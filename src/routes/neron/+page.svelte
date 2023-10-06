@@ -2,12 +2,16 @@
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
 
+    let username = "";
+
     onMount(async () => {
-        console.log(await universisGet("users/me"))
+        let personalData = await universisGet("users/me");
+        username = personalData.name;
     });
     
 </script>
 
-<h1>These are the todos</h1>
 
-<footer>The end</footer>
+<p>Hello {username}</p>
+
+
