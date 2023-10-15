@@ -34,8 +34,6 @@ function paramsToString(params: object) {
   let parameterString = "?";
 
   (Object.keys(params) as (keyof typeof params)[]).forEach((key, index) => {
-    // 👇️ name Bobby Hadz 0, country Chile 1
-    // console.log(key, params[key], index);
     parameterString = parameterString + "&" + key + "=" + params[key]
   });
   parameterString = parameterString[0] + parameterString.substring(2)
