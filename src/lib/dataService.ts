@@ -1,4 +1,3 @@
-import { PUBLIC_API_TOKEN } from "$env/static/public";
 import { get } from "svelte/store";
 import { userCreds } from "./authentication/authStore";
 
