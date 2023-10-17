@@ -28,5 +28,5 @@
 
 </script>
 
-<p>This is Christos's page. Keep out unless you're a moron</p>
+<p>This is Christos's page. Keep out unless you're a moron. (Kidding)</p>
 <p>Your general AVG is {_g_avg}</p>
