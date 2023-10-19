@@ -1,5 +1,7 @@
 <script>
-
+  import LeafletMap from '$lib/LeafletMap.svelte';
 </script>
 
-<p>Hello Tolis</p>
+<main>
+  <LeafletMap />
+</main>
