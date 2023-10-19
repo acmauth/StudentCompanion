@@ -1,32 +1,67 @@
-<script lang="ts">
+<script>
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
 
-    // General AVG html element
-    var _g_avg = "";
+    // HTML elements
+    let _g_avg = "";
+    let _w_avg = "";
 
+    // This code runs when the component is mounted to the DOM
     onMount(async () => {
 
+        // Fetch exam data for the current student
         let exams = await universisGet("students/me/grades?$top=-1&$filter=isPassed eq 1");
 
-        let i = 0;
+        // Fetch a list of courses for the current student
+        let courses = (await universisGet("students/me/courses?$top=-1")).value;
+
+        let k = 0;
+        let passed_courses = [];
+
+        // Loop through the courses to find the passed ones
+        for (const course of courses)
+            if (course.isPassed == 1)
+                passed_courses[k++] = course;
+
+        let i = 0, j = 0;
         let g_grades = [];
         let g_sum = 0;
-        let g_avg = 0
+        let g_avg = 0;
+        let w_sum = 0;
+        let w_avg = 0;
+        let courses_codes = [];
+        let ects_list = [];
+
+        // Extract the grades and course codes from the exams
         for (const exam of exams.value) {
-            g_grades[i++] = exam.formattedGrade * 1;
-            console.log(exam);
+            g_grades[i] = exam.formattedGrade * 1;
+            courses_codes[i++] = exam.course;
         }
+
+        // Calculate the sum of grades and their average
         g_sum = g_grades.reduce((total, currentValue) => total + currentValue, 0);
-
-
         if (g_grades.length > 0)
-           g_avg = Number((g_sum / g_grades.length).toFixed(2));
+            g_avg = Number((g_sum / g_grades.length).toFixed(2));
         _g_avg = String(g_avg);
 
-    });
+        // Loop through course codes to find their corresponding ECTS values
+        for (const code of courses_codes)
+            for (const courseEntry of passed_courses)
+                if (courseEntry.course == code)
+                    ects_list[j++] = courseEntry.ects;
 
+        i = 0;
+        for (const g of g_grades)
+            // Calculate the weighted sum of grades
+            w_sum += g * ects_list[i++];
+
+        // Calculate the weighted average
+        w_avg = Number((w_sum / ects_list.reduce((total, currentValue) => total + currentValue, 0)).toFixed(2));
+        _w_avg = String(w_avg);
+
+    });
 </script>
 
-<p>This is Christos's page. Keep out unless you're a moron. (Kidding)</p>
+<p>This is Christos's page. Keep out unless you're a moron.</p>
 <p>Your general AVG is {_g_avg}</p>
+<p>Your weighted AVG is {_w_avg}</p>
