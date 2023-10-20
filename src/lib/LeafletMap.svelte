@@ -9,12 +9,14 @@
         if(browser) {
             const leaflet = await import('leaflet');
 
+            // This part of the code sets the viewport, what area the user will be greeted with
             map = leaflet.map(mapElement).setView([40.63182425082954, 22.959049527401312], 15);
 
             leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
 
+            // Key locations markers 
             leaflet.marker([40.63182425082954, 22.959049527401312]).addTo(map)
                 .bindPopup('Main AUTh Campus')
                 .openPopup();
