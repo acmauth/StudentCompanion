@@ -15,11 +15,12 @@ let gender = "";
 let mobilePhone = "";
 let departmentName = "";
 let departmentAddress = "";
+let semester = "";
 
 onMount(async () => {
 	let personalData = await universisGet("Students/me/");
 	let department = await universisGet('Students/me/department');
-	console.log(department);
+	console.log(personalData);
 	aem = personalData.studentIdentifier;
 	inscriptionYear = personalData.inscriptionYear.name;
 	schoolGraduated = personalData.schoolGraduated;
@@ -31,6 +32,7 @@ onMount(async () => {
 	mobilePhone = personalData.person.mobilePhone;
 	departmentName = department.abbreviation;
 	departmentAddress = department.address;
+	semester = personalData.semester;
 
 });
 
@@ -49,3 +51,4 @@ onMount(async () => {
 <p>Gender: {gender === 'Α' ? "Άντρας" : "Γυναίκα"}</p>
 <p>Mobile Phone: {mobilePhone}</p>
 <p>Department: {departmentName} {departmentAddress}</p>
+<p>Semester: {semester}o</p>
