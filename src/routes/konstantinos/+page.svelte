@@ -3,6 +3,8 @@ import { onMount } from "svelte";
 import { universisGet } from "$lib/dataService";
 
 
+// Keep personal info
+
 let aem = "";
 let inscriptionYear = "";
 let fullName = "";
@@ -16,6 +18,9 @@ let mobilePhone = "";
 let departmentName = "";
 let departmentAddress = "";
 let semester = "";
+
+
+// Get personal details and department details
 
 onMount(async () => {
 	let personalData = await universisGet("Students/me/");
@@ -48,7 +53,7 @@ onMount(async () => {
 <p>Birth Date: {birthDate}</p>
 <p>Email: {email}</p>
 <p>Full Name: {givenName} {familyName}</p>
-<p>Gender: {gender === 'Α' ? "Άντρας" : "Γυναίκα"}</p>
+<p>Gender: {gender === "Α" ? "Άντρας" : "Γυναίκα"}</p>
 <p>Mobile Phone: {mobilePhone}</p>
 <p>Department: {departmentName} {departmentAddress}</p>
 <p>Semester: {semester}o</p>
