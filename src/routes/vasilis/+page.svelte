@@ -7,7 +7,7 @@
         let grades = await universisGet("students/me/grades");
 
         let subjects = await universisGet("students/me/courses");
-    }
+    });
 </script>
 
 <p>Hello Vasilis</p>
