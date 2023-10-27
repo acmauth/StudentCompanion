@@ -1,7 +1,6 @@
 <script>
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
-    import { Route, Router } from 'svelte-routing';
 
     let username = "";
 
@@ -30,9 +29,6 @@
     
 </script>
 
-<Router>
-    <Route path="myrto/courseExam/:id"/>
-</Router>
 
 <h1>My Course List</h1>
 <ul>
