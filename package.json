@@ -35,7 +35,6 @@
 		"crypto": "^1.0.1",
 		"leaflet": "^1.9.4",
 		"svelte-persisted-store": "^0.7.0",
-		"svelte-routing": "^2.5.0",
 		"tough-cookie": "^4.1.3"
 	}
 }
