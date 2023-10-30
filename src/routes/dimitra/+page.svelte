@@ -1,29 +1,29 @@
+<!-- src/routes/Scrape.svelte -->
 <script>
-	import axios from 'axios';
 	import { onMount } from 'svelte';
-
+	import axios from 'axios';
 	import cheerio from 'cheerio';
-	let title = ''; // Declare title as a reactive variable with a default value
-	console.log('here');
-	// Define a function to fetch the webpage and set the title
+
+	let scrapedHTML = '';
 
 	onMount(async () => {
-		const url = 'http://localhost:5173/getWebpage';
-		console.log('what');
 		try {
-			const response = await axios.get(url);
-			const $ = cheerio.load(response.data);
+			const targetURL = 'http://localhost:3000/proxy?url=https://www.auth.gr/weekly-menu/';
+			const response = await axios.get(targetURL);
+			const htmlContent = response.data;
+			const $ = cheerio.load(htmlContent);
 
-			// Set the title in the component's state
-			title = $('title').text(); // This will trigger a re-render
-			console.log('Title:', title);
+			const days = $('.kt-blocks-accordion-title');
+			const dailyMenus = $('.kt-accordion-panel-inner');
+			dailyMenus.each(function (idx, el) {
+				scrapedHTML += $(days[idx]).html();
+				scrapedHTML += $(el).html();
+			});
 		} catch (error) {
-			console.error('An error occurred:', error);
+			console.error('Error while scraping data:', error);
 		}
 	});
 </script>
 
-<main>
-	<h1>Scraped Title</h1>
-	<p>Title:{title}</p>
-</main>
+<h1>Μενού Λέσχης</h1>
+<div>{@html scrapedHTML}</div>
