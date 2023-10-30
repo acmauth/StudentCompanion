@@ -1,4 +1,3 @@
-<!-- src/routes/Scrape.svelte -->
 <script>
 	import { onMount } from 'svelte';
 	import axios from 'axios';
