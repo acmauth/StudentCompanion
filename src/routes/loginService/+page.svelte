@@ -12,7 +12,11 @@
 
     async function submit(){
         // Using the username and password, we're calling the tokenGrab function to get an authentication token.
-        const response = await tokenGrab(username, password);
+        
+        // URL-encode the password
+        const encodedPassword = encodeURIComponent(password);
+
+        const response = await tokenGrab(username, encodedPassword);
         if (response.error){
             outputMessage = response.error;
         }
