@@ -15,7 +15,9 @@
     var students_failed = 0;
 
     onMount(async () => {
-        let courses = await universisGet("students/me/grades?$top=-1");
+
+        let courses = await universisGet("students/me/courses?$top=-1");
+        
         let course_exam = "";
         
         exam_code = courses.value;
@@ -24,8 +26,8 @@
         for (const exam of exam_code){
             if (exam.course == courseCode){
                 found = true;
-                course_exam = exam.courseExam
-                myGrade = exam.grade1
+                course_exam = exam.gradeExam;
+                myGrade = exam.grade
                 break;
             }
         }

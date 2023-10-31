@@ -15,6 +15,7 @@
 
         // Getting an object that contains an array with courses
         let courses = await universisGet("students/me/courses?$top=-1");
+        console.log(courses);
 
         // With the value property we get one array for each course which stores course related information
         let course_info = courses.value
