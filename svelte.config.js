@@ -1,5 +1,7 @@
 import adapter from '@sveltejs/adapter-auto';
 
+// console.log(process.env.NODE_ENV);
+// console.log(process.env.NODE_ENV === 'production');
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
