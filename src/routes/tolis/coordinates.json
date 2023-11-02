@@ -1,10 +1,16 @@
 [
     {
-      "name": "Main AUTh Campus",
-      "coordinates": [40.63182425082954, 22.959049527401312]
+        "name": "Main AUTh Campus",
+        "coordinates": [
+            40.63182425082954,
+            22.959049527401312
+        ]
     },
     {
-      "name": "Faculty of Sciences", 
-      "coordinates": [40.63405427059443, 22.956504569317843]
+        "name": "Faculty of Sciences",
+        "coordinates": [
+            40.63405427059443,
+            22.956504569317843
+        ]
     }
 ]
