@@ -6,6 +6,15 @@
     
     // This is a simple login page that gets a user token and stores it in the browser.
 
+    // export const load: PageLoad = ({ params }) => {
+	// return {
+	// 	post: {
+	// 		title: `Title for ${params.slug} goes here`,
+	// 		content: `Content for ${params.slug} goes here`,
+	// 	    },
+	//     };
+    // };
+
     let username = '';
     let password = '';
     let outputMessage = ''
