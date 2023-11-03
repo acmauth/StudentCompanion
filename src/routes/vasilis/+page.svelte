@@ -10,10 +10,13 @@
         grades = (await universisGet("students/me/grades?$top=-1")).value;
 
         subjects = (await universisGet("students/me/courses?$top=-1")).value;
+
  
         console.log(grades);
         console.log(subjects);
-        
+
+
+
     });
 
 
@@ -24,11 +27,11 @@
     <ol>
         {#each subjects as subject}
 
-            <li>{subject.courseTitle} ({subject.course})<br></li>
+            <li>{subject.courseTitle} ({subject.course})<br></li>           
             
             {#if subject.grade !== null}
 
-                <p>Grade: <b>{subject.formattedGrade}</b></p>
+                <p>Grade: <b>{subject.formattedGrade}</b></p> 
                 
             {:else}
 
@@ -36,9 +39,18 @@
 
             {/if}
 
+            <p>Semester: <b>{subject.semester.name}</b></p>
+            <p>Ects: <b>{subject.ects}</b></p>
+            <p>Course Type: <b>{subject.courseType.name}</b></p>
+            <p>Hours Weekly: <b>{subject.hours}</b></p>
+            <!-- professor -->
+            <!-- overall hours -->
+            <!-- exam period e.g Χειμερινη -->
+            <!-- year -->
         {/each}
         
     </ol>
 {:else}
     <p>No subjects available</p>
 {/if}
+
