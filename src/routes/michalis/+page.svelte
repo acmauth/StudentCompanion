@@ -12,39 +12,59 @@
 
     // some multitudes
     let unpassed_courses_multitude = 0;
-    let passed_courses_multitude = 0;
-    let courses_multitude = 0; // unpassed + passed
 
     // Grades sum
     let sum_unpassed_courses = 0; 
     let sum_passed_courses = 0;
     let degree_grade = 0;
     let degree_grade_string = "";
+
+    /**
+	 * @type {any[]}
+	 */
+    let ects_list = [{}];
+    let semester = 0;
+    let semester_current = 0;
         
     onMount(async () => {
         // Fetch a list of the current student's courses
         let courses = (await universisGet("students/me/courses?$top=-1")).value;
 
+        // fills the ects total of a semester
+        for (const course of courses)
+        {
+            ects_list[course.semester.id] = 0;
+        }
+
+        for (const course of courses)
+        {
+            ects_list[course.semester.id] += course.ects;
+        }
+
         // Loop through the courses. If the current course is
         // not passed) change the not_passed_all_courses bool to true and push the courses to the unpassed_courses list
-        // passed) add the grade to the sum of the passed courses grade
+        // passed) add the ect calculated grade to the sum of the passed courses grade
         for (const course of courses)
         {
             if (course.isPassed == 0)
             {
                 unpassed_courses_multitude++;
                 not_passed_all_courses = true;
-                unpassed_courses.push({title: course.courseTitle, grade: 0});
+                unpassed_courses.push({title: course.courseTitle, grade: 0, ects: course.ects});
             }
             else
             {
-                passed_courses_multitude++;
-                sum_passed_courses += course.grade;
+                sum_passed_courses += course.grade * course.ects / ects_list[course.semester.id];
+                // get last passed semester
+                semester = course.semester.id;
             }
         }
 
+        // current semester
+        semester_current = semester + 1;
+
         // calculate pre existing degree grade with a two digit percision
-        degree_grade = sum_passed_courses/passed_courses_multitude;
+        degree_grade = sum_passed_courses/semester;
         degree_grade_string = String(degree_grade.toFixed(2));
     });   
 
@@ -54,19 +74,15 @@
 
     function updateGrades() 
     {
-        unpassed_courses_multitude = 0;
         sum_unpassed_courses = 0
 
         for (const course of unpassed_courses)
         {
-            if (course.grade != 0)
-                unpassed_courses_multitude++;
-
-            sum_unpassed_courses += course.grade;
+            // console.log(ects_list[1]);
+            sum_unpassed_courses += course.grade * course.ects / ects_list[semester_current];
         }
 
-        courses_multitude = unpassed_courses_multitude + passed_courses_multitude; // courses + inputed_courses multitude
-        degree_grade = ((sum_unpassed_courses+sum_passed_courses)/courses_multitude);
+        degree_grade = ((sum_unpassed_courses+sum_passed_courses)/semester_current);
         degree_grade_string = String(degree_grade.toFixed(2));
 	}
 </script>
