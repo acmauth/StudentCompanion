@@ -14,15 +14,34 @@
     let unpassed_courses_multitude = 0;
 
     // Grades sum
+    let sum_unpassed_courses = 0;
     let sum_passed_courses = 0;
     let degree_grade = 0;
     let degree_grade_string = "";
 
+    /**
+	 * @type {any[]}
+	 */
+    let ects_list = [{}];
+
     let ectsSum = 0;
+    let semester = 0;
+    let semester_current = 0;
         
     onMount(async () => {
         // Fetch a list of the current student's courses
         let courses = (await universisGet("students/me/courses?$top=-1")).value;
+
+        // fills the ects total of a semester
+        for (const course of courses)
+        {
+            ects_list[course.semester.id] = 0;
+        }
+
+        for (const course of courses)
+        {
+            ects_list[course.semester.id] += course.ects;
+        }
 
         // Loop through the courses. If the current course is
         // not passed) change the not_passed_all_courses bool to true and push the courses to the unpassed_courses list
@@ -38,12 +57,17 @@
             else
             {
                 sum_passed_courses += course.grade * course.ects;
+                // get last passed semester
+                semester = course.semester.id;
                 ectsSum += course.ects;
             }
         }
 
+        // current semester
+        semester_current = semester + 1;
+
         // calculate pre existing degree grade with a two digit percision
-        degree_grade = sum_passed_courses / ectsSum * 10;
+        degree_grade = sum_passed_courses/ectsSum;
         degree_grade_string = String(degree_grade.toFixed(2));
     });   
 
@@ -53,7 +77,7 @@
 
     function updateGrades() 
     {
-        let sum_unpassed_courses = 0
+        sum_unpassed_courses = 0
         let ectsSumAll = ectsSum;
 
         for (const course of unpassed_courses)
@@ -65,12 +89,13 @@
             }
         }
 
-        degree_grade = ((sum_unpassed_courses+sum_passed_courses) / ectsSumAll * 10);
+        degree_grade = ((sum_unpassed_courses+sum_passed_courses)/ectsSumAll);
         degree_grade_string = String(degree_grade.toFixed(2));
 	}
 </script>
 
     <!-- Check if there are any unpassed courses and if so, show them in the screen and ask for input -->
+    <h1>Hi</h1>
     {#if not_passed_all_courses}
     <h2>To calculate your degreed grade, you must first give a prediction to your unpassed courses grades (0-1):</h2>
     {#each unpassed_courses as course}
@@ -84,6 +109,7 @@
 
     <!-- Show the Degree grade in the screen -->
     <h2>Degree grade: {degree_grade_string}</h2>
+
 
 
 <style>
