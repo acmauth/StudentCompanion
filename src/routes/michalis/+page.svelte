@@ -14,7 +14,7 @@
     let unpassed_courses_multitude = 0;
 
     // Grades sum
-    let sum_unpassed_courses = 0; 
+    let sum_unpassed_courses = 0;
     let sum_passed_courses = 0;
     let degree_grade = 0;
     let degree_grade_string = "";
@@ -78,7 +78,6 @@
 
         for (const course of unpassed_courses)
         {
-            // console.log(ects_list[1]);
             sum_unpassed_courses += course.grade * course.ects / ects_list[semester_current];
         }
 
