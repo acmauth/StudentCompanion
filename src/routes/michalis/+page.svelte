@@ -37,17 +37,16 @@
             }
             else
             {
-                sum_passed_courses += course.grade * course.ects;
+                sum_passed_courses += course.grade * course.ects * 10;
                 ectsSum += course.ects;
             }
         }
 
         // calculate pre existing degree grade with a two digit percision
-        degree_grade = sum_passed_courses / ectsSum * 10;
+        degree_grade = sum_passed_courses / ectsSum;
         degree_grade_string = String(degree_grade.toFixed(2));
     });   
 
-    // If the value of an unpassed course is different than 0, the divisor of the degree grade, rises by 1
     // Whenever there are changes in the unpassed course grades, the average is recalculated
     // taking count of the new grade assumption
 
@@ -65,7 +64,7 @@
             }
         }
 
-        degree_grade = ((sum_unpassed_courses+sum_passed_courses) / ectsSumAll * 10);
+        degree_grade = ((sum_unpassed_courses+sum_passed_courses) / ectsSumAll);
         degree_grade_string = String(degree_grade.toFixed(2));
 	}
 </script>
@@ -76,8 +75,8 @@
     {#each unpassed_courses as course}
     <div class="my-div">
         <p>{course.title}</p>
-        <input type="range" bind:value={course.grade} min="0" max="1" step="0.01" on:input={updateGrades} >
-        <input type="number" bind:value={course.grade} min="0" max="1" step="0.01" on:input={updateGrades} >
+        <input type="range" bind:value={course.grade} min="0" max="10" step="0.1" on:input={updateGrades} >
+        <input type="number" bind:value={course.grade} min="0" max="10" step="0.1" on:input={updateGrades} >
     </div>
     {/each}
     {/if}
