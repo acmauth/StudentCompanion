@@ -1,9 +1,10 @@
 <script>
-import Grades from "../../lib/components/grades/grades.svelte";
-
-
+	import Grades from '../../lib/components/grades/grades.svelte';
 </script>
 
-<Grades>
+<ion-page style="overflow-y: auto;">
 	
-</Grades>
+		<Grades />
+
+</ion-page>
+
