@@ -9,4 +9,6 @@
 	</ion-card>
 
 
+<a href='/grades'>Grades</a>
+
   
