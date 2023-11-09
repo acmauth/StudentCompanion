@@ -1,9 +1,6 @@
 <script lang="ts">
 	import * as allIonicIcons from 'ionicons/icons';
 	import type { course } from './courseType';
-	/**
-	 * @type {{ "": any; }}
-	 */
 	export let subject: course;
 </script>
 
