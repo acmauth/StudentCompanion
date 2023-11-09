@@ -1,10 +1,25 @@
 <script>
 	import Grades from '$lib/components/grades/grades.svelte';
+	import * as allIonicIcons from 'ionicons/icons';
+	import  courseBySemester  from '$lib/components/grades/grades.svelte';
+
+	function handleChange(event) {
+		console.log(event.target.value);
+		console.log(Object.keys(courseBySemester));
+	}
+
+
 </script>
 
 <ion-page style="overflow-y: auto;">
 	
-		<Grades />
+	<ion-item>
+			<ion-input label="Αναζήτηση Μαθημάτων" label-placement="floating" on:input={handleChange}>
+			</ion-input>			
+	</ion-item>
+
+	
+	
+		<Grades  />
 
 </ion-page>
-

@@ -2,7 +2,9 @@
 	import * as allIonicIcons from 'ionicons/icons';
 	import type { course } from './courseType';
 	export let subject: course;
+
 </script>
+
 
 <ion-card href="/" class="ion-padding">
 	<ion-grid>
@@ -10,7 +12,7 @@
 			<ion-col class="ion-no-padding" size-md="10" size-lg="8" size-xl="6">
 				<ion-card-header>
 					<ion-card-title class="ion-padding-bottom">{subject.courseTitle}</ion-card-title>
-
+				
 					<div class="icons">
 						<ion-icon icon={allIonicIcons.flagOutline} />
 						<ion-card-subtitle>{subject.course}</ion-card-subtitle>
@@ -20,7 +22,7 @@
 						<ion-icon icon={allIonicIcons.personOutline} />
 						<ion-card-subtitle>Nikolaos Tsitsas</ion-card-subtitle>
 					</div>
-				</ion-card-header>
+					</ion-card-header>
 			</ion-col>
 
 			<ion-col size="20">
