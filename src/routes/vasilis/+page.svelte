@@ -2,18 +2,16 @@
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
 
-    let subjects = [];
-    let grades = [];
+    let courses = [];
+    let currentGrades = [];
 
     onMount(async () => {
 
-        grades = (await universisGet("students/me/grades?$top=-1")).value;
+        // Getting an array with courses
+        courses = (await universisGet("students/me/courses?$top=-1")).value;
 
-        subjects = (await universisGet("students/me/courses?$top=-1")).value;
+        // currentGrades = (await universisGet("students/me/currentRegistration?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=1&$skip=0&$count=false")).value;
 
- 
-        console.log(grades);
-        console.log(subjects);
 
 
 
@@ -23,15 +21,15 @@
 </script>
 
 
-{#if subjects.length > 0}
-    <ol>
-        {#each subjects as subject}
+{#if courses.length > 0}
+    <ul>
+        {#each courses as course}
 
-            <li>{subject.courseTitle} ({subject.course})<br></li>           
+            <a href={`vasilis/${course.course}`}>{course.courseTitle} ({course.course})<br></a>    
             
-            {#if subject.grade !== null}
+            {#if course.grade !== null}
 
-                <p>Grade: <b>{subject.formattedGrade}</b></p> 
+                <p>Grade: <b>{course.formattedGrade}</b></p> 
                 
             {:else}
 
@@ -39,18 +37,9 @@
 
             {/if}
 
-            <p>Semester: <b>{subject.semester.name}</b></p>
-            <p>Ects: <b>{subject.ects}</b></p>
-            <p>Course Type: <b>{subject.courseType.name}</b></p>
-            <p>Hours Weekly: <b>{subject.hours}</b></p>
-            <!-- professor -->
-            <!-- overall hours -->
-            <!-- exam period e.g Χειμερινη -->
-            <!-- year -->
         {/each}
-        
-    </ol>
+    </ul>
 {:else}
-    <p>No subjects available</p>
+    <p>No courses available</p>
 {/if}
 
