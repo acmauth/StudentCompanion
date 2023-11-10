@@ -10,11 +10,6 @@
         // Getting an array with courses
         courses = (await universisGet("students/me/courses?$top=-1")).value;
 
-        // currentGrades = (await universisGet("students/me/currentRegistration?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=1&$skip=0&$count=false")).value;
-
-
-
-
     });
 
 
