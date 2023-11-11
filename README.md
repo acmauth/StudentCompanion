@@ -2,7 +2,7 @@
 <!-- 
     Apostolos Halis
     Christos Balaktsis
-    Demetra Angelidou
+    Dimitra Angelidou
     Konstantinos Agathopoulos
     Michalis Karypidis
     Myrto Gkogkou
@@ -28,9 +28,9 @@
             </td>
             <td align="center" valign="top" width="25%">
                 <a href="https://github.com/dangelidou">
-                    <img src="https://avatars.githubusercontent.com/u/115474360?v=4?s=100" width="100px;" alt="Demetra Angelidou"/>
+                    <img src="https://avatars.githubusercontent.com/u/115474360?v=4?s=100" width="100px;" alt="Dimitra Angelidou"/>
                     <br />
-                    <sub><b>Demetra Angelidou</b></sub>
+                    <sub><b>Dimitra Angelidou</b></sub>
                 </a>
             </td>
             <td align="center" valign="top" width="25%">
