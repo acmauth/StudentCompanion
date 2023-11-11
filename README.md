@@ -1,4 +1,4 @@
-## Contributors ✨
+## Meet the team ✨
 <!-- 
     Apostolos Halis
     Christos Balaktsis
