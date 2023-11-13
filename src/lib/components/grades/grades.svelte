@@ -23,7 +23,6 @@
 
         console.log(courseClasses);
         
-        
         subjects.sort((a,b) => a.semester.id - b.semester.id);
 
         courseBySemester = subjects.reduce((acc, course) => {
