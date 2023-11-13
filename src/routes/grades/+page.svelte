@@ -12,14 +12,16 @@
 </script>
 
 <ion-page style="overflow-y: auto;">
-	
-	<ion-item>
-			<ion-input label="Αναζήτηση Μαθημάτων" label-placement="floating" on:input={handleChange}>
-			</ion-input>			
-	</ion-item>
 
-	
-	
+	<ion-nav-title>
+			<ion-item-divider sticky>
+				<ion-searchbar on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
+			</ion-item-divider>
+	</ion-nav-title>
+			
+		
+			
+
 		<Grades  />
 
 </ion-page>

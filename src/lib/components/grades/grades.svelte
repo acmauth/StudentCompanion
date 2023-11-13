@@ -8,15 +8,21 @@
     let subjects = [];
     let grades = [];
     let courseBySemester = {};
+    let courseClasses = [];
 
     
 
     onMount(async () => {
 
         grades = (await universisGet("students/me/grades?$top=-1")).value;
+        
 
         subjects = (await universisGet("students/me/courses?$top=-1")).value;
 
+        courseClasses = (await universisGet("CourseClassInstructors/me/")).value;
+
+        console.log(courseClasses);
+        
         
         subjects.sort((a,b) => a.semester.id - b.semester.id);
 
@@ -29,7 +35,7 @@
         }, {});
 
      
-        console.log(courseBySemester);
+        // console.log(courseBySemester);
         
     });
 
