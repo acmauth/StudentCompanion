@@ -50,5 +50,3 @@
 	{/if}
 {/each}
 
-<style>
-</style>

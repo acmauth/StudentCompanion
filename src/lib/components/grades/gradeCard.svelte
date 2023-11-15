@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as allIonicIcons from 'ionicons/icons';
-	import type { course } from './courseType';
-	export let subject: any = {};
+	import type { course } from './courseType';  
+  export let subject: any = {};
 	export let filteredSubjects: any = {};
 	export let semesterId: any = {};
 	
@@ -45,6 +45,7 @@
 								-
 							{/if}
 						</ion-label>
+          
 					{:else}
 						<ion-label class="ion-padding-bottom ion-padding-start">-</ion-label>
 					{/if}
