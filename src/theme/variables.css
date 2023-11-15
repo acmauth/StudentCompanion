@@ -78,7 +78,8 @@
     --ion-color-light-tint: #f5f6f9;
   }
   
-  @media (prefers-color-scheme: dark) {
+  /*  #FIXME and (max-width: 0) is used as a boolean to disable this css rule */
+  @media (prefers-color-scheme: dark) and (max-width: 0) {
     /*
      * Dark Colors
      * -------------------------------------------
