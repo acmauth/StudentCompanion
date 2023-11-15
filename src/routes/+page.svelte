@@ -6,6 +6,7 @@
 			Let's list here our quick page links, before we get navigation figured out
 		</ion-card-content>
 		<ion-button href="/loginService">Log in/Log out</ion-button>
+		<ion-button href="/schedule">Schedule</ion-button>
 	</ion-card>
 
 
