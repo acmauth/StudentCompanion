@@ -30,7 +30,7 @@
 	} else if (hours >= 16 && hours < 18) {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 18:00';
 		color = 'danger';
-	} else if (hours >= 12 && hours < 16) {
+	} else if (hours >= 18 && hours < 21) {
 		message = 'Λέσχη ανοιχτή για Βραδινό - Κλείνει στις 21:00';
 	} else {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 08:30';
