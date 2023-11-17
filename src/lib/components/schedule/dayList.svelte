@@ -1,7 +1,21 @@
 <script>
-    // import {activeDay} from "./activeDay"; 
+	import { onMount } from "svelte";
+    import {activeDay, getToday} from "./activeDay"; 
     import DayCard from "./dayTitle.svelte";
     import { weekdays } from "./days";
+    import * as allIonicIcons from 'ionicons/icons';
+
+
+    onMount(async () => {
+
+        const allIcons = document.querySelectorAll('ion-icon');
+		allIcons.forEach(icon => {
+		icon.icon = allIonicIcons.ellipseOutline;
+		});
+
+        activeDay.set(getToday());
+    });
+
 
 </script>
 
