@@ -2,6 +2,7 @@
 	import { onMount } from "svelte";
 	import {activeDay} from "./activeDay";
 	import * as allIonicIcons from 'ionicons/icons';
+	import { toLower } from "ionicons/dist/types/components/icon/utils";
 	export let day: string;
 
 	function setActiveDay(event: Event) {
@@ -24,14 +25,6 @@
 		}
   	}
 
-	onMount(async () => {
-		if(day.toLowerCase() == $activeDay)
-		{	
-			const el = document.getElementById('icon');
-			el.icon = allIonicIcons.ellipse;
-		}
-	})
-
 </script>
 
 
@@ -39,7 +32,11 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <ion-grid id="{day.toLowerCase()}" on:click={setActiveDay}>
 	<ion-row class="ion-align-items-center ion-justify-content-center" style="padding: 3%; font-size: 200%">
-	  <ion-icon id="icon" icon={allIonicIcons.ellipseOutline}/>
+		{#if $activeDay != day.toLowerCase() }
+			<ion-icon id="icon" icon={allIonicIcons.ellipseOutline}/>
+		{:else}
+			<ion-icon id="icon" icon={allIonicIcons.ellipse}/>
+		{/if}
 	</ion-row >
 	<ion-row class="ion-align-items-center ion-justify-content-center">
 	  <ion-div >{day}</ion-div>
