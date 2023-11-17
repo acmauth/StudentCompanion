@@ -17,4 +17,9 @@
 	</ion-card-header>
 	<ion-button href="/grades">Grades</ion-button>
 </ion-card>
+
+<ion-card>
+	<ion-button href="/schedule">Schedule</ion-button>
+</ion-card>
+
 </ion-page>
