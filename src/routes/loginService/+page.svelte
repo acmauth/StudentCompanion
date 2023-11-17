@@ -1,6 +1,6 @@
 <script lang='ts'>
     import { tokenGrab } from "$lib/authentication/tokenGeneratorWorker"
-    import { userCreds } from "$lib/authentication/authStore";
+    import { userCreds, userTokens } from "../../stores/credentials.store";
     import { goto } from '$app/navigation';
     
     
@@ -32,9 +32,12 @@
         else {
             userCreds.set({
                 username: username,
-                password: password,
-                token: response.token
+                password: password
             });
+            const myTokens = $userTokens;
+            myTokens.universis.token = response.universisToken;
+            userTokens.set(myTokens);
+
             goto("/");
             outputMessage = "Login successful!"
         }

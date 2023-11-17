@@ -1,6 +1,6 @@
 import { get } from "svelte/store";
 import { userCreds } from "./authentication/authStore";
-
+import { elearningGet as internalelearningGet } from "./elearningAuthentication/elearningDataService";
 
 // This is a wrapper for the Universis API.
 // It's a simple GET request with a token in the header.
@@ -20,3 +20,10 @@ export const universisGet = async (endpoint: string) => {
     
   };
 
+  export async function elearningGet(dataArguments: any){
+
+    const response =  await internalelearningGet(dataArguments);
+    console.log(response);
+    return response;
+    
+}

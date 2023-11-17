@@ -13,6 +13,7 @@ export async function validateAuth(): Promise<boolean>{
         }
     }
     catch (Error){
+        console.log("Invalid universis token, generating new one...");
         // Our token is invalid! This is an outrage, we gotta fix it!
         const creds = get(userCreds);
 
@@ -22,11 +23,12 @@ export async function validateAuth(): Promise<boolean>{
         // Did it work?
         if (response.error){
             // Nopeee, someone didn't set their username and password!
+            console.log("Invalid username or password");
             return false
         }
         else {
             // Of course it worked! We got a brand new token now! Best birthday present!
-            console.log(response);
+            console.log("New universis token generated!")
             creds.token = response.token;
             userCreds.set(creds)
             return true
