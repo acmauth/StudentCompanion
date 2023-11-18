@@ -17,4 +17,11 @@
 	</ion-card-header>
 	<ion-button href="/grades">Grades</ion-button>
 </ion-card>
+
+<ion-card>
+	<ion-card-header>
+		<ion-card-subtitle>Grades Page</ion-card-subtitle>
+	</ion-card-header>
+	<ion-button href="/recentGrades">recentGrades</ion-button>
+</ion-card>
 </ion-page>

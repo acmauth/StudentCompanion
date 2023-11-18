@@ -1,7 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
-    import gradeCard from "./recentGradesCard.svelte";
+    import GradeCard from "./recentGradesCard.svelte";
 
     let examPeriod = [];
     let recentGrades = [];
@@ -42,6 +42,17 @@
             recentGrades = (await universisGet('students/me/grades?$filter=courseExam/year eq ' + lastYear + ' and courseExam/examPeriod eq ' + lastPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
         }
 
+        //for loop
+        console.log(recentGrades);
+        
     });
 
 </script>
+
+
+{#each recentGrades as recentGrade } 
+
+    <p>hello</p>
+    <GradeCard subject = {recentGrade}/>
+
+{/each}
