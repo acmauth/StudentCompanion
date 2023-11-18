@@ -22,10 +22,8 @@ let searchQuery = '';
 				<ion-searchbar on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
 			</ion-item-divider>
 	</ion-nav-title>
-			
-		
-			
-
+  
 		<Grades searchQuery = {searchQuery}  />
   
+
 </ion-page>
