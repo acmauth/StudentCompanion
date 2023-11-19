@@ -1,8 +1,9 @@
 <script lang='ts'>
-    import { tokenGrab } from "$lib/authentication/tokenGeneratorWorker"
+    import { tokenGrab } from "$lib/universisAuthentication/tokenGeneratorWorker"
     import { userCreds, userTokens } from "../../stores/credentials.store";
+    import userInfoStore from "../../stores/userinfo.store";
     import { goto } from '$app/navigation';
-    
+    import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDataService";
     
     // This is a simple login page that gets a user token and stores it in the browser.
 
@@ -18,29 +19,60 @@
     let username = '';
     let password = '';
     let outputMessage = ''
-
-    async function submit(){
-        // Using the username and password, we're calling the tokenGrab function to get an authentication token.
-        
-        // URL-encode the password
+    
+    async function getUniversisToken() {
         const encodedPassword = encodeURIComponent(password);
 
         const response = await tokenGrab(username, encodedPassword);
         if (response.error){
             outputMessage = response.error;
+            outputMessage = outputMessage + "Universis failed!"
         }
         else {
             userCreds.set({
                 username: username,
                 password: password
             });
-            const myTokens = $userTokens;
-            myTokens.universis.token = response.universisToken;
-            userTokens.set(myTokens);
+            
+            userTokens.update((newTokens) => {
+                newTokens.universis.token = response.token;
+                console.log(response);
+                return newTokens;
+            });
 
-            goto("/");
-            outputMessage = "Login successful!"
+            outputMessage = outputMessage + "Universis!"
+        } 
+    }
+    
+    async function getElearningToken() {
+        const encodedPassword = encodeURIComponent(password);
+
+        const response = await elearningFetchNewToken(username, encodedPassword);
+        if (!response.error && response.credentials){
+        userTokens.update((newTokens) => {
+            newTokens.elearning.moodleSession = response.credentials.moodleSession;
+            newTokens.elearning.sesskey = response.credentials.sesskey;
+            return newTokens;
+        });
+        userInfoStore.update((newUserInfo) => {
+            newUserInfo.userId = response.credentials.userID;
+            newUserInfo.valid = true;
+            return newUserInfo;
+        });
+        outputMessage = outputMessage + "Elearning!"
+        } else {
+            outputMessage = outputMessage + "Elearning failed!"
         }
+
+    }
+
+    async function submit(){
+        // Using the username and password, we're calling the tokenGrab function to get an authentication token.
+        
+        await getUniversisToken();
+        await getElearningToken();
+        goto("/");
+
     }
 </script>
 

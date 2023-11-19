@@ -1,7 +1,7 @@
 import { browser } from '$app/environment'; 
 import { get } from 'svelte/store';
-import { elearningCredentials } from './elearningCredentials.store';
-import { userCreds } from '../../stores/credentials.store';
+import { userCreds, userTokens } from '../../stores/credentials.store';
+import userInfoStore from '../../stores/userinfo.store';
 import elearningAuthenticator from './scraper/elearningAuthenticator';
 
 
@@ -15,7 +15,7 @@ export async function elearningFetchNewToken(username: string, password: string)
 
 export async function elearningFetchNewTokenInternal(username: string, password: string){
     
-    let credentials = elearningCredentials;
+    
     let response: { error: string; credentials?: undefined; } | { error: null; credentials: { sesskey: string; moodleSession: string; userID: string; }; };
     // If we're running on the browser, we go through this to avoid a CORS error
     if (browser) {
@@ -28,14 +28,16 @@ export async function elearningFetchNewTokenInternal(username: string, password:
         response = await elearningAuthenticator(username, password);
     }
 
-    if (!response.error){
-        credentials.update((creds) => {
-        creds.username = username;
-        creds.password = password;
-        creds.sesskey = response.credentials.sesskey;
-        creds.userID = response.credentials.userID;
-        creds.moodleSession = response.credentials.moodleSession;
-        return creds;
+    if (!response.error && response.credentials){
+        userTokens.update((newTokens) => {
+            newTokens.elearning.moodleSession = response.credentials.moodleSession;
+            newTokens.elearning.sesskey = response.credentials.sesskey;
+            return newTokens;
+        });
+        userInfoStore.update((newUserInfo) => {
+            newUserInfo.userId = response.credentials.userID;
+            newUserInfo.valid = true;
+            return newUserInfo;
         });
     }
     return response;
@@ -69,8 +71,8 @@ export async function internalElearningGet(dataArguments: string, sesskey: strin
 
 export async function elearningGet(dataArguments: any){
 
-    let sesskey = get(elearningCredentials).sesskey;
-    let moodleSession = get(elearningCredentials).moodleSession;
+    let sesskey = get(userTokens).elearning.sesskey;
+    let moodleSession = get(userTokens).elearning.moodleSession;
     let data;
 
     if (browser){

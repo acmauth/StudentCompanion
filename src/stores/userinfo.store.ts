@@ -7,7 +7,7 @@ interface UserInfo {
 
 // Store for the user's credentials
 const userInfoStore = persisted<UserInfo>("userInfo", {
-  userId: '146589',
+  userId: '',
   valid: true
 });
 
