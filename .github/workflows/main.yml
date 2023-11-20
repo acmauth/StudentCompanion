@@ -31,7 +31,10 @@ jobs:
           script: |
             # SSH into the server
             cd studentcomp
-
+            
+            # Debug
+            touch test
+            
             # Stop previous application if running
             pm2 stop studentcompaniongui || true
 
