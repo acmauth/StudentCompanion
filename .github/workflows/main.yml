@@ -45,4 +45,4 @@ jobs:
             npm install
 
             # Start the Node.js application with a process manager like PM2
-            pm2 start index.js --name studentcompaniongui
+            pm2 start "npm run dev" --name studentcompaniongui
