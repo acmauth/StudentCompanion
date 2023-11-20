@@ -29,11 +29,11 @@ jobs:
           password: ${{ secrets.SERVER_SSH_PASS }}
           port: ${{ secrets.SERVER_SSH_PORT }} # Specify your SSH port if it's not the default (22)
           script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            npm --help
             # SSH into the server
             cd studentcomp
-            
-            # Debug
-            touch test
             
             # Stop previous application if running
             pm2 stop studentcompaniongui || true
