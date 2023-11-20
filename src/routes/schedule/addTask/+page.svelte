@@ -1,10 +1,9 @@
 <script lang="ts">
-    import type { TaskItem } from "$lib/components/schedule/subject/TaskItem";
-    import { taskStore } from '$lib/components/schedule/subject/taskStore';
+    import type { TaskItem } from "$lib/components/schedule/task/TaskItem";
+    import { taskStore } from '$lib/components/schedule/task/taskStore';
     import { weekdays } from '$lib/components/schedule/day/days'
     import { goto } from '$app/navigation';
-
-    let modalOpen = false;
+	import { next } from "cheerio/lib/api/traversing";
 
     let formData: TaskItem = {
         id: Math.floor(Math.random()*100000),
@@ -14,9 +13,37 @@
         dateTime: [new Date()],
     };
 
+    function handleTimeChange(event: CustomEvent<KeyboardEvent>) {
+        const target = event.target as HTMLInputElement;
+        const value = target.value;
+        const id = target.id;
+        if (id === "starttime") {
+            if (value == "") {
+                target.value = "00:00";
+                var endTime = document.querySelector("#endtime") as HTMLInputElement;
+                endTime.value = "01:00";
+            } else {
+                const nextHours = String(parseInt(value.split(":")[0]) < 23 ? parseInt(value.split(":")[0]) + 1 : 0);
+                const nextMins = String(parseInt(value.split(":")[1]) < 59 ? parseInt(value.split(":")[1]) : 0);
+                var nextTime = nextHours.length < 2 ? "0" + nextHours : nextHours;
+                nextTime += ":" + (nextMins.length < 2 ? "0" + nextMins : nextMins);
+                var endTime = document.querySelector("#endtime") as HTMLInputElement;
+                endTime.value = nextTime;
+            }
+        } else if (id === "endtime") {
+            if (value == "" || document.querySelector("#starttime")?.value > value) {
+                const nextHours = String(parseInt(document.querySelector("#starttime")?.value.split(":")[0]) < 23 ? parseInt(document.querySelector("#starttime")?.value.split(":")[0]) + 1 : 0);
+                const nextMins = String(parseInt(document.querySelector("#starttime")?.value.split(":")[1]) < 59 ? parseInt(document.querySelector("#starttime")?.value.split(":")[1]) : 0);
+                var nextTime = nextHours.length < 2 ? "0" + nextHours : nextHours;
+                nextTime += ":" + (nextMins.length < 2 ? "0" + nextMins : nextMins);
+                target.value = nextTime;
+            }
+        }
+    }
+
     function onSubmit() {
         formData.title = (document.getElementById("title") as HTMLInputElement)?.value || "New Subject";
-        formData.professor = (document.getElementById("proffesor") as HTMLInputElement)?.value || "Mr Know-it-all";
+        formData.professor = (document.getElementById("professor") as HTMLInputElement)?.value || "Mr Know-it-all";
         formData.classroom = (document.getElementById("classroom") as HTMLInputElement)?.value || "Campus";
 
         $taskStore = [formData, ...$taskStore];
@@ -80,27 +107,25 @@
             spellcheck={false}
         />         
 
-        <ion-list>
-            <ion-row>
-                <ion-col style="padding-top: 0;">
-                    <ion-select label="Day" label-placement="stacked" interface="action-sheet" placeholder="Select day" style="padding:0;">
-                        {#each weekdays as day}
-                            {#each Object.keys(day) as key }
-                                <ion-select-option contextmenu="" >{day[key].en}</ion-select-option>
-                            {/each}
+        <ion-row>
+            <ion-col style="padding-left: 0%;">
+                <ion-select label="Day" label-placement="stacked" interface="action-sheet" placeholder="Select day" style="padding:0;">
+                    {#each weekdays as day}
+                        {#each Object.keys(day) as key }
+                            <ion-select-option contextmenu="" >{day[key].en}</ion-select-option>
                         {/each}
-                    </ion-select>
+                    {/each}
+                </ion-select>
+            </ion-col>
+            <ion-row>
+                <ion-col>
+                    <ion-input label="From" label-placement="stacked" type="time" id="starttime" name="starttime" value="09:00" on:ionInput={handleTimeChange}/>
                 </ion-col>
-                <ion-row>
-                    <ion-col>
-                        <ion-input label="From" label-placement="stacked" type="time" id="starttime" name="starttime" value="09:00"/>
-                    </ion-col>
-                    <ion-col>
-                        <ion-input label="To" label-placement="stacked" type="time" id="endtime" name="endttime" value="10:00" >
-                    </ion-col>
-                </ion-row>
+                <ion-col>
+                    <ion-input label="To" label-placement="stacked" type="time" id="endtime" name="endtime" value="10:00" on:ionInput={handleTimeChange}/>
+                </ion-col>
             </ion-row>
-        </ion-list>
+        </ion-row>
           
         <!-- <ion-row class="ion-align-items-center">
             <ion-col size="3">
