@@ -1,4 +1,4 @@
-name: Node.js Docker Deploy
+name: Node.js Deploy with SSH
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - gui
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,25 +21,25 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build and Dockerize
-        run: |
-          docker build -t studentCompanion-image .
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push your-docker-image-name
-
-      - name: SSH into the server and deploy
+      - name: Deploy via SSH
         uses: appleboy/ssh-action@v2
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT }} # Specify your SSH port if it's not the default (22)
           script: |
-            # Stop and remove previous Docker container
-            docker stop studentCompanion || true
-            docker rm studentCompanion || true
+            # SSH into the server
+            cd studentcomp
 
-            # Pull the latest Docker image
-            docker pull studentCompanion-image
+            # Stop previous application if running
+            pm2 stop studentcompaniongui || true
 
-            # Run the Docker container
-            docker run -d --name studentCompanion -p 5173:5173 studentCompanion-image
+            # Pull the latest changes
+            git pull origin gui
+
+            # Install or update dependencies
+            npm install
+
+            # Start the Node.js application with a process manager like PM2
+            pm2 start index.js --name studentcompaniongui
