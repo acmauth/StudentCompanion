@@ -1,12 +1,20 @@
 <script lang="ts">
 	import * as allIonicIcons from 'ionicons/icons';
+	import { activeTask} from './activeTask';
 	import type { TaskItem } from './TaskItem';
+	import { onMount } from 'svelte';
 	export let task: TaskItem; 
 	export let start: string;
 	export let end: string;
+
+	function setActiveTask() {
+		activeTask.set(task);
+	}
 </script>
 
-<ion-card class="card">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<ion-card href="/schedule/editTask" class="card" on:click={setActiveTask}>
 	<ion-grid>
 		<ion-row class="ion-justify-content-start">
 			<ion-col style="padding: 0%">
