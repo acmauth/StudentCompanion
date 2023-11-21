@@ -9,7 +9,7 @@
     onMount(() => {
 
         // TODO: Sort the $taskStore list for each day each slot by timeStart
-        let store = $taskStore;
+        // let store = $taskStore;
 
         // Enable below to reset taskStore
         // taskStore.set([]);

@@ -114,7 +114,7 @@
             placeholder="Mr Know-it-all"
             label="Professor"
             label-placement="stacked"
-            id="proffesor"
+            id="professor"
             type="text"
             contenteditable="true"
             spellcheck={false}
