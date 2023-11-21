@@ -1,5 +1,5 @@
 import type { Writable } from "svelte/store";
 import type { TaskItem } from "./TaskItem";
-import { persisted } from 'svelte-local-storage-store'
+import { persisted } from 'svelte-persisted-store'
 
-export const taskStore: Writable<TaskItem[]> = persisted("taskItem", []);
+export const taskStore = persisted("taskItem", []);
