@@ -3,7 +3,7 @@ name: Node.js Deploy with SSH
 on:
   push:
     branches:
-      - gui
+      - dev
 
 jobs:
   deploy:
@@ -39,7 +39,8 @@ jobs:
             pm2 stop studentcompaniongui || true
 
             # Pull the latest changes
-            git pull origin gui
+            git checkout dev
+            git pull origin dev
 
             # Install or update dependencies
             npm install
