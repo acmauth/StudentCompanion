@@ -1,39 +1,31 @@
 <script lang="ts">
-    import type { TaskItem } from "$lib/components/schedule/task/TaskItem";
+    import type { TaskItem, TimeSlot } from "$lib/components/schedule/task/TaskItem";
     import { taskStore } from '$lib/components/schedule/task/taskStore';
     import { weekdays } from '$lib/components/schedule/day/days'
     import { goto } from '$app/navigation';
-	import { next } from "cheerio/lib/api/traversing";
-
-    let formData: TaskItem = {
-        id: Math.floor(Math.random()*100000),
-        title: "New subject",
-        professor: "Mr Know-it-all",
-        classroom: "Campus",
-        dateTime: [new Date()],
-    };
 
     function handleTimeChange(event: CustomEvent<KeyboardEvent>) {
         const target = event.target as HTMLInputElement;
         const value = target.value;
-        const id = target.id;
-        if (id === "starttime") {
+        const name = target.name;
+        const id = target.id.split("-")[1];
+        if (name === "starttime") {
             if (value == "") {
                 target.value = "00:00";
-                var endTime = document.querySelector("#endtime") as HTMLInputElement;
+                var endTime = document.querySelector("#endtime-" + id) as HTMLInputElement;
                 endTime.value = "01:00";
             } else {
                 const nextHours = String(parseInt(value.split(":")[0]) < 23 ? parseInt(value.split(":")[0]) + 1 : 0);
                 const nextMins = String(parseInt(value.split(":")[1]) < 59 ? parseInt(value.split(":")[1]) : 0);
                 var nextTime = nextHours.length < 2 ? "0" + nextHours : nextHours;
                 nextTime += ":" + (nextMins.length < 2 ? "0" + nextMins : nextMins);
-                var endTime = document.querySelector("#endtime") as HTMLInputElement;
+                var endTime = document.querySelector("#endtime-" + id) as HTMLInputElement;
                 endTime.value = nextTime;
             }
-        } else if (id === "endtime") {
-            if (value == "" || document.querySelector("#starttime")?.value > value) {
-                const nextHours = String(parseInt(document.querySelector("#starttime")?.value.split(":")[0]) < 23 ? parseInt(document.querySelector("#starttime")?.value.split(":")[0]) + 1 : 0);
-                const nextMins = String(parseInt(document.querySelector("#starttime")?.value.split(":")[1]) < 59 ? parseInt(document.querySelector("#starttime")?.value.split(":")[1]) : 0);
+        } else if (name === "endtime") {
+            if (value == "" || document.querySelector("#starttime-" + id)?.value > value) {
+                const nextHours = String(parseInt(document.querySelector("#starttime-" + id)?.value.split(":")[0]) < 23 ? parseInt(document.querySelector("#starttime-" + id)?.value.split(":")[0]) + 1 : 0);
+                const nextMins = String(parseInt(document.querySelector("#starttime-" + id)?.value.split(":")[1]) < 59 ? parseInt(document.querySelector("#starttime-" + id)?.value.split(":")[1]) : 0);
                 var nextTime = nextHours.length < 2 ? "0" + nextHours : nextHours;
                 nextTime += ":" + (nextMins.length < 2 ? "0" + nextMins : nextMins);
                 target.value = nextTime;
@@ -41,42 +33,63 @@
         }
     }
 
-    function onSubmit() {
-        formData.title = (document.getElementById("title") as HTMLInputElement)?.value || "New Subject";
-        formData.professor = (document.getElementById("professor") as HTMLInputElement)?.value || "Mr Know-it-all";
-        formData.classroom = (document.getElementById("classroom") as HTMLInputElement)?.value || "Campus";
+    let count = 1;
 
-        $taskStore = [formData, ...$taskStore];
+    function handleDaySelection(event: CustomEvent<KeyboardEvent>) {
+        if (event.target.value != null && event.target.value != "")
+            count++;
+    }
+
+    function clearDaySelection(event: CustomEvent<KeyboardEvent>) {
+        if (!(count > 1 && event.target.value == ""))
+            count--;
+        event.target.value = "";
+    }
+
+    function onCancel() {
         goto('/schedule');
     }
 
-    interface DayTime {
-        [key: string]: string;
-    }
+    function onSubmit() {
+        let formData: TaskItem = {
+            id: new Date().getTime(),
+            title: (document.getElementById("title") as HTMLInputElement)?.value || "New Subject",
+            professor: (document.getElementById("professor") as HTMLInputElement)?.value || "Mr Know-it-all",
+            classroom: (document.getElementById("classroom") as HTMLInputElement)?.value || "Campus",
+            slots: new Array<TimeSlot>()
+        };
 
-    let dayAndTimes :DayTime[] = []; 
-    let currentDay = '';
-    let currentTime = '';
+        const days = document.querySelectorAll("ion-select");
+        if (days.length > 1) {
+            for (let i = 0; i < days.length - 1 ; i++) {
+                const day = days[i] as HTMLIonSelectElement;
+                if (day.value != null && day.value != "") {
+                    const startTime = (document.getElementById("starttime-" + i) as HTMLInputElement)?.value || "00:00";
+                    const endTime = (document.getElementById("endtime-" + i) as HTMLInputElement)?.value || "01:00";
+                    formData.slots.push({
+                        day: day.value,
+                        timeStart: startTime,
+                        timeEnd: endTime
+                    });
+                }
+            }
 
-    const addDayAndTime = () => {
-    if (currentDay && currentTime) {
-        dayAndTimes = [...dayAndTimes, { day: currentDay, time: currentTime }];
-        currentDay = '';
-        currentTime = '';
+            $taskStore = $taskStore.concat(formData);
         }
-    };
+
+        goto('/schedule');
+    }
 </script>
 
 <ion-header>
     <ion-toolbar>
-        <ion-title>Create a lecture</ion-title>
+        <ion-title>Create a new task</ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <form on:submit|preventDefault={onSubmit}>
-
         <ion-input			
             placeholder="Coolness 101"
             label="Title"
@@ -107,92 +120,52 @@
             spellcheck={false}
         />         
 
-        <ion-row>
-            <ion-col style="padding-left: 0%;">
-                <ion-select label="Day" label-placement="stacked" interface="action-sheet" placeholder="Select day" style="padding:0;">
-                    {#each weekdays as day}
-                        {#each Object.keys(day) as key }
-                            <ion-select-option contextmenu="" >{day[key].en}</ion-select-option>
-                        {/each}
-                    {/each}
-                </ion-select>
-            </ion-col>
+
+        {#each {length: count} as _, i}
             <ion-row>
-                <ion-col>
-                    <ion-input label="From" label-placement="stacked" type="time" id="starttime" name="starttime" value="09:00" on:ionInput={handleTimeChange}/>
-                </ion-col>
-                <ion-col>
-                    <ion-input label="To" label-placement="stacked" type="time" id="endtime" name="endtime" value="10:00" on:ionInput={handleTimeChange}/>
-                </ion-col>
-            </ion-row>
-        </ion-row>
-          
-        <!-- <ion-row class="ion-align-items-center">
-            <ion-col size="3">
-                <ion-label>Day:</ion-label>
-            </ion-col>
-            <ion-col size="9">
-                <ion-select placeholder="Select day">
-                    {#each weekdays as day}
-                        {#each Object.keys(day) as key }
-                            <ion-select-option value={key.charAt(0).toUpperCase() + key.slice(1)}>{key.charAt(0).toUpperCase() + key.slice(1)}</ion-select-option>
-                        {/each}
-                    {/each}
-                </ion-select>
-            </ion-col>
-        </ion-row> -->
-
-        <!-- Add more rows for additional fields if needed -->
-
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- <ion-button expand="full" on:click={addDayAndTime}>Add Day and Time</ion-button> -->
-
-        <!-- {#if dayAndTimes.length > 0}
-            <ion-row class="ion-align-items-center">
-                <ion-col size="3">
-                    <ion-label>Day:</ion-label>
-                </ion-col>
-                <ion-col size="9">
-                    <select placeholder="Select day" bind:value={currentDay}>
+                <ion-col style="padding-left: 0%; padding-top: 0%">
+                    <ion-select label="Day" 
+                                label-placement="stacked" 
+                                interface="action-sheet" 
+                                on:ionCancel={clearDaySelection} 
+                                placeholder="Select day" 
+                                on:ionChange={handleDaySelection} 
+                                style="padding:0;">
                         {#each weekdays as day}
                             {#each Object.keys(day) as key }
-                                <ion-select-option value={key.charAt(0).toUpperCase() + key.slice(1)}>{key.charAt(0).toUpperCase() + key.slice(1)}</ion-select-option>
+                                <ion-select-option id={key} contextmenu="">{day[key].en}</ion-select-option>
                             {/each}
                         {/each}
-                    </select>
+                    </ion-select>
                 </ion-col>
+                <ion-row>
+                    <ion-col>
+                        <ion-input label="From" 
+                                    label-placement="stacked" 
+                                    type="time" 
+                                    id="starttime-{i}" 
+                                    name="starttime" 
+                                    value="09:00" 
+                                    on:ionInput={handleTimeChange}
+                                    disabled={!(i + 1 < count)}/>
+                    </ion-col>
+                    <ion-col>
+                        <ion-input label="To" 
+                                    label-placement="stacked" 
+                                    type="time" 
+                                    id="endtime-{i}" 
+                                    name="endtime" 
+                                    value="10:00" 
+                                    on:ionInput={handleTimeChange}
+                                    disabled={!(i + 1 < count)}/>
+                    </ion-col>
+                </ion-row>
             </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                <ion-col size="3">
-                    <ion-label>Time:</ion-label>
-                </ion-col>
-                <ion-col size="9">
-                    <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" />
-                </ion-col>
-            </ion-row>
-        {/if} -->
-
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- <ion-button expand="full" type="submit" on:click={onSubmit}>Create</ion-button> -->
+        {/each}
+            
+        <div style="display: flex; justify-content: space-between; padding-top: 5%">
+            <ion-button type="reset" on:ionFocus={onCancel}>Cancel</ion-button>
+            <ion-button type="button" on:ionFocus={onSubmit}>Create</ion-button>
+        </div>
     </form>
 </ion-content>
-
-<style>
-  
-    /* Optional: Adjust styling for better alignment */
-    ion-item {
-        margin-right: 16px; /* Add margin for spacing */
-    }
-  
-    input {
-        align-self: center;
-        height: 100%;
-        border: none; /* Remove the border */
-        outline: none; /* Remove the outline on focus (optional) */
-    }
-  
-    ion-input[type="time"]::-webkit-picker-indicator {
-                display: none;
-    }
-</style>

@@ -4,14 +4,14 @@ type DayCodes = {
     [key: number]: string;
 };
 
-const dayCodes: DayCodes = {
+export const dayCodes: DayCodes = {
     1: "mon",
     2: "tue",
     3: "wed",
     4: "thu",
     5: "fri",
     6: "sat",
-    7: "sun"
+    0: "sun"
 };
 
 export const activeDay = writable(dayCodes[new Date().getDay()]);

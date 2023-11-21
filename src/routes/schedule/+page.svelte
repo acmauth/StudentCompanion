@@ -1,57 +1,49 @@
 <script lang="ts">
 	import Days from '$lib/components/schedule/day/dayList.svelte';
     import * as allIonicIcons from 'ionicons/icons';
+    import {taskStore} from '$lib/components/schedule/task/taskStore';
+    import {activeDay} from '$lib/components/schedule/day/activeDay';
+	import { onMount } from 'svelte';
+	import TaskCard from '$lib/components/schedule/task/taskCard.svelte';
+
+    onMount(() => {
+
+        // TODO: Sort the $taskStore list for each day each slot by timeStart
+        let store = $taskStore;
+
+        // Enable below to reset taskStore
+        // taskStore.set([]);
+        // $taskStore.forEach((task) => {console.log(task)})
+    });
 
 </script>
 
-
 <ion-page class="card-container">
+    <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+        <ion-fab-button href="/schedule/addTask" color="add">
+            <ion-icon icon={allIonicIcons.add} />
+        </ion-fab-button>
+    </ion-fab>
+    
     <ion-grid>
         <ion-row>
-    <Days />
-</ion-row>
-<ion-grid>
-    <ion-card href="/" class="ion-padding">
-        <ion-grid class="card">
-            <ion-row>
-                <!-- <ion-col>
-                    <p>{subject.time.getHours()}</p>
-                </ion-col>
-                <ion-col>
-                    <h2>{subject.title}</h2>
-                    <p>{subject.classroom}</p>
-                    <p>{subject.professor}</p> -->
-                <!-- </ion-col> -->
-            </ion-row>
-        </ion-grid>
-    </ion-card>
-</ion-grid>
-</ion-grid>
+            <Days />
+        </ion-row>
+        
+        {#each $taskStore as task}
+            {#each task.slots as slot}
+                {#if slot.day.toLowerCase().startsWith($activeDay)}
+                    <TaskCard task={task} start={slot.timeStart} end={slot.timeEnd}/>
+                {/if}
+            {/each}
+        {/each}
+        
+    </ion-grid>
 </ion-page>
 
 <style>
     .card-container {
         display: flex;
         justify-content: center;
-    }
-    .card {
-        display: flex;
-        align-items: center;
-        justify-content: start;
-        padding: 0 1rem;
-    }
-
-    ion-card {
-        transition: all ease-in-out 0.2s;
-    }
-
-    ion-card:active {
-        transform: scale(0.95);
-    }
-
-    .icons {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
     }
 </style>
