@@ -38,7 +38,6 @@
 	<ion-button href="/schedule">Schedule</ion-button>
 </ion-card>
 
-</ion-page>
 
 	<ion-card>
 		<ion-card-header>
