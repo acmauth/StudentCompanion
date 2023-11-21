@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from "svelte";
-    import {activeDay, getToday} from "./activeDay"; 
-    import DayCard from "./dayTitle.svelte";
+    import {activeDay, getToday} from "./activeDay";
+    import DayCard from "./dayCard.svelte";
     import { weekdays } from "./days";
     import * as allIonicIcons from 'ionicons/icons';
 

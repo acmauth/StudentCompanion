@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { onMount } from "svelte";
 	import {activeDay} from "./activeDay";
 	import * as allIonicIcons from 'ionicons/icons';
-	import { toLower } from "ionicons/dist/types/components/icon/utils";
 	export let day: string;
 
 	function setActiveDay(event: Event) {
@@ -33,9 +31,9 @@
 <ion-grid id="{day.toLowerCase()}" on:click={setActiveDay}>
 	<ion-row class="ion-align-items-center ion-justify-content-center" style="padding: 3%; font-size: 200%">
 		{#if $activeDay == day.toLowerCase() || day.toLowerCase() == "mon" && ($activeDay == "sat" || $activeDay == "sun") }
-			<ion-icon id="icon" icon={allIonicIcons.ellipse}/>
+			<ion-icon id="icon" icon={allIonicIcons.ellipse} color="primary"/>
 		{:else}
-			<ion-icon id="icon" icon={allIonicIcons.ellipseOutline}/>
+			<ion-icon id="icon" icon={allIonicIcons.ellipseOutline} color="primary"/>
 		{/if}
 	</ion-row >
 	<ion-row class="ion-align-items-center ion-justify-content-center">
