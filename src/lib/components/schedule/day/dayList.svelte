@@ -33,7 +33,7 @@
         justify-content: space-evenly;
         width: 100%;
         padding-inline: 5%;
-        padding-top: 3%;
+        padding-top: 0%;
     }
 </style>
 

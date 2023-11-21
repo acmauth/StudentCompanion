@@ -90,7 +90,7 @@
 <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <form on:submit|preventDefault={onSubmit}>
-        <ion-input			
+        <ion-input
             placeholder="Coolness 101"
             label="Title"
             label-placement="stacked"
@@ -98,9 +98,9 @@
             type="text"
             contenteditable="true"
             spellcheck={true}
-        />                    
+        />
 
-        <ion-input			
+        <ion-input
             placeholder="Hogwarts campus"
             label="Classroom"
             label-placement="stacked"
@@ -108,9 +108,9 @@
             type="text"
             contenteditable="true"
             spellcheck={true}
-        />         
+        />
 
-        <ion-input			
+        <ion-input
             placeholder="Mr Know-it-all"
             label="Professor"
             label-placement="stacked"
@@ -118,18 +118,18 @@
             type="text"
             contenteditable="true"
             spellcheck={false}
-        />         
+        />
 
 
         {#each {length: count} as _, i}
             <ion-row>
                 <ion-col style="padding-left: 0%; padding-top: 0%">
-                    <ion-select label="Day" 
-                                label-placement="stacked" 
-                                interface="action-sheet" 
-                                on:ionCancel={clearDaySelection} 
-                                placeholder="Select day" 
-                                on:ionChange={handleDaySelection} 
+                    <ion-select label="Day"
+                                label-placement="stacked"
+                                interface="action-sheet"
+                                on:ionCancel={clearDaySelection}
+                                placeholder="Select day"
+                                on:ionChange={handleDaySelection}
                                 style="padding:0;">
                         {#each weekdays as day}
                             {#each Object.keys(day) as key }
@@ -140,29 +140,29 @@
                 </ion-col>
                 <ion-row>
                     <ion-col>
-                        <ion-input label="From" 
-                                    label-placement="stacked" 
-                                    type="time" 
-                                    id="starttime-{i}" 
-                                    name="starttime" 
-                                    value="09:00" 
+                        <ion-input label="From"
+                                    label-placement="stacked"
+                                    type="time"
+                                    id="starttime-{i}"
+                                    name="starttime"
+                                    value="09:00"
                                     on:ionInput={handleTimeChange}
                                     disabled={!(i + 1 < count)}/>
                     </ion-col>
                     <ion-col>
-                        <ion-input label="To" 
-                                    label-placement="stacked" 
-                                    type="time" 
-                                    id="endtime-{i}" 
-                                    name="endtime" 
-                                    value="10:00" 
+                        <ion-input label="To"
+                                    label-placement="stacked"
+                                    type="time"
+                                    id="endtime-{i}"
+                                    name="endtime"
+                                    value="10:00"
                                     on:ionInput={handleTimeChange}
                                     disabled={!(i + 1 < count)}/>
                     </ion-col>
                 </ion-row>
             </ion-row>
         {/each}
-            
+
         <div style="display: flex; justify-content: space-between; padding-top: 5%">
             <ion-button type="reset" on:ionFocus={onCancel}>Cancel</ion-button>
             <ion-button type="button" on:ionFocus={onSubmit}>Create</ion-button>

@@ -3,7 +3,7 @@
 	import { activeTask} from './activeTask';
 	import type { TaskItem } from './TaskItem';
 	import { onMount } from 'svelte';
-	export let task: TaskItem; 
+	export let task: TaskItem;
 	export let start: string;
 	export let end: string;
 
@@ -20,7 +20,7 @@
 			<ion-col style="padding: 0%">
 				<ion-card-header>
 					<ion-card-subtitle>{start + " - " + end}</ion-card-subtitle>
-					<ion-card-title>{task.title}</ion-card-title>
+					<ion-card-title color="primary">{task.title}</ion-card-title>
 
 					<div class="icons">
 						<ion-icon icon={allIonicIcons.personOutline} />

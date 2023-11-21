@@ -18,19 +18,21 @@
 
 </script>
 
-<ion-page class="card-container" style="overflow-y: auto;">
-    <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+<ion-page style="overflow-y: auto;">
+    <ion-fab horizontal="end" vertical="bottom">
         <ion-fab-button href="/schedule/addTask" color="add">
             <ion-icon icon={allIonicIcons.add} />
         </ion-fab-button>
     </ion-fab>
-    <ion-grid style="height: 100%">
+
+    <ion-grid style="padding: 0%">
         <ion-header>
             <ion-toolbar>
-              <ion-title>Schedule</ion-title>
+                <ion-title>Schedule</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-row style="position:sticky">
+
+        <ion-row style="position:sticky;">
             <Days />
         </ion-row>
         {#each $taskStore as task}
@@ -41,12 +43,4 @@
             {/each}
         {/each}
     </ion-grid>
-
 </ion-page>
-
-<style>
-    .card-container {
-        display: flex;
-        justify-content: center;
-    }
-</style>
