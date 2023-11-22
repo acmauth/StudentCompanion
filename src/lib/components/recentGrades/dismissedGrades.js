@@ -1,4 +1,4 @@
 import { persisted } from 'svelte-persisted-store'
 
-// Store for the user's credentials
+// Store for the recent grades that the user has already seen
 export const dismissedGrades = persisted('dismissedGrades', [])

@@ -43,16 +43,19 @@
         }
 
         //for loop
-        console.log(recentGrades);
+        
         
     });
-
+    // remove course from recent grades when close button is pressed
+    const deleteCard = (id) => {
+        const examId = id.detail;
+        recentGrades = recentGrades.filter((course) => course.courseExam.id !== examId);
+    }
 </script>
 
 
 {#each recentGrades as recentGrade } 
 
-    <p>hello</p>
-    <GradeCard subject = {recentGrade}/>
+    <GradeCard subject = {recentGrade} on:delete-card={deleteCard}/>
 
 {/each}
