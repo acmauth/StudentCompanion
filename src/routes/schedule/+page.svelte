@@ -4,7 +4,7 @@
     import { taskStore } from '$lib/components/schedule/task/taskStore';
     import { activeDay } from '$lib/components/schedule/day/activeDay';
 	import TaskCard from '$lib/components/schedule/task/taskCard.svelte';
-
+    import type { TaskItem } from '$lib/components/schedule/task/TaskItem';
     // taskStore.set([]);
 
     $: currentTasks = $taskStore.filter((task) => {
@@ -15,10 +15,39 @@
         }).length > 0) {
             return task;
         }
-    }).flatMap((task) => {return task.slots.forEach(element => {
-            return {tile: task.title, timeStart: element.timeStart, timeEnd: element.timeEnd};
+    })
+    .flatMap((task) => {
+        return {
+            task: task,
+            slots: task.slots.filter((slot) => {
+                if (slot.day.toLowerCase().startsWith($activeDay)) {
+                    return slot;
+                }
+            })   
+        };
+    })
+    .flatMap((task) => {
+        let occurences: Array<{task: TaskItem, slot: any }> = [];
+        task.slots.forEach((slot) => {
+            occurences.push({
+                task: task.task,
+                slot: slot
             });
         });
+        return occurences;
+    })
+    .sort((a,b) => {
+        let aTime = new Date("1970-01-01T" + a.slot.timeStart);
+        let bTime = new Date("1970-01-01T" + b.slot.timeStart);
+        return aTime < bTime ? -1 : aTime > bTime ? 1 : 0;
+    }).map((task) => {
+        return {
+            taskItem: task.task,
+            start: task.slot.timeStart,
+            end: task.slot.timeEnd
+        };
+    });
+
 </script>
 
 <ion-page style="overflow-y: auto;">
@@ -39,8 +68,9 @@
             <Days />
         </ion-row>
 
-        {#each currentTasks as task1}
-            <TaskCard task={task.title} start={slot.timeStart} end={slot.timeEnd}/>
+        {#each currentTasks as task}
+            <TaskCard task={task.taskItem} start={task.start} end={task.end}/>
         {/each}
+        
     </ion-grid>
 </ion-page>
