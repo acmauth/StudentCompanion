@@ -3,53 +3,22 @@
     import * as allIonicIcons from 'ionicons/icons';
     import { taskStore } from '$lib/components/schedule/task/taskStore';
     import { activeDay } from '$lib/components/schedule/day/activeDay';
-	import { onMount } from 'svelte';
 	import TaskCard from '$lib/components/schedule/task/taskCard.svelte';
-	import type { TaskItem } from '$lib/components/schedule/task/TaskItem';
-	import { getDayIndex, weekdays } from '$lib/components/schedule/day/days';
 
-    export     let weeklyTaskList = new Array<TaskItem[]>();
+    // taskStore.set([]);
 
-    onMount(() => {
-            
-        // $taskStore = new Array<TaskItem>();     
-        if($taskStore?.length == 0) {
-            $taskStore = new Array<TaskItem>();     
-        } else {
-            let dayList = weekdays;
-            for (let i = 0; i < dayList.length; i++) {
-                let dayTasks = new Array<TaskItem>();
-                $taskStore.filter((task) => {
-                    if (task.slots.filter((slot) => {
-                        if (slot.day.toLowerCase().startsWith(Object.keys(dayList[i])[0])) {
-                            return slot;
-                        }
-                    }).length > 0) {
-                        dayTasks.push(task);
-                    }
-                });
-                weeklyTaskList.push(dayTasks);
+    $: currentTasks = $taskStore.filter((task) => {
+        if (task.slots.filter((slot) => {
+            if (slot.day.toLowerCase().startsWith($activeDay)) {
+                return slot;
             }
-
-            for (let  i = 0; i < weeklyTaskList.length ; i++) {
-                weeklyTaskList[i].sort((a,b) => {
-                    let aTime = new Date("1970-01-01T" + a.slots.filter((slot) => {
-                        if (slot.day.toLowerCase().startsWith(Object.keys(dayList[i])[0])) {
-                            return slot;
-                        }
-                    })[0].timeStart);
-                    let bTime = new Date("1970-01-01T" + b.slots.filter((slot) => {
-                        if (slot.day.toLowerCase().startsWith(Object.keys(dayList[i])[0])) {
-                            return slot;
-                        }
-                    })[0].timeStart);
-                    return aTime < bTime ? -1 : aTime > bTime ? 1 : 0;
-                });
-            }            
+        }).length > 0) {
+            return task;
         }
-        console.log(weeklyTaskList);
-    });
-
+    }).flatMap((task) => {return task.slots.forEach(element => {
+            return {tile: task.title, timeStart: element.timeStart, timeEnd: element.timeEnd};
+            });
+        });
 </script>
 
 <ion-page style="overflow-y: auto;">
@@ -70,12 +39,8 @@
             <Days />
         </ion-row>
 
-        {#each weeklyTaskList[getDayIndex($activeDay)] as task}
-                {#each task.slots as slot}
-                    {#if slot.day.toLowerCase().startsWith($activeDay)}
-                        <TaskCard task={task} start={slot.timeStart} end={slot.timeEnd}/>
-                    {/if}
-                {/each}
+        {#each currentTasks as task1}
+            <TaskCard task={task.title} start={slot.timeStart} end={slot.timeEnd}/>
         {/each}
     </ion-grid>
 </ion-page>
