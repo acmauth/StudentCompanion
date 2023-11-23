@@ -52,7 +52,7 @@
 
 <ion-page style="overflow-y: auto;">
     <ion-fab horizontal="end" vertical="bottom">
-        <ion-fab-button href="/schedule/addTask" color="add">
+        <ion-fab-button href="/schedule/addTask" color="primary">
             <ion-icon icon={allIonicIcons.add} />
         </ion-fab-button>
     </ion-fab>
@@ -71,6 +71,6 @@
         {#each currentTasks as task}
             <TaskCard task={task.taskItem} start={task.start} end={task.end}/>
         {/each}
-        
+
     </ion-grid>
 </ion-page>
