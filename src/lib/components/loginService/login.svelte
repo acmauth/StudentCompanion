@@ -3,12 +3,8 @@
     import { userCreds } from "$lib/authentication/authStore";
     import { goto } from '$app/navigation';
     import {validateAuth, invalidateAuth} from "$lib/authentication/authValidator";
-	import { IonButton } from "@ionic/core/components/ion-button";
-    import { IonInput } from "@ionic/core/components/ion-input"
-    import { IonLabel } from "@ionic/core/components/ion-label";
-	import IonNav from "ionic-svelte/components/IonNav.svelte";
 	import IonPage from "ionic-svelte/components/IonPage.svelte";
-	import { Icon } from "ionicons/dist/types/components/icon/icon";
+    import * as allIonicIcons from 'ionicons/icons';
  
    
     // This is a simple login page that gets a user token and stores it in the browser.
@@ -63,18 +59,16 @@
 </script>
 
 <IonPage>
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px;">
-        
-        <ion-input id='usernameInput' class="custom" placeholder="Username" fill="outline" style="margin-bottom: 20px;"></ion-input>
-        <ion-input id='passwordInput' class="custom" type="password" placeholder="Password" fill="outline" style="margin-bottom: 40px;"></ion-input>
-      
+    <div style="position: relative; width: 100%; height: 50%;">
+        <img src="src/lib/components/loginService/Vector.svg" alt="Vector Icon" style="position: absolute; width: 100rem; height:75%">
+        <img src="src/lib/components/loginService/Vector(1).svg" alt="Overlay Icon" style="width: 100rem; height:95%">
+    </div>
 
-        <ion-button on:click={submit}>Log In</ion-button>
-        <ion-button on:click={logOut}>Log Out</ion-button>
-
-            
-       
-
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: top; height: 80%; padding-top: 2px; padding-right:20px; padding-left:20px;">
+        <ion-input id='usernameInput' class="custom" placeholder="Username" fill="outline" style="margin-bottom: 10px;"></ion-input> 
+        <ion-input id='passwordInput' class="custom" type="password" placeholder="Password" fill="outline" style="margin-bottom: 25px;"></ion-input>
+        <ion-button class="custom" on:click={submit}>Log In</ion-button>
+        <ion-button class="custom" on:click={logOut}>Log Out</ion-button>
     </div>
 </IonPage>
   
@@ -85,16 +79,16 @@
       --placeholder-color: #98BDD6;
       --placeholder-opacity: 0.8;
       --border-color: #98BDD6;
-      --border-radius: 10px;
-      --border-width: 2px;
+      --border-radius: 1rem; /* Adjust as needed */
+      --border-width: 1.7px;
+      width: 80%;
     }
 
-    ion-button {
+    ion-button.custom {
         --background: #55BBFF;
         --color: #fff;
-        --border-radius: 30px;
-        width: 100%; 
-        height: 6%
+        --border-radius: 2.5rem; /* Adjust as needed */
+        width: 80%; 
+        height: 3.5rem; /* Adjust as needed */
     }
-
-  </style>
+</style>
