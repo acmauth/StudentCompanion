@@ -5,7 +5,8 @@
     import { goto } from '$app/navigation';
     import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDataService";
     import { IonButton } from "@ionic/core/components/ion-button";
-    import { getUniversisToken, getElearningToken} from "./helpers.ts"
+    import { getUniversisToken, getElearningToken} from "./helpers"
+    import { invalidateAuth } from "$lib/authentication/authValidator";
 
     let username = '';
     let password = '';
