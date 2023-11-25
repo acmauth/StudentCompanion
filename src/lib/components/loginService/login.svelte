@@ -60,8 +60,8 @@
 
 <IonPage>
     <div style="position: relative; width: 100%; height: 50%;">
-        <img src="src/lib/components/loginService/Vector.svg" alt="Vector Icon" style="position: absolute; width: 100rem; height:75%">
-        <img src="src/lib/components/loginService/Vector(1).svg" alt="Overlay Icon" style="width: 100rem; height:95%">
+        <img src="src/lib/components/loginService/Vector.svg" alt="Vector Icon" style="position: absolute; width: 100%; height:75%">
+        <img src="src/lib/components/loginService/Vector(1).svg" alt="Overlay Icon" style="width: 100%; height:95%">
     </div>
 
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: top; height: 80%; padding-top: 2px; padding-right:20px; padding-left:20px;">
