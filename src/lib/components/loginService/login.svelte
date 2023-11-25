@@ -1,55 +1,26 @@
 <script lang='ts'>
-    import { tokenGrab } from "$lib/authentication/tokenGeneratorWorker"
-    import { userCreds } from "$lib/authentication/authStore";
+    import { tokenGrab } from "$lib/universisAuthentication/tokenGeneratorWorker"
+    import { userCreds, userTokens } from "$stores/credentials.store";
+    import userInfoStore from "$stores/userinfo.store";
     import { goto } from '$app/navigation';
-    import {validateAuth, invalidateAuth} from "$lib/authentication/authValidator";
-	import IonPage from "ionic-svelte/components/IonPage.svelte";
-    import * as allIonicIcons from 'ionicons/icons';
- 
-   
-    // This is a simple login page that gets a user token and stores it in the browser.
+    import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDataService";
+    import { IonButton } from "@ionic/core/components/ion-button";
+    import { getUniversisToken, getElearningToken} from "./helpers"
+    import { invalidateAuth } from "$lib/authentication/authValidator";
 
-    // export const load: PageLoad = ({ params }) => {
-	// return {
-	// 	post: {
-	// 		title: `Title for ${params.slug} goes here`,
-	// 		content: `Content for ${params.slug} goes here`,
-	// 	    },
-	//     };
-    // };
-
-    var username ;
-    var password ;
+    let username = '';
+    let password = '';
     let outputMessage = ''
-    
-    async function submit(){
-        // Using the username and password, we're calling the tokenGrab function to get an authentication token.
-        
-        // URL-encode the password
-        username = document.getElementById('usernameInput');
-        password = document.getElementById('passwordInput');
-        
-            var username = username.value;
-            var password = password.value;
-            console.log(username)
-            const encodedPassword = encodeURIComponent(password);
 
-            const response = await tokenGrab(username, encodedPassword);
-            if (response.error){
-                outputMessage = response.error;
-            }
-            else {
-                userCreds.set({
-                    username: username,
-                    password: password,
-                    token: response.token
-                });
-                goto("/");
-                outputMessage = "Login successful!"
-            
-            }
-    }
+    async function submit(){
+
+        let universisOutput = await getUniversisToken(username, password);
+        let elearningOutput = await getElearningToken(username, password);
         
+        outputMessage = universisOutput + " " + elearningOutput;
+        goto("/");
+
+    }
 
     function logOut(){
         invalidateAuth();
