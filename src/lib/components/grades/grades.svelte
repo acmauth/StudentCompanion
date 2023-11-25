@@ -22,7 +22,6 @@
 			return acc;
 		}, {});
 
-		
 	});
 
 	// Filter the results based on the searchQuery
@@ -35,7 +34,7 @@
 
 			for (let semesterId in courseBySemester) {
 				filteredSubjects[semesterId] = courseBySemester[semesterId].filter((course) =>
-					course.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) || course.course.toLowerCase().includes(searchQuery.toLowerCase())
+              course.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) || course.course.toLowerCase().includes(searchQuery.toLowerCase())
 				);
 			}
 		}

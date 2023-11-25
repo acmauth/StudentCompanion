@@ -1,6 +1,6 @@
 <script>
 	import Grades from '$lib/components/grades/grades.svelte';
-	// @ts-ignore
+  	// @ts-ignore
 	import * as allIonicIcons from 'ionicons/icons';
 	// @ts-ignore
 	import  courseBySemester  from '$lib/components/grades/grades.svelte';
@@ -21,6 +21,7 @@
 		searchQuery = event.target.value;
 	}
 
+
 	onMount(async () => {
 		subjects = (await universisGet('students/me/courses?$top=-1')).value;
 		// @ts-ignore
@@ -33,12 +34,12 @@
 	});
 
 
+
 </script>
 
 
 
 <ion-page style="overflow-y: auto;">
-
 	<ion-nav-title>
 		<ion-item-divider sticky>
 			<ion-searchbar on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
@@ -46,13 +47,8 @@
 </ion-nav-title>
 
 	<Stats subjects={subjects} passedSubjects={passedSubjects} />
-
-
-
-  
   
 		<Grades searchQuery = {searchQuery}  />
   
 
 </ion-page>
-
