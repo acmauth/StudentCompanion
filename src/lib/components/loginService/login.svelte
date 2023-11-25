@@ -29,7 +29,6 @@
 
 </script>
 
-<IonPage>
     <div style="position: relative; width: 100%; height: 50%;">
         <img src="src/lib/components/loginService/Vector.svg" alt="Vector Icon" style="position: absolute; width: 100%; height:75%">
         <img src="src/lib/components/loginService/Vector(1).svg" alt="Overlay Icon" style="width: 100%; height:95%">
@@ -41,7 +40,6 @@
         <ion-button class="custom" on:click={submit}>Log In</ion-button>
         <ion-button class="custom" on:click={logOut}>Log Out</ion-button>
     </div>
-</IonPage>
   
 <style>
     ion-input.custom {

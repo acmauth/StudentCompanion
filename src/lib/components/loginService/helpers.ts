@@ -1,6 +1,6 @@
 import { tokenGrab } from "$lib/universisAuthentication/tokenGeneratorWorker"
-import { userCreds, userTokens } from "../../stores/credentials.store";
-import userInfoStore from "../../stores/userinfo.store";
+import { userCreds, userTokens } from "$stores/credentials.store";
+import userInfoStore from "$stores/userinfo.store";
 import { goto } from '$app/navigation';
 import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDataService";
 
