@@ -10,7 +10,7 @@
 
 <ion-card>
 	<ion-card-header>
-		<ion-card-title>{semesterId}ο Εξάμηνο</ion-card-title>
+		<ion-card-title><b>{semesterId}ο Εξάμηνο</b></ion-card-title>
 		<ion-card-subtitle>Μ.Ο Εξαμήνου: placeholder</ion-card-subtitle>
 	</ion-card-header>
 
