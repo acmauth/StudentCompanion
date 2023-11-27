@@ -18,6 +18,8 @@ const config = {
 			alias: {
 				$stores: "src/stores",
 				$components: "src/lib/components",
+				$images: "src/lib/static/images",
+				$types: "src/lib/types",
 			},
 	}
 };
