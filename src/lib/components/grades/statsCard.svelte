@@ -26,7 +26,6 @@ onMount(() => {
       labels: semesters,
       datasets: [
         {
-          label: "Μ.Ο ανά εξάμηνο",
           data: averageGrades,
           backgroundColor: "#3880ff",
           borderColor: "#3880ff",
@@ -79,10 +78,9 @@ onMount(() => {
 			<h2>Περασμένα μαθήματα</h2>
 		</ion-card-subtitle>
 	</ion-card-header>
+	<ion-card-content>
 	{#if !subjects}
-		<ion-card-content>
 			Loading...
-		</ion-card-content>
 	{:else}
 		<circle-progress max={subjects} value={passedSubjects} ></circle-progress>
 	{/if}
