@@ -21,7 +21,11 @@ const config = {
 				$images: "src/lib/static/images",
 				$types: "src/lib/types",
 			},
+csrf: {
+      checkOrigin: false,
+    }
 	}
+
 };
 
 export default config;
