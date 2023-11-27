@@ -14,6 +14,9 @@
 
     async function submit(){
 
+        username = (document.getElementById('usernameInput') as HTMLInputElement).value;
+        password = (document.getElementById('passwordInput') as HTMLInputElement)?.value;
+
         let universisOutput = await getUniversisToken(username, password);
         let elearningOutput = await getElearningToken(username, password);
         
@@ -37,8 +40,8 @@
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: top; height: 80%; padding-top: 2px; padding-right:20px; padding-left:20px;">
         <ion-input id='usernameInput' class="custom" placeholder="Username" fill="outline" style="margin-bottom: 10px;"></ion-input> 
         <ion-input id='passwordInput' class="custom" type="password" placeholder="Password" fill="outline" style="margin-bottom: 25px;"></ion-input>
-        <ion-button class="custom" on:click={submit}>Log In</ion-button>
-        <ion-button class="custom" on:click={logOut}>Log Out</ion-button>
+        <ion-button class="custom" on:click={submit} aria-hidden>Log In</ion-button>
+        <ion-button class="custom" on:click={logOut} aria-hidden>Log Out</ion-button>
     </div>
   
 <style>
