@@ -5,7 +5,11 @@
     import { activeDay } from '$lib/components/schedule/day/activeDay';
 	import TaskCard from '$lib/components/schedule/task/taskCard.svelte';
 	import IonNav from 'ionic-svelte/components/IonNav.svelte';
-
+    import type { TaskItem } from '$lib/components/schedule/task/TaskItem';
+    
+    // Uncomment the following to reset the task store.
+    // taskStore.set([]);
+    
     onMount(() => {
 
         // TODO: Sort the $taskStore list for each day each slot by timeStart
