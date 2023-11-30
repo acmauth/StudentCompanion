@@ -1,7 +1,6 @@
 <script lang="ts">
 	import * as allIonicIcons from 'ionicons/icons';
 	import type { course } from './courseType';  
-  export let subject: any = {};
 	export let filteredSubjects: any = {};
 	export let semesterId: any = {};
 	
@@ -10,7 +9,7 @@
 
 <ion-card>
 	<ion-card-header>
-		<ion-card-title>{semesterId}ο Εξάμηνο</ion-card-title>
+  <ion-card-title><b>{semesterId}ο Εξάμηνο</b></ion-card-title>
 		<ion-card-subtitle>Μ.Ο Εξαμήνου: placeholder</ion-card-subtitle>
 	</ion-card-header>
 
@@ -19,7 +18,7 @@
 			{#each filteredSubjects[semesterId] as course}
 				<div class="courseDetails">
 					<ion-label class="ion-padding-start">{course.course}</ion-label>
-					<ion-item href="/">
+					<ion-item href={`/courses/${course.course}`}>
 						<ion-label class="ion-text-wrap">{course.courseTitle}</ion-label>
 						{#if course.grade !== null}
 							{#if course.grade * 10 >= 5}
