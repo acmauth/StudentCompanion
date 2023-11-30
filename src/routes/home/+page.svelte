@@ -1,4 +1,5 @@
 <ion-page style="overflow-y: auto;">
+<ion-tab tab="home">
 	<ion-card>
 		<ion-card-header>
 			<ion-card-subtitle>Student companion (test) homepage</ion-card-subtitle>
@@ -25,8 +26,8 @@
 </ion-card>
 
 <ion-card>
+
 	<ion-button href="/schedule">Schedule</ion-button>
-	<ion-button href="/notifications">Notifications</ion-button>
 </ion-card>
 
 
@@ -36,7 +37,6 @@
 		</ion-card-header>
 		<ion-button href="/menu">Weekly Menu</ion-button>
 	</ion-card>
-
-
+</ion-tab>
 </ion-page>
 

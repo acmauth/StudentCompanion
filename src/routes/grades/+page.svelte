@@ -38,7 +38,7 @@
 </script>
 
 
-
+<ion-tab tab="grades">
 <ion-page style="overflow-y: auto;">
 	<ion-nav-title>
 		<ion-item-divider sticky>
@@ -52,3 +52,4 @@
   
 
 </ion-page>
+</ion-tab>

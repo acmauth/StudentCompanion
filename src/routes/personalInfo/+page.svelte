@@ -49,7 +49,7 @@
     }
 
 </script>
-
+<ion-tab tab="personalInfo">
 <ion-header>
 	<ion-toolbar>
 		<ion-title>Personal Info</ion-title>
@@ -132,6 +132,7 @@
 		</ion-card-content>
 	</ion-card>
 </ion-content>
+</ion-tab>
 
 <style>
 	.info {
