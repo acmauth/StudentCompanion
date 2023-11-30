@@ -37,11 +37,6 @@
 		<ion-button href="/menu">Weekly Menu</ion-button>
 	</ion-card>
 
-	<ion-card>
-		<ion-card-header>
-			<ion-card-subtitle>statistics</ion-card-subtitle>
-		</ion-card-header>
-		<ion-button href="./functions/statistics/courseExam">stats</ion-button>
-	</ion-card>
+
 </ion-page>
 
