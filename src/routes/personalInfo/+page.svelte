@@ -47,9 +47,10 @@
         invalidateAuth();
         goto("/");
     }
-
 </script>
+
 <ion-tab tab="personalInfo">
+	<ion-content style="overflow-y: auto;">
 <ion-header>
 	<ion-toolbar>
 		<ion-title>Personal Info</ion-title>
@@ -127,11 +128,10 @@
 
 				<ion-text color="danger" class="ion-padding-start">Αποσύνδεση</ion-text>
 			</ion-item>
-
-
-		</ion-card-content>
-	</ion-card>
-</ion-content>
+				</ion-card-content>
+			</ion-card>
+		</ion-content>
+	</ion-content>
 </ion-tab>
 
 <style>

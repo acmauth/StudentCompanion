@@ -19,7 +19,8 @@
 </script>
 
 <ion-tab tab="schedule">
-<ion-page style="overflow-y: auto;">
+<ion-content style="overflow-y: auto;">
+        
     <ion-fab horizontal="end" vertical="bottom">
         <ion-fab-button href="/schedule/addTask" color="primary">
             <ion-icon icon={allIonicIcons.add} />
@@ -41,5 +42,5 @@
             <TaskCard task={task.taskItem} start={task.start} end={task.end}/>
         {/each}
     </ion-grid>
-</ion-page>
+</ion-content>
 </ion-tab>
