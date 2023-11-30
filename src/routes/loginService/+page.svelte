@@ -1,4 +1,3 @@
-
 <script>
 	import Login from '$lib/components/loginService/login.svelte';
 </script>

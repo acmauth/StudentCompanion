@@ -17,6 +17,7 @@ interface Day {
     // { sun: { en: 'Sunday', el: 'Κυριακή' } },
   ];
   
-  
-//console.log(weekdays.tue.el); // Output: Τρίτη
-  
+export function getDayIndex(day: string): number {
+    const dayCode = day.slice(0, 3).toLowerCase();
+    return weekdays.findIndex(weekday => weekday.hasOwnProperty(dayCode));
+} 
