@@ -17,6 +17,7 @@
 			<ion-card-subtitle>{course.courseType}</ion-card-subtitle>
 		</ion-card-header>
 
+		<!-- Checking if there is a grade and displays the corresponding color depending if you passed or not -->
 		<ion-card-content class="ion-text-center">
 			{#if !stats.grade}
 				<ion-text color="danger">Δεν έχεις βαθμολογήθει ακόμα στο μάθημα</ion-text>
@@ -26,18 +27,20 @@
 				<circle-progress class="failed" max={10} value={stats.grade} />
 			{/if}
 
+			<!-- Course info -->
+
 			<ion-list>
+				<ion-accordion-group expand="compact">
+					<ion-accordion value="first">
+					  <ion-item slot="header" color="light">
+						<ion-label>Διδάσκοντες</ion-label>
+					  </ion-item>
+					  <div class="ion-padding" slot="content">{course.teacher}</div>
+					</ion-accordion>
+				  </ion-accordion-group>
 				<ion-item>
 					<ion-label>ECTS</ion-label>
 					<ion-text slot="end">{course.ects}</ion-text>
-				</ion-item>
-				<ion-item>
-					<ion-text>Διδάσκοντες</ion-text>
-					<ul>
-						{#each course.teacher as teacher}
-							<ion-text slot="end">{teacher}</ion-text>
-						{/each}
-					</ul>
 				</ion-item>
 
 				<ion-item>
