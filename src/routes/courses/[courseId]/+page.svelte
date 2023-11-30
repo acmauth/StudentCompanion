@@ -137,5 +137,6 @@
 	});
 </script>
 
+
 <CourseStats {stats} {course} />
 
