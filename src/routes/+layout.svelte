@@ -7,7 +7,7 @@
 
 	/* Import all components - or do partial loading - see below */
 	import 'ionic-svelte/components/all';
-	import { calendar, home, personCircle, statsChart } from 'ionicons/icons';
+	import { calendar, home, notifications, personCircle, statsChart } from 'ionicons/icons';
 
 	/* Theme variables */
 	// import '../theme/variables.css';
@@ -29,7 +29,11 @@
 			icon: statsChart, 
 			tab: 'grades'
 		},
-		// Add notifications here when "back end" is added
+		{
+			label: 'Notifications',
+			icon: notifications,
+			tab: 'notifications'
+		},
 		{
 			label: 'Me',
 			icon: personCircle,
