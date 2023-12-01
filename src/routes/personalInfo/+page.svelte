@@ -47,9 +47,10 @@
         invalidateAuth();
         goto("/");
     }
-
 </script>
 
+<ion-tab tab="personalInfo">
+	<ion-content style="overflow-y: auto;">
 <ion-header>
 	<ion-toolbar>
 		<ion-title>Personal Info</ion-title>
@@ -122,16 +123,16 @@
 				<ion-text class="ion-padding-start">{semester}ο Εξάμηνο</ion-text>
 			</ion-item>
 
-			<ion-item on:click={logOut}>
+			<ion-item on:click={logOut} aria-hidden>
 				<ion-icon color="danger" size="small" icon={allIonicIcons.exit} />
 
 				<ion-text color="danger" class="ion-padding-start">Αποσύνδεση</ion-text>
 			</ion-item>
-
-
-		</ion-card-content>
-	</ion-card>
-</ion-content>
+				</ion-card-content>
+			</ion-card>
+		</ion-content>
+	</ion-content>
+</ion-tab>
 
 <style>
 	.info {

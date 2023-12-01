@@ -4,11 +4,11 @@
     import { taskStore } from '$lib/components/schedule/task/taskStore';
     import { activeDay } from '$lib/components/schedule/day/activeDay';
 	import TaskCard from '$lib/components/schedule/task/taskCard.svelte';
+	import IonNav from 'ionic-svelte/components/IonNav.svelte';
     import type { TaskItem } from '$lib/components/schedule/task/TaskItem';
     
     // Uncomment the following to reset the task store.
     // taskStore.set([]);
-
     $: currentTasks = $taskStore.filter((task) => {
         // Get only the tasks that have a slot on the active day.
         if (task.slots.filter((slot) => {
@@ -34,9 +34,12 @@
     .sort((a,b) => new Date("1970-01-01T" + a.slot.timeStart) < new Date("1970-01-01T" + b.slot.timeStart) ? -1 : 0)
     // Rename the properties of the array to match the names of the props of the TaskCard component.
     .map(({ task, slot }) => ({ taskItem: task, start: slot.timeStart, end: slot.timeEnd }));
+
 </script>
 
-<ion-page style="overflow-y: auto;">
+<ion-tab tab="schedule">
+<ion-content style="overflow-y: auto;">
+        
     <ion-fab horizontal="end" vertical="bottom">
         <ion-fab-button href="/schedule/addTask" color="primary">
             <ion-icon icon={allIonicIcons.add} />
@@ -58,4 +61,5 @@
             <TaskCard task={task.taskItem} start={task.start} end={task.end}/>
         {/each}
     </ion-grid>
-</ion-page>
+</ion-content>
+</ion-tab>
