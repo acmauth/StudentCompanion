@@ -8,18 +8,18 @@
     <ion-chip color="primary" outline={!$toggles.all} on:click={() => {toggles.toggleAll()}} aria-hidden>
        <ion-label>Όλες οι ειδοποιήσεις</ion-label>
     </ion-chip>
-    <ion-chip color="tertiary" outline={!$toggles.universis} on:click={() => {toggles.toggleUniversis()}} aria-hidden>
-       <ion-avatar>
-          <img src={universisLogo} alt="universis logo"/>
-       </ion-avatar>
-       <ion-label>Universis</ion-label>
-    </ion-chip>
     <ion-chip color="warning" outline={!$toggles.elearning} on:click={() => {toggles.toggleElearning()}} aria-hidden>
         <ion-avatar>
            <img src={elearningLogo} alt="elearning logo"/>
         </ion-avatar>
         <ion-label>eLearning</ion-label>
      </ion-chip>
+    <ion-chip color="tertiary" outline={!$toggles.universis} on:click={() => {toggles.toggleUniversis()}} aria-hidden>
+       <ion-avatar>
+          <img src={universisLogo} alt="universis logo"/>
+       </ion-avatar>
+       <ion-label>Universis</ion-label>
+    </ion-chip>
      <ion-chip color="warning" outline={!$toggles.elSystem} on:click={() => {toggles.toggleelSystem()}} aria-hidden>
         <ion-avatar>
            <img src={elearningLogo} alt="elearning logo"/>
