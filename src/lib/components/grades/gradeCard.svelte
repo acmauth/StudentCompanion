@@ -1,63 +1,65 @@
 <script lang="ts">
 	import * as allIonicIcons from 'ionicons/icons';
-	import type { course } from './courseType';
-	export let subject: course;
+	import type { course } from './courseType';  
+	export let filteredSubjects: any = {};
+	export let semesterId: any = {};
+	
 </script>
 
-<ion-card href="/" class="ion-padding">
-	<ion-grid>
-		<ion-row class="ion-justify-content-start">
-			<ion-col class="ion-no-padding" size-md="10" size-lg="8" size-xl="6">
-				<ion-card-header>
-					<ion-card-title class="ion-padding-bottom">{subject.courseTitle}</ion-card-title>
 
-					<div class="icons">
-						<ion-icon icon={allIonicIcons.flagOutline} />
-						<ion-card-subtitle>{subject.course}</ion-card-subtitle>
-					</div>
+<ion-card>
+	<ion-card-header>
+  <ion-card-title><b>{semesterId}ο Εξάμηνο</b></ion-card-title>
+		<ion-card-subtitle>Μ.Ο Εξαμήνου: placeholder</ion-card-subtitle>
+	</ion-card-header>
 
-					<div class="icons">
-						<ion-icon icon={allIonicIcons.personOutline} />
-						<ion-card-subtitle>Nikolaos Tsitsas</ion-card-subtitle>
-					</div>
-				</ion-card-header>
-			</ion-col>
-
-			<ion-col size="20">
-				<ion-card-content class="ion-text-center">
-					{#if subject.grade !== null}
-						<ion-text color="success">
-							<h2>{subject.formattedGrade}</h2>
-						</ion-text>
+	<ion-card-content>
+		<ion-list>
+			{#each filteredSubjects[semesterId] as course}
+				<div class="courseDetails">
+					<ion-label class="ion-padding-start">{course.course}</ion-label>
+					<ion-item href={`/courses/${course.course}`}>
+						<ion-label class="ion-text-wrap">{course.courseTitle}</ion-label>
+						{#if course.grade !== null}
+							{#if course.grade * 10 >= 5}
+								<ion-text class="ion-padding-left ion-padding-start" color="success">
+									<h2>{course.formattedGrade}</h2>
+								</ion-text>
+							{:else}
+								<ion-text class="ion-padding-left ion-padding-start" color="danger">
+									<h2>{course.formattedGrade}</h2>
+								</ion-text>
+							{/if}
+						{:else}
+							<ion-text class="ion-padding-left ion-padding-start" color="danger">
+								<h2>Ungraded</h2>
+							</ion-text>
+						{/if}
+					</ion-item>
+					{#if course.examPeriod !== null}
+						<ion-label class="ion-padding-bottom ion-padding-start">
+							{#if course.examPeriod && course.gradeYear}
+								{course.examPeriod.name} {course.gradeYear.name}
+							{:else}
+								-
+							{/if}
+						</ion-label>
+          
 					{:else}
-						<p>Ungraded</p>
+						<ion-label class="ion-padding-bottom ion-padding-start">-</ion-label>
 					{/if}
-				</ion-card-content>
-			</ion-col>
-		</ion-row>
-	</ion-grid>
+				</div>
+			{/each}
+	</ion-list>
+</ion-card-content>
 </ion-card>
 
 
 
 <style>
-	.card {
+
+.courseDetails {
 		display: flex;
-		align-items: center;
-		justify-content: start;
-	}
-
-	ion-card {
-		transition: all ease-in-out 0.2s;
-	}
-
-	ion-card:active {
-		transform: scale(0.95);
-	}
-
-	.icons {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
+		flex-direction: column;
 	}
 </style>
