@@ -6,7 +6,14 @@
     import { toggles } from './notificationToggles';
     import { flip } from "svelte/animate";
     import { quintOut } from 'svelte/easing';
-    
+    import NotifSkeleton from './notifSkeleton.svelte';
+
+
+    const randList = (length: number) => {
+        const randomLength = Math.floor(Math.random() * length) + 2;
+        return Array.from({ length: randomLength }, (_, i) => i + 1);
+    }
+
 </script>
 
 <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
@@ -25,9 +32,10 @@
     
     {#await gatherNotifications()}
         
-        <ion-progress-bar type="indeterminate"></ion-progress-bar>
-        <!-- <ion-skeleton-text animated style="width: 80px"></ion-skeleton-text> -->
-        <!-- TODO skeletos -->
+        <ion-progress-bar type="indeterminate"/>
+        {#each randList(5) as rand (rand)}
+            <NotifSkeleton/>
+        {/each}
         
     {:then notifications}
         {#each notifications as notification (notification.id)}
