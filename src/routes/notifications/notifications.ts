@@ -2,6 +2,12 @@ import { universisGet, elearningGet } from "$lib/dataService";
 import UserInfoStore from "$stores/userinfo.store";
 import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
+import { persisted } from "svelte-persisted-store";
+
+
+// Storing the IDs of notifications that have been read in a persisted store
+//TODO: Add a way to remove notifications from the list
+export const readNotifications = persisted("ReadNotifications", []);
 
 
 function cleanUpFullMessage(fullMessage: string) {
