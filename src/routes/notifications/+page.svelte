@@ -4,6 +4,8 @@
     import { gatherNotifications } from './notifications';
     import Notification from './notification.svelte';
     import { toggles } from './notificationToggles';
+    import { flip } from "svelte/animate";
+    import { quintOut } from 'svelte/easing';
     
 </script>
 
@@ -28,10 +30,12 @@
         <!-- TODO skeletos -->
         
     {:then notifications}
-        {#each notifications as notification}
-            {#if $toggles.all || ($toggles.universis && notification.type === 'universis') || ($toggles.elearning && notification.type === 'elearning') || ($toggles.elSystem && notification.type === 'system')}
-                <Notification {notification}/>
-            {/if}
+        {#each notifications as notification (notification.id)}
+            <div animate:flip={{ duration: 500, easing: quintOut }}>
+                {#if $toggles.all || ($toggles.universis && notification.type === 'universis') || ($toggles.elearning && notification.type === 'elearning') || ($toggles.elSystem && notification.type === 'system')}
+                    <Notification {notification}/>
+                {/if}
+            </div>    
         {/each}
     {:catch error}
         <p>{error.message}</p>
