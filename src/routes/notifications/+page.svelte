@@ -29,15 +29,14 @@
         </ion-toolbar>
             <Chips/>
     </ion-header>
-    
+  
     {#await gatherNotifications()}
-        
         <ion-progress-bar type="indeterminate"/>
         {#each randList(5) as rand (rand)}
             <NotifSkeleton/>
         {/each}
-        
     {:then notifications}
+  
         {#each notifications as notification (notification.id)}
             <div animate:flip={{ duration: 500, easing: quintOut }}>
                 {#if $toggles.all || ($toggles.universis && notification.type === 'universis') || ($toggles.elearning && notification.type === 'elearning') || ($toggles.elSystem && notification.type === 'system')}
@@ -45,6 +44,7 @@
                 {/if}
             </div>    
         {/each}
+  
     {:catch error}
         <p>{error.message}</p>
     {/await}

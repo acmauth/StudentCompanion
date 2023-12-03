@@ -3,7 +3,6 @@
    import elearningLogo from "$images/elearning.png";
    import { toggles } from './notificationToggles';
    import { checkmark  } from "ionicons/icons"; 
-
 </script>
 
 <div class="chipsrow">

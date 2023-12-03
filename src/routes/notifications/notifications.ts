@@ -10,6 +10,7 @@ import { persisted } from "svelte-persisted-store";
 export const readNotifications = persisted("ReadNotifications", []);
 
 
+
 function cleanUpFullMessage(fullMessage: string) {
     // Regular expression to match content between dashes
     const regex = /-{5,}\n([\s\S]*?)-{5,}/;
@@ -129,3 +130,4 @@ export type notification = {
     dateReceived: Date;
     id: number;
 };
+
