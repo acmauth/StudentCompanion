@@ -9,6 +9,7 @@
 	import { universisGet } from '$lib/dataService';
 	import Stats from '$lib/components/grades/statsCard.svelte';
 
+
 	let searchQuery = '';
 	let subjects = 0;
 	let passedSubjects = 0;

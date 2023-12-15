@@ -11,6 +11,7 @@
 
 <ion-card>
 	<ion-card-header>
+
   <ion-card-title><b>{semesterId}ο Εξάμηνο</b></ion-card-title>
 		{#if semesterAverage}
 		<ion-card-subtitle>Μ.Ο Εξαμήνου: {semesterAverage}</ion-card-subtitle>
@@ -24,6 +25,7 @@
 			{#each filteredSubjects[semesterId] as course}
 				<div class="courseDetails">
 					<ion-label class="ion-padding-start">{course.course}</ion-label>
+
 					<ion-item href={`/courses/${course.course}`}>
 						<ion-label class="ion-text-wrap">{course.courseTitle}</ion-label>
 						{#if course.grade !== null}
