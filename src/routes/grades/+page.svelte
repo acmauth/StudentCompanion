@@ -46,7 +46,7 @@
 		</ion-item-divider>
 </ion-nav-title>
 
-	<Stats subjects={subjects} passedSubjects={passedSubjects} />
+	<Stats searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} />
   
 		<Grades searchQuery = {searchQuery}  />
   

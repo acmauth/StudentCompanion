@@ -4,7 +4,16 @@
     import { gatherNotifications } from './notifications';
     import Notification from './notification.svelte';
     import { toggles } from './notificationToggles';
-    
+    import { flip } from "svelte/animate";
+    import { quintOut } from 'svelte/easing';
+    import NotifSkeleton from './notifSkeleton.svelte';
+
+
+    const randList = (length: number) => {
+        const randomLength = Math.floor(Math.random() * length) + 2;
+        return Array.from({ length: randomLength }, (_, i) => i + 1);
+    }
+
 </script>
 
 <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
@@ -20,19 +29,22 @@
         </ion-toolbar>
             <Chips/>
     </ion-header>
-    
+  
     {#await gatherNotifications()}
-        
-        <ion-progress-bar type="indeterminate"></ion-progress-bar>
-        <!-- <ion-skeleton-text animated style="width: 80px"></ion-skeleton-text> -->
-        <!-- TODO skeletos -->
-        
-    {:then notifications}
-        {#each notifications as notification}
-            {#if $toggles.all || ($toggles.universis && notification.type === 'universis') || ($toggles.elearning && notification.type === 'elearning') || ($toggles.elSystem && notification.type === 'system')}
-                <Notification {notification}/>
-            {/if}
+        <ion-progress-bar type="indeterminate"/>
+        {#each randList(5) as rand (rand)}
+            <NotifSkeleton/>
         {/each}
+    {:then notifications}
+  
+        {#each notifications as notification (notification.id)}
+            <div animate:flip={{ duration: 500, easing: quintOut }}>
+                {#if $toggles.all || ($toggles.universis && notification.type === 'universis') || ($toggles.elearning && notification.type === 'elearning') || ($toggles.elSystem && notification.type === 'system')}
+                    <Notification {notification}/>
+                {/if}
+            </div>    
+        {/each}
+  
     {:catch error}
         <p>{error.message}</p>
     {/await}
