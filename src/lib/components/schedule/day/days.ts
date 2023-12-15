@@ -21,3 +21,7 @@ export function getDayIndex(day: string): number {
     const dayCode = day.slice(0, 3).toLowerCase();
     return weekdays.findIndex(weekday => weekday.hasOwnProperty(dayCode));
 } 
+
+export function getDayByIndex(index: number): string {
+    return Object.keys(weekdays[index - 1])[0].toUpperCase().slice(0, 3);
+}

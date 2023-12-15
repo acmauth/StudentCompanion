@@ -1,12 +1,11 @@
 export interface TimeSlot {
-    day: string,
+    day: number,
     timeStart: string,
     timeEnd: string
 }
 export interface TaskItem {
     id: number,
     title: string,
-    professor: string,
-    classroom: string,
-    slots: TimeSlot[] 
+    description: string,
+    slot: TimeSlot
 }

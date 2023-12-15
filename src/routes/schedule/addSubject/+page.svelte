@@ -1,9 +1,8 @@
 <script lang="ts">
-    import type { TaskItem, TimeSlot } from "$lib/components/schedule/task/TaskItem";
-    import { taskStore } from '$lib/components/schedule/task/taskStore';
+    import type { SubjectItem, TimeSlot } from "$lib/components/schedule/subject/SubjectItem";
+    import { subjectStore } from '$lib/components/schedule/subject/SubjectStore';
     import { weekdays } from '$lib/components/schedule/day/days'
     import { goto } from '$app/navigation';
-    import { activeTask } from '$lib/components/schedule/task/activeTask'
 
     function handleTimeChange(event: CustomEvent<KeyboardEvent>) {
         const target = event.target as HTMLInputElement;
@@ -34,7 +33,7 @@
         }
     }
 
-    let count = $activeTask.slots.length + 1;
+    let count = 1;
 
     function handleDaySelection(event: CustomEvent<KeyboardEvent>) {
         if (event.target.value != null && event.target.value != "")
@@ -51,17 +50,8 @@
         goto('/schedule');
     }
 
-    function onDelete() {
-        taskStore.update(oldArray => {
-            // Filter out the item with the specified id
-            const newArray = oldArray.filter(item => item.id !== $activeTask.id);
-            return newArray;
-        });
-        goto('/schedule');
-    }
-
     function onSubmit() {
-        let formData: TaskItem = {
+        let formData: SubjectItem = {
             id: new Date().getTime(),
             title: (document.getElementById("title") as HTMLInputElement)?.value || "New Subject",
             professor: (document.getElementById("professor") as HTMLInputElement)?.value || "Mr Know-it-all",
@@ -84,16 +74,7 @@
                 }
             }
 
-            taskStore.update(oldArray => {
-                // Find the index of the item with the specified id
-                const index = oldArray.findIndex(item => item.id === $activeTask.id);
-
-                // If the item is found, update its value
-                if (index !== -1) {
-                    oldArray[index] = formData;
-                }
-                return [...oldArray];
-            });
+            $subjectStore = $subjectStore.concat(formData);
         }
 
         goto('/schedule');
@@ -102,57 +83,53 @@
 
 <ion-header>
     <ion-toolbar>
-        <ion-title>Edit your task</ion-title>
+        <ion-title>Create a new task</ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <form on:submit|preventDefault={onSubmit}>
-        <ion-input
+        <ion-input			
             placeholder="Coolness 101"
             label="Title"
             label-placement="stacked"
             id="title"
             type="text"
-            value={$activeTask.title}
             contenteditable="true"
             spellcheck={true}
-        />
+        />                    
 
-        <ion-input
+        <ion-input			
             placeholder="Hogwarts campus"
             label="Classroom"
             label-placement="stacked"
             id="classroom"
-            value={$activeTask.classroom}
             type="text"
             contenteditable="true"
             spellcheck={true}
-        />
+        />         
 
-        <ion-input
+        <ion-input			
             placeholder="Mr Know-it-all"
             label="Professor"
             label-placement="stacked"
             id="professor"
-            value={$activeTask.professor}
             type="text"
             contenteditable="true"
             spellcheck={false}
-        />
+        />         
 
 
         {#each {length: count} as _, i}
             <ion-row>
                 <ion-col style="padding-left: 0%; padding-top: 0%">
-                    <ion-select label="Day"
-                                label-placement="stacked"
-                                interface="action-sheet"
-                                on:ionCancel={clearDaySelection}
-                                placeholder="Select day"
-                                value={$activeTask.slots[i]?.day}
-                                on:ionChange={handleDaySelection}
+                    <ion-select label="Day" 
+                                label-placement="stacked" 
+                                interface="action-sheet" 
+                                on:ionCancel={clearDaySelection} 
+                                placeholder="Select day" 
+                                on:ionChange={handleDaySelection} 
                                 style="padding:0;">
                         {#each weekdays as day}
                             {#each Object.keys(day) as key }
@@ -163,33 +140,32 @@
                 </ion-col>
                 <ion-row>
                     <ion-col>
-                        <ion-input label="From"
-                                    label-placement="stacked"
-                                    type="time"
-                                    id="starttime-{i}"
-                                    name="starttime"
-                                    value={$activeTask.slots[i]?.timeStart || "09:00"}
+                        <ion-input label="From" 
+                                    label-placement="stacked" 
+                                    type="time" 
+                                    id="starttime-{i}" 
+                                    name="starttime" 
+                                    value="09:00" 
                                     on:ionInput={handleTimeChange}
                                     disabled={!(i + 1 < count)}/>
                     </ion-col>
                     <ion-col>
-                        <ion-input label="To"
-                                    label-placement="stacked"
-                                    type="time"
-                                    id="endtime-{i}"
-                                    name="endtime"
-                                    value={$activeTask.slots[i]?.timeEnd || "10:00"}
+                        <ion-input label="To" 
+                                    label-placement="stacked" 
+                                    type="time" 
+                                    id="endtime-{i}" 
+                                    name="endtime" 
+                                    value="10:00" 
                                     on:ionInput={handleTimeChange}
                                     disabled={!(i + 1 < count)}/>
                     </ion-col>
                 </ion-row>
             </ion-row>
         {/each}
-
+            
         <div style="display: flex; justify-content: space-between; padding-top: 5%">
-            <ion-button type="button" on:ionFocus={onCancel}>Cancel</ion-button>
-            <ion-button type="button" on:ionFocus={onDelete}>Delete</ion-button>
-            <ion-button type="button" on:ionFocus={onSubmit}>Update</ion-button>
+            <ion-button type="reset" on:ionFocus={onCancel}>Cancel</ion-button>
+            <ion-button type="button" on:ionFocus={onSubmit}>Create</ion-button>
         </div>
     </form>
 </ion-content>
