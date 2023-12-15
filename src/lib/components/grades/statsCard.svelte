@@ -4,6 +4,7 @@
 	import {averages} from '$lib/functions/gradeAverages/averages';
 	import {averagesPerSemester} from '$lib/functions/gradeAverages/averagesPerSemester';
 
+
 	/**
 	 * @type {any}
 	 */
@@ -39,7 +40,9 @@
 			gradesObject.ects = result.ects;
 		});
 
-		averagesPerSemester().then((result) => {
+
+		  averagesPerSemester().then((result) => {
+
 			gradesObject.averagesPerSemester = result;
 			
 			for (let i = 1; i < result.length+1; i++) {
@@ -113,7 +116,6 @@
 	{:else}
 		<circle-progress max={subjects} value={passedSubjects} ></circle-progress>
 	{/if}
-		
 		<ion-list>
 			<ion-item >
 				<ion-label >ECTS</ion-label>

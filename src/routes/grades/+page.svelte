@@ -2,7 +2,6 @@
 	import Grades from '$lib/components/grades/grades.svelte';
 	// @ts-ignore
 	import 'js-circle-progress'
-	import { onMount } from 'svelte';
 	import { universisGet } from '$lib/dataService';
 	import Stats from '$lib/components/grades/statsCard.svelte';
 	import {coursesPerSemester} from '$lib/functions/coursePerSemester/coursesPerSemester';
@@ -90,9 +89,4 @@
 		z-index: 10;
 	}
 </style>
-
-
-
-
-
 

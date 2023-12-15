@@ -32,6 +32,7 @@
 	  return semesters;
 	}
   
+
 	// Filter the results based on the searchQuery
 
   
@@ -54,6 +55,7 @@
 	  }
   
 	}
+
   </script>
   
   <!-- Card -->
@@ -71,3 +73,4 @@
 	<p>{error.message}</p>
   {/await}
   
+
