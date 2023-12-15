@@ -30,6 +30,7 @@
             invalidData = true;
         }
         else {
+            isVisible = false;
             goto("/");
         }
 
