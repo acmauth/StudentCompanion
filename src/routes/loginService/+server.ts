@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import sisAuthenticator from '../../lib/authentication/scraper/sisAuthenticator';
+import sisAuthenticator from '../../lib/universisAuthentication/scraper/sisAuthenticator';
 
 // Server function that handles the login request
 export const GET: RequestHandler = async ({ url }) => {
