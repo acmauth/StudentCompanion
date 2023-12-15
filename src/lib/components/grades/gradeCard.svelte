@@ -1,15 +1,13 @@
-<script lang="ts">
-	import * as allIonicIcons from 'ionicons/icons';
-	import type { course } from './courseType';  
+<script lang="ts">  
 	export let filteredSubjects: any = {};
 	export let semesterId: any = {};
 	export let semesterAverage: any = {};
 
 	
 </script>
-
-
-<ion-card>
+{#if filteredSubjects.length > 0}
+<span class="scroll" id={semesterId}></span>
+<ion-card class="ion-padding-vertical">
 	<ion-card-header>
 
   <ion-card-title><b>{semesterId}ο Εξάμηνο</b></ion-card-title>
@@ -22,7 +20,7 @@
 
 	<ion-card-content>
 		<ion-list>
-			{#each filteredSubjects[semesterId] as course}
+			{#each filteredSubjects as course}
 				<div class="courseDetails">
 					<ion-label class="ion-padding-start">{course.course}</ion-label>
 
@@ -61,10 +59,15 @@
 	</ion-list>
 </ion-card-content>
 </ion-card>
-
+{/if}
 
 
 <style>
+
+.scroll {
+	display: block;
+	height: 35px;
+}
 
 .courseDetails {
 		display: flex;

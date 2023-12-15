@@ -2,7 +2,8 @@
 	import Chart from "chart.js/auto";
 	import { afterUpdate, onMount } from 'svelte';
 	import {averages} from '$lib/functions/gradeAverages/averages';
-	import {coursesPerSemester} from '$lib/functions/gradeAverages/gradesPerSemester';
+	import {averagesPerSemester} from '$lib/functions/gradeAverages/averagesPerSemester';
+
 
 	/**
 	 * @type {any}
@@ -39,7 +40,9 @@
 			gradesObject.ects = result.ects;
 		});
 
-		coursesPerSemester().then((result) => {
+
+		  averagesPerSemester().then((result) => {
+
 			gradesObject.averagesPerSemester = result;
 			
 			for (let i = 1; i < result.length+1; i++) {
@@ -48,6 +51,7 @@
 
 			
 		});
+
 	});
 
 	afterUpdate(() => {
@@ -72,7 +76,7 @@
 				],
 			},
 			options: {
-				responsive: false,
+				responsive: true,
 				scales: {
 					y: {
 						beginAtZero: false,
@@ -96,16 +100,7 @@
 	}
 	});
 
-
-		
-
-
-
-
-
-
-
-
+	
 </script>
 
 {#if !searchQuery.length}
@@ -121,7 +116,6 @@
 	{:else}
 		<circle-progress max={subjects} value={passedSubjects} ></circle-progress>
 	{/if}
-	
 		<ion-list>
 			<ion-item >
 				<ion-label >ECTS</ion-label>
@@ -141,10 +135,12 @@
 					<h2>{gradesObject.average}</h2>
 				</ion-text>
 			</ion-item>
-		</ion-list>
-		<div>
+
+			
 			<canvas id="gradeChart"></canvas>
-		</div>
+
+		</ion-list>
+
 	</ion-card-content>
 		
 	
@@ -161,5 +157,5 @@
 	circle-progress::part(value) {
 		stroke: #3880ff;
 		}
-	
+
 </style>
