@@ -6,7 +6,7 @@ import { universisGet } from "$lib/dataService";
  */
 
 
-export async function coursesPerSemester() {
+export async function averagesPerSemester() {
 
 		let courseBySemester = [];
 
