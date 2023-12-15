@@ -10,6 +10,7 @@
 	import GradesSkeleton from '$components/grades/gradesSkeleton.svelte';
 	import NotifSkeleton from '../notifications/notifSkeleton.svelte';
 
+
 	let searchQuery = '';
 	let subjects = 0;
 	let passedSubjects = 0;

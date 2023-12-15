@@ -37,6 +37,7 @@
 
   
 	$: {
+
 	  const courses = $courseBySemester;
 	  if (searchQuery.length === 0) {
 		filteredSubjects.set(courses);
