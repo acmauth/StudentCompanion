@@ -6,7 +6,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const config = {
 	preprocess: preprocess(),
-
 	kit: {
 		adapter: isProduction
 			? adapterStatic({
@@ -15,8 +14,19 @@ const config = {
 				fallback: 'index.html',
 				precompress: false
 			})
-			: adapterAuto()
+			: adapterAuto(),
+			alias: {
+				$stores: "src/stores",
+				$components: "src/lib/components",
+				$images: "src/lib/static/images",
+				$types: "src/lib/types",
+			},
+csrf: {
+      checkOrigin: false,
+    }
+
 	}
+
 };
 
 export default config;
