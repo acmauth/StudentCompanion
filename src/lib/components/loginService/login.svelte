@@ -14,9 +14,11 @@
     let password = '';
     let outputMessage = ''
     let invalidData = false;
+    let isVisible = false;
 
     async function submit(){
-
+        
+        isVisible = true;
         username = (document.getElementById('usernameInput') as HTMLInputElement).value;
         password = (document.getElementById('passwordInput') as HTMLInputElement)?.value;
         
@@ -24,6 +26,7 @@
         let elearningOutput = await getElearningToken(username, password);
         
         if (universisOutput || elearningOutput) { 
+            isVisible = false;
             invalidData = true;
         }
         else {
@@ -46,6 +49,13 @@
         {#if invalidData}
             <ion-label class="error"> Invalid username or password</ion-label>
         {/if}
+        {#if isVisible}
+            <div class="loading-panel">
+                <ion-spinner></ion-spinner>
+                <p>Loading...</p>
+            </div>
+        {/if}
+
         <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">Log In</ion-button>
         <ion-checkbox label-placement="start" style="margin-bottom:15px" class="custom" checked="true"> 
             <ion-label class="custom"> Remember me</ion-label>
@@ -91,5 +101,28 @@
         color: rgb(191, 59, 59);
         font-size: 1rem;
     }
+
+    .loading-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+    }
+
+  ion-spinner {
+    --color: white;
+    margin-right: 10px; /* Adjust the margin as needed */
+  }
+
+  p {
+    color: white;
+    margin: 0; /* Remove default margin */
+  }
 
 </style>
