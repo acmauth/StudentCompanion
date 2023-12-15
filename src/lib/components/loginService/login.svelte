@@ -23,9 +23,7 @@
         let universisOutput = await getUniversisToken(username, password);
         let elearningOutput = await getElearningToken(username, password);
         
-        outputMessage = universisOutput + " " + elearningOutput;
-        
-        if (outputMessage == "Wrong passwordUniversis failed! Elearning failed!") { 
+        if (universisOutput || elearningOutput) { 
             invalidData = true;
         }
         else {
