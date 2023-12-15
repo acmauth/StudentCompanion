@@ -13,14 +13,15 @@
     let outputMessage = ''
 
     async function submit(){
-
+        console.log("Submit clicked!");
+        
         username = (document.getElementById('usernameInput') as HTMLInputElement).value;
         password = (document.getElementById('passwordInput') as HTMLInputElement)?.value;
 
         let universisOutput = await getUniversisToken(username, password);
         let elearningOutput = await getElearningToken(username, password);
         
-        outputMessage = universisOutput + " " + elearningOutput;
+        // outputMessage = universisOutput + " " + elearningOutput;
         goto("/");
 
     }
@@ -31,7 +32,7 @@
     }
 
 </script>
-
+    <p>{outputMessage}</p>
     <div style="position: relative; width: 100%; height: 50%;">
         <img src="src/lib/components/loginService/Vector.svg" alt="Vector Icon" style="position: absolute; width: 100%; height:75%">
         <img src="src/lib/components/loginService/Vector(1).svg" alt="Overlay Icon" style="width: 100%; height:95%">

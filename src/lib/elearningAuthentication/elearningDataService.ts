@@ -3,7 +3,9 @@ import { get } from 'svelte/store';
 import { userCreds, userTokens } from '../../stores/credentials.store';
 import userInfoStore from '../../stores/userinfo.store';
 import elearningAuthenticator from './scraper/elearningAuthenticator';
-
+import { ElearningAuthenticate } from './scraper/nativeScraper';
+import { CapacitorHttp, CapacitorCookies } from '@capacitor/core';
+const isProduction = process.env.NODE_ENV === 'production';
 
 export async function elearningFetchNewToken(username: string, password: string){
     console.log("Generating a new elearning token");
@@ -18,14 +20,24 @@ export async function elearningFetchNewTokenInternal(username: string, password:
     
     let response: { error: string; credentials?: undefined; } | { error: null; credentials: { sesskey: string; moodleSession: string; userID: string; }; };
     // If we're running on the browser, we go through this to avoid a CORS error
-    if (browser) {
+    if (!isProduction) {
         const newTokenAttempt = await fetch("/elearningService?username="+username+"&password="+password, {
             method: "GET"
         });
 
         response = await newTokenAttempt.json();
     } else {
-        response = await elearningAuthenticator(username, password);
+        console.log("Running on production-FetchNewToken");
+        
+        try {
+            response = await ElearningAuthenticate.authenticate({username: username, password: password});
+            // response = await elearningAuthenticator(username, password);
+        }
+        catch (err) {
+            console.log(err);
+            response = { error: err };
+        }
+        // response = await elearningAuthenticator(username, password);
     }
 
     if (!response.error && response.credentials){
@@ -54,13 +66,18 @@ interface elearningResponse extends Array<elearningResponseItem> {}
 
 export async function internalElearningGet(dataArguments: string, sesskey: string, moodleSession: string): Promise<any>{
 
+    console.log("Running on production-internalElearningGet");
+    
+    
     const response = await fetch('https://elearning.auth.gr/lib/ajax/service.php?sesskey='+sesskey, {
                 method: 'POST',
                 body: JSON.stringify(dataArguments),
                 headers: {
                     'Cookie': 'MoodleSession='+moodleSession
-                }
+                },
+                credentials: 'include'
     });
+    
 
     const responseRaw: elearningResponse = await response.json();
     
@@ -75,7 +92,7 @@ export async function elearningGet(dataArguments: any){
     let moodleSession = get(userTokens).elearning.moodleSession;
     let data;
 
-    if (browser){
+    if (!isProduction){
         const elearningData = await fetch("/elearningService?sesskey="+sesskey+"&moodlesession="+moodleSession, {
             method: "POST",
             body: JSON.stringify({  userArgs: dataArguments,
@@ -85,7 +102,18 @@ export async function elearningGet(dataArguments: any){
         data = await elearningData.json();
 
     } else {
-
+        console.log("Running on production-elearningGet");
+        
+        try {
+            const elearningData = await internalElearningGet(dataArguments, sesskey, moodleSession);
+            data = elearningData;
+        }
+        catch (err) {
+            console.log(err);
+            await elearningFetchNewToken(get(userCreds).username, get(userCreds).password);
+            const elearningData = await internalElearningGet(dataArguments, sesskey, moodleSession);
+            data = elearningData;
+        }
         const elearningData = await internalElearningGet(dataArguments, sesskey, moodleSession);
         data = elearningData;
 
