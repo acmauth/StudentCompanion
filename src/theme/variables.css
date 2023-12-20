@@ -10,8 +10,8 @@
     --ion-color-primary-rgb: 56, 128, 255;
     --ion-color-primary-contrast: #ffffff;
     --ion-color-primary-contrast-rgb: 255, 255, 255;
-    --ion-color-primary-shade: #3171e0;
-    --ion-color-primary-tint: #4c8dff;
+    --ion-color-primary-shade: #004c96;
+    --ion-color-primary-tint: #8ed2ff;
   
     /** secondary **/
     --ion-color-secondary: #3dc2ff;
@@ -22,12 +22,12 @@
     --ion-color-secondary-tint: #50c8ff;
   
     /** tertiary **/
-    --ion-color-tertiary: #5260ff;
+    --ion-color-tertiary: #c79dff;
     --ion-color-tertiary-rgb: 82, 96, 255;
     --ion-color-tertiary-contrast: #ffffff;
     --ion-color-tertiary-contrast-rgb: 255, 255, 255;
-    --ion-color-tertiary-shade: #4854e0;
-    --ion-color-tertiary-tint: #6370ff;
+    --ion-color-tertiary-shade: #390096;
+    --ion-color-tertiary-tint: #8d63ff;
   
     /** success **/
     --ion-color-success: #2dd36f;
@@ -38,12 +38,12 @@
     --ion-color-success-tint: #42d77d;
   
     /** warning **/
-    --ion-color-warning: #ffc409;
+    --ion-color-warning: #ffcdb1;
     --ion-color-warning-rgb: 255, 196, 9;
     --ion-color-warning-contrast: #000000;
     --ion-color-warning-contrast-rgb: 0, 0, 0;
-    --ion-color-warning-shade: #e0ac08;
-    --ion-color-warning-tint: #ffca22;
+    --ion-color-warning-shade: #c94800;
+    --ion-color-warning-tint: #c94800;
   
     /** danger **/
     --ion-color-danger: #eb445a;
@@ -77,6 +77,21 @@
     --ion-color-light-shade: #d7d8da;
     --ion-color-light-tint: #f5f6f9;
 
+    --app-color-primary: #55bbff;
+    --app-color-primary-dark: #004c96;
+    --app-color-primary-light: #8ed2ff;
+
+    --app-color-orange: #ffcdb1;
+    --app-color-orange-dark: #c94800;
+    --app-color-orange-light: #c94800;
+
+    --app-color-green: #cfffc7;
+    --app-color-green-dark: #006e0b;
+
+    --app-color-purple: #d5b4ff;
+    --app-color-purple-dark: #390096;
+
+
     --shadow-xl: 0px -2px 40.6px -1px rgba(0, 0, 0, 0.10), 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
     --shadow-sm: 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
     --shadow-md: rgba(149, 157, 165, 0.2) 0px 8px 24px;
@@ -87,6 +102,7 @@
       border-radius: 1rem !important;
       border: 0.1rem solid #EBEBEB;
       box-shadow: var(--shadow-short-md);
+      /* margin: 0 !important; */
     }
 
     ion-searchbar {
@@ -95,6 +111,11 @@
     }
     .searchbar-input.sc-ion-searchbar-md {
       border: 1px solid #8ED2FF;
+    }
+
+    ion-item {
+      --background: transparent !important;
+      /* --color: inherit !important; */
     }
 
   }

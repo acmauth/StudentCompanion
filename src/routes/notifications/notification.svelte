@@ -3,6 +3,7 @@
     import universisLogo from "$images/universis.png";
     import elearningLogo from "$images/elearning.png";
     import { openOutline, open } from 'ionicons/icons';
+    import AppCard from "$shared/AppCard.svelte";
 
     export let notification: notification;
 
@@ -40,7 +41,7 @@
     }
 </script>
 
-<ion-card on:click={() => {inlineModalOpen = true;}} aria-hidden class="ion-padding">
+<AppCard onClick={() => {inlineModalOpen = true}} class="ion-padding">
     <div class="top">
             <img alt="Service logo" src={notification.type == "universis" ? universisLogo : elearningLogo} />
             
@@ -52,7 +53,7 @@
             <p>{notification.body}</p>
         </ion-label>
     </ion-item>
-</ion-card>
+</AppCard>
 
 <ion-modal
       is-open={inlineModalOpen}
