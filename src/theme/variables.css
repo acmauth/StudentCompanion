@@ -76,6 +76,27 @@
     --ion-color-light-contrast-rgb: 0, 0, 0;
     --ion-color-light-shade: #d7d8da;
     --ion-color-light-tint: #f5f6f9;
+
+    --shadow-xl: 0px -2px 40.6px -1px rgba(0, 0, 0, 0.10), 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
+    --shadow-sm: 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
+    --shadow-md: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    --shadow-short: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+    --shadow-short-md: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+
+    ion-card {
+      border-radius: 1rem !important;
+      border: 0.1rem solid #EBEBEB;
+      box-shadow: var(--shadow-short-md);
+    }
+
+    ion-searchbar {
+      --border-radius: 1rem !important;
+      --box-shadow: var(--shadow-md);
+    }
+    .searchbar-input.sc-ion-searchbar-md {
+      border: 1px solid #8ED2FF;
+    }
+
   }
   
   /*  #FIXME and (max-width: 0) is used as a boolean to disable this css rule */
