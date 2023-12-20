@@ -7,6 +7,7 @@
     export let maxWidth: string = "100%";
     export let innerClass = $$props.class;
     export let onClick = () => {}
+    export let href: string = "";
 
     let paddingstr = padding ? "padding: 1rem;" : "";
     let marginstr = margin ? "" : "margin: 0 !important;";
@@ -16,11 +17,11 @@
 </script>
 
 {#if colour === "default"}
-    <ion-card class="{innerClass}" on:click={onClick} aria-hidden style="{paddingstr}{marginstr}{shadowstr}{maxWidth}">
+    <ion-card href={href} class="{innerClass}" on:click={onClick} aria-hidden style="{paddingstr}{marginstr}{shadowstr}{maxWidth}">
         <slot/>
     </ion-card>
 {:else}
-    <ion-card class="{innerClass}" on:click={onClick} aria-hidden style="--background: var(--app-color-{colour})!important; --color: var(--app-color-{colour}-dark);border: none !important;{paddingstr}{marginstr}{shadowstr}{maxWidthstr}">
+    <ion-card href={href} class="{innerClass}" on:click={onClick} aria-hidden style="--background: var(--app-color-{colour})!important; --color: var(--app-color-{colour}-dark);border: none !important;{paddingstr}{marginstr}{shadowstr}{maxWidthstr}">
         <slot/>
     </ion-card>
 {/if}
