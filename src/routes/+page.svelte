@@ -36,7 +36,7 @@
 		</ion-card-header>
 		<ion-button href="/menu">Weekly Menu</ion-button>
 	</ion-card>
-
+	
 	<ion-card>
 		<ion-card-header>
 			<ion-card-subtitle>Cards with the Recent Grades</ion-card-subtitle>

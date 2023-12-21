@@ -83,6 +83,7 @@
 
 </script>
 
+
 <ion-content>
 
     {#each recentGrades as recentGrade } 

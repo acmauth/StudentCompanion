@@ -10,9 +10,9 @@
     }
 </script>
 
+
 <ion-card class="grade-card">
-  <ion-card-content>
-        
+  <ion-card-content>  
     <ion-chip class="ion-padding-start" on:click={() => handleDelete(subject.courseExam.id)}>
       <ion-label>Κλείσιμο</ion-label>
       <ion-icon name="close-circle-outline"></ion-icon>
@@ -31,8 +31,7 @@
           {/if}
         
     </ion-item>
-  
-</ion-card-content>
+  </ion-card-content>
 </ion-card>
 
 <style>
