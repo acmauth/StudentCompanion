@@ -40,12 +40,14 @@
     .map(({ task, slot }) => ({ taskItem: task, start: slot.timeStart, end: slot.timeEnd }));
     
     
-    
+        
     
     onMount(async() => {
-        let classes = (await universisGet('students/me/teachingEvents?$expand=location,performer&$filter=startDate ne null&$top=-1')).value;
-        console.log(classes);
+        let classes = (await universisGet('students/me/teachingEvents?$expand=location,performer&$filter=startDate ne null&$top=-1&$orderby=startDate')).value;
+        let exams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
 
+        console.log(classes);
+        console.log(exams);
 
     });
 

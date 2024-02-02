@@ -39,7 +39,7 @@
 
 
 <ion-fab horizontal="start" vertical="bottom">
-    <ion-fab-button href="/schedule" color="secondary">
+    <ion-fab-button href="/schedule/classes" color="secondary">
         <ion-icon icon={calendarOutline} />
     </ion-fab-button>
 </ion-fab>
