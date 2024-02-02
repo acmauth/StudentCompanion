@@ -25,7 +25,7 @@
 </ion-card>
 
 <ion-card>
-	<ion-button href="/schedule">Schedule</ion-button>
+	<ion-button href="/schedule/classes">Schedule</ion-button>
 	<ion-button href="/notifications">Notifications</ion-button>
 </ion-card>
 

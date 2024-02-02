@@ -48,7 +48,7 @@
     }
 
     function onCancel() {
-        goto('/schedule');
+        goto('/schedule/classes');
     }
 
     function onDelete() {
@@ -57,7 +57,7 @@
             const newArray = oldArray.filter(item => item.id !== $activeSubject.id);
             return newArray;
         });
-        goto('/schedule');
+        goto('/schedule/classes');
     }
 
     function onSubmit() {
@@ -96,7 +96,7 @@
             });
         }
 
-        goto('/schedule');
+        goto('/schedule/classes');
     }
 </script>
 

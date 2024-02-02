@@ -8,10 +8,11 @@
     import { Capacitor } from '@capacitor/core';
 	import { onMount } from 'svelte';
 	import SubjectCard from '$components/schedule/subject/subjectCard.svelte';
+	import { universisGet } from '$lib/dataService';
 
     // Uncomment the following to reset the task store.
-    subjectStore.set([]);
-
+    // subjectStore.set([]);
+    
     $: currentSubjects = $subjectStore.filter((subject) => {
         // Get only the tasks that have a slot on the active day.
         if (subject.slots.filter((slot) => {
@@ -37,14 +38,24 @@
     .sort((a,b) => new Date("1970-01-01T" + a.slot.timeStart) < new Date("1970-01-01T" + b.slot.timeStart) ? -1 : 0)
     // Rename the properties of the array to match the names of the props of the TaskCard component.
     .map(({ task, slot }) => ({ taskItem: task, start: slot.timeStart, end: slot.timeEnd }));
-    onMount(() => {
-    //    window.location.reload();
+    
+    
+    
+    
+    onMount(async() => {
+        let classes = (await universisGet('students/me/teachingEvents?$expand=location,performer&$filter=startDate ne null&$top=-1')).value;
+        console.log(classes);
+
+
     });
+
+
+
 </script>
 
 <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-      <ion-title>Πρόγραμμα μαθημάτων</ion-title>
+      <ion-title>Πρόγραμμα Μαθημάτων</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -62,14 +73,7 @@
 
 
 <ion-content fullscreen={true}>
-    
-    <ion-header collapse="condense" mode="ios">
-        <ion-toolbar mode="{Capacitor.getPlatform() != 'ios' ? 'md': undefined}">
-            <ion-title size="large">Πρόγραμμα μαθημάτων</ion-title>
-        </ion-toolbar>
-    </ion-header>
     <Days />    
-
 
     <ion-grid style="padding: 0%">
         {#each currentSubjects as task}

@@ -47,7 +47,7 @@
     }
 
     function onCancel() {
-        goto('/schedule');
+        goto('/schedule/classes');
     }
 
     function onSubmit() {
@@ -77,7 +77,7 @@
             $subjectStore = $subjectStore.concat(formData);
         }
 
-        goto('/schedule');
+        goto('/schedule/classes');
     }
 </script>
 
