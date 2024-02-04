@@ -3,6 +3,7 @@
 		<ion-card-header>
 			<ion-card-subtitle>Student companion (test) homepage</ion-card-subtitle>
 		</ion-card-header>
+		<ion-button href="/homepage">Homepage</ion-button>
 		<ion-card-content>
 			Let's list here our quick page links, before we get navigation figured out
 		</ion-card-content>
@@ -23,7 +24,6 @@
 		<ion-button href="/personalInfo">Personal Info</ion-button>
 	</ion-card>
 
-  
 	<ion-card>
 		<ion-button href="/schedule">Schedule</ion-button>
 		<ion-button href="/notifications">Notifications</ion-button>
@@ -47,6 +47,12 @@
 	<ion-button href="/degreeGrade">Calculate Degree Grade</ion-button>
 </ion-card>
 
+	<ion-card>
+		<ion-card-header>
+			<ion-card-subtitle>Degree Grade</ion-card-subtitle>
+		</ion-card-header>
+		<ion-button href="/degreeGrade">Calculate Degree Grade</ion-button>
+	</ion-card>
 
 	<ion-card>
 		<ion-card-header>
