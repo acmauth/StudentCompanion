@@ -30,9 +30,9 @@
         examPeriod = (await universisGet("students/me/department?$expand=departmentConfiguration($expand=examYear,examPeriod)&$top=1&$skip=0&$count=false"));
 
         let currentPeriod = examPeriod.currentPeriod;
-
+        
         let currentYear = examPeriod.currentYear;
-
+        
         // getting recent grades based on the current period, if empty that exam period didn't arrive
         recentGrades = (await universisGet('students/me/grades?$filter=courseExam/year eq ' + currentYear + ' and courseExam/examPeriod eq ' + currentPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
 
@@ -41,17 +41,20 @@
             let lastPeriod;
             let lastYear;
 
-            // exam periods: 1 winter, 3 sprint, 5 september
+            // exam periods: 1-2 winter, 3-4 sprint, 5-6 september
             switch (currentPeriod){
                 case 1:
+                case 2:
                     lastPeriod = 5;
                     lastYear = currentYear - 1;
                     break;
                 case 3:
+                case 4:
                     lastPeriod = 1;
                     lastYear = currentYear
                     break;
                 case 5:
+                case 6:
                     lastPeriod = 3;
                     lastYear = currentYear;
                     break;
@@ -59,7 +62,7 @@
 
             // getting recent grades from the previous period
             recentGrades = (await universisGet('students/me/grades?$filter=courseExam/year eq ' + lastYear + ' and courseExam/examPeriod eq ' + lastPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
-
+            
         }
 
         // removing the grades that are already deleted
@@ -70,11 +73,11 @@
         }
 
         // removeFromDismissedGrades(1);
-        console.log(recentGrades);      
+        // console.log(recentGrades);      
 
     });       
 
-    // remove card when close button is pressed
+    // remove card when swipped
     const deleteCard = (id) => {
         const examId = id.detail;
         recentGrades = recentGrades.filter((course) => course.courseExam.id !== examId);
