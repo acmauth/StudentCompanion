@@ -29,6 +29,13 @@
 	<ion-button href="/notifications">Notifications</ion-button>
 </ion-card>
 
+<ion-card>
+	<ion-card-header>
+		<ion-card-subtitle>Degree Grade</ion-card-subtitle>
+	</ion-card-header>
+	<ion-button href="/degreeGrade">Calculate Degree Grade</ion-button>
+</ion-card>
+
 
 	<ion-card>
 		<ion-card-header>

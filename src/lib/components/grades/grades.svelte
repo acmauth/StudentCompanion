@@ -32,10 +32,12 @@
 	  return semesters;
 	}
   
+
 	// Filter the results based on the searchQuery
 
   
 	$: {
+
 	  const courses = $courseBySemester;
 	  if (searchQuery.length === 0) {
 		filteredSubjects.set(courses);
@@ -54,6 +56,7 @@
 	  }
   
 	}
+
   </script>
   
   <!-- Card -->
@@ -71,3 +74,4 @@
 	<p>{error.message}</p>
   {/await}
   
+

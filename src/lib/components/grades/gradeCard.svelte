@@ -9,6 +9,7 @@
 <span class="scroll" id={semesterId}></span>
 <ion-card class="ion-padding-vertical">
 	<ion-card-header>
+
   <ion-card-title><b>{semesterId}ο Εξάμηνο</b></ion-card-title>
 		{#if semesterAverage}
 		<ion-card-subtitle>Μ.Ο Εξαμήνου: {semesterAverage}</ion-card-subtitle>

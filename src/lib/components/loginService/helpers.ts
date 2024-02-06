@@ -25,9 +25,9 @@ export async function getUniversisToken(username: string, password: string) {
             return newTokens;
         });
 
-        outputMessage = outputMessage + "Universis!"
+        //outputMessage = outputMessage + "Universis!"
     } 
-    return outputMessage;
+    return response.error;
 }
 
 export async function getElearningToken(username: string, password: string) {
@@ -49,5 +49,5 @@ export async function getElearningToken(username: string, password: string) {
     } else {
         outputMessage = outputMessage + "Elearning failed!"
     }
-    return outputMessage;
+    return response.error;
 }
