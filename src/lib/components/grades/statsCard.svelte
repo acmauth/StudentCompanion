@@ -77,6 +77,9 @@
 				scales: {
 					y: {
 						beginAtZero: false,
+						grid: {
+							display: false,
+						},
 						
 					},
 				},
@@ -95,13 +98,14 @@
 			},
 		});
 	}
+
 	});
 
 	
 </script>
 
 {#if !searchQuery.length}
-<ion-card class="ion-text-center ion-padding-vertical">
+<ion-card class="ion-text-center ion-padding-vertical stats">
 	<ion-card-header>
 		<ion-card-subtitle>
 			<h2>Περασμένα μαθήματα</h2>
@@ -155,5 +159,11 @@
 	circle-progress::part(value) {
 		stroke: #3880ff;
 		}
+
+	.stats {
+		box-shadow: none;
+	}
+	
+
 
 </style>

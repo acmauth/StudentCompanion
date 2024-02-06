@@ -16,9 +16,9 @@
 	let email = '';
 	let familyName = '';
 	let givenName = '';
+	let username = '';
 	let gender = '';
 	let departmentName = '';
-	let departmentAddress = '';
 	let semester = '';
 
 	// Get personal details and department details
@@ -26,16 +26,18 @@
 	async function getPersonalInfo() {
 		let personalData = await universisGet('Students/me/');
 		let department = await universisGet('Students/me/department');
+		let user = await universisGet('Users/me');
+		console.log(user);
 		aem = personalData.studentIdentifier;
 		inscriptionYear = personalData.inscriptionYear.name;
 		schoolGraduated = personalData.schoolGraduated;
 		birthDate = personalData.person.birthDate.slice(0, 10);
 		email = personalData.person.email;
+		username = user.name;
 		familyName = personalData.person.familyName;
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
 		departmentName = department.abbreviation;
-		departmentAddress = department.address;
 		semester = personalData.semester;
 	}
 
@@ -60,7 +62,7 @@
 		</ion-content>
 		
 	{:then} 
-	<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName}  departmentName = {departmentName} departmentAddress = {departmentAddress} semester = {semester} logOut = {logOut} />
+	<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} logOut = {logOut} />
 
 	{:catch error}
         <p>{error.message}</p>

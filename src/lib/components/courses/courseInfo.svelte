@@ -13,7 +13,7 @@
 
 	// Slot machine animation variables
 	let targetNumber = 0;
-	const maxIterations = 20;
+	const maxIterations = stats.grade;
 	let currentIteration = 0;
 	/**
 	 * @type {HTMLElement | null}
@@ -26,14 +26,14 @@
 
 	// Slot machine animation function
 	function animate() {
-		const randomNumber = Math.floor(Math.random() * 10);
+		const randomNumber = currentIteration+1;
 		if (numberElement) {
 			numberElement.textContent = randomNumber.toString();
-			if (currentIteration < maxIterations) {
+			if (randomNumber < maxIterations) {
 				currentIteration++;
 				setTimeout(() => {
 					requestAnimationFrame(animate);
-				}, 50);
+				}, 60);
 			} else {
 				numberElement.textContent = targetNumber.toString();
 			}
@@ -63,7 +63,7 @@
 
 			// Create a bar chart using Chart.js
 			const ctx = document.getElementById('gradeChart').getContext('2d');
-			const colors = grades.map((grade) => (grade < 5 ? '#eb445a' : '#2dd36f'));
+			const colors = grades.map((grade) => (grade < 5 ? '#515151' : '#55BBFF'));
 			chart = new Chart(ctx, {
 				type: 'bar',
 				data: {
@@ -97,6 +97,16 @@
 								size: 15
 							}
 						}
+					},
+
+
+					layout: {
+						padding: {
+							left: 20,
+							right: 20,
+							top: 0,
+							bottom: 20
+						}
 					}
 				}
 			});
@@ -104,6 +114,8 @@
 			console.log('Error', error);
 		}
 	});
+
+	console.log(course);
 </script>
 
 <ion-content>
@@ -117,6 +129,8 @@
 		<!-- Checking if there is a grade and displays the corresponding color depending if you passed or not -->
 		<ion-card-content class="ion-text-center">
 			{#if !stats.grade}
+				<ion-text><b>-</b></ion-text>
+				<br>
 				<ion-text color="danger">Δεν έχεις βαθμολογήθει ακόμα στο μάθημα</ion-text>
 			{:else if stats.grade * 10 >= 5}
 				<ion-text color="success" id="number">{stats.grade}</ion-text>
@@ -127,16 +141,7 @@
 			<!-- Course info -->
 
 			<ion-list>
-				<ion-accordion-group expand="compact">
-					<ion-accordion value="first">
-						<ion-item slot="header" color="light">
-							<ion-label>Διδάσκοντες</ion-label>
-						</ion-item>
-						{#each course.teacher.split(', ') as teacher}
-							<h3 class="teachers" slot="content">{teacher}</h3>
-						{/each}
-					</ion-accordion>
-				</ion-accordion-group>
+
 				<ion-item>
 					<ion-label>ECTS</ion-label>
 					<ion-text slot="end">{course.ects}</ion-text>
@@ -151,9 +156,20 @@
 					<ion-text slot="end">{course.season}</ion-text>
 				</ion-item>
 				<ion-item>
-					<ion-label>Εβδομαδιαίες ώρες</ion-label>
+					<ion-label >Εβδομαδιαίες ώρες</ion-label>
 					<ion-text slot="end">{course.weeklyHours}</ion-text>
 				</ion-item>
+
+				<ion-accordion-group class="accordion" expand="compact">
+					<ion-accordion value="first">
+						<ion-item slot="header" color="white">
+							<ion-label>Διδάσκοντες</ion-label>
+						</ion-item>
+						{#each course.teacher.split(', ') as teacher}
+							<h3 class="teachers" slot="content">{teacher}</h3>
+						{/each}
+					</ion-accordion>
+				</ion-accordion-group>
 			</ion-list>
 		</ion-card-content>
 	</ion-card>
@@ -197,7 +213,7 @@
 					<ion-label>Μέσος όρος</ion-label>
 					<ion-text slot="end">{stats.averageGrade}</ion-text>
 				</ion-item>
-				<ion-item>
+				<ion-item lines="none">
 					<ion-label>Μέσος όρος επιτυχόντων</ion-label>
 					<ion-text slot="end">{stats.averageGradePassed}</ion-text>
 				</ion-item>
@@ -227,4 +243,14 @@
 		margin-bottom: 1rem;
 		text-align: center;
 	}
+
+	ion-card {
+		box-shadow: none;
+	}
+
+
+  
+
+
+	
 </style>

@@ -20,7 +20,7 @@
 	  const semesters = Object.keys(courses).map((key) => {
 		return {
 		  semesterId: key,
-		  average: semesterAverage[key - 1] ? semesterAverage[key - 1] : '-',
+		  average: semesterAverage[key] ? semesterAverage[key] : '-',
 		  courses: courses[key],
 		};
 	  });

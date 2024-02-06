@@ -2,6 +2,7 @@
 	import man from '$lib/assets/man.png';
 	import woman from '$lib/assets/woman.png';
 	import * as allIonicIcons from 'ionicons/icons';
+	import '../../../theme/variables.css';
 	/**
 	 * @type {string}
 	 */
@@ -9,11 +10,17 @@
 	/**
 	 * @type {any}
 	 */
-	 export let givenName;
+	 export let username;
 	/**
 	 * @type {any}
 	 */
+
 	 export let familyName;
+	/**
+	 * @type {any}
+	 */
+
+	 export let givenName;
 	/**
 	 * @type {any}
 	 */
@@ -38,10 +45,6 @@
 	/**
 	 * @type {any}
 	 */
-	 export let departmentAddress;
-	/**
-	 * @type {any}
-	 */
 	 export let semester;
 	 /**
 	 * @type {any}
@@ -60,62 +63,74 @@
 				<img class="avatar ion-padding-vertical" alt="man" src={woman} width="60px" />
 			{/if}
 			<ion-card-title>{givenName} {familyName}</ion-card-title>
+			<ion-item lines="none">
+				<ion-card-subtitle>{aem}</ion-card-subtitle>
+			</ion-item>
 		</ion-card-header>
 	</ion-card>
 	<ion-card>
 		<ion-card-content>
-			<ion-item>
-				<ion-icon size="small" icon={allIonicIcons.pricetag} />
-				<ion-text class="ion-padding-start">{aem}</ion-text>
-			</ion-item>
-
+			{#if username}
 			<ion-item>
 				<ion-icon size="small" icon={allIonicIcons.person} />
 
-				<ion-text class="ion-padding-start">{givenName} {familyName}</ion-text>
+				<ion-label class="ion-padding-start">{username}</ion-label>
 			</ion-item>
+			{/if}
 
+			{#if schoolGraduated}
 			<ion-item>
 				<ion-icon size="small" icon={allIonicIcons.school} />
 
-				<ion-text class="ion-padding-start">{schoolGraduated}</ion-text>
+				<ion-label class="ion-padding-start">{schoolGraduated}</ion-label>
 			</ion-item>
+			{/if}
 
+			{#if birthDate}
 			<ion-item>
 				<ion-icon size="small" icon={allIonicIcons.calendar} />
 
-				<ion-text class="ion-padding-start">{birthDate}</ion-text>
+				<ion-label class="ion-padding-start">{birthDate}</ion-label>
 			</ion-item>
+			{/if}
 
+			{#if email}
 			<ion-item>
 				<ion-icon size="small" icon={allIonicIcons.mail} />
 
-				<ion-text class="ion-padding-start">{email}</ion-text>
+				<ion-label class="ion-padding-start">{email}</ion-label>
 			</ion-item>
+			{/if}
 
+			{#if gender}
 			<ion-item>
 				<ion-icon size="small" icon={allIonicIcons.maleFemale} />
 
-				<ion-text class="ion-padding-start">{gender === 'Α' ? 'Άντρας' : 'Γυναίκα'}</ion-text>
+				<ion-label class="ion-padding-start">{gender === 'Α' ? 'Άντρας' : 'Γυναίκα'}</ion-label>
 			</ion-item>
+			{/if}
 
 
+			{#if departmentName}
 			<ion-item>
 				<ion-icon size="small" icon={allIonicIcons.location} />
 
-				<ion-text class="ion-padding-start">{departmentName} {departmentAddress}</ion-text>
+				<ion-label class="ion-padding-start">{departmentName}</ion-label>
 			</ion-item>
+			{/if}
 
+			{#if semester}
 			<ion-item>
 				<ion-icon size="small" icon={allIonicIcons.analytics} />
 
-				<ion-text class="ion-padding-start">{semester}ο Εξάμηνο</ion-text>
+				<ion-label class="ion-padding-start">{semester}ο Εξάμηνο</ion-label>
 			</ion-item>
+			{/if}
 
-			<ion-item on:click={logOut}>
+			<ion-item lines="none" on:click={logOut}>
 				<ion-icon color="danger" size="small" icon={allIonicIcons.exit} />
 
-				<ion-text color="danger" class="ion-padding-start">Αποσύνδεση</ion-text>
+				<ion-label color="danger" class="ion-padding-start">Αποσύνδεση</ion-label>
 			</ion-item>
 
 
@@ -130,5 +145,15 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
+
+	ion-icon {
+		color: var(--ion-color-primary);
+	}
+
+
+	ion-card-subtitle {
+		font-size: 1.2rem;
+		padding-left: 5px;
 	}
 </style>
