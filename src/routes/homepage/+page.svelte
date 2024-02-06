@@ -55,7 +55,7 @@
 	</ion-header>
 	<ion-content class="" fullscreen>
 		<div class="info-container">
-			<div class="image">
+			<div>
 				{#if gender === 'Α'}
 					<img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
 				{:else}
@@ -66,10 +66,12 @@
 				<h5 class="h5">Γεια σου</h5>
 				<h5 class="h5"><b>{givenName}!</b></h5>
 			</div>
-			<div>
-				<ion-button color="trietary" class="student-id" fill="clear"
-					><ion-icon class="id-icon" icon={wallet} /></ion-button
-				>
+			<div class="student-id">
+				<AppCard margin={false} shadow={true} href="/id">
+					<div style="background-color: #f3faff">
+						<ion-icon class="id-icon" icon={wallet} />
+					</div>
+				</AppCard>
 			</div>
 		</div>
 		<div class="card-container">
@@ -96,7 +98,7 @@
 		</div>
 		<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
 		<AppletsSlides />
-		<p class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
+		<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
 	</ion-content>
 </IonPage>
 
@@ -113,21 +115,17 @@
 	}
 
 	.student-id {
-		height: 4rem;
-		width: fit-content;
 		margin: 1.5rem;
-		color: var(--app-color-primary-dark);
-		/* outline-style: auto; */
-		border-radius: 15px;
-		background-color: #f3faff;
 		border-style: solid;
-		border-width: 0.01rem;
+		border-radius: 17px;
+		border-width: 1px;
 		border-color: var(--app-color-primary-light);
-		/* box-shadow: 0px 2px 1px rgb(0, 0, 0, 0.25); */
 	}
 
 	.id-icon {
+		margin: 1rem;
 		font-size: 2.5rem;
+		color: var(--app-color-primary-dark);
 	}
 
 	.info-container {
@@ -189,7 +187,8 @@
 	.progress-avg {
 		--progress-background: white;
 		background: var(--app-color-primary-dark);
-		height: 1rem;
+		height: 1.5rem;
+		margin-left: -0.2rem;
 		border-radius: 15px;
 		transform: rotate(-90deg);
 	}
