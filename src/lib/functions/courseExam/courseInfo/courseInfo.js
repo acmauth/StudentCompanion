@@ -91,7 +91,6 @@
             "season": season
 		};
 
-        console.log(courses);
 
 		return courseInformation;
 
