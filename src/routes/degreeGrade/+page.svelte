@@ -1,4 +1,4 @@
- <script>
+<script>
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
  
@@ -21,23 +21,29 @@
     onMount(async () => {
         // Fetch a list of the current student's courses
         let courses = (await universisGet("students/me/courses?$top=-1")).value;
-        let last_semester = 1
+
+        let last_semester = -1
         let last_semester_unpassed_courses_pushed = true
 
         // Loop through the courses. If the current course is
         // not passed) change the not_passed_all_courses bool to true and push the courses to the unpassed_semesters list
         // passed) add the ect calculated grade to the sum of the passed courses grade
+        courses.sort((a, b) => a.semester.id - b.semester.id);
+        console.log(courses);
+
         for (const course of courses)
         {
             if (course.isPassed == 0)
             {
                 not_passed_all_courses = true;
 
-                if (course.semester.id != last_semester && temp_courses.length != 0)
+                if (course.semester.id != last_semester)
                 {
                     last_semester_unpassed_courses_pushed = true
-                    unpassed_semesters.push({courses: temp_courses, semester: course.semester.id});
-                    temp_courses = [];
+                    if (last_semester != -1)
+                        unpassed_semesters.push({courses: temp_courses, semester: course.semester.id});
+
+                    temp_courses = [{title: course.courseTitle, grade: 0, ects: course.ects}];
                     last_semester = course.semester.id;
                 }
                 else
@@ -76,12 +82,10 @@
         {
             for (const course of semesterCourses.courses)
             {
-                if (course.grade != 0)
+                if (course.grade > 0 && course.grade != null)
                 {
                     if (course.grade > 10)
                         course.grade = 10;
-                    else if (course.grade < 0 )
-                        course.grade = 0;
 
                     ectsSumAll += course.ects;
                     sum_unpassed_semesters += course.grade * course.ects;
@@ -119,14 +123,15 @@
             <ion-card-header>Εξάμηνο: {semester.semester}</ion-card-header>
 
             {#each semester.courses as course}
-                <ion-item>
+                <ion-item >
                     <ion-text class="class">{course.title}</ion-text>
-                    <input  type="number"bind:value={course.grade} min="0" max="10" step="0.1" on:input={updateGrades} >
+                    <input  type="number" bind:value={course.grade} min="0" max="10" step="0.1" on:input={updateGrades} >
                 </ion-item>
             {/each}
 
             </ion-card>
             {/each}
+
             <!-- Skeleton start -->
             {:else}
             <ion-card class="ion-padding" style="margin-bottom: 20px;">
