@@ -114,7 +114,7 @@
 
             <ion-card-header class="ion-text-center info">
                 <ion-card-title>Για τον υπολογισμό του βαθμού σας,
-                    πρέπει να δώσετε μια πρόβλεψη για τα μη επιτυχείς μαθήματά σας [0-10]:</ion-card-title>
+                    πρέπει να δώσετε μια πρόβλεψη για τα μη περασμένα μαθήματά σας [0-10]:</ion-card-title>
             </ion-card-header>
 
             {#if not_passed_all_courses}
