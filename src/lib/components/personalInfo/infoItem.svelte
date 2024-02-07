@@ -131,4 +131,15 @@
 		flex-direction: column;
 		align-items: center;
 	}
+	/* ion-icon {
+		--color: var(--ion-color-primary);
+		color: var(--app-color-primary-dark);
+	}
+	ion-text {
+		color: var(--app-color-primary-dark);
+	}
+	ion-content {
+		--background: var(--app-color-primary-light);
+		--color: var(--app-color-primary-dark);
+	} */
 </style>
