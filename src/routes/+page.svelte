@@ -16,7 +16,18 @@
 		<ion-button href="/grades">Grades</ion-button>
 	</ion-card>
 
+	<ion-card>
+		<ion-card-header>
+			<ion-card-subtitle>Personal Info Page</ion-card-subtitle>
+		</ion-card-header>
+		<ion-button href="/personalInfo">Personal Info</ion-button>
+	</ion-card>
 
+  
+	<ion-card>
+		<ion-button href="/schedule">Schedule</ion-button>
+		<ion-button href="/notifications">Notifications</ion-button>
+	</ion-card>
 <ion-card>
 	<ion-card-header>
 		<ion-card-subtitle>Personal Info Page</ion-card-subtitle>
@@ -29,6 +40,13 @@
 	<ion-button href="/notifications">Notifications</ion-button>
 </ion-card>
 
+<ion-card>
+	<ion-card-header>
+		<ion-card-subtitle>Degree Grade</ion-card-subtitle>
+	</ion-card-header>
+	<ion-button href="/degreeGrade">Calculate Degree Grade</ion-button>
+</ion-card>
+
 
 	<ion-card>
 		<ion-card-header>
@@ -37,6 +55,7 @@
 		<ion-button href="/menu">Weekly Menu</ion-button>
 	</ion-card>
 
-
+	<ion-card>
+		<ion-button href="/quickLinks">Quick Links</ion-button>
+	</ion-card>
 </ion-page>
-
