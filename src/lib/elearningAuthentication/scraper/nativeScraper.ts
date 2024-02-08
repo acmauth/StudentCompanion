@@ -12,6 +12,13 @@ export interface ElearningAuthenticatePlugin {
             userID: string;
         };
     }>;
+    apiGet(options: { sesskey: string, moodleSession: string, dataArguments: string }): Promise<{
+        error: boolean;
+        reason: string;
+    } | {
+        error: null;
+        response: object;
+    }>;
 }
 
 export const ElearningAuthenticate = registerPlugin<ElearningAuthenticatePlugin>('ElearningScraper');

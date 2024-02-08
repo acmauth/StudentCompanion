@@ -34,6 +34,7 @@
 	"type": "module",
 	"dependencies": {
 		"@capacitor/android": "^5.5.1",
+		"@capacitor/app": "^5.0.7",
 		"@capacitor/core": "^5.5.1",
 		"@ionic/core": "^7.2.1",
 		"@sveltejs/adapter-auto": "^2.1.0",

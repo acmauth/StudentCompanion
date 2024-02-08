@@ -4,6 +4,7 @@ import { userCreds, userTokens } from '../../stores/credentials.store';
 import userInfoStore from '../../stores/userinfo.store';
 import elearningAuthenticator from './scraper/elearningAuthenticator';
 import { ElearningAuthenticate } from './scraper/nativeScraper';
+// import { ElearningFetch } from './nativeFetcher';
 import { CapacitorHttp, CapacitorCookies } from '@capacitor/core';
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -103,20 +104,31 @@ export async function elearningGet(dataArguments: any){
 
     } else {
         console.log("Running on production-elearningGet");
-        
+        let elearningData;
         try {
-            const elearningData = await internalElearningGet(dataArguments, sesskey, moodleSession);
+            // const elearningData = await internalElearningGet(dataArguments, sesskey, moodleSession);
+            elearningData = await ElearningAuthenticate.apiGet({sesskey: sesskey, moodleSession: moodleSession, dataArguments: JSON.stringify(dataArguments)});
             data = elearningData;
         }
         catch (err) {
             console.log(err);
             await elearningFetchNewToken(get(userCreds).username, get(userCreds).password);
-            const elearningData = await internalElearningGet(dataArguments, sesskey, moodleSession);
+            // const elearningData = await internalElearningGet(dataArguments, sesskey, moodleSession);
+            elearningData = await ElearningAuthenticate.apiGet({sesskey: sesskey, moodleSession: moodleSession, dataArguments: JSON.stringify(dataArguments)});
             data = elearningData;
         }
-        const elearningData = await internalElearningGet(dataArguments, sesskey, moodleSession);
+        // const elearningData = await internalElearningGet(dataArguments, sesskey, moodleSession);
         data = elearningData;
 
+    }
+
+    if (data.error){
+        console.log(data);
+        return;
+    } else {
+        console.log(data);
+        data = JSON.parse(data.data);
+        console.log(data);
     }
 
     // Checking if we're logged out
