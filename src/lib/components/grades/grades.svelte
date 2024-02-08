@@ -1,53 +1,77 @@
 <script lang="ts">
 	// @ts-nocheck
-	import * as allIonicIcons from 'ionicons/icons';
-	import { onMount } from 'svelte';
-	import { universisGet } from '$lib/dataService';
+	import { writable } from 'svelte/store';
 	import Card from './gradeCard.svelte';
-
+	import { coursesPerSemester } from '$lib/functions/coursePerSemester/coursesPerSemester';
+	import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
+  
 	export let searchQuery;
-
-	let subjects = [];
-	let filteredSubjects = {};
-	let courseBySemester = {};
-	// let grades = [];
-
-	onMount(async () => {
-		subjects = (await universisGet('students/me/courses?$top=-1')).value;
-		courseBySemester = subjects.reduce((acc, course) => {
-			if (!acc[course.semester.id]) {
-				acc[course.semester.id] = [];
-			}
-			acc[course.semester.id].push(course);
-			return acc;
-		}, {});
-
-	});
+	export let semesterId;
+  
+	let courseBySemester = writable([]);
+	let filteredSubjects = writable([]);
+  
+	// Get the courses per semester and the average per semester
+	async function gatherGrades() {
+	  const courses = await coursesPerSemester();
+	  const semesterAverage = await averagesPerSemester();
+  
+	  // keep semester id, average, and courses in an array
+	  const semesters = Object.keys(courses).map((key) => {
+		return {
+		  semesterId: key,
+		  average: semesterAverage[key] ? semesterAverage[key] : '-',
+		  courses: courses[key],
+		};
+	  });
+  
+	  semesters.sort((a, b) => a.semesterId - b.semesterId);
+  
+	  courseBySemester.set(semesters);
+  
+	  return semesters;
+	}
+  
 
 	// Filter the results based on the searchQuery
 
+  
 	$: {
-		if (searchQuery.length === 0) {
-			filteredSubjects = { ...courseBySemester };
-		} else {
-			//filter the subjects from the searchQuery and make a new object with the filtered subjects and the semesterId as key
 
-			for (let semesterId in courseBySemester) {
-				filteredSubjects[semesterId] = courseBySemester[semesterId].filter((course) =>
-              course.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) || course.course.toLowerCase().includes(searchQuery.toLowerCase())
-				);
-			}
-		}
+	  const courses = $courseBySemester;
+	  if (searchQuery.length === 0) {
+		filteredSubjects.set(courses);
+	  } else {
+		const filtered = courses.map((semester) => {
+		  return {
+			...semester,
+			courses: semester.courses.filter(
+			  (course) =>
+				course.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				course.course.toLowerCase().includes(searchQuery.toLowerCase())
+			),
+		  };
+		});
+		filteredSubjects.set(filtered);
+	  }
+  
 	}
-</script>
 
-<!-- Card -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-
-{#each Object.keys(filteredSubjects) as semesterId}
-	{#if filteredSubjects[semesterId].length > 0}
-		<Card {semesterId} {filteredSubjects} />
-	{/if}
-{/each}
+  </script>
+  
+  <!-- Card -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  
+  {#await gatherGrades()}
+	<p>Loading...</p>
+  {:then semesters}
+	{#each $filteredSubjects as semester}
+	  <Card semesterAverage={semester.average} semesterId={semester.semesterId} filteredSubjects={semester.courses} />
+	{/each}
+  
+  {:catch error}
+	<p>{error.message}</p>
+  {/await}
+  
 

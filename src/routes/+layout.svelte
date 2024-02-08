@@ -16,7 +16,7 @@
 		}
 	});
 	/* Theme variables */
-	// import '../theme/variables.css';
+	import '../theme/variables.css';
 
 
 
