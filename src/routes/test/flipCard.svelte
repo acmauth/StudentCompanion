@@ -1,5 +1,4 @@
 <script lang="ts">
-    import AppCard from "$components/shared/AppCard.svelte";
     export let reactToHeight: boolean = false;
     
     // The flip class is what we use to toggle the flip effect.
@@ -29,38 +28,24 @@
 
 </script>
 
-
+<!-- Main container, this dictates the element height and flip state/click handling -->
 <div on:click={() => flipClass = !flipClass} class="flip-container" class:flipClass={flipClass} aria-hidden bind:this={flipContainer}>
+    <!-- The flipper is the element that rotates, it contains the front and back children and handles the animation -->
     <div class="flipper">
-      <div class="front" bind:this={frontChild}>
-        <AppCard>
-            <ion-card-header>
-                <ion-card-subtitle>Student companion (test) homepage</ion-card-subtitle>
-            </ion-card-header>
-            <ion-text>Homepage</ion-text>
-            <ion-card-content>
-                Let's list here our quick page links, before we get navigation figured out
-            </ion-card-content>
-            <ion-button href="/loginService">Log in/Log out</ion-button>
-        </AppCard>
-      </div>
-      <div class="back" bind:this={backChild}>
-        <AppCard colour="orange">
-            <ion-card-header>
-                <ion-card-subtitle>SECONDDDDD Student companion (test) homepage</ion-card-subtitle>
-            </ion-card-header>
-            <ion-button href="/loginservice">Homepage</ion-button>
-            <ion-card-content>
-                Let's list here our quick page links, before we get navigation figured out
-            </ion-card-content>
-            <ion-button href="/loginService">Log in/Log out</ion-button>
-        </AppCard>
-      </div>
+        <!-- Slot for the front element and wrapping div -->
+        <div class="front" bind:this={frontChild}>
+            <slot name="front"/>
+        </div>
+        <!-- Slot for the back element and wrapping div -->
+        <div class="back" bind:this={backChild}>
+            <slot name="back"/>
+        </div>
     </div>
 </div>
 
 <style>
 
+/*  */
 .flip-container {
   -webkit-perspective: 1000;
   -moz-perspective: 1000;
@@ -68,6 +53,7 @@
   perspective: 1000;
 }
 
+/* When flipClass is active, rotate the whole contents of flipper 180 */
 .flip-container.flipClass
 .flipper {
   -webkit-transform: rotateY(-180deg);
@@ -78,7 +64,7 @@
 }
 
 
-
+/* Animation for the rotation and style */
 .flipper {
   transition: 0.6s;
   -webkit-transition: 0.6s;
@@ -92,8 +78,8 @@
   -ms-transform-style: preserve-3d;
   position: relative;
 }
-/* hide back of pane during swap */
 
+/* hide back of pane during swap */
 .front,
 .back {
   -webkit-backface-visibility: hidden;
@@ -102,33 +88,28 @@
   backface-visibility: hidden;
 }
 
+
+
+/* front pane, placed above back */
 .front {
+    z-index: 2;
+    /* for firefox 31 */
     position: relative;
+    -webkit-transform: rotateY(0deg);
+    -moz-transform: rotateY(0deg);
+    -o-transform: rotateY(0deg);
+    -ms-transform: rotateY(0deg);
+    transform: rotateY(0deg);
 }
 
+/* back, initially hidden pane, moved to the same position as the front pane */
 .back {
     position: absolute;
     top: 0;
     left: 0;
-}
-/* front pane, placed above back */
-
-.front {
-  z-index: 2;
-  /* for firefox 31 */
-  
-  -webkit-transform: rotateY(0deg);
-  -moz-transform: rotateY(0deg);
-  -o-transform: rotateY(0deg);
-  -ms-transform: rotateY(0deg);
-  transform: rotateY(0deg);
-}
-/* back, initially hidden pane */
-
-.back {
-  -webkit-transform: rotateY(180deg);
-  -moz-transform: rotateY(180deg);
-  -o-transform: rotateY(180deg);
-  transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+    transform: rotateY(180deg);
 }
 </style>
