@@ -8,7 +8,6 @@ import * as base64urlAUTH from 'base64url';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
 import fetch from 'cross-fetch';
-import makeFetchCookie from 'fetch-cookie'
 
 
 const authorizeURL= "https://oauth2.it.auth.gr/auth/realms/universis/protocol/openid-connect/auth"
@@ -70,12 +69,11 @@ export default async function authenticate(username: string, password: string) {
   
   // Creating an axios session
   const jar = new CookieJar();
-  // axios.defaults.withCredentials = true
-  // const session = wrapper(axios.create({ 
-  //   jar: jar, 
-  //   adapter: axios.getAdapter('http')
-  // }));
-  const sessionFetch = makeFetchCookie(fetch, jar);
+  axios.defaults.withCredentials = true
+  const session = wrapper(axios.create({ 
+    jar: jar, 
+    adapter: axios.getAdapter('http')
+  }));
 
   // Step 1: Initial GET request
 
@@ -102,11 +100,11 @@ export default async function authenticate(username: string, password: string) {
   // console.log(response1.status);
   
   // const response1 = await wretch(extendedURL).headers(step1Headers).get().res();
-  // const response1 = await fetch(extendedURL, {method: 'GET', headers:step1Headers, credentials: 'include', redirect: 'follow' });
-  const response1 = await sessionFetch(extendedURL, { headers:step1Headers, maxRedirect: 5 });
+  const response1 = await fetch(extendedURL, {method: 'GET', headers:step1Headers, credentials: 'include', redirect: 'follow' });
+  console.log(response1.status);
   
   
-  const response_page = cheerio.load(await response1.text());  
+  const response_page = cheerio.load(await response1.text());
   
   // Scraping for the form url, SAMLRequest, RelayState
   let formElements = response_page('form[action]');
@@ -125,16 +123,13 @@ export default async function authenticate(username: string, password: string) {
   }
 
   const step2Headers = PreHeaders.H2();
-  // const response2 = await session.post(form_url, form_data, { headers:step2Headers, withCredentials: true});
-  const response2 = await sessionFetch(form_url, { method: 'POST', headers:step2Headers, body: new URLSearchParams(form_data), maxRedirect: 5 });
+  const response2 = await session.post(form_url, form_data, { headers:step2Headers, withCredentials: true});
   
   
   // Step 3: POST username, password, and AuthState
-  // const form2url = response2.request.res.responseUrl.split("?")[0];
-  const form2url = response2.url.split("?")[0];
-  const response_page2 = cheerio.load(await response2.text());
+  const form2url = response2.request.res.responseUrl.split("?")[0];
+  const response_page2 = cheerio.load(response2.data);
   formElements = response_page2('input[name="AuthState"]');
-  
   const auth_state = stripData(response_page2, formElements, "value");
   
   const form_data3 = {
@@ -143,14 +138,11 @@ export default async function authenticate(username: string, password: string) {
     "AuthState": auth_state,
   }
 
-  // const step3Headers = PreHeaders.H3(response2.request.res.responseUrl);
-  const step3Headers = PreHeaders.H3(form2url);
-  // const response3 = await session.post(form2url, form_data3, { headers:step3Headers, withCredentials: true});
-  const response3 = await sessionFetch(form2url, { method: 'POST', headers:step3Headers, body: new URLSearchParams(form_data3), maxRedirect: 5 });
-  const response_page3_text = await response3.text();
-  const response_page3 = cheerio.load(response_page3_text);
+  const step3Headers = PreHeaders.H3(response2.request.res.responseUrl);
+  const response3 = await session.post(form2url, form_data3, { headers:step3Headers, withCredentials: true});
+  const response_page3 = cheerio.load(response3.data);
   
-  if (response_page3_text.includes("το όνομα χρήστη ή ο κωδικός πρόσβασης ήταν λάθος")){
+  if (response3.data.includes("το όνομα χρήστη ή ο κωδικός πρόσβασης ήταν λάθος")){
     return {error: "Wrong password"};
   };
 
@@ -170,12 +162,10 @@ export default async function authenticate(username: string, password: string) {
   
   const step4Headers = PreHeaders.H4();
   let responseHeaders = "";
-  // const response4 = await session.post(form_url3, form_data4, { headers:step4Headers, withCredentials: true, maxRedirects: 0})
-  // .catch(data => data.response.headers).then(data => responseHeaders = data);
-  const response4 = await sessionFetch(form_url3, { method: 'POST', headers:step4Headers, body: new URLSearchParams(form_data4), redirect: 'manual' })
+  const response4 = await session.post(form_url3, form_data4, { headers:step4Headers, withCredentials: true, maxRedirects: 0})
+  .catch(data => data.response.headers).then(data => responseHeaders = data);
   
-  // const redirect_url = responseHeaders["location"];
-  const redirect_url = response4.headers.get('location');
+  const redirect_url = responseHeaders["location"];
   
   if (!redirect_url.includes("code=")){
     return {error: "the url does not contain a code"}
@@ -193,10 +183,8 @@ export default async function authenticate(username: string, password: string) {
     }
 
     const step5headers = PreHeaders.H5();
-    // const response5 = await session.post(oauth2.tokenURL, form_data5, { headers:step5headers, withCredentials: true});
-    const response5 = await sessionFetch(oauth2.tokenURL, { method: 'POST', headers:step5headers, body: new URLSearchParams(form_data5) });
-    // const token = response5.data.access_token;
-    const token = (await response5.json()).access_token;
+    const response5 = await session.post(oauth2.tokenURL, form_data5, { headers:step5headers, withCredentials: true});
+    const token = response5.data.access_token;
 
   // return response_status.toString();
   return {error: null, token: token};

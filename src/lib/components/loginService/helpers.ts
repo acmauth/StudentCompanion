@@ -6,9 +6,15 @@ import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDa
 
 
 export async function getUniversisToken(username: string, password: string) {
+    console.log("U1");
+    
     const encodedPassword = encodeURIComponent(password);
     let outputMessage = "";
+    console.log("U2");
+    
     const response = await tokenGrab(username, encodedPassword);
+    console.log("C");
+    
     if (response.error){
         outputMessage = response.error;
         outputMessage = outputMessage + "Universis failed!"
@@ -31,9 +37,14 @@ export async function getUniversisToken(username: string, password: string) {
 }
 
 export async function getElearningToken(username: string, password: string) {
+
+    console.log("E1");
+    
     const encodedPassword = encodeURIComponent(password);
     let outputMessage = "";
     const response = await elearningFetchNewToken(username, encodedPassword);
+    console.log("E2");
+    
     if (!response.error && response.credentials){
     userTokens.update((newTokens) => {
         newTokens.elearning.moodleSession = response.credentials.moodleSession;
