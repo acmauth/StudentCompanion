@@ -1,11 +1,14 @@
-<script lang="ts">
+<script>
+    import Flipper from "$components/shared/Flipper.svelte";
+    import TestComponentA from "./testComponentA.svelte";
+	import TestComponentB from "./testComponentB.svelte";
 
-    let outlineValue = true;
-    function toggleOutline() {
-        outlineValue = !outlineValue;
-    };
-    
 </script>
 
-<ion-chip outline={outlineValue} on:click={toggleOutline} aria-hidden>Hello</ion-chip>
-<p>{outlineValue}</p>
+<ion-content>
+    <Flipper reactToHeight>
+        <TestComponentA slot="front"/>
+        <TestComponentB slot="back"/>
+    </Flipper>
+</ion-content>
+

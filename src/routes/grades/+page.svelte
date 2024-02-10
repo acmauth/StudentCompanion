@@ -43,10 +43,6 @@
 		coursesBySemester = await coursesPerSemester();
 	}
 
-	const randList = (length: number) => {
-        const randomLength = Math.floor(Math.random() * length) + 2;
-        return Array.from({ length: randomLength }, (_, i) => i + 1);
-    }
 
 
 
@@ -57,7 +53,7 @@
 		<ion-title class="ion-padding-vertical" size="large">Βαθμοί</ion-title>
 	
 
-		<ion-searchbar debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
+		<ion-searchbar class="searchbar" debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
 		
 		
 		<Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />
@@ -88,6 +84,9 @@
 		position: sticky;
 		top: 0px;
 		z-index: 10;
+	}
+	.searchbar {
+    --border-radius: 10px;
 	}
 </style>
 

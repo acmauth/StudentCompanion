@@ -45,23 +45,10 @@
 
 	async function getData() {
 		try {
-		result = await statistics(courseCode);
-		stats.grade = result.myGrade;
-		stats.studentsLikeMe = result.studentsLikeMe;
-		stats.studentsBetterThanMe = result.studentsBetterThanMe;
-		stats.studentsWorseThanMe = result.studentsWorseThanMe;
-		stats.passedCount = result.studentsPassed;
-		stats.failedCount = result.studentsFailed;
-		stats.totalStudents = result.totalStudents;
-		// fix to 2 digits after decimal point
-		stats.averageGradePassed = result.averagePassed.toFixed(1);
-		stats.averageGrade = result.average.toFixed(1);
-		stats.gradesCount = result.gradesCount;
-
-
 		// Fetch course information
 		result = await courseInformation(courseCode);
-		// Assign values from the result to course
+		if (result) {
+			// Assign values from the result to course
 		course.title = result.courseTitle;
 		course.code = courseCode;
 		course.ects = result.ects;
@@ -78,9 +65,26 @@
 		course.courseType = result.courseType;
 		course.season = result.season;
 
-
 		if (result.period) {
 			course.period = result.period;
+		}
+
+		}
+		
+		// Fetch statistics
+		result = await statistics(courseCode);
+		if (result) {	
+		stats.grade = result.myGrade;
+		stats.studentsLikeMe = result.studentsLikeMe;
+		stats.studentsBetterThanMe = result.studentsBetterThanMe;
+		stats.studentsWorseThanMe = result.studentsWorseThanMe;
+		stats.passedCount = result.studentsPassed;
+		stats.failedCount = result.studentsFailed;
+		stats.totalStudents = result.totalStudents;
+		// fix to 2 digits after decimal point
+		stats.averageGradePassed = result.averagePassed.toFixed(1);
+		stats.averageGrade = result.average.toFixed(1);
+		stats.gradesCount = result.gradesCount;
 		}
 
 
