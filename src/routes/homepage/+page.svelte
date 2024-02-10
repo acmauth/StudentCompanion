@@ -55,16 +55,18 @@
 	</ion-header>
 	<ion-content class="" fullscreen>
 		<div class="info-container">
-			<div>
-				{#if gender === 'Α'}
-					<img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
-				{:else}
-					<img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
-				{/if}
-			</div>
-			<div>
-				<h5 class="h5">Γεια σου</h5>
-				<h5 class="h5"><b>{givenName}!</b></h5>
+			<div style="display: flex; align-items:center">
+				<div>
+					{#if gender === 'Α'}
+						<img class="avatar" alt="man" src={man} />
+					{:else}
+						<img class="avatar" alt="man" src={woman} />
+					{/if}
+				</div>
+				<div>
+					<h5 class="h5">Γεια σου</h5>
+					<h5 class="h5"><b>{givenName}!</b></h5>
+				</div>
 			</div>
 			<div class="student-id">
 				<AppCard margin={false} shadow={true} href="/id">
@@ -104,18 +106,19 @@
 
 <style>
 	.avatar {
-		display: block;
-		margin: 1.5rem;
+		width: 5rem;
 	}
 
 	.h5 {
 		margin: 0;
 		padding-left: 0.5rem;
+		padding-right: 0.5rem;
 		color: var(--app-color-primary-dark);
 	}
 
 	.student-id {
-		margin: 1.5rem;
+		/* margin: 1.5rem; */
+		width: fit-content;
 		border-style: solid;
 		border-radius: 17px;
 		border-width: 1px;
@@ -129,10 +132,11 @@
 	}
 
 	.info-container {
-		display: grid;
+		display: flex;
+		max-height: 5rem;
+		margin: 1.5rem;
+		justify-content: space-between;
 		align-items: center;
-		grid-template-columns: 1fr 2fr 1fr;
-		column-gap: 1.5rem;
 	}
 
 	.card-container {
@@ -175,20 +179,23 @@
 
 	.avg-grade-grid {
 		display: grid;
+		justify-content: space-between;
 		grid-template-columns: 1fr 1fr;
+
 		align-items: center;
 		height: 6rem;
 	}
 
 	.avg-grade {
 		padding-left: 1rem;
+		/* padding-right: -1rem; */
 	}
 
 	.progress-avg {
 		--progress-background: white;
 		background: var(--app-color-primary-dark);
-		height: 1.5rem;
-		margin-left: -0.2rem;
+		height: 5vw;
+		width: 4rem;
 		border-radius: 15px;
 		transform: rotate(-90deg);
 	}
