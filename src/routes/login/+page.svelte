@@ -1,5 +1,5 @@
 <script>
-	import Login from '$lib/components/loginService/login.svelte';
+	import Login from '$components/loginPage/login.svelte';
 </script>
 
 <ion-page>

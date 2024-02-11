@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import sisAuthenticator from '../../lib/universisAuthentication/scraper/sisAuthenticator';
+import sisAuthenticator from '$lib/-universis/plugins/webserver/webScraper';
 
 // Server function that handles the login request
 export const GET: RequestHandler = async ({ url }) => {
@@ -13,10 +13,10 @@ export const GET: RequestHandler = async ({ url }) => {
 		throw error(400, 'Bad Request');
 	}
     
-	const token = await sisAuthenticator(username, password);
-	if (!token) {
+	const response = await sisAuthenticator(username, password);
+	if (response.error) {
 		throw error(401, 'Unauthorized');
 	}
 
-	return new Response(JSON.stringify({...token}));
+	return new Response(JSON.stringify(response));
 };

@@ -23,7 +23,7 @@ export const GET: RequestHandler = async ({ url }) => {
 };
 
 
-// Server function that handles the registration request
+// Server function that handles the data request
 export const POST: RequestHandler = async ({ request }) => {
 	
     const requestBody = await request.json();

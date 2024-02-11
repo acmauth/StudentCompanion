@@ -1,14 +1,20 @@
-import { tokenGrab } from "$lib/universisAuthentication/tokenGeneratorWorker"
-import { userCreds, userTokens } from "../../stores/credentials.store";
-import userInfoStore from "../../stores/userinfo.store";
-import { goto } from '$app/navigation';
+// import { tokenGrab } from "$lib/universisAuthentication/tokenGeneratorWorker"
+import { userCreds, userTokens } from "$stores/credentials.store";
+import userInfoStore from "$stores/userinfo.store";
 import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDataService";
+import sisAuthenticator from "$lib/-universis/authenticator/core";
 
-
+/**
+ * Retrieves the Universis token for the given username and password.
+ * @param username - The username for authentication.
+ * @param password - The password for authentication.
+ * @returns A message indicating the success or failure of the token retrieval.
+ */
 export async function getUniversisToken(username: string, password: string) {
     const encodedPassword = encodeURIComponent(password);
     let outputMessage = "";
-    const response = await tokenGrab(username, encodedPassword);
+    const response = await sisAuthenticator(username, encodedPassword);
+    
     if (response.error){
         outputMessage = response.error;
         outputMessage = outputMessage + "Universis failed!"
@@ -20,8 +26,7 @@ export async function getUniversisToken(username: string, password: string) {
         });
         
         userTokens.update((newTokens) => {
-            newTokens.universis.token = response.token;
-            console.log(response);
+            newTokens.universis.token = response.token as string;
             return newTokens;
         });
 
@@ -30,6 +35,13 @@ export async function getUniversisToken(username: string, password: string) {
     return outputMessage;
 }
 
+
+/**
+ * Retrieves the Universis token for the given username and password.
+ * @param username - The username for authentication.
+ * @param password - The password for authentication.
+ * @returns A message indicating the success or failure of the token retrieval.
+ */
 export async function getElearningToken(username: string, password: string) {
     const encodedPassword = encodeURIComponent(password);
     let outputMessage = "";
