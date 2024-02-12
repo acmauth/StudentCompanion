@@ -25,6 +25,9 @@
         
         let universisOutput = await getUniversisToken(username, password);
         let elearningOutput = await getElearningToken(username, password);
+        elearningOutput = ""
+        console.log(universisOutput);
+        
 
         if (universisOutput || elearningOutput) { 
             isVisible = false;

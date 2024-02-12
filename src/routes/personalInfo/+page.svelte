@@ -44,7 +44,7 @@
 	// Log out
 	function logOut(){
         invalidateAuth();
-        goto("/loginService");
+        goto("/login");
     }
 
 </script>
