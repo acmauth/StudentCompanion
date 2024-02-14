@@ -3,7 +3,7 @@ export interface TimeSlot {
     timeStart: string,
     timeEnd: string
 }
-export interface SubjectItem {
+export interface ClassItem {
     id: number,
     title: string,
     professor: string,

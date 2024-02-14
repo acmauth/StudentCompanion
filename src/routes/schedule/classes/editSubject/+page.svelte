@@ -1,9 +1,7 @@
 <script lang="ts">
-    import type { SubjectItem, TimeSlot } from "$lib/components/schedule/subject/SubjectItem";
-    import { subjectStore } from '$lib/components/schedule/subject/SubjectStore';
-    import { weekdays } from '$lib/components/schedule/day/days'
+    import type { SubjectItem, TimeSlot } from "$components$components/schedule/class/SubjectItemrt { subjectStore } from '$compon$components/schedule/class/SubjectStoreimport { weekdays } from '$lib/components/schedule/day/days'
     import { goto } from '$app/navigation';
-    import { activeSubject } from '$lib/components/schedule/subject/activeSubject';
+    import { activeSubject } f$components/schedule/class/activeSubject;
 
     function handleTimeChange(event: CustomEvent<KeyboardEvent>) {
         const target = event.target as HTMLInputElement;

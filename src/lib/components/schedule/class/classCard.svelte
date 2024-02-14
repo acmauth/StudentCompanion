@@ -1,34 +1,34 @@
 <script lang="ts">
 	import * as allIonicIcons from 'ionicons/icons';
-	import { activeSubject} from './activeSubject';
-	import type { SubjectItem } from './SubjectItem';
-	export let task: SubjectItem;
+	import { activeClass } from './activeClass'
+	import type { ClassItem } from './ClassItem'
+	export let classCourse: ClassItem;
 	export let start: string;
 	export let end: string;
 
-	function setActiveTask() {
-		activeSubject.set(task);
+	function setActiveclassCourse() {
+		activeClass.set(classCourse);
 	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
-<ion-card href="/schedule/editSubject" class="card" on:click={setActiveTask}>
+<ion-card href="/schedule/editSubject" class="card" on:click={setActiveclassCourse}>
 	<ion-grid>
 		<ion-row class="ion-justify-content-start">
 			<ion-col style="padding: 0%">
 				<ion-card-header>
 					<ion-card-subtitle>{start + " - " + end}</ion-card-subtitle>
-					<ion-card-title color="primary">{task.title}</ion-card-title>
+					<ion-card-title color="primary">{classCourse.title}</ion-card-title>
 
 					<div class="icons">
 						<ion-icon icon={allIonicIcons.personOutline} />
-						<ion-card-subtitle>{task.professor}</ion-card-subtitle>
+						<ion-card-subtitle>{classCourse.professor}</ion-card-subtitle>
 					</div>
 
 					<div class="icons">
 						<ion-icon icon={allIonicIcons.map} />
-						<ion-card-subtitle>{task.classroom}</ion-card-subtitle>
+						<ion-card-subtitle>{classCourse.classroom}</ion-card-subtitle>
 					</div>
 				</ion-card-header>
 			</ion-col>

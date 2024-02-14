@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {createOutline, schoolOutline} from 'ionicons/icons';
+    import {bookOutline, createOutline} from 'ionicons/icons';
     import type { ExamItem } from '$components/schedule/exam/ExamItem';
     import ExamCard from '$components/schedule/exam/examCard.svelte';
     import { getDayByIndex } from '$components/schedule/day/days';
@@ -12,6 +12,7 @@
         let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
         exams = fetchedExams.map((exam: any) => {
             return {
+                id: exam.courseExam.course,
                 subject: exam.name,
                 classroom: exam.location.name,
                 date: {
@@ -22,11 +23,7 @@
                 }
             }   
         });
-        console.log(exams);
     });
-
-
-
 </script>
 
 <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
@@ -43,7 +40,7 @@
 
 <ion-fab horizontal="end" vertical="bottom">
     <ion-fab-button href="/schedule/classes" color="primary">
-        <ion-icon icon={schoolOutline} />
+        <ion-icon icon={bookOutline} />
     </ion-fab-button>
 </ion-fab>
 

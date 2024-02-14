@@ -50,6 +50,7 @@
 		"leaflet": "^1.9.4",
 		"svelte-local-storage-store": "^0.6.4",
 		"svelte-persisted-store": "^0.7.0",
+		"svelte-swiper": "^1.0.1",
 		"tough-cookie": "^4.1.3"
 	}
 }

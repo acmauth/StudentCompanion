@@ -1,11 +1,18 @@
-export interface TimeSlot {
-    day: number,
-    timeStart: string,
-    timeEnd: string
+export interface TaskTimeSlot {
+    startDate: Date,
+    endDate: Date
 }
+
+export enum TaskType {
+    PROJECT = 'project',
+    TEST = 'test',
+    OTHER = 'other',
+}
+
 export interface TaskItem {
     id: number,
     title: string,
     description: string,
-    slot: TimeSlot
+    date: TaskTimeSlot,
+    type: TaskType
 }
