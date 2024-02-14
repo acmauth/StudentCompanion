@@ -5,12 +5,9 @@
     import { Capacitor } from '@capacitor/core';    
 	import { onMount } from 'svelte';
 
-    //TODO: sort tasks by date
     // $taskStore = [];
-    console.log($taskStore)
     onMount(async() => {
-        // $taskStore.forEach(task => { console.log(task); })
-        // taskStore.update(tasks => tasks.sort((a, b) => a.date.startDate.getTime() - b.date.startDate.getTime()));
+        taskStore.update(tasks => tasks.sort((a, b) => new Date(a.date.startDate).getTime() - new Date(b.date.startDate).getTime()));
     });
 </script>
 

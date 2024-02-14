@@ -17,7 +17,7 @@
         const endInputElement = document.getElementById("end") as HTMLIonDatetimeElement;
         const startDate = new Date(startInputElement.value?.toString() || new Date().toString());
         const endDate = new Date(endInputElement.value?.toString() || new Date().toString());
-        console.log(startDate, endDate);
+
         if (startDate > endDate) {
             alert("Η ημερομηνία λήξης πρέπει να είναι μετά την ημερομηνία έναρξης");
             return;
