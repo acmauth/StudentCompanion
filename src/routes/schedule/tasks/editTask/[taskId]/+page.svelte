@@ -1,197 +1,164 @@
 <script lang="ts">
-    
     import { page } from '$app/stores';
+    import { goto } from '$app/navigation';
+    import { taskStore } from '$components/schedule/task/taskStore';
+    import { TaskType } from '$components/schedule/task/TaskItem';
+    import type { TaskItem } from '$components/schedule/task/TaskItem';
     // import type { SubjectItem, TimeSlot } from "$components$components/schedule/class/SubjectItemrt { subjectStore } from '$compon$components/schedule/class/SubjectStoreimport { weekdays } from '$lib/components/schedule/day/days'
     // import { goto } from '$app/navigation';
 
-    // Extract taskId from the URL
+    // Extract taskId from the URL and get the referenced task
 	const taskId = $page.params.taskId;
+    let taskItem = $taskStore.find(x => x.id === Number(taskId));
+    
+    if (taskItem == undefined) {
+        alert("Το συμβάν δεν βρέθηκε.");
+        goto('/schedule/tasks');
+    }
 
-    // function handleTimeChange(event: CustomEvent<KeyboardEvent>) {
-    //     const target = event.target as HTMLInputElement;
-    //     const value = target.value;
-    //     const name = target.name;
-    //     const id = target.id.split("-")[1];
-    //     if (name === "starttime") {
-    //         if (value == "") {
-    //             target.value = "00:00";
-    //             var endTime = document.querySelector("#endtime-" + id) as HTMLInputElement;
-    //             endTime.value = "01:00";
-    //         } else {
-    //             const nextHours = String(parseInt(value.split(":")[0]) < 23 ? parseInt(value.split(":")[0]) + 1 : 0);
-    //             const nextMins = String(parseInt(value.split(":")[1]) < 59 ? parseInt(value.split(":")[1]) : 0);
-    //             var nextTime = nextHours.length < 2 ? "0" + nextHours : nextHours;
-    //             nextTime += ":" + (nextMins.length < 2 ? "0" + nextMins : nextMins);
-    //             var endTime = document.querySelector("#endtime-" + id) as HTMLInputElement;
-    //             endTime.value = nextTime;
-    //         }
-    //     } else if (name === "endtime") {
-    //         if (value == "" || document.querySelector("#starttime-" + id)?.value > value) {
-    //             const nextHours = String(parseInt(document.querySelector("#starttime-" + id)?.value.split(":")[0]) < 23 ? parseInt(document.querySelector("#starttime-" + id)?.value.split(":")[0]) + 1 : 0);
-    //             const nextMins = String(parseInt(document.querySelector("#starttime-" + id)?.value.split(":")[1]) < 59 ? parseInt(document.querySelector("#starttime-" + id)?.value.split(":")[1]) : 0);
-    //             var nextTime = nextHours.length < 2 ? "0" + nextHours : nextHours;
-    //             nextTime += ":" + (nextMins.length < 2 ? "0" + nextMins : nextMins);
-    //             target.value = nextTime;
-    //         }
-    //     }
-    // }
+    let startDate = new Date(taskItem?.date.startDate || new Date());
+    let start =  startDate.getFullYear() + "-" + 
+                (String(startDate.getMonth() + 1)).padStart(2, '0') + "-" + 
+                String(startDate.getDate()).padStart(2, '0') + "T" + 
+                String(startDate.getHours()).padStart(2, '0') + ":" + 
+                String(startDate.getMinutes()).padStart(2, '0');
 
-    // let count = $activeSubject.slots.length + 1;
+    let endDate = new Date(taskItem?.date.endDate || new Date());
+    let end =  endDate.getFullYear() + "-" + 
+            (String(endDate.getMonth() + 1)).padStart(2, '0') + "-" + 
+            String(endDate.getDate()).padStart(2, '0') + "T" + 
+            String(endDate.getHours()).padStart(2, '0') + ":" + 
+            String(endDate.getMinutes()).padStart(2, '0');
 
-    // function handleDaySelection(event: CustomEvent<KeyboardEvent>) {
-    //     if (event.target.value != null && event.target.value != "")
-    //         count++;
-    // }
 
-    // function clearDaySelection(event: CustomEvent<KeyboardEvent>) {
-    //     if (!(count > 1 && event.target.value == ""))
-    //         count--;
-    //     event.target.value = "";
-    // }
+    function onCancel() {
+        goto('/schedule/tasks');
+    }
 
-    // function onCancel() {
-    //     goto('/schedule');
-    // }
+    function onDelete() {
+        taskStore.update(oldArray => {
+            // Filter out the item with the specified id
+            const newArray = oldArray.filter(item => item.id !== taskItem?.id);
+            return newArray;
+        });
+        goto('/schedule/tasks');
+    }
 
-    // function onDelete() {
-    //     subjectStore.update(oldArray => {
-    //         // Filter out the item with the specified id
-    //         const newArray = oldArray.filter(item => item.id !== $activeSubject.id);
-    //         return newArray;
-    //     });
-    //     goto('/schedule');
-    // }
+    function onSubmit() {
+        const startInputElement = document.getElementById("start") as HTMLIonDatetimeElement;
+        const endInputElement = document.getElementById("end") as HTMLIonDatetimeElement;
+        const startDate = new Date(startInputElement.value?.toString() || new Date().toString());
+        const endDate = new Date(endInputElement.value?.toString() || new Date().toString());
 
-    // function onSubmit() {
-    //     let formData: SubjectItem = {
-    //         id: new Date().getTime(),
-    //         title: (document.getElementById("title") as HTMLInputElement)?.value || "New Subject",
-    //         professor: (document.getElementById("professor") as HTMLInputElement)?.value || "Mr Know-it-all",
-    //         classroom: (document.getElementById("classroom") as HTMLInputElement)?.value || "Campus",
-    //         slots: new Array<TimeSlot>()
-    //     };
+        if (startDate > endDate) {
+            alert("Η ημερομηνία λήξης πρέπει να είναι μετά την ημερομηνία έναρξης");
+            return;
+        }
 
-    //     const days = document.querySelectorAll("ion-select");
-    //     if (days.length > 1) {
-    //         for (let i = 0; i < days.length - 1 ; i++) {
-    //             const day = days[i] as HTMLIonSelectElement;
-    //             if (day.value != null && day.value != "") {
-    //                 const startTime = (document.getElementById("starttime-" + i) as HTMLInputElement)?.value || "00:00";
-    //                 const endTime = (document.getElementById("endtime-" + i) as HTMLInputElement)?.value || "01:00";
-    //                 formData.slots.push({
-    //                     day: day.value,
-    //                     timeStart: startTime,
-    //                     timeEnd: endTime
-    //                 });
-    //             }
-    //         }
+        let formData: TaskItem = {
+            id: taskItem?.id || new Date().getTime(),
+            title: (document.getElementById("title") as HTMLInputElement)?.value || "New task",
+            description: (document.getElementById("description") as HTMLInputElement)?.value || "Wizard stuff",
+            date: {
+                startDate: startDate,
+                endDate: endDate
+            },
+            type: ((document.getElementById("type") as HTMLIonRadioGroupElement)?.value as TaskType) || TaskType.OTHER
+        };
 
-    //         subjectStore.update(oldArray => {
-    //             // Find the index of the item with the specified id
-    //             const index = oldArray.findIndex(item => item.id === $activeSubject.id);
+        if (formData == taskItem) {
+            goto('/schedule/tasks');
+            return;
+        }
 
-    //             // If the item is found, update its value
-    //             if (index !== -1) {
-    //                 oldArray[index] = formData;
-    //             }
-    //             return [...oldArray];
-    //         });
-    //     }
+        taskStore.update(oldArray => {
+            // Find the index of the item with the specified id
+            const index = oldArray.findIndex(item => item.id === taskItem?.id);
 
-    //     goto('/schedule');
-    // }
+            // If the item is found, update its value
+            if (index !== -1) {
+                oldArray[index] = formData;
+            }
+            return [...oldArray];
+        });
+
+        goto('/schedule/tasks');
+    }
 </script>
 
 <ion-header>
     <ion-toolbar>
-        <ion-title>Edit your task</ion-title>
+        <ion-title>Επεξεργασία {taskItem?.type == TaskType.PROJECT ? 'εργασίας' : taskItem?.type == TaskType.TEST ? 'προόδου' : 'συμβάντος'}</ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
-    <!-- svelte-ignore a11y-no-static-element-interactions
-    <form on:submit|preventDefault={onSubmit}>
-        <ion-input
-            placeholder="Coolness 101"
-            label="Title"
+    <form on:submit={onSubmit}>
+        <ion-input			
+            placeholder="Πρόοδος στην ιπτάμενη σκούπα"
+            label="Τίτλος"
             label-placement="stacked"
             id="title"
-            type="text"
-            value={$activeSubject.title}
-            contenteditable="true"
-            spellcheck={true}
-        />
-
-        <ion-input
-            placeholder="Hogwarts campus"
-            label="Classroom"
-            label-placement="stacked"
-            id="classroom"
-            value={$activeSubject.classroom}
+            value={taskItem?.title}
             type="text"
             contenteditable="true"
             spellcheck={true}
-        />
+        />                    
 
-        <ion-input
-            placeholder="Mr Know-it-all"
-            label="Professor"
+        <ion-input			
+            placeholder="Στροφές με τη σκούπα μου"
+            label="Περιγραφή"
             label-placement="stacked"
-            id="professor"
-            value={$activeSubject.professor}
+            id="description"
+            value={taskItem?.description}
             type="text"
             contenteditable="true"
-            spellcheck={false}
-        />
+            spellcheck={true}
+        />     
 
-
-        {#each {length: count} as _, i}
-            <ion-row>
-                <ion-col style="padding-left: 0%; padding-top: 0%">
-                    <ion-select label="Day"
-                                label-placement="stacked"
-                                interface="action-sheet"
-                                on:ionCancel={clearDaySelection}
-                                placeholder="Select day"
-                                value={$activeSubject.slots[i]?.day}
-                                on:ionChange={handleDaySelection}
-                                style="padding:0;">
-                        {#each weekdays as day}
-                            {#each Object.keys(day) as key }
-                                <ion-select-option id={key} contextmenu="">{day[key].en}</ion-select-option>
-                            {/each}
-                        {/each}
-                    </ion-select>
-                </ion-col>
-                <ion-row>
-                    <ion-col>
-                        <ion-input label="From"
-                                    label-placement="stacked"
-                                    type="time"
-                                    id="starttime-{i}"
-                                    name="starttime"
-                                    value={$activeSubject.slots[i]?.timeStart || "09:00"}
-                                    on:ionInput={handleTimeChange}
-                                    disabled={!(i + 1 < count)}/>
-                    </ion-col>
-                    <ion-col>
-                        <ion-input label="To"
-                                    label-placement="stacked"
-                                    type="time"
-                                    id="endtime-{i}"
-                                    name="endtime"
-                                    value={$activeSubject.slots[i]?.timeEnd || "10:00"}
-                                    on:ionInput={handleTimeChange}
-                                    disabled={!(i + 1 < count)}/>
-                    </ion-col>
-                </ion-row>
-            </ion-row>
-        {/each}
-
+        <ion-div style="display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 2%; margin-bottom: 3%;">
+            <ion-label style="flex: 1;">Από</ion-label>
+            <ion-datetime-button datetime="start"></ion-datetime-button>
+            <ion-modal keep-contents-mounted={true}>
+                <ion-datetime id="start" locale="el-GR" value={start}></ion-datetime>
+            </ion-modal>
+        </ion-div>
+        
+        <ion-div style="display: flex; align-items: center; justify-content: center; width: 100%;">
+            <ion-label style="flex: 1;">Έως</ion-label>
+            <ion-datetime-button datetime="end"/>
+            <ion-modal keep-contents-mounted={true}>
+                <ion-datetime id="end" locale="el-GR" value={end}></ion-datetime>
+            </ion-modal>
+        </ion-div>
+        
+        
+        <ion-row class="expanded-row">
+            <ion-radio-group id="type" value={taskItem?.type.valueOf()} class="expanded-radio-group">
+                <ion-radio mode="ios" slot="end" value="test">Πρόοδος</ion-radio>
+                <ion-radio mode="ios" slot="end" value="project">Εργασία</ion-radio>
+                <ion-radio mode="ios" slot="end" value="other">Άλλο</ion-radio>
+            </ion-radio-group>
+        </ion-row>
+        
         <div style="display: flex; justify-content: space-between; padding-top: 5%">
-            <ion-button type="button" on:ionFocus={onCancel}>Cancel</ion-button>
-            <ion-button type="button" on:ionFocus={onDelete}>Delete</ion-button>
-            <ion-button type="button" on:ionFocus={onSubmit}>Update</ion-button>
+            <ion-button type="button" on:ionFocus={onCancel}>ΑΚΥΡΟ</ion-button>
+            <ion-button type="button" on:ionFocus={onDelete}>ΔΙΑΓΡΑΦΗ</ion-button>
+            <ion-button type="button" on:ionFocus={onSubmit}>ΕΝΗΜΕΡΩΣΗ</ion-button>
         </div>
-    </form> -->
+    </form>
 </ion-content>
+
+<style>
+    .expanded-row {
+        padding-top: 5%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .expanded-radio-group {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+</style>
