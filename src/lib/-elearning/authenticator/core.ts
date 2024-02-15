@@ -10,12 +10,12 @@
 import { Capacitor } from "@capacitor/core";
 import {authenticate as webAuthenticate} from "../plugins/webserver/authenticate";
 import { authenticate as nativeAuthenticate } from "../plugins/native/authenticate";
-import type { AuthenticationResult } from "$lib/-universis/types";
+import type { AuthenticationResult, ElearningCredentials } from "$lib/-elearning/types";
 import { userTokens } from "$stores/credentials.store";
 const isNative = Capacitor.isNativePlatform();
 
 
-export default async function sisAuthenticator(username: string, password: string) {
+export default async function elearningAuthenticator(username: string, password: string) {
     let authenticationResult: AuthenticationResult;
 
     if (isNative) {
@@ -24,10 +24,11 @@ export default async function sisAuthenticator(username: string, password: strin
         authenticationResult =  await webAuthenticate(username, password);
     }
 
-
     if (!authenticationResult.error) {
         userTokens.update((newTokens) => {
-            newTokens.universis.token = authenticationResult.token as string; // Type assertion added here
+            newTokens.elearning.moodleSession = (authenticationResult.credentials as ElearningCredentials).moodleSession;
+            newTokens.elearning.sesskey = (authenticationResult.credentials as ElearningCredentials).sesskey;
+            newTokens.elearning.userID = (authenticationResult.credentials as ElearningCredentials).userID;
             return newTokens;
           });
     }

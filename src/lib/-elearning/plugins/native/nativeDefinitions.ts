@@ -17,8 +17,8 @@ export interface ElearningAuthenticatePlugin {
         reason: string;
     } | {
         error: null;
-        response: object;
+        data: string;
     }>;
 }
 
-export const ElearningAuthenticate = registerPlugin<ElearningAuthenticatePlugin>('ElearningScraper');
+export const ElearningPlugins = registerPlugin<ElearningAuthenticatePlugin>('ElearningScraper');

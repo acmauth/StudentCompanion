@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import elearningAuthenticator from '$lib/elearningAuthentication/scraper/elearningAuthenticator';
-import { elearningGet, internalElearningGet } from '$lib/elearningAuthentication/elearningDataService';
+import elearningAuthenticator from '$lib/-elearning/plugins/webserver/_webScraper';
+import { ElearningGet } from '$lib/-elearning/plugins/webserver/_webDataservice';
 
 // Server function that handles the login request
 export const GET: RequestHandler = async ({ url }) => {
@@ -14,12 +14,12 @@ export const GET: RequestHandler = async ({ url }) => {
 		throw error(400, 'Bad Request');
 	}
     
-	const token = await elearningAuthenticator(username, password);
-	if (!token) {
+	const response = await elearningAuthenticator(username, password);
+	if (response.error) {
 		throw error(401, 'Unauthorized');
 	}
 
-	return new Response(JSON.stringify({...token}));
+	return new Response(JSON.stringify(response));
 };
 
 
@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	
     const requestBody = await request.json();
 
-	const response = await internalElearningGet(requestBody.userArgs, requestBody.sesskey, requestBody.moodleSession);
+	const response = await ElearningGet(requestBody.userArgs, requestBody.sesskey, requestBody.moodleSession);
 
     return new Response(JSON.stringify(response));
 };

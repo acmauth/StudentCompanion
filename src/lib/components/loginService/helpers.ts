@@ -1,8 +1,8 @@
 // import { tokenGrab } from "$lib/universisAuthentication/tokenGeneratorWorker"
 import { userCreds, userTokens } from "$stores/credentials.store";
-import userInfoStore from "$stores/userinfo.store";
 import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDataService";
 import sisAuthenticator from "$lib/-universis/authenticator/core";
+import elearningAuthenticator from "$lib/-elearning/authenticator/core";
 
 /**
  * Retrieves the Universis token for the given username and password.
@@ -24,11 +24,6 @@ export async function getUniversisToken(username: string, password: string) {
             username: username,
             password: password
         });
-        
-        userTokens.update((newTokens) => {
-            newTokens.universis.token = response.token as string;
-            return newTokens;
-        });
 
     } 
     return outputMessage;
@@ -36,30 +31,22 @@ export async function getUniversisToken(username: string, password: string) {
 
 
 /**
- * Retrieves the Universis token for the given username and password.
+ * Retrieves the Elearning token for the given username and password.
  * @param username - The username for authentication.
  * @param password - The password for authentication.
  * @returns A message indicating the success or failure of the token retrieval.
  */
 export async function getElearningToken(username: string, password: string) {
-    return;
-    const encodedPassword = encodeURIComponent(password);
-    let outputMessage = "";
-    const response = await elearningFetchNewToken(username, encodedPassword);
-    if (!response.error && response.credentials){
-    userTokens.update((newTokens) => {
-        newTokens.elearning.moodleSession = response.credentials.moodleSession;
-        newTokens.elearning.sesskey = response.credentials.sesskey;
-        return newTokens;
-    });
-    userInfoStore.update((newUserInfo) => {
-        newUserInfo.userId = response.credentials.userID;
-        newUserInfo.valid = true;
-        return newUserInfo;
-    });
-    outputMessage = outputMessage + "Elearning!"
-    } else {
-        outputMessage = outputMessage + "Elearning failed!"
+    try {
+        const encodedPassword = encodeURIComponent(password);
+        const response = await elearningAuthenticator(username, encodedPassword);
+
+        if (!response.error && response.credentials) {
+            return "";
+        } else {
+            return "Elearning failed!" + response.error + response.credentials;
+        }
+    } catch (error) {
+        return "An error occurred while retrieving the Elearning token.";
     }
-    return outputMessage;
 }

@@ -1,5 +1,5 @@
 // import { universisGet as internalUniversisGet } from "./universisAuthentication/universisDataService";
-import { elearningGet as internalelearningGet } from "./elearningAuthentication/elearningDataService";
+import { apiRequest as internalElearningGet } from "./-elearning/dataService/core";
 import { apiRequest as internalUniversisGet } from "./-universis/dataService/core";
 
 // This is a wrapper for the Universis API.
@@ -13,7 +13,7 @@ export const universisGet = async (endpoint: string) => {
 
 export async function elearningGet(dataArguments: any){
 
-  const response =  await internalelearningGet(dataArguments);
+  const response =  await internalElearningGet(dataArguments);
   return response;
   
 }

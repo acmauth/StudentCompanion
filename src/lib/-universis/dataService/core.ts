@@ -1,13 +1,14 @@
 import { get } from "svelte/store";
-import { userCreds, userTokens } from "$stores/credentials.store";
+import { userTokens } from "$stores/credentials.store";
 import { tries, increment, reset } from "../stores/reAuthTries.store.js";
-import sisAuthenticator from "../authenticator/core";
+import reauthenticate from "../authenticator/reauthenticate.js";
 
 // This is a wrapper for the Universis API.
 // It's a simple GET request with a token in the header.
 export const apiRequest = async (endpoint: string): Promise<Object> => {
     
-    let _userTokens: any = get(userTokens); 
+    let _userTokens: any = get(userTokens);
+    
     // We get the token from the store
     const url = `https://universis-api.it.auth.gr/api/${endpoint}`;
     const response = await fetch(url, {
@@ -27,11 +28,8 @@ export const apiRequest = async (endpoint: string): Promise<Object> => {
       increment();
       
       // If the token is invalid, we try to get a new one
-      let newToken = await sisAuthenticator(get(userCreds).username, get(userCreds).password);
-      userTokens.update((newTokens) => {
-        newTokens.universis.token = newToken.token as string; // Type assertion added here
-        return newTokens;
-      });
+      await reauthenticate();
+
       // And then we try to get the data again
       return await apiRequest(endpoint);
     }

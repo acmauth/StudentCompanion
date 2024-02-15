@@ -1,5 +1,5 @@
 
-export type AuthenticationResult {
+export type AuthenticationResult = {
     error: null;
     token: string;
 } | {
