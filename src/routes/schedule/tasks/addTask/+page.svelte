@@ -2,9 +2,6 @@
     import { TaskType, type TaskItem } from "$lib/components/schedule/task/TaskItem";
     import { goto } from '$app/navigation';
 	import { taskStore } from "$components/schedule/task/taskStore";
-	import { getDayByIndex } from "$components/schedule/day/days";
-	import { onMount } from "svelte";
-
 
     function onCancel() {
         goto('/schedule/tasks');
@@ -25,8 +22,8 @@
 
         let formData: TaskItem = {
             id: new Date().getTime(),
-            title: (document.getElementById("title") as HTMLInputElement)?.value || "New task",
-            description: (document.getElementById("description") as HTMLInputElement)?.value || "Wizard stuff",
+            title: (document.getElementById("title") as HTMLInputElement)?.value || "Ανώνυμο συμβάν",
+            description: (document.getElementById("description") as HTMLInputElement)?.value || "Χωρίς περιγραφή",
             date: {
                 startDate: startDate,
                 endDate: endDate
@@ -41,12 +38,11 @@
 
 <ion-header>
     <ion-toolbar>
-        <ion-title>Προσθήκη εργασίας/προόδου</ion-title>
+        <ion-title>Νέο συμβάν</ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <form on:submit={onSubmit}>
         <ion-input			
             placeholder="Πρόοδος στην ιπτάμενη σκούπα"
@@ -101,16 +97,15 @@
 </ion-content>
 
 <style>
-.expanded-row {
-    padding-top: 5%;
-    display: flex;
-    justify-content: center;
-}
+    .expanded-row {
+        padding-top: 5%;
+        display: flex;
+        justify-content: center;
+    }
 
-.expanded-radio-group {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-}
-
+    .expanded-radio-group {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
 </style>

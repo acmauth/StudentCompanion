@@ -4,8 +4,6 @@
     import { taskStore } from '$components/schedule/task/taskStore';
     import { TaskType } from '$components/schedule/task/TaskItem';
     import type { TaskItem } from '$components/schedule/task/TaskItem';
-    // import type { SubjectItem, TimeSlot } from "$components$components/schedule/class/SubjectItemrt { subjectStore } from '$compon$components/schedule/class/SubjectStoreimport { weekdays } from '$lib/components/schedule/day/days'
-    // import { goto } from '$app/navigation';
 
     // Extract taskId from the URL and get the referenced task
 	const taskId = $page.params.taskId;
@@ -57,8 +55,8 @@
 
         let formData: TaskItem = {
             id: taskItem?.id || new Date().getTime(),
-            title: (document.getElementById("title") as HTMLInputElement)?.value || "New task",
-            description: (document.getElementById("description") as HTMLInputElement)?.value || "Wizard stuff",
+            title: (document.getElementById("title") as HTMLInputElement)?.value || "Ανώνυμο συμβάν",
+            description: (document.getElementById("description") as HTMLInputElement)?.value || "Χωρίς περιγραφή",
             date: {
                 startDate: startDate,
                 endDate: endDate
@@ -142,9 +140,9 @@
         </ion-row>
         
         <div style="display: flex; justify-content: space-between; padding-top: 5%">
-            <ion-button type="button" on:ionFocus={onCancel}>ΑΚΥΡΟ</ion-button>
-            <ion-button type="button" on:ionFocus={onDelete}>ΔΙΑΓΡΑΦΗ</ion-button>
-            <ion-button type="button" on:ionFocus={onSubmit}>ΕΝΗΜΕΡΩΣΗ</ion-button>
+            <ion-button type="reset" color="light" on:ionFocus={onCancel}>ΑΚΥΡΟ</ion-button>
+            <ion-button type="button" color="secondary" on:ionFocus={onDelete}>ΔΙΑΓΡΑΦΗ</ion-button>
+            <ion-button type="submit" on:ionFocus={onSubmit}>ΕΝΗΜΕΡΩΣΗ</ion-button>
         </div>
     </form>
 </ion-content>
