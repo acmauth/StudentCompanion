@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {bookOutline, schoolOutline, add} from 'ionicons/icons';
+    import {bookOutline, schoolOutline, add, createOutline} from 'ionicons/icons';
     import { taskStore } from '$lib/components/schedule/task/taskStore';
     import type { TaskItem } from '$lib/components/schedule/task/TaskItem';
 	import TaskCard from '$components/schedule/task/taskCard.svelte';
@@ -58,4 +58,23 @@
             </ion-div>
         {/each}
     </ion-grid>
+    <ion-row class="custom-center-label">
+        {#if tasks.length === 0}
+            <ion-icon icon={createOutline} size="large" style="padding: 15px"></ion-icon>
+            <ion-label>Δεν υπάρχουν συμβάντα.</ion-label>
+        {/if}
+    </ion-row>
 </ion-content>
+
+<style>
+    .custom-center-label {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+</style>

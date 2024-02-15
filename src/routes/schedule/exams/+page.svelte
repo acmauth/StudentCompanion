@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {bookOutline, createOutline} from 'ionicons/icons';
+    import {bookOutline, createOutline, schoolOutline} from 'ionicons/icons';
     import type { ExamItem } from '$components/schedule/exam/ExamItem';
     import ExamCard from '$components/schedule/exam/examCard.svelte';
     import { getDayByIndex } from '$components/schedule/day/days';
@@ -51,4 +51,23 @@
             <ExamCard {examItem} />
         {/each}
     </ion-grid>
+    <ion-row class="custom-center-label">
+        {#if exams.length === 0}
+            <ion-icon icon={schoolOutline} size="large" style="padding: 15px"></ion-icon>
+            <ion-label>Δεν υπάρχουν προγραμματισμένες εξετάσεις.</ion-label>
+        {/if}
+    </ion-row>
 </ion-content>
+
+<style>
+    .custom-center-label {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
