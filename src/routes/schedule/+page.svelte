@@ -36,26 +36,28 @@
     .map(({ task, slot }) => ({ taskItem: task, start: slot.timeStart, end: slot.timeEnd }));
 </script>
 
-<ion-page style="overflow-y: auto;">
-    <ion-fab horizontal="end" vertical="bottom">
-        <ion-fab-button href="/schedule/addTask" color="primary">
-            <ion-icon icon={allIonicIcons.add} />
-        </ion-fab-button>
-    </ion-fab>
+<ion-tab tab="schedule">
+  <ion-page style="overflow-y: auto;">
+      <ion-fab horizontal="end" vertical="bottom">
+          <ion-fab-button href="/schedule/addTask" color="primary">
+              <ion-icon icon={allIonicIcons.add} />
+          </ion-fab-button>
+      </ion-fab>
 
-    <ion-grid style="padding: 0%">
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Schedule</ion-title>
-            </ion-toolbar>
-        </ion-header>
+      <ion-grid style="padding: 0%">
+          <ion-header>
+              <ion-toolbar>
+                  <ion-title>Schedule</ion-title>
+              </ion-toolbar>
+          </ion-header>
 
-        <ion-row style="position: relative; z-index: 1000">
-            <Days />
-        </ion-row>
+          <ion-row style="position: relative; z-index: 1000">
+              <Days />
+          </ion-row>
 
-        {#each currentTasks as task}
-            <TaskCard task={task.taskItem} start={task.start} end={task.end}/>
-        {/each}
-    </ion-grid>
-</ion-page>
+          {#each currentTasks as task}
+              <TaskCard task={task.taskItem} start={task.start} end={task.end}/>
+          {/each}
+      </ion-grid>
+  </ion-page>
+</ion-tab>

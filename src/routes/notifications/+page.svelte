@@ -16,40 +16,42 @@
 
 </script>
 
-<ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
-        <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-          <ion-title>Ειδοποιήσεις</ion-title>
-        </ion-toolbar>
-</ion-header>
-      
-<ion-content fullscreen={true}>
-    <ion-header collapse="condense" mode="ios">
-        <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-            <ion-title size="large">Ειδοποιήσεις</ion-title>
-        </ion-toolbar>
-            <Chips/>
+<ion-tab tab="notifications"> 
+  <ion-page>
+    <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
+            <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+              <ion-title>Ειδοποιήσεις</ion-title>
+            </ion-toolbar>
     </ion-header>
-  
-    {#await gatherNotifications()}
-        <ion-progress-bar type="indeterminate"/>
-        {#each randList(5) as rand (rand)}
-            <NotifSkeleton/>
-        {/each}
-    {:then notifications}
-  
-        {#each notifications as notification (notification.id)}
-            <div animate:flip={{ duration: 500, easing: quintOut }}>
-                {#if $toggles.all || ($toggles.universis && notification.type === 'universis') || ($toggles.elearning && notification.type === 'elearning') || ($toggles.elSystem && notification.type === 'system')}
-                    <Notification {notification}/>
-                {/if}
-            </div>    
-        {/each}
-  
-    {:catch error}
-        <p>{error.message}</p>
-    {/await}
+          
+    <ion-content fullscreen={true}>
+        <ion-header collapse="condense" mode="ios">
+            <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+                <ion-title size="large">Ειδοποιήσεις</ion-title>
+            </ion-toolbar>
+                <Chips/>
+        </ion-header>
+      
+        {#await gatherNotifications()}
+            <ion-progress-bar type="indeterminate"/>
+            {#each randList(5) as rand (rand)}
+                <NotifSkeleton/>
+            {/each}
+        {:then notifications}
+      
+            {#each notifications as notification (notification.id)}
+                <div animate:flip={{ duration: 500, easing: quintOut }}>
+                    {#if $toggles.all || ($toggles.universis && notification.type === 'universis') || ($toggles.elearning && notification.type === 'elearning') || ($toggles.elSystem && notification.type === 'system')}
+                        <Notification {notification}/>
+                    {/if}
+                </div>    
+            {/each}
+      
+        {:catch error}
+            <p>{error.message}</p>
+        {/await}
 
-    
-</ion-content>
-
-
+        
+    </ion-content>
+  </ion-page>
+</ion-tab>
