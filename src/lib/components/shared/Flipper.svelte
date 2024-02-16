@@ -1,8 +1,10 @@
 <script lang="ts">
+    export let flipped: boolean;    
     export let reactToHeight: boolean = false;
     
     // The flip class is what we use to toggle the flip effect.
     let flipClass = false;
+    $ : flipClass = flipped;
 
     // We need to keep track of the flip container and the front
     // and back children so we can update the height of the flip card.
@@ -29,7 +31,8 @@
 </script>
 
 <!-- Main container, this dictates the element height and flip state/click handling -->
-<div on:click={() => flipClass = !flipClass} class="flip-container" class:flipClass={flipClass} aria-hidden bind:this={flipContainer}>
+<!-- <div on:click={() => flipClass = !flipClass} class="flip-container" class:flipClass={flipClass} aria-hidden bind:this={flipContainer}> -->
+<div class="flip-container" class:flipClass={flipClass} aria-hidden bind:this={flipContainer}>
     <!-- The flipper is the element that rotates, it contains the front and back children and handles the animation -->
     <div class="flipper">
         <!-- Slot for the front element and wrapping div -->
