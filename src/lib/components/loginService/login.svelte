@@ -9,12 +9,15 @@
     import { invalidateAuth } from "$lib/authentication/authValidator";
     import Vector from "$lib/components/loginService/Vector.svg"
     import Vector1 from "$lib/components/loginService/Vector(1).svg"
+    import { onMount } from 'svelte';
+
 
     let username = '';
     let password = '';
     let outputMessage = ''
     let invalidData = false;
     let isVisible = false;
+
 
     async function submit(){
         
@@ -36,6 +39,31 @@
 
     }
 
+    function handleKeyboardVisibility(event: { type: string; }) {
+        const formContainer = document.getElementById('formContainer');
+        if (formContainer) {
+            if (event.type === 'focusin') {
+                // Adjust your layout when the keyboard is shown
+                formContainer.style.transform = 'translateY(-50px)';
+            } else {
+                // Adjust your layout when the keyboard is hidden
+                formContainer.style.transform = 'translateY(0)';
+            }
+        }
+    }
+
+    onMount(() => {
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+
+        if (usernameInput && passwordInput) {
+            // Attach event listeners to handle keyboard visibility
+            usernameInput.addEventListener('focusin', handleKeyboardVisibility);
+            passwordInput.addEventListener('focusin', handleKeyboardVisibility);
+            usernameInput.addEventListener('focusout', handleKeyboardVisibility);
+            passwordInput.addEventListener('focusout', handleKeyboardVisibility);
+        }
+    });
 
 </script>
 
