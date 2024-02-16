@@ -49,28 +49,29 @@
 
 </script>
 
-<ion-header collapse="condense" mode="ios">
-	<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-		<ion-title class="ion-padding-vertical" size="large">Personal Info</ion-title>
-	
-	</ion-toolbar>
-</ion-header>
-
-	{#await getPersonalInfo()}
-
-    <ion-tab tab="personalInfo">
-      <ion-content>
-        <PersonSkeleton />
-      </ion-content>
-    </ion-tab>
+<ion-tab tab="personalInfo">
+		<ion-header collapse="condense" mode="ios">
+			<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+				<ion-title class="ion-padding-vertical" size="large">Personal Info</ion-title>
+				
+			</ion-toolbar>
+		</ion-header>
 		
-	{:then} 
-	<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} logOut = {logOut} />
-
-	{:catch error}
-        <p>{error.message}</p>
-	{/await}
-
+		<ion-content fullscreen={true}>
+		{#await getPersonalInfo()}
+		
+			<PersonSkeleton />
+		
+		{:then} 
+			<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} logOut = {logOut} />
+			
+			{:catch error}
+			<p>{error.message}</p>
+			{/await}
+		</ion-content>
+</ion-tab>
 	
-
-
+	
+	
+	
+	

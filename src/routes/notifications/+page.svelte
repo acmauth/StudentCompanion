@@ -16,8 +16,7 @@
 
 </script>
 
-<ion-tab tab="notifications"> 
-  <ion-page>
+<ion-tab tab="notifications">
     <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
             <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
               <ion-title>Ειδοποιήσεις</ion-title>
@@ -53,5 +52,4 @@
 
         
     </ion-content>
-  </ion-page>
 </ion-tab>

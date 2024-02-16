@@ -54,7 +54,6 @@
 
 
 
-<ion-content>
 	<ion-card class="ion-padding">
 		<ion-card-header class="ion-text-center info">
 			{#if gender === 'Α'}
@@ -136,7 +135,6 @@
 
 		</ion-card-content>
 	</ion-card>
-</ion-content>
 
 
 
