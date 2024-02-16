@@ -3,6 +3,7 @@ import adapterStatic from '@sveltejs/adapter-static';
 import preprocess from "svelte-preprocess";
 
 const isProduction = process.env.NODE_ENV === 'production';
+console.log("isProduction", isProduction);
 
 const config = {
 	preprocess: preprocess(),

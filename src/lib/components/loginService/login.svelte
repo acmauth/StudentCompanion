@@ -1,7 +1,5 @@
 <script lang='ts'>
-    import { tokenGrab } from "$lib/universisAuthentication/tokenGeneratorWorker"
     import { userCreds, userTokens } from "$stores/credentials.store";
-    import userInfoStore from "$stores/userinfo.store";
     import { goto } from '$app/navigation';
     import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDataService";
     import { IonButton } from "@ionic/core/components/ion-button";
@@ -22,20 +20,24 @@
     async function submit(){
         
         isVisible = true;
+
         username = (document.getElementById('usernameInput') as HTMLInputElement).value;
         password = (document.getElementById('passwordInput') as HTMLInputElement)?.value;
         
         let universisOutput = await getUniversisToken(username, password);
         let elearningOutput = await getElearningToken(username, password);
         
+
         if (universisOutput || elearningOutput) { 
             isVisible = false;
             invalidData = true;
+            outputMessage = universisOutput + ",-," + elearningOutput;
         }
         else {
             isVisible = false;
             goto("/");
         }
+
 
     }
 
@@ -70,6 +72,7 @@
     <div style="position: relative; width: 100%; height: 55%; ">
         <img src={Vector} alt="Vector" style="position: absolute; width: 100%; height:80%">
         <img src={Vector1} alt="Overlay Icon" style="width: 100%; height:95%">
+
     </div>
 
     <div style="display: flex; flex-direction: column; align-items: center; justify-content: top; height: 80%; padding-top: 2px; padding-right:20px; padding-left:20px;">

@@ -1,3 +1,10 @@
+/**
+ * Authenticates a user by performing a series of HTTP requests to an authentication server.
+ * 
+ * @param username The username of the user.
+ * @param password The password of the user.
+ * @returns A promise that resolves to an object containing the authentication token or an error message.
+ */
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios'; // Import Axios for HTTP requests
@@ -7,6 +14,7 @@ import * as cryptoAUTH from 'crypto';
 import * as base64urlAUTH from 'base64url';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
+import type { AuthenticationResult } from '$lib/-universis/types';
 
 const authorizeURL= "https://oauth2.it.auth.gr/auth/realms/universis/protocol/openid-connect/auth"
 const logoutURL= "https://oauth2.it.auth.gr/auth/realms/universis/protocol/openid-connect/logout?redirect_uri=https://students.auth.gr/#/auth/login"
@@ -57,7 +65,7 @@ function stripData(page: cheerio.CheerioAPI, formElements: cheerio.Cheerio<cheer
   }
 }
 
-export default async function authenticate(username: string, password: string) {
+export default async function authenticate(username: string, password: string): Promise<AuthenticationResult> {
   
 
   // Creating the code Verifier and code Challenge for authentication
@@ -177,4 +185,3 @@ export default async function authenticate(username: string, password: string) {
   // return response_status.toString();
   return {error: null, token: token};
 }
-

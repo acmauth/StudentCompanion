@@ -1,9 +1,10 @@
 import { universisGet, elearningGet } from "$lib/dataService";
-import UserInfoStore from "$stores/userinfo.store";
+// import UserInfoStore from "$stores/userinfo.store";
+import { userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
 import { persisted } from "svelte-persisted-store";
-
+let userID = get(userTokens).elearning.userID;
 
 // Storing the IDs of notifications that have been read in a persisted store
 //TODO: Add a way to remove notifications from the list
@@ -33,7 +34,7 @@ async function getElearningNotifications() {
             "index": 0,
             "methodname": "core_message_get_messages",
             "args": {
-                "useridto": get(UserInfoStore).userId,
+                "useridto": userID,
                 "useridfrom": "0",
                 "type": "notifications",
                 "newestfirst": 1,
@@ -49,7 +50,7 @@ async function getElearningNotifications() {
             "index": 0,
             "methodname": "core_message_get_messages",
             "args": {
-                "useridto": get(UserInfoStore).userId,
+                "useridto": userID,
                 "useridfrom": "0",
                 "type": "notifications",
                 "newestfirst": 1,

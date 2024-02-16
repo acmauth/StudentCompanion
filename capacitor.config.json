@@ -5,5 +5,18 @@
 		"_server": {
 		  "url": "http://172.20.32.1:5173/",
 		  "cleartext": true
-		}
+		},
+		"plugins": {
+			"CapacitorHttp": {
+			  "enabled": true
+			},
+			"CapacitorCookies": {
+				"enabled": true,
+				"androidCustomSchemeAllowInsecureAccess": true
+			}
+		  },
+		  "server": {
+			"hostname": "localhost",
+			"androidScheme": "https"
+		  }
 	}
