@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
 	import AppCard from '$shared/AppCard.svelte';
 	import { fastFood, map, link } from 'ionicons/icons';
 </script>
+
 
 <ion-content
 	scroll-x={true}
@@ -20,7 +21,7 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={fastFood} />
-				<ion-label>Μενού Λέσχης</ion-label>
+				<ion-label><span class="overflowingtext">Μενού Λέσχης</span></ion-label>
 			</div>
 		</AppCard>
 		<AppCard
@@ -33,7 +34,7 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={map} />
-				<ion-label>Χάρτης ΑΠΘ</ion-label>
+				<ion-label><span class="overflowingtext">Χάρτης ΑΠΘ</span></ion-label>
 			</div>
 		</AppCard>
 		<AppCard
@@ -46,13 +47,19 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={link} />
-				<ion-label>Σύνδεσμοι</ion-label>
+				<ion-label><span class="overflowingtext">Σύνδεσμοι</span></ion-label>
 			</div>
 		</AppCard>
 	</div>
 </ion-content>
 
 <style>
+	.overflowingtext {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
 	.applets {
 		/* display: inline-flex;
         flex-direction: row;
