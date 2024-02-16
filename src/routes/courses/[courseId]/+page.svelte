@@ -6,6 +6,7 @@
 	import CourseStats from '$lib/components/courses/courseInfo.svelte'
 	import CoursesSkeleton from "$lib/components/courses/coursesSkeleton.svelte";
 	import { Capacitor } from '@capacitor/core';
+	import SubPageHeader from '$shared/subPageHeader.svelte';
 
 	// Initiniatize variables
 	let course = {
@@ -101,29 +102,22 @@
 
 </script>
 
-<ion-header collapse="condense" mode="ios">
-	<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-		<ion-title class="ion-padding-vertical" size="large">Πληροφορίες</ion-title>
-	</ion-toolbar>
-</ion-header>
+
+<SubPageHeader title="Πληροφορίες"/> <!-- subtitle={courseCode} /> -->
 
 
-	{#await getData()}
+{#await getData()}
 	<ion-content>
 	<ion-progress-bar type="indeterminate"/>
 	{#each {length: 3} as i}
-	
 		<CoursesSkeleton />
-	
 	{/each}
 	</ion-content>
-	
-	{:then}
-		<CourseStats stats={stats} course={course} />
-		
-	{:catch error}
-    <p>{error.message}</p>
-	{/await}
+{:then}
+	<CourseStats stats={stats} course={course} />
+{:catch error}
+	<p>{error.message}</p>
+{/await}
 
 	
 

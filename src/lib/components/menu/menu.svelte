@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	const isProduction = process.env.NODE_ENV === 'production';
 	import { getMenu } from "$lib/menuScrapper/scraper"
+	import SubPageHeader from '$shared/subPageHeader.svelte';
 	/**
 	 * @type {any[]}
 	 */
@@ -60,11 +61,7 @@
 </script>
 
 <IonPage>
-	<ion-header>
-		<ion-toolbar>
-			<ion-title>Μενού Λέσχης</ion-title>
-		</ion-toolbar>
-	</ion-header>
+	<SubPageHeader title="Μενού Λέσχης" />
 	<ion-content class="ion-padding">
 		<div class="ion-text-center">
 			<ion-chip {color}><ion-icon icon={allIonicIcons.timeOutline} /> &nbsp; {message}</ion-chip>

@@ -6,7 +6,7 @@
 	import InfoItem  from '$lib/components/personalInfo/infoItem.svelte'
 	import PersonSkeleton from '$components/personalInfo/personSkeleton.svelte';
 	import { Capacitor } from '@capacitor/core';
-
+	import SubPageHeader from '$shared/subPageHeader.svelte';
 	// Keep personal info
 
 	let aem = '';
@@ -49,24 +49,18 @@
 
 </script>
 
-<ion-header collapse="condense" mode="ios">
-	<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-		<ion-title class="ion-padding-vertical" size="large">Personal Info</ion-title>
-	
-	</ion-toolbar>
-</ion-header>
 
-	{#await getPersonalInfo()}
-		<ion-content>
-			<PersonSkeleton />
-		</ion-content>
-		
-	{:then} 
+<SubPageHeader title="Personal Info" />
+
+{#await getPersonalInfo()}
+	<ion-content>
+		<PersonSkeleton />
+	</ion-content>
+{:then} 
 	<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} logOut = {logOut} />
-
-	{:catch error}
-        <p>{error.message}</p>
-	{/await}
+{:catch error}
+	<p>{error.message}</p>
+{/await}
 
 	
 
