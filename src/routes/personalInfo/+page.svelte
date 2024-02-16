@@ -57,9 +57,12 @@
 </ion-header>
 
 	{#await getPersonalInfo()}
-		<ion-content>
-			<PersonSkeleton />
-		</ion-content>
+
+    <ion-tab tab="personalInfo">
+      <ion-content>
+        <PersonSkeleton />
+      </ion-content>
+    </ion-tab>
 		
 	{:then} 
 	<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} logOut = {logOut} />

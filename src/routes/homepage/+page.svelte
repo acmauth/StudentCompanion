@@ -47,55 +47,57 @@
 	});
 </script>
 
-<IonPage>
-	<ion-content class="" fullscreen>
-		<div class="info-container">
-			<div>
-				{#if gender === 'Α'}
-					<img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
-				{:else}
-					<img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
-				{/if}
-			</div>
-			<div>
-				<h5 class="h5">Γεια σου</h5>
-				<h5 class="h5"><b>{givenName}!</b></h5>
-			</div>
-			<div class="student-id">
-				<AppCard margin={false} shadow={true} href="/id">
-					<div style="background-color: #f3faff">
-						<ion-icon class="id-icon" icon={wallet} />
-					</div>
-				</AppCard>
-			</div>
-		</div>
-		<div class="card-container">
-			<AppCard colour="primary" margin={false}>
-				<div class="courses-passed">
-					<ion-card-title><b> {passedSubjects}/{subjects} </b></ion-card-title>
-					<ion-card-subtitle>Περασμένα</ion-card-subtitle>
+<ion-tab tab="homepage"> 
+  <IonPage>
+    <ion-content class="" fullscreen>
+      <div class="info-container">
+        <div>
+          {#if gender === 'Α'}
+            <img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
+          {:else}
+            <img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
+          {/if}
+        </div>
+        <div>
+          <h5 class="h5">Γεια σου</h5>
+          <h5 class="h5"><b>{givenName}!</b></h5>
+        </div>
+        <div class="student-id">
+          <AppCard margin={false} shadow={true} href="/id">
+            <div style="background-color: #f3faff">
+              <ion-icon class="id-icon" icon={wallet} />
+            </div>
+          </AppCard>
+        </div>
+      </div>
+      <div class="card-container">
+        <AppCard colour="primary" margin={false}>
+          <div class="courses-passed">
+            <ion-card-title><b> {passedSubjects}/{subjects} </b></ion-card-title>
+            <ion-card-subtitle>Περασμένα</ion-card-subtitle>
 
-					<ion-progress-bar class="progress-courses" />
-				</div>
-			</AppCard>
+            <ion-progress-bar class="progress-courses" />
+          </div>
+        </AppCard>
 
-			<AppCard colour="primary" margin={false}>
-				<div class="avg-grade-grid">
-					<div class="avg-grade">
-						<ion-card-title> <b>{average} </b></ion-card-title>
-						<ion-card-subtitle>M.O.</ion-card-subtitle>
-					</div>
-					<div>
-						<ion-progress-bar class="progress-avg" />
-					</div>
-				</div>
-			</AppCard>
-		</div>
-		<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
-		<AppletsSlides />
-		<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
-	</ion-content>
-</IonPage>
+        <AppCard colour="primary" margin={false}>
+          <div class="avg-grade-grid">
+            <div class="avg-grade">
+              <ion-card-title> <b>{average} </b></ion-card-title>
+              <ion-card-subtitle>M.O.</ion-card-subtitle>
+            </div>
+            <div>
+              <ion-progress-bar class="progress-avg" />
+            </div>
+          </div>
+        </AppCard>
+      </div>
+      <p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
+      <AppletsSlides />
+      <p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
+    </ion-content>
+  </IonPage>
+</ion-tab>
 
 <style>
 	.avatar {
