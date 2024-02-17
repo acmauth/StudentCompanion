@@ -4,10 +4,8 @@
 	import {averages} from '$lib/functions/gradeAverages/averages';
 	import {averagesPerSemester} from '$lib/functions/gradeAverages/averagesPerSemester';
 	import * as allIonicIcons from 'ionicons/icons';
-<<<<<<< HEAD
 	import Chip from "$components/shared/chip.svelte";
-=======
->>>>>>> 07f8f1e0ce64907b32004e14cd7974de9e299bb4
+
 
 
 
@@ -201,16 +199,6 @@
 		fill: var(--app-color-primary-dark);
 	}
 
-<<<<<<< HEAD
-
-=======
-	.chipFlex {
-		display: flex;
-		gap: 0.2rem;
-		align-items: center;
-		font-size: 0.8rem;
-	}
->>>>>>> 07f8f1e0ce64907b32004e14cd7974de9e299bb4
 
 	.subtitle {
 		color: var(--app-color-primary-dark);
