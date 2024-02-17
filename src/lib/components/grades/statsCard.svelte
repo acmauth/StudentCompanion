@@ -16,12 +16,16 @@
 	 */
 	 export let passedSubjects;
 	 export let searchQuery;
-
+	 /**
+	 * @type {any}
+	 */
+	 export let flip;
 
 	 
 	 /**
 	 * @type {Chart<"line", number[], string>}
 	 */
+	
 
 	 const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-primary-dark').trim();
 
@@ -150,7 +154,9 @@
 			
 			<canvas id="gradeChart"></canvas>
 
-			<ion-chip class="chip">
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<ion-chip on:click={flip} class="chip">
 				<div class="chipFlex">
 					<ion-icon icon={allIonicIcons.calculator}></ion-icon>
 				Πρόβλεψη Μ.Ο.

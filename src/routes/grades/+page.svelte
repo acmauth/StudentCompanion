@@ -11,6 +11,7 @@
 	import NotifSkeleton from '../notifications/notifSkeleton.svelte';
 	import Flipper from "$components/shared/Flipper.svelte";
 	import TestComponentB from '../test/testComponentB.svelte';
+	import { flipped } from "./flipstore"; 
 
 
 
@@ -30,6 +31,10 @@
 
 	function handleChange(event: { target: { value: string; }; }) {
 		searchQuery = event.target.value;
+	}
+
+	function flip() {
+		$flipped = !$flipped;
 	}
 
 
@@ -72,8 +77,8 @@
 	{:then}
 	
 	<!-- Show content after loading is completed -->
-	<Flipper reactToHeight>
-        <Stats searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} slot="front" />
+	<Flipper reactToHeight bind:flipped={$flipped}>
+        <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} slot="front" />
         <TestComponentB slot="back"/>
     </Flipper>
 		
