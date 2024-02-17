@@ -9,6 +9,9 @@
 	import { Capacitor } from '@capacitor/core';
 	import GradesSkeleton from '$components/grades/gradesSkeleton.svelte';
 	import NotifSkeleton from '../notifications/notifSkeleton.svelte';
+	import Flipper from "$components/shared/Flipper.svelte";
+	import TestComponentB from '../test/testComponentB.svelte';
+
 
 
 	let searchQuery = '';
@@ -69,7 +72,12 @@
 	{:then}
 	
 	<!-- Show content after loading is completed -->
-		<Stats searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} />
+	<Flipper reactToHeight>
+        <Stats searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} slot="front" />
+        <TestComponentB slot="back"/>
+    </Flipper>
+		
+		
 	  
 		<Grades semesterId = {semesterId} searchQuery = {searchQuery}  />
 
@@ -85,8 +93,6 @@
 		top: 0px;
 		z-index: 10;
 	}
-	.searchbar {
-    --border-radius: 10px;
-	}
+
 </style>
 
