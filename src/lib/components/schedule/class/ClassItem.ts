@@ -1,7 +1,7 @@
 export interface TimeSlot {
-    day: string,
-    timeStart: string,
-    timeEnd: string
+    day: number,
+    startTime: Date,
+    endTime: Date
 }
 export interface ClassItem {
     id: number,
@@ -9,4 +9,14 @@ export interface ClassItem {
     professor: string,
     classroom: string,
     slots: TimeSlot[] 
+}
+
+export interface ClassItemFlat {
+    id: number,
+    title: string,
+    professor: string,
+    classroom: string,
+    day: number,
+    startTime: string,
+    endTime: string
 }

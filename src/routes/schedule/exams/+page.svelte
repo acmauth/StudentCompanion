@@ -26,11 +26,11 @@
     });
 </script>
 
-<ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
-    <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-      <ion-title>Πρόγραμμα Εξετάσεων</ion-title>
-    </ion-toolbar>
-</ion-header>
+    <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
+        <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+        <ion-title>Πρόγραμμα Εξετάσεων</ion-title>
+        </ion-toolbar>
+    </ion-header>
 
 <ion-fab horizontal="start" vertical="bottom">
     <ion-fab-button href="/schedule/tasks" color="secondary">
