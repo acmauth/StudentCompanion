@@ -138,6 +138,18 @@ h2 {
 	color: grey
 }
 
+.success {
+	color: var(--app-color-green-dark);
+}
+
+.danger {
+	color: var(--app-color-orange-dark);
+}
+
+.examPeriod{
+	font-size: 0.8rem;
+}
+
 
 
 

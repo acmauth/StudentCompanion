@@ -139,7 +139,7 @@
 					<h2>{gradesObject.weightedAverage}</h2>
 				</ion-text>
 			</ion-item>
-			<ion-item>
+			<ion-item class="ion-padding-bottom">
 				<ion-label>M.O απλός</ion-label>
 				<ion-text color="tertiary">
 					<h2>{gradesObject.average}</h2>
