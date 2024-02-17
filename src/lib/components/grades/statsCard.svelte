@@ -9,6 +9,7 @@
 
 
 
+
 	/**
 	 * @type {any}
 	 */
@@ -27,7 +28,6 @@
 	 /**
 	 * @type {Chart<"line", number[], string>}
 	 */
-	
 
 	 const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-primary-dark').trim();
 
@@ -161,6 +161,7 @@
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<Chip chipIcon ={allIonicIcons.calculator} text="Πρόβλεψη Μ.Ο." flip = {flip} />
+
 
 
 		</ion-list>

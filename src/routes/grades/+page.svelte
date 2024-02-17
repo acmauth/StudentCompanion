@@ -15,6 +15,7 @@
 
 
 
+
 	let searchQuery = '';
 	let subjects = 0;
 	let passedSubjects = 0;

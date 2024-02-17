@@ -8,10 +8,12 @@
 </script>
 <span class="scroll" id={semesterId}></span>
 
+
 <div class="container">
 {#if filteredSubjects.length > 0}
 <div class="ion-padding-start ion-padding-vertical semester">
 	<ion-text class="title"><b>{semesterId}ο Εξάμηνο</b></ion-text>
+
 		{#if semesterAverage}
 		<ion-text class="subtitle">Μ.Ο Εξαμήνου: {semesterAverage}</ion-text>
 		<ion-text class="subtitle">Μ.Ο Εξαμήνου: {semesterAverage}</ion-text>
@@ -20,6 +22,7 @@
 		<ion-text class="subtitle">Μ.Ο Εξαμήνου: -</ion-text>
 		{/if}
 		
+
 </div>
 
 	
@@ -37,6 +40,8 @@
 
 						{#if course.examPeriod !== null}
 						<ion-label class="examPeriod">
+
+
 							{#if course.examPeriod && course.gradeYear}
 								{course.examPeriod.name} {course.gradeYear.name}
 							{:else}
@@ -50,6 +55,7 @@
 
 						</div>
 				<!-- -->
+
 				
 					{#if course.grade !== null}
 						{#if course.grade * 10 >= 5}
@@ -80,6 +86,7 @@
 
 
 
+
 h2 {
 	font-size: 1.5rem;
 	font-weight: bold;
@@ -105,6 +112,7 @@ h2 {
 	height: 2rem;
 }
 
+
 .containerFlex {
 	display: flex;
 	align-items: center;
@@ -127,12 +135,15 @@ h2 {
 	gap: 0.8rem;
 }
 
+
 .success {
 	color: var(--app-color-green-dark);
 }
 
 .danger {
 	color: var(--app-color-orange-dark);
+
+
 }
 
 .examPeriod{
@@ -159,13 +170,17 @@ h2 {
 	font-size: 0.8rem;
 }
 
+.success {
+	color: var(--app-color-green-dark);
+}
 
+.danger {
+	color: var(--app-color-orange-dark);
+}
 
-
-
-
-
-
+.examPeriod{
+	font-size: 0.8rem;
+}
 
 
 
