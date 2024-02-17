@@ -1,8 +1,8 @@
 import { writable } from 'svelte/store';
-
+import { persisted } from 'svelte-persisted-store';
 
 function createToggles() {
-    const { subscribe, set, update } = writable({
+    const { subscribe, set, update } = persisted("NotificationToggles", {
         all: true,
         universis: true,
         elearning: true,
