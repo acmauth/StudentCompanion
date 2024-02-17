@@ -50,7 +50,12 @@
 </script>
 
 
-<SubPageHeader title="Personal Info" />
+<ion-header collapse="condense" mode="ios">
+	<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+		<ion-title class="ion-padding-vertical" size="large">Personal Info</ion-title>
+	
+	</ion-toolbar>
+</ion-header>
 
 {#await getPersonalInfo()}
 	<ion-content>
