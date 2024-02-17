@@ -136,15 +136,7 @@
 		<circle-progress max={subjects} value={passedSubjects} ></circle-progress>
 	{/if}
 		<ion-list>
-<<<<<<< HEAD
-=======
-			<ion-item >
-				<ion-label>ECTS</ion-label>
-				<ion-text>
-					<h2>{gradesObject.ects}</h2>
-				</ion-text>
-			</ion-item>
->>>>>>> 07f8f1e0ce64907b32004e14cd7974de9e299bb4
+
 			<ion-item>
 				<ion-label>M.O με συντελεστές</ion-label>
 				<ion-text color="tertiary">
@@ -170,17 +162,8 @@
 
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-<<<<<<< HEAD
 			<Chip chipIcon ={allIonicIcons.calculator} text="Πρόβλεψη Μ.Ο." flip = {flip} />
-=======
-			<ion-chip on:click={flip} class="chip">
-				<div class="chipFlex">
-					<ion-icon icon={allIonicIcons.calculator}></ion-icon>
-				Πρόβλεψη Μ.Ο.
-				</div>
-				
-			</ion-chip>
->>>>>>> 07f8f1e0ce64907b32004e14cd7974de9e299bb4
+
 
 		</ion-list>
 
