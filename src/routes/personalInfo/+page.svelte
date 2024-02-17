@@ -6,6 +6,7 @@
 	import InfoItem  from '$lib/components/personalInfo/infoItem.svelte'
 	import PersonSkeleton from '$components/personalInfo/personSkeleton.svelte';
 	import { Capacitor } from '@capacitor/core';
+	import Settings from '$components/personalInfo/settings.svelte';
 
 	// Keep personal info
 
@@ -27,7 +28,6 @@
 		let personalData = await universisGet('Students/me/');
 		let department = await universisGet('Students/me/department');
 		let user = await universisGet('Users/me');
-		console.log(user);
 		aem = personalData.studentIdentifier;
 		inscriptionYear = personalData.inscriptionYear.name;
 		schoolGraduated = personalData.schoolGraduated;
@@ -56,17 +56,23 @@
 	</ion-toolbar>
 </ion-header>
 
-	{#await getPersonalInfo()}
-		<ion-content>
+	<ion-content>
+	{#await getPersonalInfo()}		
 			<PersonSkeleton />
-		</ion-content>
-		
+			<Settings logOut = {logOut} />
+
 	{:then} 
-	<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} logOut = {logOut} />
+	<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} />
+	
+	<Settings logOut = {logOut} />
 
 	{:catch error}
         <p>{error.message}</p>
 	{/await}
+
+	</ion-content>
+
+	
 
 	
 
