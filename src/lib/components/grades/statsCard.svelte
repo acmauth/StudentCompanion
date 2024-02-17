@@ -4,6 +4,7 @@
 	import {averages} from '$lib/functions/gradeAverages/averages';
 	import {averagesPerSemester} from '$lib/functions/gradeAverages/averagesPerSemester';
 	import * as allIonicIcons from 'ionicons/icons';
+	import Chip from "$components/shared/chip.svelte";
 
 
 
@@ -132,22 +133,23 @@
 		<circle-progress max={subjects} value={passedSubjects} ></circle-progress>
 	{/if}
 		<ion-list>
-			<ion-item >
-				<ion-label>ECTS</ion-label>
-				<ion-text>
-					<h2>{gradesObject.ects}</h2>
-				</ion-text>
-			</ion-item>
 			<ion-item>
 				<ion-label>M.O με συντελεστές</ion-label>
 				<ion-text color="tertiary">
 					<h2>{gradesObject.weightedAverage}</h2>
 				</ion-text>
 			</ion-item>
-			<ion-item class="ion-padding-bottom">
+			<ion-item>
 				<ion-label>M.O απλός</ion-label>
 				<ion-text color="tertiary">
 					<h2>{gradesObject.average}</h2>
+				</ion-text>
+			</ion-item>
+
+			<ion-item lines="none" class="ion-padding-bottom">
+				<ion-label>ECTS</ion-label>
+				<ion-text>
+					<h2>{gradesObject.ects}</h2>
 				</ion-text>
 			</ion-item>
 
@@ -156,13 +158,7 @@
 
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<ion-chip on:click={flip} class="chip">
-				<div class="chipFlex">
-					<ion-icon icon={allIonicIcons.calculator}></ion-icon>
-				Πρόβλεψη Μ.Ο.
-				</div>
-				
-			</ion-chip>
+			<Chip chipIcon ={allIonicIcons.calculator} text="Πρόβλεψη Μ.Ο." flip = {flip} />
 
 		</ion-list>
 
@@ -200,12 +196,7 @@
 		fill: var(--app-color-primary-dark);
 	}
 
-	.chipFlex {
-		display: flex;
-		gap: 0.2rem;
-		align-items: center;
-		font-size: 0.8rem;
-	}
+
 
 	.subtitle {
 		color: var(--app-color-primary-dark);
