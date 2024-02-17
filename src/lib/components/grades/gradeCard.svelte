@@ -14,7 +14,9 @@
 	<ion-text class="title"><b>{semesterId}ο Εξάμηνο</b></ion-text>
 		{#if semesterAverage}
 		<ion-text class="subtitle">Μ.Ο Εξαμήνου: {semesterAverage}</ion-text>
+		<ion-text class="subtitle">Μ.Ο Εξαμήνου: {semesterAverage}</ion-text>
 		{:else}
+		<ion-text class="subtitle">Μ.Ο Εξαμήνου: -</ion-text>
 		<ion-text class="subtitle">Μ.Ο Εξαμήνου: -</ion-text>
 		{/if}
 		
@@ -136,6 +138,25 @@ h2 {
 .examPeriod{
 	font-size: 0.8rem;
 	color: grey
+}
+
+.semester {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	gap: 1rem;
+}
+
+.success {
+	color: var(--app-color-green-dark);
+}
+
+.danger {
+	color: var(--app-color-orange-dark);
+}
+
+.examPeriod{
+	font-size: 0.8rem;
 }
 
 
