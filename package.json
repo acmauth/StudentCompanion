@@ -50,6 +50,7 @@
 		"cross-fetch": "^4.0.0",
 		"fetch-cookie": "^2.1.0",
 		"flowbite-svelte": "^0.44.19",
+		"fuse.js": "^7.0.0",
 		"ionic-svelte": "^0.5.82",
 		"ionicons": "^7.2.1",
 		"isomorphic-fetch": "^3.0.0",
