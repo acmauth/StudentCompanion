@@ -170,6 +170,18 @@ h2 {
 	font-size: 0.8rem;
 }
 
+.success {
+	color: var(--app-color-green-dark);
+}
+
+.danger {
+	color: var(--app-color-orange-dark);
+}
+
+.examPeriod{
+	font-size: 0.8rem;
+}
+
 
 
 
