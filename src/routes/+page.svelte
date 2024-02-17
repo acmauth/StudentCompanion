@@ -44,11 +44,6 @@
 		<ion-button href="/menu">Weekly Menu</ion-button>
 	</ion-card>
 	<ion-card>
-		<ion-card-header>
-			<ion-card-subtitle>Cards with the Recent Grades</ion-card-subtitle>
-		</ion-card-header>
-		<ion-button href="/recentGrades">Recent Grades</ion-button>
-	</ion-card>
 
 	<ion-card>
 		<ion-button href="/quickLinks">Quick Links</ion-button>
