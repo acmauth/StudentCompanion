@@ -15,6 +15,7 @@ export const userCreds = persisted<UserCreds>('usercredentials', {
 interface elearningCreds {
     sesskey: string;
     moodleSession: string;
+    userID: string;
 }
 
 interface universisCreds {
@@ -29,7 +30,8 @@ export interface userTokens {
 export const userTokens = persisted<userTokens>('userTokens', {
     elearning: {
         sesskey: "",
-        moodleSession: ""
+        moodleSession: "",
+        userID: ""
     },
     universis: {
         token: ""
