@@ -61,4 +61,13 @@
 	<ion-card>
 		<ion-button href="/quickLinks">Quick Links</ion-button>
 	</ion-card>
+
+	<ion-card>
+		<ion-button href="/about">About Us</ion-button>
+	</ion-card>
+
+	<ion-card>
+		<ion-button href="/faq">FAQ</ion-button>
+	</ion-card>
+
 </ion-page>
