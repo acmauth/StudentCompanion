@@ -29,10 +29,8 @@
             endTime: new Date(slot.endTime).toTimeString().substring(0, 5)
         }))).filter(slot => slot.day === (weekdays.findIndex((day) => Object.keys(day)[0] === activeDay))).sort((a, b) => a.startTime.localeCompare(b.startTime));
     
-
-    // onMount(async() => {
     //     // classes = (await universisGet('students/me/teachingEvents?$expand=location,performer&$filter=startDate ne null&$top=-1&$orderby=startDate')).value;
-    // });
+
 </script>
 
 <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
