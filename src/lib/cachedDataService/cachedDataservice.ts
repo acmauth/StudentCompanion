@@ -1,4 +1,5 @@
 import { universisGet, elearningGet } from "$lib/dataService"
+import { Network } from '@capacitor/network';
 
 type cachedItem = {
     key: string;
@@ -18,7 +19,7 @@ export async function cachedUniversisGet (endpoint: string, options?: options): 
     if (!options) options = {};
     const key = `universis_${endpoint}`;
     const cached = getFromCache(key);
-    if (cached.exists && !cached.expired && !options.forceFresh) {
+    if (cached.exists && (!cached.expired && !options.forceFresh || !(await Network.getStatus()).connected)){
         return cached.value;
     } else {
         const response = await universisGet(endpoint);
@@ -31,7 +32,7 @@ export async function cachedElearningGet(data: any, options?: options): Promise<
     if (!options) options = {};
     const key = `elearning_${JSON.stringify(data)}`;
     const cached = getFromCache(key);
-    if (cached.exists && !cached.expired && !options.forceFresh) {
+    if (cached.exists && (!cached.expired && !options.forceFresh || !(await Network.getStatus()).connected)){
         return cached.value;
     } else {
         const response = await elearningGet(data);
