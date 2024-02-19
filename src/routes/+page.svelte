@@ -43,7 +43,6 @@
 		</ion-card-header>
 		<ion-button href="/menu">Weekly Menu</ion-button>
 	</ion-card>
-	<ion-card>
 
 	<ion-card>
 		<ion-button href="/quickLinks">Quick Links</ion-button>
