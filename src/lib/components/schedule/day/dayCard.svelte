@@ -1,42 +1,19 @@
 <script lang="ts">
-	import {activeDay} from "./activeDay";
-	import * as allIonicIcons from 'ionicons/icons';
+	import { goto } from '$app/navigation';
+	import { ellipse, ellipseOutline } from 'ionicons/icons';
+	import { getDayIndex, getDayByIndex } from "$lib/components/schedule/day/days";
 	export let day: string;
-
-	function setActiveDay(event: Event) {
-
-		const allIcons = document.querySelectorAll('ion-icon');
-		allIcons.forEach(icon => {
-		icon.icon = allIonicIcons.ellipseOutline;
-		});
-
-		const clickedElement = event.target as HTMLElement;
-		const gridElement = clickedElement.closest('ion-grid');
-
-		if (gridElement) {
-			activeDay.set(gridElement.id)
-
-			const iconElement = gridElement.querySelector('ion-icon');
-			if (iconElement) {
-				iconElement.icon = allIonicIcons.ellipse;
-			}
-		}
-  	}
-
+	export let activeDay: string;
 </script>
 
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
-<ion-grid id="{day.toLowerCase()}" on:click={setActiveDay}>
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<ion-grid on:click={() => { goto(`/schedule/classes/${day.toLowerCase()}`)}}>
 	<ion-row class="ion-align-items-center ion-justify-content-center" style="padding: 3%; font-size: 200%">
-		{#if $activeDay == day.toLowerCase() || day.toLowerCase() == "mon" && ($activeDay == "sat" || $activeDay == "sun") }
-			<ion-icon id="icon" icon={allIonicIcons.ellipse} color="primary"/>
-		{:else}
-			<ion-icon id="icon" icon={allIonicIcons.ellipseOutline} color="primary"/>
-		{/if}
+		<ion-icon icon={activeDay.toLowerCase() == day.toLowerCase() ? ellipse : ellipseOutline} color="primary"/>
 	</ion-row >
 	<ion-row class="ion-align-items-center ion-justify-content-center">
-	  <ion-div >{day}</ion-div>
+		<ion-div>{getDayByIndex(getDayIndex(day), 'el', true)}</ion-div>
 	</ion-row>
 </ion-grid>
