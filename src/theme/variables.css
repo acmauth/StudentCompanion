@@ -119,6 +119,14 @@
     /* --color: inherit !important; */
   }
 
+  .tab-selected {
+    color: var(--app-color-primary-dark) !important;
+  }
+
+  ion-progress-bar {
+    --progress-background: var(--app-color-primary-dark);
+  }
+
 }
 
 /*  #FIXME and (max-width: 0) is used as a boolean to disable this css rule */

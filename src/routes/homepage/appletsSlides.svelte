@@ -43,7 +43,7 @@
 			shadow={false}
 			class="applet"
 			maxWidth="9rem"
-			href="/quicklinks"
+			href="/quickLinks"
 		>
 			<div class="appletcontent">
 				<ion-icon icon={link} />
