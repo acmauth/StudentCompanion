@@ -106,11 +106,12 @@
 
   ion-searchbar {
     --border-radius: 1rem !important;
-    --box-shadow: var(--shadow-md);
+    --box-shadow: var(--shadow-sm);
   }
 
   .searchbar-input.sc-ion-searchbar-md {
-    border: 1px solid #8ED2FF;
+    /* border: 1px solid #8ED2FF; */
+    border: 1px solid #EBEBEB;
   }
 
   ion-item {

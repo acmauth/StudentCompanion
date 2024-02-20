@@ -5,7 +5,7 @@
 
 <ion-card>
 
-    <ion-item>
+    <ion-item lines="none">
         <ion-thumbnail slot="start">
        <ion-skeleton-text />
     </ion-thumbnail>

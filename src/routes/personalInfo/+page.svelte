@@ -70,6 +70,6 @@
 			<p>{error.message}</p>
 		{/await}
 	</ion-content>
-</ion-tab>	
+</ion-tab>
 	
 	
