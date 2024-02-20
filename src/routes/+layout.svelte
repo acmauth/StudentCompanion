@@ -23,11 +23,12 @@
 	/* Theme variables */
 	import '../theme/variables.css';
 
-  /* Needed ion icons for the router */  
-	import { calendar, home, notifications, personCircle, statsChart } from 'ionicons/icons'; 
+  /* Needed ion icons for the router */
+	import { calendar, home, notifications, personCircle, statsChart } from 'ionicons/icons';
+	import { getDayByIndex } from '$components/schedule/day/days';
 
-  // Routes 
-	const bottomNav = [
+  // Routes
+	let bottomNav = [
 		{
 			label: '',
 			icon: home,
@@ -35,12 +36,12 @@
 		},
 		{
 			label: '',
-			icon: calendar, 
-			tab: 'schedule'
+			icon: calendar,
+			tab: "schedule/classes/" + getDayByIndex(new Date().getDay()).toLowerCase()
 		},
 		{
 			label: '',
-			icon: statsChart, 
+			icon: statsChart,
 			tab: 'grades'
 		},
 		{
