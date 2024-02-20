@@ -29,27 +29,27 @@
   // Routes 
 	const bottomNav = [
 		{
-			label: 'Home',
+			label: '',
 			icon: home,
 			tab: 'homepage'
 		},
 		{
-			label: 'Schedule',
+			label: '',
 			icon: calendar, 
 			tab: 'schedule'
 		},
 		{
-			label: 'Grades',
+			label: '',
 			icon: statsChart, 
 			tab: 'grades'
 		},
 		{
-			label: 'Notifications',
+			label: '',
 			icon: notifications,
 			tab: 'notifications'
 		},
 		{
-			label: 'Me',
+			label: '',
 			icon: personCircle,
 			tab: 'personalInfo'
 		}
