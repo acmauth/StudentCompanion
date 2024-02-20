@@ -1,4 +1,4 @@
-import { universisGet, elearningGet } from "$lib/dataService";
+import { neoUniversisGet, neoElearningGet } from "$lib/dataService";
 // import UserInfoStore from "$stores/userinfo.store";
 import { userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
@@ -28,7 +28,7 @@ function cleanUpFullMessage(fullMessage: string) {
     }
 }
 
-async function getElearningNotifications() {
+async function getElearningNotifications(refresh: boolean = false) {
     const body_Read = [
         {
             "index": 0,
@@ -61,8 +61,8 @@ async function getElearningNotifications() {
         }
     ];
     
-    const response_Read = await elearningGet(body_Read);
-    const response_Unread = await elearningGet(body_Unread);
+    const response_Read = await neoElearningGet(body_Read, {forceFresh: refresh});
+    const response_Unread = await neoElearningGet(body_Unread, {forceFresh: refresh});
 
     let messages: elearningMessages;
 
@@ -89,14 +89,12 @@ async function getElearningNotifications() {
             dateReceived: new Date(message.timecreated * 1000),
             id: message.id
         };});
-    console.log(cleanMessages);
     return cleanMessages;
 }
 
-async function getUniversisNotifications() {
-    let messages: messages = await universisGet("students/me/messages?$top=3");//&$filter=dateReceived eq null");
+async function getUniversisNotifications(refresh: boolean = false) {
+    let messages: messages = await neoUniversisGet("students/me/messages?$top=3", {forceFresh: refresh});//&$filter=dateReceived eq null");
     
-    console.log(messages);
 
     let cleanMessages = messages.value.map((message) => {
         return {
@@ -108,14 +106,13 @@ async function getUniversisNotifications() {
             dateReceived: new Date(message.dateReceived),
             id: message.id
         };});
-    console.log(cleanMessages);
     return cleanMessages;
 }
 
-export async function gatherNotifications(){
+export async function gatherNotifications(refresh: boolean = false){
 
-    let elearningNotifications = await getElearningNotifications();
-    let universisNotifications = await getUniversisNotifications();
+    let elearningNotifications = await getElearningNotifications(refresh);
+    let universisNotifications = await getUniversisNotifications(refresh);
 
     let notifications = elearningNotifications.concat(universisNotifications).sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
     

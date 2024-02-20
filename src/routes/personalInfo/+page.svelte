@@ -6,6 +6,7 @@
 	import InfoItem  from '$lib/components/personalInfo/infoItem.svelte'
 	import PersonSkeleton from '$components/personalInfo/personSkeleton.svelte';
 	import { Capacitor } from '@capacitor/core';
+	import Settings from '$components/personalInfo/settings.svelte';
 
 	// Keep personal info
 
@@ -27,7 +28,6 @@
 		let personalData = await universisGet('Students/me/');
 		let department = await universisGet('Students/me/department');
 		let user = await universisGet('Users/me');
-		console.log(user);
 		aem = personalData.studentIdentifier;
 		inscriptionYear = personalData.inscriptionYear.name;
 		schoolGraduated = personalData.schoolGraduated;
@@ -49,29 +49,27 @@
 
 </script>
 
+
 <ion-tab tab="personalInfo">
-		<ion-header collapse="condense" mode="ios">
-			<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-				<ion-title class="ion-padding-vertical" size="large">Personal Info</ion-title>
-				
-			</ion-toolbar>
-		</ion-header>
+	<ion-header collapse="condense" mode="ios">
+		<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+			<ion-title class="ion-padding-vertical" size="large">Personal Info</ion-title>
 		
-		<ion-content fullscreen={true}>
-		{#await getPersonalInfo()}
+		</ion-toolbar>
+	</ion-header>
 		
+	<ion-content fullscreen={true}>
+		{#await getPersonalInfo()}		
 			<PersonSkeleton />
-		
+			<Settings logOut = {logOut} />
 		{:then} 
-			<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} logOut = {logOut} />
+			<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} />
 			
-			{:catch error}
+			<Settings logOut = {logOut} />
+		{:catch error}
 			<p>{error.message}</p>
-			{/await}
-		</ion-content>
-</ion-tab>
-	
-	
-	
+		{/await}
+	</ion-content>
+</ion-tab>	
 	
 	

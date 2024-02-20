@@ -9,6 +9,11 @@
 	import { Capacitor } from '@capacitor/core';
 	import GradesSkeleton from '$components/grades/gradesSkeleton.svelte';
 	import NotifSkeleton from '../notifications/notifSkeleton.svelte';
+	import Flipper from "$components/shared/Flipper.svelte";
+	import TestComponentB from '../test/testComponentB.svelte';
+	import { flipped } from "./flipstore"; 
+
+
 
 
 	let searchQuery = '';
@@ -27,6 +32,10 @@
 
 	function handleChange(event: { target: { value: string; }; }) {
 		searchQuery = event.target.value;
+	}
+
+	function flip() {
+		$flipped = !$flipped;
 	}
 
 
@@ -61,18 +70,21 @@
     </ion-toolbar>
   </ion-header>
 
-   <!-- Show skeleton while loading -->
-   <ion-content fullscreen={true} class="content">
-    {#await getSubjects()}
-      <ion-progress-bar type="indeterminate"/>
-      <GradesSkeleton/>
-      <NotifSkeleton/>
-    {:then}
-    
-    <!-- Show content after loading is completed -->
-      <Stats searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} />
-      
-      <Grades semesterId = {semesterId} searchQuery = {searchQuery}  />
+<!-- Show skeleton while loading -->
+<ion-content fullscreen={true} class="content">
+   {#await getSubjects()}
+	   <ion-progress-bar type="indeterminate"/>
+	   <GradesSkeleton/>
+	   <NotifSkeleton/>
+   {:then}
+   
+   <!-- Show content after loading is completed -->
+   <Flipper reactToHeight bind:flipped={$flipped}>
+	   <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} slot="front" />
+	   <TestComponentB slot="back"/>
+   </Flipper>
+	   
+	   <Grades semesterId = {semesterId} searchQuery = {searchQuery}  />
 
       {:catch error}
           <p>{error.message}</p>
@@ -86,8 +98,6 @@
 		top: 0px;
 		z-index: 10;
 	}
-	.searchbar {
-    --border-radius: 10px;
-	}
+
 </style>
 

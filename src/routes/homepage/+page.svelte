@@ -47,8 +47,7 @@
 	});
 </script>
 
-<ion-tab tab="homepage"> 
-  <IonPage>
+<ion-tab tab="homepage">
     <ion-content class="" fullscreen>
       <div class="info-container">
         <div>
@@ -96,23 +95,23 @@
       <AppletsSlides />
       <p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
     </ion-content>
-  </IonPage>
 </ion-tab>
 
 <style>
 	.avatar {
-		display: block;
-		margin: 1.5rem;
+		width: 5rem;
 	}
 
 	.h5 {
 		margin: 0;
 		padding-left: 0.5rem;
+		padding-right: 0.5rem;
 		color: var(--app-color-primary-dark);
 	}
 
 	.student-id {
-		margin: 1.5rem;
+		/* margin: 1.5rem; */
+		width: fit-content;
 		border-style: solid;
 		border-radius: 17px;
 		border-width: 1px;
@@ -126,10 +125,11 @@
 	}
 
 	.info-container {
-		display: grid;
+		display: flex;
+		max-height: 5rem;
+		margin: 1.5rem;
+		justify-content: space-between;
 		align-items: center;
-		grid-template-columns: 1fr 2fr 1fr;
-		column-gap: 1.5rem;
 	}
 
 	.card-container {
@@ -172,20 +172,23 @@
 
 	.avg-grade-grid {
 		display: grid;
+		justify-content: space-between;
 		grid-template-columns: 1fr 1fr;
+
 		align-items: center;
 		height: 6rem;
 	}
 
 	.avg-grade {
 		padding-left: 1rem;
+		/* padding-right: -1rem; */
 	}
 
 	.progress-avg {
 		--progress-background: white;
 		background: var(--app-color-primary-dark);
-		height: 1.5rem;
-		margin-left: -0.2rem;
+		height: 5vw;
+		width: 4rem;
 		border-radius: 15px;
 		transform: rotate(-90deg);
 	}

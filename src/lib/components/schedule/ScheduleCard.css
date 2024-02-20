@@ -1,0 +1,31 @@
+ion-card {
+    transition: all ease-in-out 0.2s;
+}
+
+ion-card-header {
+    padding: 0;
+}
+
+ion-card:active {
+    transform: scale(0.95);
+}
+
+.circular-toast {
+    --border-radius: 20px;
+    --box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+}
+
+.icons {
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 2%;
+    align-items: center;
+}
+
+.title {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

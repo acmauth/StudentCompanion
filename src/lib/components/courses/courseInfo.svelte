@@ -122,8 +122,8 @@
 	<ion-card>
 		<ion-card-header>
 			<ion-card-title>{course.title}</ion-card-title>
-			<ion-card-subtitle>{course.code}</ion-card-subtitle>
-			<ion-card-subtitle>{course.courseType}</ion-card-subtitle>
+			<ion-card-subtitle># {course.code}</ion-card-subtitle>
+			<ion-card-subtitle>Τύπος: {course.courseType}</ion-card-subtitle>
 		</ion-card-header>
 
 		<!-- Checking if there is a grade and displays the corresponding color depending if you passed or not -->
@@ -142,20 +142,20 @@
 
 			<ion-list>
 
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>ECTS</ion-label>
 					<ion-text slot="end">{course.ects}</ion-text>
 				</ion-item>
 
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>Εξάμηνο</ion-label>
 					<ion-text slot="end">{course.semester}ο</ion-text>
 				</ion-item>
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>Περίοδος</ion-label>
 					<ion-text slot="end">{course.season}</ion-text>
 				</ion-item>
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label >Εβδομαδιαίες ώρες</ion-label>
 					<ion-text slot="end">{course.weeklyHours}</ion-text>
 				</ion-item>
@@ -183,33 +183,34 @@
 				<ion-card-subtitle>-</ion-card-subtitle>
 			{/if}
 		</ion-card-header>
+		<ion-card-content>
 		{#if stats.grade}
 			<ion-list>
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>Βαθμολογημένοι</ion-label>
 					<ion-text slot="end">{stats.totalStudents}</ion-text>
 				</ion-item>
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>Φοιτητές με ίδιο βαθμό</ion-label>
 					<ion-text slot="end">{stats.studentsLikeMe}</ion-text>
 				</ion-item>
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>Φοιτητές με καλύτερο βαθμό</ion-label>
 					<ion-text slot="end">{stats.studentsBetterThanMe}</ion-text>
 				</ion-item>
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>Φοιτητές με χειρότερο βαθμό</ion-label>
 					<ion-text slot="end">{stats.studentsWorseThanMe}</ion-text>
 				</ion-item>
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>Φοιτητές που πέρασαν</ion-label>
 					<ion-text slot="end">{stats.passedCount}</ion-text>
 				</ion-item>
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>Φοιτητές που κόπηκαν</ion-label>
 					<ion-text slot="end">{stats.failedCount}</ion-text>
 				</ion-item>
-				<ion-item>
+				<ion-item lines ="full">
 					<ion-label>Μέσος όρος</ion-label>
 					<ion-text slot="end">{stats.averageGrade}</ion-text>
 				</ion-item>
@@ -227,6 +228,7 @@
 				</ion-item>
 			</ion-list>
 		{/if}
+	</ion-card-content>
 	</ion-card>
 
 	<canvas id="gradeChart" />
@@ -247,6 +249,11 @@
 	ion-card {
 		box-shadow: none;
 	}
+
+	ion-accordion-group {
+	margin-top: 0.2rem;
+
+}
 
 
   

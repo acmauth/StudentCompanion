@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { setupIonicBase } from 'ionic-svelte';
 	import type { IonicConfig } from "@ionic/core";
-	import { nativeSettings } from './nativeSettings';
+	import { nativeSettings } from '$lib/globalFunctions/nativeSettings';
 	import { Capacitor } from '@capacitor/core';
   	import IonTabs from 'ionic-svelte/components/IonTabs.svelte';
-
-	/* Call Ionic's setup routine */
-	setupIonicBase();
-
+	import { addNetworkListener } from '$lib/globalFunctions/offlineHandling';
 	/* Import all components - or do partial loading - see below */
 	import 'ionic-svelte/components/all';
 
@@ -20,6 +17,8 @@
 		// Apply native settings
 		nativeSettings();
 	}
+
+	addNetworkListener();
 
 	/* Theme variables */
 	import '../theme/variables.css';
