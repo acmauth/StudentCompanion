@@ -7,3 +7,7 @@
         goto("/schedule/classes/" + getDayByIndex(new Date().getDay()).toLowerCase());
     });
 </script>
+
+<ion-tab tab="schedule">
+    <slot></slot>
+</ion-tab>
