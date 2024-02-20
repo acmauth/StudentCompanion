@@ -4,12 +4,20 @@
 	import Card from './gradeCard.svelte';
 	import { coursesPerSemester } from '$lib/functions/coursePerSemester/coursesPerSemester';
 	import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
-  
+	import Fuse from 'fuse.js';
+
 	export let searchQuery;
 	export let semesterId;
   
 	let courseBySemester = writable([]);
 	let filteredSubjects = writable([]);
+
+	const fuseOptions = {
+	  keys: ['course', 'courseTitle'],
+	  threshold: 0.3,
+	};
+
+
   
 	// Get the courses per semester and the average per semester
 	async function gatherGrades() {
@@ -42,16 +50,18 @@
 	  if (searchQuery.length === 0) {
 		filteredSubjects.set(courses);
 	  } else {
-		const filtered = courses.map((semester) => {
-		  return {
-			...semester,
-			courses: semester.courses.filter(
-			  (course) =>
-				course.courseTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				course.course.toLowerCase().includes(searchQuery.toLowerCase())
-			),
-		  };
-		});
+		const subjects = courses.reduce((acc, curr) => acc.concat(curr.courses), []);
+	    const fuse = new Fuse(subjects, fuseOptions);
+	    const searchResults = fuse.search(searchQuery);
+
+	    const filtered = courses.map((semester) => {
+	        return {
+	            ...semester,
+	            courses: searchResults.filter(result =>
+	                semester.courses.some(course => course.course === result.item.course)
+	            ).map(result => result.item),
+	        };
+	    });
 		filteredSubjects.set(filtered);
 	  }
   

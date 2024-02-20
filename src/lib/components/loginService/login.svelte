@@ -69,30 +69,30 @@
 
 </script>
 
-    <div style="position: relative; width: 100%; height: 55%; ">
-        <img src={Vector} alt="Vector" style="position: absolute; width: 100%; height:80%">
-        <img src={Vector1} alt="Overlay Icon" style="width: 100%; height:95%">
+<div style="position: relative; width: 100%; height: 55%; ">
+    <img src={Vector} alt="Vector" style="position: absolute; width: 100%; height:80%">
+    <img src={Vector1} alt="Overlay Icon" style="width: 100%; height:95%">
 
-    </div>
+</div>
 
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: top; height: 80%; padding-top: 2px; padding-right:20px; padding-left:20px;">
-        <ion-input id='usernameInput' class="custom" placeholder="Username" fill="outline" style="margin-bottom: 10px;"></ion-input> 
-        <ion-input id='passwordInput' class="custom" type="password" placeholder="Password" fill="outline" style="margin-bottom: 10px;" ></ion-input>
-        {#if invalidData}
-            <ion-label class="error"> Invalid username or password</ion-label>
-        {/if}
-        {#if isVisible}
-            <div class="loading-panel">
-                <ion-spinner></ion-spinner>
-                <p>Loading...</p>
-            </div>
-        {/if}
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: top; height: 80%; padding-top: 2px; padding-right:20px; padding-left:20px;">
+    <ion-input id='usernameInput' class="custom" placeholder="Username" fill="outline" style="margin-bottom: 10px;"></ion-input> 
+    <ion-input id='passwordInput' class="custom" type="password" placeholder="Password" fill="outline" style="margin-bottom: 10px;" ></ion-input>
+    {#if invalidData}
+        <ion-label class="error"> Invalid username or password</ion-label>
+    {/if}
+    {#if isVisible}
+        <div class="loading-panel">
+            <ion-spinner></ion-spinner>
+            <p>Loading...</p>
+        </div>
+    {/if}
 
-        <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">Log In</ion-button>
-        <ion-checkbox label-placement="start" style="margin-bottom:15px" class="custom" checked="true"> 
-            <ion-label class="custom"> Remember me</ion-label>
-        </ion-checkbox>
-    </div>
+    <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">Log In</ion-button>
+    <ion-checkbox label-placement="start" style="margin-bottom:15px" class="custom" checked="true"> 
+        <ion-label class="custom"> Remember me</ion-label>
+    </ion-checkbox>
+</div>
   
 <style>
     ion-input.custom {
@@ -126,7 +126,6 @@
     ion-label.custom {
         color: #3b8abf;
         font-size: 1rem;
-        text-decoration: underline;
     }
 
     ion-label.error {

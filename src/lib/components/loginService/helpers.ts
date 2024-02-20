@@ -11,9 +11,9 @@ import elearningAuthenticator from "$lib/-elearning/authenticator/core";
  * @returns A message indicating the success or failure of the token retrieval.
  */
 export async function getUniversisToken(username: string, password: string) {
-    const encodedPassword = encodeURIComponent(password);
+    
     let outputMessage = "";
-    const response = await sisAuthenticator(username, encodedPassword);
+    const response = await sisAuthenticator(username, password);
     
     if (response.error){
         outputMessage = response.error;
@@ -38,8 +38,8 @@ export async function getUniversisToken(username: string, password: string) {
  */
 export async function getElearningToken(username: string, password: string) {
     try {
-        const encodedPassword = encodeURIComponent(password);
-        const response = await elearningAuthenticator(username, encodedPassword);
+        // const encodedPassword = encodeURIComponent(password);
+        const response = await elearningAuthenticator(username, password);
 
         if (!response.error && response.credentials) {
             return "";

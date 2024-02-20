@@ -2,100 +2,173 @@
 	export let filteredSubjects: any = {};
 	export let semesterId: any = {};
 	export let semesterAverage: any = {};
+	import AppCard from '$shared/AppCard.svelte';
 
 	
 </script>
-{#if filteredSubjects.length > 0}
 <span class="scroll" id={semesterId}></span>
-<ion-card class="ion-padding-vertical">
-	<ion-card-header>
 
-  <ion-card-title><b>{semesterId}ο Εξάμηνο</b></ion-card-title>
+
+<div class="container">
+{#if filteredSubjects.length > 0}
+<div class="ion-padding-start ion-padding-vertical semester">
+	<ion-text class="title"><b>{semesterId}ο Εξάμηνο</b></ion-text>
+
 		{#if semesterAverage}
-		<ion-card-subtitle>Μ.Ο Εξαμήνου: {semesterAverage}</ion-card-subtitle>
+		<ion-text class="subtitle">Μ.Ο Εξαμήνου: {semesterAverage}</ion-text>
 		{:else}
-		<ion-card-subtitle>Μ.Ο Εξαμήνου: -</ion-card-subtitle>
+		<ion-text class="subtitle">Μ.Ο Εξαμήνου: -</ion-text>
 		{/if}
-	</ion-card-header>
+		
 
-	<ion-card-content>
-		<ion-list lines="none">
-			{#each filteredSubjects as course}
-					<ion-label class="ion-padding-start">{course.course}</ion-label>
+</div>
 
-					<ion-item href={`/courses/${course.course}`}>
-						<ion-label class="ion-text-wrap title">{course.courseTitle}</ion-label>
-						{#if course.grade !== null}
-							{#if course.grade * 10 >= 5}
-								<ion-text class="ion-padding-start" color="success">
-									<h2>{course.formattedGrade}</h2>
-								</ion-text>
-							{:else}
-								<ion-text class="ion-padding-start" color="danger">
-									<h2>{course.formattedGrade}</h2>
-								</ion-text>
-							{/if}
-						{:else}
-							<ion-text class="ion-padding-start" color="danger">
-								<h2><b>-</b></h2>
-							</ion-text>
-						{/if}
-					</ion-item>
+	
+
+		{#each filteredSubjects as course}
+		
+		<AppCard href={`/courses/${course.course}`} padding>
+				<ion-item lines="none" class="ion-no-padding">
+						<div class="containerFlex">
+
+							<div class="titlesFlex">
+							<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
+
 					{#if course.examPeriod !== null}
-						<ion-label class="ion-padding-start examPeriod">
+						<ion-label class="examPeriod">
 							{#if course.examPeriod && course.gradeYear}
 								{course.examPeriod.name} {course.gradeYear.name}
 							{:else}
-								-
+								ΔΗΛΩΜΕΝΟ
 							{/if}
 						</ion-label>
-          
+		
 					{:else}
-						<ion-label class="ion-padding-start examPeriod">-</ion-label>
+						<ion-label class="examPeriod">-</ion-label>
 					{/if}
-					<span class="line"></span>
-				
-				
-			{/each}
-	</ion-list>
-</ion-card-content>
-</ion-card>
-{/if}
 
+					</div>
+					{#if course.grade !== null}
+						{#if course.grade * 10 >= 5}
+							<ion-text class="ion-padding-start success gradeNumber">
+								<h2>{course.formattedGrade}</h2>
+							</ion-text>
+						{:else}
+							<ion-text class="ion-padding-start danger gradeNumber">
+								<h2>{course.formattedGrade}</h2>
+							</ion-text>
+						{/if}
+					{/if}
+					</div>
+				</ion-item>
+	</AppCard>
+	{/each}
+
+{/if}
+</div>
 
 <style>
 
+
+.gradeNumber h2{
+	margin: 0 !important;
+}
+
+h2 {
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+
+
+.courseTitle {
+	font-size: 1rem;
+}
+
+.title {
+	font-size: 1.5rem;
+}
+
+.subtitle {
+	font-size: 0.9rem;
+	color: var(--app-color-primary-dark);
+	font-weight: bold;
+}
+
 .scroll {
 	display: block;
-	height: 35px;
-}
-
-ion-item { --min-height: 0; }
-
-
-ion-label {
-	margin: 0.3rem 0rem;
+	height: 2rem;
 }
 
 
+.containerFlex {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	min-width: 100%;
+	padding: 0.5rem;
+	padding-left: 0.7rem;
+}
 
-.line {
-	display: block;
-	height: 1px;
-	width: 90%;
-	background-color: #e0e0e0;
-	margin-left: 1rem;
-	margin-bottom: 1rem;
-	margin-top: 1rem;
+.titlesFlex {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	
+}
+
+.semester {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	gap: 0.5rem !important;
 }
 
 
+.success {
+	color: var(--app-color-green-dark);
+}
+
+.danger {
+	color: var(--app-color-orange-dark);
 
 
+}
 
+.examPeriod{
+	font-size: 0.8rem;
+	color: grey
+}
 
+.semester {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	gap: 1rem;
+}
 
+.success {
+	color: var(--app-color-green-dark);
+}
 
+.danger {
+	color: var(--app-color-orange-dark);
+}
+
+.examPeriod{
+	font-size: 0.8rem;
+}
+
+.success {
+	color: var(--app-color-green-dark);
+}
+
+.danger {
+	color: var(--app-color-orange-dark);
+}
+
+.examPeriod{
+	font-size: 0.8rem;
+}
 
 
 
