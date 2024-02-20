@@ -2,8 +2,9 @@
 
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
-    import GradeCard from "./recentGradesCard.svelte";
-    import { dismissedGrades } from "./dismissedGrades";
+    import GradeCard from "../../../routes/recentGrades/recentGradesCard.svelte";
+    import { dismissedGrades } from "../../../routes/recentGrades/dismissedGrades"
+;
 
     let examPeriod = [];
     let recentGrades = [];
@@ -70,9 +71,7 @@
                 recentGrades = recentGrades.filter((grade) => grade.courseExam.id !== recentGrade.courseExam.id);
             }
         }
-
-        removeFromDismissedGrades(1);
-        // console.log(recentGrades);      
+    
 
     });       
 
