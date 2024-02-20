@@ -57,41 +57,40 @@
 
 </script>
 
-<ion-header collapse="condense" mode="ios">
-	<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-		<ion-title class="ion-padding-vertical" size="large">Βαθμοί</ion-title>
-	
+<ion-tab tab="grades">
+  <ion-header collapse="condense" mode="ios">
+    <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+      <ion-title class="ion-padding-vertical" size="large">Βαθμοί</ion-title>
+    
 
-		<ion-searchbar class="searchbar" debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
-		
-		
-		<Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />
-	</ion-toolbar>
-</ion-header>
+      <ion-searchbar class="searchbar" debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
+      
+      
+      <Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />
+    </ion-toolbar>
+  </ion-header>
 
- <!-- Show skeleton while loading -->
- <ion-content fullscreen={true} class="content">
-	{#await getSubjects()}
-		<ion-progress-bar type="indeterminate"/>
-		<GradesSkeleton/>
-		<NotifSkeleton/>
-	{:then}
-	
-	<!-- Show content after loading is completed -->
-	<Flipper reactToHeight bind:flipped={$flipped}>
-        <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} slot="front" />
-        <TestComponentB slot="back"/>
-    </Flipper>
-		
-		
-	  
-		<Grades semesterId = {semesterId} searchQuery = {searchQuery}  />
+<!-- Show skeleton while loading -->
+<ion-content fullscreen={true} class="content">
+   {#await getSubjects()}
+	   <ion-progress-bar type="indeterminate"/>
+	   <GradesSkeleton/>
+	   <NotifSkeleton/>
+   {:then}
+   
+   <!-- Show content after loading is completed -->
+   <Flipper reactToHeight bind:flipped={$flipped}>
+	   <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} slot="front" />
+	   <TestComponentB slot="back"/>
+   </Flipper>
+	   
+	   <Grades semesterId = {semesterId} searchQuery = {searchQuery}  />
 
-		{:catch error}
-        <p>{error.message}</p>
-	{/await}
-</ion-content>
-	
+      {:catch error}
+          <p>{error.message}</p>
+    {/await}
+  </ion-content>
+</ion-tab>	
 
 <style>
 	ion-header {
