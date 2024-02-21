@@ -8,6 +8,7 @@
 	import { wallet } from 'ionicons/icons';
 	import man from '$lib/assets/man.png';
 	import woman from '$lib/assets/woman.png';
+	import RecentGrades from "$components/recentGrades/recentGrades.svelte";
 
 	let givenName = '';
 	let gender = '';
@@ -50,17 +51,17 @@
 <ion-tab tab="homepage">
     <ion-content class="" fullscreen>
       <div class="info-container">
-        <div>
+        <div class="Person-tag">
           {#if gender === 'Α'}
             <img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
           {:else}
             <img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
           {/if}
-        </div>
-        <div>
-          <h5 class="h5">Γεια σου</h5>
-          <h5 class="h5"><b>{givenName}!</b></h5>
-        </div>
+		  	<div>
+			  <h5 class="h5">Γεια σου</h5>
+			  <h5 class="h5"><b>{givenName}!</b></h5>
+			</div>
+		</div>
         <div class="student-id">
           <AppCard margin={false} shadow={true} href="/id">
             <div style="background-color: #f3faff">
@@ -94,6 +95,7 @@
       <p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
       <AppletsSlides />
       <p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
+	  <RecentGrades />
     </ion-content>
 </ion-tab>
 
@@ -109,18 +111,23 @@
 		color: var(--app-color-primary-dark);
 	}
 
+	.Person-tag {
+		display: flex;
+		align-items: center;
+	}
+
 	.student-id {
 		/* margin: 1.5rem; */
 		width: fit-content;
 		border-style: solid;
-		border-radius: 17px;
+		border-radius: 1rem;
 		border-width: 1px;
 		border-color: var(--app-color-primary-light);
 	}
 
 	.id-icon {
-		margin: 1rem;
-		font-size: 2.5rem;
+		margin: 0.7rem;
+		font-size: 2.0rem;
 		color: var(--app-color-primary-dark);
 	}
 
