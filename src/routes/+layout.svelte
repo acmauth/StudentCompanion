@@ -36,7 +36,7 @@
 		{
 			label: '',
 			icon: calendar,
-			tab: "schedule/classes"
+			tab: 'schedule/classes'
 		},
 		{
 			label: '',
