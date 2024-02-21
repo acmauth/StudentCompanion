@@ -1,11 +1,11 @@
 <script lang="ts">
 	import {personOutline, map} from 'ionicons/icons';
 	import type { ClassItemFlat} from './ClassItem'
+	import AppCard from '$components/shared/AppCard.svelte';
 	export let classItem: ClassItemFlat;
 </script>
 
-
-<ion-card href={`/schedule/classes/editClass/${classItem.id}`} class="card">
+<AppCard href={`/classes/editClass/${classItem.id}`}>
 	<ion-grid>
 		<ion-row class="ion-justify-content-start">
 			<ion-col style="padding: 0%">
@@ -26,27 +26,13 @@
 			</ion-col>
 		</ion-row>
 	</ion-grid>
-</ion-card>
+</AppCard>
 
 
 
 <style>
-	.card {
-		display: flex;
-		align-items: center;
-		justify-content: start;
-	}
-
-	ion-card {
-		transition: all ease-in-out 0.2s;
-	}
-
 	ion-card-header {
 		padding: 10px;
-	}
-
-	ion-card:active {
-		transform: scale(0.95);
 	}
 
 	.icons {

@@ -2,12 +2,13 @@
     import { TaskType, type TaskItem } from "$lib/components/schedule/task/TaskItem";
     import { goto } from '$app/navigation';
 	import { taskStore } from "$components/schedule/task/taskStore";
+	import { toastController } from "@ionic/core";
 
     function onCancel() {
-        goto('/schedule/tasks');
+        goto('/tasks');
     }
 
-    function onSubmit(event: Event) {
+    async function onSubmit(event: Event) {
         event.preventDefault();
 
         const startInputElement = document.getElementById("start") as HTMLIonDatetimeElement;
@@ -16,8 +17,9 @@
         const endDate = new Date(endInputElement.value?.toString() || new Date().toString());
 
         if (startDate > endDate) {
-            alert("Η ημερομηνία λήξης πρέπει να είναι μετά την ημερομηνία έναρξης");
-            return;
+            await toastController.create({message: "Η ημερομηνία λήξης πρέπει να είναι μετά την ημερομηνία έναρξης.", duration: 2000, color: 'tertiary' , mode: 'ios', translucent: true, cssClass: 'toast-center'})
+                        .then(toast => toast.present());
+                return;
         }
 
         let formData: TaskItem = {
@@ -32,7 +34,7 @@
         };
 
         $taskStore = $taskStore.concat(formData);
-        goto('/schedule/tasks');
+        goto('/tasks');
     }
 </script>
 

@@ -4,6 +4,7 @@
     import { taskStore } from '$components/schedule/task/taskStore';
     import { TaskType } from '$components/schedule/task/TaskItem';
     import type { TaskItem } from '$components/schedule/task/TaskItem';
+	import { toastController } from '@ionic/core';
 
     // Extract taskId from the URL and get the referenced task
 	const taskId = $page.params.taskId;
@@ -30,7 +31,7 @@
 
 
     function onCancel() {
-        goto('/schedule/tasks');
+        goto('/tasks');
     }
 
     function onDelete() {
@@ -39,17 +40,18 @@
             const newArray = oldArray.filter(item => item.id !== taskItem?.id);
             return newArray;
         });
-        goto('/schedule/tasks');
+        goto('/tasks');
     }
 
-    function onSubmit() {
+    async function onSubmit() {
         const startInputElement = document.getElementById("start") as HTMLIonDatetimeElement;
         const endInputElement = document.getElementById("end") as HTMLIonDatetimeElement;
         const startDate = new Date(startInputElement.value?.toString() || new Date().toString());
         const endDate = new Date(endInputElement.value?.toString() || new Date().toString());
 
         if (startDate > endDate) {
-            alert("Η ημερομηνία λήξης πρέπει να είναι μετά την ημερομηνία έναρξης");
+            await toastController.create({message: "Η ώρα λήξης πρέπει να είναι μετά την ώρα έναρξης.", duration: 2000, color: 'tertiary' , mode: 'ios', translucent: true, cssClass: 'toast-center'})
+                        .then(toast => toast.present());
             return;
         }
 
@@ -65,7 +67,7 @@
         };
 
         if (formData == taskItem) {
-            goto('/schedule/tasks');
+            goto('/tasks');
             return;
         }
 
@@ -80,7 +82,7 @@
             return [...oldArray];
         });
 
-        goto('/schedule/tasks');
+        goto('/tasks');
     }
 </script>
 

@@ -23,11 +23,13 @@
     });
 </script>
 
+<ion-tab tab="schedule"></ion-tab>
+
 <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
       <ion-title>Συμβάντα</ion-title>
       <ion-buttons slot="end">
-        <ion-button href="/schedule/tasks/addTask">
+        <ion-button href="/tasks/addTask">
           <ion-icon slot="icon-only" icon={add}></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -35,13 +37,13 @@
 </ion-header>
 
 <ion-fab horizontal="start" vertical="bottom">
-    <ion-fab-button href="/schedule/exams" color="secondary">
+    <ion-fab-button href="/exams" color="secondary">
         <ion-icon icon={schoolOutline} />
     </ion-fab-button>
 </ion-fab>
 
 <ion-fab horizontal="end" vertical="bottom">
-    <ion-fab-button href="/schedule/classes" color="primary">
+    <ion-fab-button href="/schedule" color="primary">
         <ion-icon icon={bookOutline} />
     </ion-fab-button>
 </ion-fab>

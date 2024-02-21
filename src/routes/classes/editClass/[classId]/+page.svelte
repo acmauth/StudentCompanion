@@ -6,6 +6,7 @@
         import type { ClassItem, TimeSlot } from '$components/schedule/class/ClassItem';
         import { add } from 'ionicons/icons';
 	    import { onMount } from 'svelte';
+	    import { toastController } from '@ionic/core';
 
         let classId = $page.params.classId;
         let classItem: ClassItem | undefined;
@@ -17,11 +18,11 @@
         let count: number;
 
         let selectedOption: boolean[] = [];
-        
+
         onMount(() => {
-            
+
             classItem = $classStore.find(x => (x.id).toString() == classId);
-            
+
             if (typeof(classItem) == undefined) {
                 alert("Το μάθημα δεν βρέθηκε.");
                 goto('/schedule/classes');
@@ -37,16 +38,16 @@
                 if (!selectedOption[i]) continue;
                 startDate = new Date(classItem?.slots[i]?.startTime || new Date());
                 endDate = new Date(classItem?.slots[i]?.endTime || new Date());
-                starts.push(startDate.getFullYear() + "-" + 
-                        (String(startDate.getMonth() + 1)).padStart(2, '0') + "-" + 
-                        String(startDate.getDate()).padStart(2, '0') + "T" + 
-                        String(startDate.getHours()).padStart(2, '0') + ":" + 
+                starts.push(startDate.getFullYear() + "-" +
+                        (String(startDate.getMonth() + 1)).padStart(2, '0') + "-" +
+                        String(startDate.getDate()).padStart(2, '0') + "T" +
+                        String(startDate.getHours()).padStart(2, '0') + ":" +
                         String(startDate.getMinutes()).padStart(2, '0'))
-            
-                ends.push(endDate.getFullYear() + "-" + 
-                    (String(endDate.getMonth() + 1)).padStart(2, '0') + "-" + 
-                    String(endDate.getDate()).padStart(2, '0') + "T" + 
-                    String(endDate.getHours()).padStart(2, '0') + ":" + 
+
+                ends.push(endDate.getFullYear() + "-" +
+                    (String(endDate.getMonth() + 1)).padStart(2, '0') + "-" +
+                    String(endDate.getDate()).padStart(2, '0') + "T" +
+                    String(endDate.getHours()).padStart(2, '0') + ":" +
                     String(endDate.getMinutes()).padStart(2, '0'))
             }
         });
@@ -59,7 +60,7 @@
         }
 
         function onCancel() {
-            goto('/schedule/classes');
+            goto('/schedule');
         }
 
         function onDelete() {
@@ -68,12 +69,12 @@
                 const newArray = oldArray.filter(item => item.id !== classItem?.id);
                 return newArray;
             });
-            goto('/schedule/classes');
+            goto('/schedule');
         }
-        
-        function onSubmit(event: Event) {
+
+        async function onSubmit(event: Event) {
             event.preventDefault();
-        
+
             const title = (document.getElementById('title') as HTMLInputElement).value || "Ανώνυμο μάθημα";
             const classroom = (document.getElementById('classroom') as HTMLInputElement).value || "Χωρίς αίθουσα";
             const professor = (document.getElementById('professor') as HTMLInputElement).value || "Χωρίς διδάσκοντα";
@@ -87,8 +88,9 @@
                 const end = new Date(endInputElement.value?.toString() || new Date().toString());
 
                 if (start >= end) {
-                    alert("Η ημερομηνία λήξης πρέπει να είναι μετά την ημερομηνία έναρξης");
-                    return;
+                    await toastController.create({message: "Η ώρα λήξης πρέπει να είναι μετά την ώρα έναρξης.", duration: 2000, color: 'tertiary' , mode: 'ios', translucent: true, cssClass: 'toast-center'})
+                        .then(toast => toast.present());
+                return;
                 } else slots.push({ day:day, startTime: start, endTime:end });
             }
 
@@ -100,9 +102,9 @@
                 slots
             };
 
-            
+
             if (formData == classItem) {
-                goto('/schedule/tasks');
+                goto('/schedule');
                 return;
             }
 
@@ -117,20 +119,20 @@
                 return [...oldArray];
             });
 
-            goto('/schedule/classes');
+            goto('/schedule');
         }
 
     </script>
 
     <ion-header>
         <ion-toolbar>
-            <ion-title>Νέο μάθημα</ion-title>
+            <ion-title>Επεξεργασία μαθήματος</ion-title>
         </ion-toolbar>
     </ion-header>
 
     <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
         <form on:submit={onSubmit}>
-            <ion-input			
+            <ion-input
                 placeholder="Τελειότητα 101"
                 label="Τίτλος"
                 label-placement="stacked"
@@ -139,9 +141,9 @@
                 value={classItem?.title}
                 contenteditable="true"
                 spellcheck={true}
-            />                    
+            />
 
-            <ion-input			
+            <ion-input
                 placeholder="Hogwarts campus"
                 label="Αίθουσα"
                 label-placement="stacked"
@@ -151,8 +153,8 @@
                 contenteditable="true"
                 spellcheck={true}
             />
-            
-            <ion-input			
+
+            <ion-input
                 placeholder="Κύριος Ξερώλας"
                 label="Διδάσκων"
                 label-placement="stacked"
@@ -161,13 +163,13 @@
                 value={classItem?.professor}
                 contenteditable="true"
                 spellcheck={false}
-            />   
+            />
 
             {#each {length: count} as _, i}
                 <ion-div style="display: flex; align-items: center; justify-content: center; width: 100%; padding-bottom: 0">
                     <ion-select
                         id="day-{i}"
-                        label-placement="stacked" 
+                        label-placement="stacked"
                         interface="action-sheet"
                         cancel-text="Άκυρο"
                         value={classItem && classItem.slots[i] ? classItem.slots[i].day : null}
@@ -199,7 +201,7 @@
             <ion-div on:click={() => {$: count++;}} style="display: flex; align-items: left; justify-content: left; width: 100%; padding-top: 15px; padding-bottom: 10px">
                 <ion-icon icon={add} style="margin-right: 5px;"></ion-icon>
                 <ion-div>Προσθήκη ημέρας</ion-div>
-            </ion-div>  
+            </ion-div>
 
             <div style="display: flex; justify-content: space-between; padding-top: 5%">
                 <ion-button type="reset" color="light" on:ionFocus={onCancel}>ΑΚΥΡΟ</ion-button>
