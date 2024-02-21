@@ -33,17 +33,18 @@
     </ion-header>
 
 <ion-fab horizontal="start" vertical="bottom">
-    <ion-fab-button href="/schedule/tasks" color="secondary">
+    <ion-fab-button href="/tasks" color="secondary">
         <ion-icon icon={createOutline} />
     </ion-fab-button>
 </ion-fab>
 
 <ion-fab horizontal="end" vertical="bottom">
-    <ion-fab-button href="/schedule/classes" color="primary">
+    <ion-fab-button href="/schedule" color="primary">
         <ion-icon icon={bookOutline} />
     </ion-fab-button>
 </ion-fab>
 
+<ion-tab tab="schedule"></ion-tab>
 
 <ion-content >
     <ion-grid style="padding: 0%">
