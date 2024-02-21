@@ -5,6 +5,7 @@
     import { TaskType } from '$components/schedule/task/TaskItem';
     import type { TaskItem } from '$components/schedule/task/TaskItem';
 	import { toastController } from '@ionic/core';
+    import GenericHeader from "$components/shared/subPageHeader.svelte";
 
     // Extract taskId from the URL and get the referenced task
 	const taskId = $page.params.taskId;
@@ -86,11 +87,8 @@
     }
 </script>
 
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Επεξεργασία {taskItem?.type == TaskType.PROJECT ? 'εργασίας' : taskItem?.type == TaskType.TEST ? 'προόδου' : 'συμβάντος'}</ion-title>
-    </ion-toolbar>
-</ion-header>
+
+<GenericHeader title="Επεξεργασία {taskItem?.type == TaskType.PROJECT ? 'εργασίας' : taskItem?.type == TaskType.TEST ? 'προόδου' : 'συμβάντος'}" genericHeader />
 
 <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
     <form on:submit={onSubmit}>

@@ -1,12 +1,12 @@
-ion-card {
+.examCard {
     transition: all ease-in-out 0.2s;
 }
 
-ion-card-header {
+.examCardHeader {
     padding: 0;
 }
 
-ion-card:active {
+.examCard:active {
     transform: scale(0.95);
 }
 

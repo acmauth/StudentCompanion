@@ -45,7 +45,7 @@
 			<span>{new Date(taskItem.date.endDate).toLocaleTimeString().split(':')[0] + ':' + new Date(taskItem.date.endDate).toLocaleTimeString().split(':')[1]}</span>
 		</ion-row>
 			<ion-row class="ion-align-items-center ion-justify-content-start">
-			<ion-card-header>
+			<ion-card-header class="examCardHeader">
 				<ion-card-title color="primary">{taskItem.title}</ion-card-title>
 				<div class="icons">
 					<ion-icon icon={documentText} />

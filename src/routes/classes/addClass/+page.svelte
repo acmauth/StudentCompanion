@@ -6,6 +6,7 @@
     import { add } from 'ionicons/icons';
 	import { onMount } from 'svelte';
     import { toastController } from '@ionic/core';
+    import GenericHeader from "$components/shared/subPageHeader.svelte";
 
     let selectedOption: boolean[];
     let count: number;
@@ -61,11 +62,8 @@
 
 </script>
 
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Νέο μάθημα</ion-title>
-    </ion-toolbar>
-</ion-header>
+
+<GenericHeader title="Νέο μάθημα" genericHeader />
 
 <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
     <form on:submit={onSubmit}>
