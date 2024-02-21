@@ -5,6 +5,7 @@
 	import type { ClassItem, TimeSlot } from '$components/schedule/class/ClassItem';
     import { add } from 'ionicons/icons';
 	import { onMount } from 'svelte';
+    import { toastController } from '@ionic/core';
 
     let selectedOption: boolean[];
     let count: number;
@@ -23,9 +24,9 @@
         goto('/schedule');
     }
     
-    function onSubmit(event: Event) {
+    async function onSubmit(event: Event) {
         event.preventDefault();
-        
+
         const title = (document.getElementById('title') as HTMLInputElement).value || "Ανώνυμο μάθημα";
         const classroom = (document.getElementById('classroom') as HTMLInputElement).value || "Χωρίς αίθουσα";
         const professor = (document.getElementById('professor') as HTMLInputElement).value || "Χωρίς διδάσκοντα";
@@ -39,7 +40,8 @@
             const end = new Date(endInputElement.value?.toString() || new Date().toString());
 
             if (start >= end) {
-                alert("Η ημερομηνία λήξης πρέπει να είναι μετά την ημερομηνία έναρξης");
+                await toastController.create({message: "Η ώρα λήξης πρέπει να είναι μετά την ώρα έναρξης.", duration: 2000, color: 'tertiary' , mode: 'ios', translucent: true, cssClass: 'toast-center'})
+                        .then(toast => toast.present());
                 return;
             } else slots.push({ day:day, startTime: start, endTime:end });
         }
