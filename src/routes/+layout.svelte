@@ -25,7 +25,6 @@
 
   /* Needed ion icons for the router */
 	import { calendar, home, notifications, personCircle, statsChart } from 'ionicons/icons';
-	import { getDayByIndex } from '$components/schedule/day/days';
 
   // Routes
 	let bottomNav = [
@@ -37,7 +36,7 @@
 		{
 			label: '',
 			icon: calendar,
-			tab: "schedule/classes/" + getDayByIndex(new Date().getDay()).toLowerCase()
+			tab: "schedule/classes"
 		},
 		{
 			label: '',
