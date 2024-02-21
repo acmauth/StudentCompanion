@@ -1,13 +1,9 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
-    import { page } from '$app/stores';
     import type { ClassItemFlat } from '$lib/components/schedule/class/ClassItem';
     import {add, bookOutline, createOutline, schoolOutline} from 'ionicons/icons';
     import { Capacitor } from '@capacitor/core';
-    import { onMount } from 'svelte';
     import ClassCard from '$components/schedule/class/classCard.svelte';
     import { universisGet } from '$lib/dataService';
-    import DayCard from "$lib/components/schedule/day/dayCard.svelte";
     import { getDayByIndex, getDayIndex, weekdays } from "$lib/components/schedule/day/days";
     import { classStore } from '$components/schedule/class/classStore';
 
