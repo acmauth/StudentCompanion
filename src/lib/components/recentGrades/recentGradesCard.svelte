@@ -94,14 +94,15 @@
 
 <style>
     .grade-card {
-        border-radius: 15px;
-        position: relative;
+        /* border-radius: 15px;
+        position: relative; */
+        margin: 0;
         transition: transform 0.3s ease;
-        touch-action: pan-x; /* Allow horizontal panning */
+        /* touch-action: pan-x;  */
     }
 
-    .grade-card.swiping {
-        pointer-events: none; /* Ignore pointer events during swipe */
-    }
+    /* .grade-card.swiping {
+        pointer-events: none;
+    } */
 
 </style>

@@ -8,6 +8,7 @@
 	import { wallet } from 'ionicons/icons';
 	import man from '$lib/assets/man.png';
 	import woman from '$lib/assets/woman.png';
+	import RecentGrades from "$components/recentGrades/recentGrades.svelte";
 
 	let givenName = '';
 	let gender = '';
@@ -94,6 +95,7 @@
       <p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
       <AppletsSlides />
       <p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
+	  <RecentGrades />
     </ion-content>
 </ion-tab>
 

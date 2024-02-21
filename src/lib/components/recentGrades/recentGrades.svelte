@@ -2,8 +2,8 @@
 
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
-    import GradeCard from "../../../routes/recentGrades/recentGradesCard.svelte";
-    import { dismissedGrades } from "../../../routes/recentGrades/dismissedGrades"
+    import GradeCard from "$components/recentGrades/recentGradesCard.svelte";
+    import { dismissedGrades } from "$components/recentGrades/dismissedGrades"
 ;
 
     let examPeriod = [];
@@ -84,16 +84,26 @@
 
 </script>
 
-
-<ion-content>
-
+<div class="recentGrades ion-padding">
+    {#if recentGrades.length === 0}
+        <ion-card>
+            <ion-card-content>
+                    <p>Δεν υπάρχουν πρόσφατες βαθμολογίες</p>
+            </ion-card-content>
+        </ion-card>
+    {/if}
     {#each recentGrades as recentGrade } 
-
         <GradeCard subject = {recentGrade} on:delete-card={deleteCard}/>
-
     {/each}
+</div>
 
-</ion-content>
+<style>
+    .recentGrades {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+</style>
 
 
 
