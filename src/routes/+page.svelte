@@ -46,6 +46,10 @@
 	<ion-card>
 
 	<ion-card>
+		<ion-button href="/recentGrades">Recent Grades Cards</ion-button>
+	</ion-card>
+
+	<ion-card>
 		<ion-button href="/quickLinks">Quick Links</ion-button>
 	</ion-card>
 </ion-page>

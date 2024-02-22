@@ -1,13 +1,18 @@
 <script>
 
-    import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
-    import GradeCard from "./recentGradesCard.svelte";
-    import { dismissedGrades } from "./dismissedGrades";
+    import GradeCard from "../../lib/components/recentGrades/recentGradesCard.svelte";
+    import { dismissedGrades } from "../../lib/components/recentGrades/dismissedGrades";
+    import { onMount } from "svelte";
 
-    let examPeriod = [];
+
     let recentGrades = [];
+    let allRecentGrades = []; //used to bring back recent grades with restore button
     let grades = [];
+    let deletedCards = [];
+    let showRestore = false;
+    let recentGradeKey = 0;
+    
 
     // Subscribe to changes in dismissedGrades
     const unsubscribe = dismissedGrades.subscribe(value => {
@@ -20,81 +25,131 @@
     }
 
     function removeFromDismissedGrades(id){
+        dismissedGrades.update(grades => grades.filter(grade => grade != id));
+    }
+
+    function emptyDismissedGrades(){
         dismissedGrades.update(grades => grades.filter(grade => false));
     }
 
-
     onMount(async () => {
-        // getting the current period and year 
-        examPeriod = (await universisGet("students/me/department?$expand=departmentConfiguration($expand=examYear,examPeriod)&$top=1&$skip=0&$count=false"));
+        try {
 
-        let currentPeriod = examPeriod.currentPeriod;
-        if (currentPeriod === 2) currentPeriod = 1;
-        if (currentPeriod === 4) currentPeriod = 3;
-        if (currentPeriod === 6) currentPeriod = 5;
+            // getting the current period and year 
+            let examPeriod = (await universisGet("students/me/department?$expand=departmentConfiguration($expand=examYear,examPeriod)&$top=1&$skip=0&$count=false"));
 
-        let currentYear = examPeriod.currentYear;
+            let currentPeriod = examPeriod.currentPeriod;
+            if (currentPeriod === 2) currentPeriod = 1;
+            if (currentPeriod === 4) currentPeriod = 3;
+            if (currentPeriod === 6) currentPeriod = 5;
 
-        // getting recent grades based on the current period, if empty that exam period didn't arrive
-        recentGrades = (await universisGet('students/me/grades?$filter=courseExam/year eq ' + currentYear + ' and courseExam/examPeriod eq ' + currentPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
+            let currentYear = examPeriod.currentYear;
 
-        // if its empty it means that the recent grades are a period prior
-        if (recentGrades.length === 0){
-            let lastPeriod;
-            let lastYear;
+            // getting recent grades based on the current period, if empty that exam period didn't arrive
+            recentGrades = (await universisGet('students/me/grades?$filter=courseExam/year eq ' + currentYear + ' and courseExam/examPeriod eq ' + currentPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
 
-            // exam periods: 1-2 winter, 3-4 sprint, 5-6 september
-            switch (currentPeriod){
-                case 1:
-                    lastPeriod = 5;
-                    lastYear = currentYear - 1;
-                    break;
-                case 3:
-                    lastPeriod = 1;
-                    lastYear = currentYear
-                    break;
-                case 5:
-                    lastPeriod = 3;
-                    lastYear = currentYear;
-                    break;
+            // if its empty it means that the recent grades are a period prior
+            if (recentGrades.length === 0){
+                let lastPeriod;
+                let lastYear;
+
+                // exam periods: 1-2 winter, 3-4 sprint, 5-6 september
+                switch (currentPeriod){
+                    case 1:
+                        lastPeriod = 5;
+                        lastYear = currentYear - 1;
+                        break;
+                    case 3:
+                        lastPeriod = 1;
+                        lastYear = currentYear
+                        break;
+                    case 5:
+                        lastPeriod = 3;
+                        lastYear = currentYear;
+                        break;
+                }
+
+                // getting recent grades from the previous period
+                recentGrades = (await universisGet('students/me/grades?$filter=courseExam/year eq ' + lastYear + ' and courseExam/examPeriod eq ' + lastPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
+                
+                allRecentGrades = [...recentGrades];
             }
 
-            // getting recent grades from the previous period
-            recentGrades = (await universisGet('students/me/grades?$filter=courseExam/year eq ' + lastYear + ' and courseExam/examPeriod eq ' + lastPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
-            
-        }
-
-        // removing the grades that are already deleted
-        for (const recentGrade of recentGrades){           
-            if (grades.includes(recentGrade.courseExam.id)){
-                recentGrades = recentGrades.filter((grade) => grade.courseExam.id !== recentGrade.courseExam.id);
+            // removing the grades that are already deleted
+            for (const recentGrade of recentGrades){           
+                if (grades.includes(recentGrade.courseExam.id)){
+                    recentGrades = recentGrades.filter((grade) => grade.courseExam.id !== recentGrade.courseExam.id);
+                }
             }
+            // console.log(recentGrades);
+            // emptyDismissedGrades();
+
+        }catch (error){
+            console.log("Error",error);
         }
 
-        removeFromDismissedGrades(1);
-        // console.log(recentGrades);      
-
-    });       
+    });        
 
     // remove card when swipped
     const deleteCard = (id) => {
         const examId = id.detail;
         recentGrades = recentGrades.filter((course) => course.courseExam.id !== examId);
         addToDismissedGrades(examId);
+        if (deletedCards.length === 0){
+            showRestore = true;
+        } 
+        deletedCards.push(examId);
     }
 
+    // restore the last deleted card
+    function restoreDeletedCard(){
+        let id = deletedCards[deletedCards.length - 1];
+        deletedCards.pop();
+        removeFromDismissedGrades(id);
+        for (const recentGrade of allRecentGrades){
+            if (id === recentGrade.courseExam.id){
+                recentGrades.push(recentGrade);
+                recentGradeKey++;
+            }
+        }
+        if (deletedCards.length === 0){
+            showRestore = false;
+        }
+    }
+    
 </script>
 
 
 <ion-content>
+    {#if recentGrades.length !== 0}
+        {#key recentGradeKey}
+            {#each recentGrades as recentGrade } 
 
-    {#each recentGrades as recentGrade } 
+                <GradeCard subject = {recentGrade} on:delete-card={deleteCard}/>
 
-        <GradeCard subject = {recentGrade} on:delete-card={deleteCard}/>
+            {/each}
+        {/key}
+    {:else}
 
-    {/each}
+        <p style="margin-left:5%; margin-right:5%">Δεν υπάρχουν πρόσφατα αποτελέσματα</p>
 
+    {/if}
+
+    <div class="button-container">
+        {#if showRestore}
+          <ion-button on:click={restoreDeletedCard}>Restore</ion-button>
+        {/if}
+      </div>
 </ion-content>
 
 
 
+
+<style>
+    .button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+  }
+</style>
