@@ -3,7 +3,7 @@
  * @param {{ title: string; id:string; semester: number; grade: number; input_grade: string, ects: number; }} course
  */
 
-export function test(course) {
+export function numberCheck(course) {
     var id = String(course.id);
     const input_element = document.getElementById(id);
 
@@ -48,8 +48,7 @@ export function test(course) {
         input_element.value = "10";
     
     course.grade = grade;
-    console.log(course.title, "= ", grade);
-
+    
     return 0;
 };
     

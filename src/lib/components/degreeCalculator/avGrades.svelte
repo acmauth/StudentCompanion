@@ -1,11 +1,7 @@
 <script>
-    /** @type {string} */
-    export let degree_grade_string_ect;
-
-    /** @type {string} */
-	export let degree_grade_string_simple;
-
-
+    /** @type { { ects: {value: number, stringed: string}, simple: {value: number, stringed: string} } } */
+    export let degree_grade;
+    
 </script>
 
 <h2 id="new-average">Μέσος Όρος</h2>
@@ -13,14 +9,14 @@
 <div id="grades-box">
 
     <div class="grade-box" >
-        <h1 class="grade-text">{degree_grade_string_ect}</h1>
+        <h1 class="grade-text">{degree_grade.ects.stringed}</h1>
         <p class="grade-subtext">Με συντελεστές</p>
     </div>
 
     <div id="grade-line"> </div>
 
     <div class="grade-box">
-        <h1 class="grade-text">{degree_grade_string_simple}</h1>
+        <h1 class="grade-text">{degree_grade.simple.stringed}</h1>
         <p class="grade-subtext">Απλός</p> 
     </div>
 </div>  
@@ -47,7 +43,7 @@
     }
 
     #grade-line {
-        border-left: 0.075rem solid #515151;
+        border-left: 0.09rem solid #868686;
         height: 3.1rem;      
         margin-top: 1.8rem; 
     }

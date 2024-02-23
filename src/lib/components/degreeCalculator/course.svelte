@@ -16,20 +16,20 @@
 
 
 <style>
-    .course-box {
+    .course-box { 
         padding-left: 1rem;
         flex: 3.25; /* Takes 3/4 of the available space */
     }
 
     .course-name {
         color: #000000;
-        font-size: 12px;
+        font-size: 1em;
         text-align: left;
     }
 
     .course-semester {
         margin:0;
-        font-size: 8px;
+        font-size: 0.6em;
         color: #727272;
         text-align: left;
     }    
