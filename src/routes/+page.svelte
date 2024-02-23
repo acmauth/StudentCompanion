@@ -31,9 +31,9 @@
 
 <ion-card>
 	<ion-card-header>
-		<ion-card-subtitle>Degree Grade</ion-card-subtitle>
+		<ion-card-subtitle>Calculate degree Grade</ion-card-subtitle>
 	</ion-card-header>
-	<ion-button href="/degreeGrade">Calculate Degree Grade</ion-button>
+	<ion-button href="/degreeCalculator">Calculate Degree Grade</ion-button>
 </ion-card>
 
 
