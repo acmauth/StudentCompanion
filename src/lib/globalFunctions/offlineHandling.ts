@@ -14,18 +14,7 @@ export function addNetworkListener () {
     
     Network.addListener('networkStatusChange', status => {
         console.log('Network status changed', status);
-        if (status.connected) {
-            showToast({
-                color: 'success',
-                duration: 1500,
-                message: 'Επέστρεψες online!',
-                icon: wifi,
-                mode: 'ios',
-                translucent: true,
-                position: 'bottom',
-                layout: 'stacked'
-            })
-        } else {
+        if (!status.connected) {
             showToast({
                 color: 'danger',
                 duration: 3000,
