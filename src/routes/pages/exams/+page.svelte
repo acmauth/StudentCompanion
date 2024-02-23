@@ -34,13 +34,13 @@
     </ion-header>
 
     <ion-fab horizontal="start" vertical="bottom">
-        <ion-fab-button href="/tasks" color="secondary">
+        <ion-fab-button href="/pages/tasks" color="secondary">
             <ion-icon icon={createOutline} />
         </ion-fab-button>
     </ion-fab>
 
     <ion-fab horizontal="end" vertical="bottom">
-        <ion-fab-button href="/schedule" color="primary">
+        <ion-fab-button href="/pages/schedule" color="primary">
             <ion-icon icon={bookOutline} />
         </ion-fab-button>
     </ion-fab>

@@ -10,7 +10,7 @@
 	import GradesSkeleton from '$components/grades/gradesSkeleton.svelte';
 	import NotifSkeleton from '../notifications/notifSkeleton.svelte';
 	import Flipper from "$components/shared/Flipper.svelte";
-	import TestComponentB from '../test/testComponentB.svelte';
+	import TestComponentB from '../../test/testComponentB.svelte';
 	import { flipped } from "./flipstore"; 
 
 

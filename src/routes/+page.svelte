@@ -1,3 +1,9 @@
+<script>
+	import { goto } from '$app/navigation';
+	// Handling the redirect to the homepage
+	// It's in this page so it loads after the layout.svelte
+	goto('pages/homepage');
+</script>
 <ion-page style="overflow-y: auto;">
 	<ion-card>
 		<ion-card-header>
