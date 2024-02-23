@@ -6,7 +6,7 @@
     import GenericHeader from "$components/shared/subPageHeader.svelte";
 
     function onCancel() {
-        goto('/tasks');
+        goto('/pages/tasks');
     }
 
     async function onSubmit(event: Event) {
@@ -35,7 +35,7 @@
         };
 
         $taskStore = $taskStore.concat(formData);
-        goto('/tasks');
+        goto('/pages/tasks');
     }
 </script>
 

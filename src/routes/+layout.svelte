@@ -23,44 +23,8 @@
 	/* Theme variables */
 	import '../theme/variables.css';
 
-  /* Needed ion icons for the router */
-	import { calendar, home, notifications, personCircle, statsChart } from 'ionicons/icons';
-
-  // Routes
-	let bottomNav = [
-		{
-			label: '',
-			icon: home,
-			tab: 'homepage'
-		},
-		{
-			label: '',
-			icon: calendar,
-			tab: 'schedule'
-		},
-		{
-			label: '',
-			icon: statsChart,
-			tab: 'grades'
-		},
-		{
-			label: '',
-			icon: notifications,
-			tab: 'notifications'
-		},
-		{
-			label: '',
-			icon: personCircle,
-			tab: 'personalInfo'
-		}
-	];
-
-	const logsStuff =()=>{};
-
 </script>
 
 <ion-app>
-	<IonTabs slot="bottom" tabs={bottomNav} ionTabsWillChange={logsStuff} ionTabsDidChange={logsStuff}>
-		<slot />
-	</IonTabs>
+	<slot />
 </ion-app>

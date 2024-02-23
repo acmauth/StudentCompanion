@@ -33,7 +33,7 @@
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
       <ion-title>Πρόγραμμα μαθημάτων</ion-title>
       <ion-buttons slot="end">
-        <ion-button href="/classes/addClass">
+        <ion-button href="/pages/classes/addClass">
           <ion-icon slot="icon-only" icon={add}></ion-icon>
         </ion-button>
       </ion-buttons>
@@ -41,13 +41,13 @@
 </ion-header>
 
 <ion-fab horizontal="start" vertical="bottom">
-    <ion-fab-button href="/tasks" color="secondary">
+    <ion-fab-button href="/pages/tasks" color="secondary">
         <ion-icon icon={createOutline} />
     </ion-fab-button>
 </ion-fab>
 
 <ion-fab horizontal="end" vertical="bottom">
-    <ion-fab-button href="/exams" color="primary">
+    <ion-fab-button href="/pages/exams" color="primary">
         <ion-icon icon={schoolOutline} />
     </ion-fab-button>
 </ion-fab>

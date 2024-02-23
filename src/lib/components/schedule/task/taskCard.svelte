@@ -33,7 +33,7 @@
 	}
 </style>
 
-<ion-card href={`/tasks/editTask/${taskItem.id}`} class="card {isPastDate? 'pastDate' : null} {isTest? 'test' : null} {isProject? 'project' : null}" style="padding: 10px;">
+<ion-card href={`/pages/tasks/editTask/${taskItem.id}`} class="card {isPastDate? 'pastDate' : null} {isTest? 'test' : null} {isProject? 'project' : null}" style="padding: 10px;">
 	<ion-grid>
 		<ion-row>
 			{startDay} &nbsp;
