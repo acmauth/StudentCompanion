@@ -19,11 +19,11 @@
 	});
 </script>
 
-<ion-card href="/courses/{examItem.id}" class="{isPastDate? 'pastDate' : null}" style="padding: 8px">
+<ion-card href="/courses/{examItem.id}" class="{isPastDate? 'pastDate' : null} examCard" style="padding: 0.5rem; margin: 0;">
 	<ion-grid>
 		<ion-row class="ion-justify-content-start">
-			<ion-col style="padding: 0%">
-				<ion-card-header>
+			<ion-col class="ion-no-padding">
+				<ion-card-header class="examCardHeader">
 					<ion-card-title class="title" color="primary">{examItem.subject}</ion-card-title>
 
 					<div class="icons">

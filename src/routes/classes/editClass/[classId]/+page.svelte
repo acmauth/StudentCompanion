@@ -7,6 +7,7 @@
         import { add } from 'ionicons/icons';
 	    import { onMount } from 'svelte';
 	    import { toastController } from '@ionic/core';
+        import GenericHeader from "$components/shared/subPageHeader.svelte";
 
         let classId = $page.params.classId;
         let classItem: ClassItem | undefined;
@@ -124,11 +125,7 @@
 
     </script>
 
-    <ion-header>
-        <ion-toolbar>
-            <ion-title>Επεξεργασία μαθήματος</ion-title>
-        </ion-toolbar>
-    </ion-header>
+    <GenericHeader title="Επεξεργασία μαθήματος" genericHeader />
 
     <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
         <form on:submit={onSubmit}>

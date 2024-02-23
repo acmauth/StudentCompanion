@@ -3,6 +3,7 @@
     import { goto } from '$app/navigation';
 	import { taskStore } from "$components/schedule/task/taskStore";
 	import { toastController } from "@ionic/core";
+    import GenericHeader from "$components/shared/subPageHeader.svelte";
 
     function onCancel() {
         goto('/tasks');
@@ -38,11 +39,7 @@
     }
 </script>
 
-<ion-header>
-    <ion-toolbar>
-        <ion-title>Νέο συμβάν</ion-title>
-    </ion-toolbar>
-</ion-header>
+<GenericHeader title="Νέο συμβάν" genericHeader />
 
 <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
     <form on:submit={onSubmit}>

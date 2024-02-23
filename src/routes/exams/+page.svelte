@@ -26,49 +26,63 @@
     });
 </script>
 
+
     <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
         <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-        <ion-title>Πρόγραμμα Εξετάσεων</ion-title>
+            <ion-title>Πρόγραμμα Εξετάσεων</ion-title>
         </ion-toolbar>
     </ion-header>
 
-<ion-fab horizontal="start" vertical="bottom">
-    <ion-fab-button href="/tasks" color="secondary">
-        <ion-icon icon={createOutline} />
-    </ion-fab-button>
-</ion-fab>
+    <ion-fab horizontal="start" vertical="bottom">
+        <ion-fab-button href="/tasks" color="secondary">
+            <ion-icon icon={createOutline} />
+        </ion-fab-button>
+    </ion-fab>
 
-<ion-fab horizontal="end" vertical="bottom">
-    <ion-fab-button href="/schedule" color="primary">
-        <ion-icon icon={bookOutline} />
-    </ion-fab-button>
-</ion-fab>
-
-<ion-tab tab="schedule"></ion-tab>
-
-<ion-content >
-    <ion-grid style="padding: 0%">
-        {#each exams as examItem}
+    <ion-fab horizontal="end" vertical="bottom">
+        <ion-fab-button href="/schedule" color="primary">
+            <ion-icon icon={bookOutline} />
+        </ion-fab-button>
+    </ion-fab>
+        
+    <ion-content class="ion-padding">
+        <div class="examCardList">
+            {#each exams as examItem}
             <ExamCard {examItem} />
-        {/each}
-    </ion-grid>
-    <ion-row class="custom-center-label">
+            {/each}
+        </div>
         {#if exams.length === 0}
-            <ion-icon icon={schoolOutline} size="large" style="padding: 15px"></ion-icon>
-            <ion-label>Δεν υπάρχουν προγραμματισμένες εξετάσεις.</ion-label>
+        <div class="custom-center-label">
+            <div class="middle">
+                <ion-icon icon={schoolOutline} size="large" style="padding: 15px"></ion-icon>
+                <ion-label>Δεν υπάρχουν προγραμματισμένες εξετάσεις.</ion-label>
+            </div>
+        </div>
         {/if}
-    </ion-row>
-</ion-content>
-
+    </ion-content>
+    
 <style>
-    .custom-center-label {
-        position: absolute;
-        top: 45%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+
+    .examCardList {
         display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .custom-center-label {
+        display: flex;
+        flex-direction: column;
         text-align: center;
         justify-content: center;
         align-items: center;
+        height: 100%;
     }
+    .middle {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+        }
 </style>
