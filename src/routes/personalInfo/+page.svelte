@@ -1,6 +1,5 @@
 <script>
 	import { universisGet } from '$lib/dataService';
-	import { onMount } from 'svelte';
 	import { invalidateAuth } from '$lib/authentication/authValidator';
 	import { goto } from '$app/navigation';
 	import InfoItem  from '$lib/components/personalInfo/infoItem.svelte'
@@ -67,13 +66,19 @@
 	<Settings logOut = {logOut} />
 
 	{:catch error}
-        <p>{error.message}</p>
+        <p>Παρουσιάστηκε σφάλμα :&#40;</p>
+		<p>{error.message}</p>
 	{/await}
 
 	</ion-content>
 
 	
-
+<style>
 	
-
+	ion-content {
+--padding-end: 0.6rem;
+--padding-start: 0.6rem;
+}
+	
+</style>
 

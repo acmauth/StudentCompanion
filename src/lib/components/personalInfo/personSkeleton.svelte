@@ -4,6 +4,7 @@
 
 
 <ion-card style="height: 20vh;">
+    <ion-card-content>
     <ion-item lines="none">
         <ion-label>
             <h3 style="display: flex; flex-direction: row; gap:1rem;">
@@ -22,11 +23,13 @@
 
         </ion-label>
     </ion-item>
-	
+    
+    </ion-card-content>
 </ion-card>
 
-{#each {length: 6} as i}
+
 <ion-card>
+    {#each [1,2,3] as item }
     <ion-item lines="none">
         <ion-thumbnail slot="start">
             <ion-skeleton-text />
@@ -43,5 +46,7 @@
             </p>
         </ion-label>
     </ion-item>
+    {/each}
+    
 </ion-card>
-{/each}
+

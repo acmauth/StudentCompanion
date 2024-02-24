@@ -22,6 +22,10 @@
 	 */
 	 export let flip;
 
+	 /**
+	 * @type {null | undefined}
+	 */
+	  export let subjectsJSON;
 	 
 	 /**
 	 * @type {Chart<"line", number[], string>}
@@ -30,6 +34,9 @@
 
 	 const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-primary-dark').trim();
 
+	 /**
+	 * @type {Chart<"line", never[], never>}
+	 */
 	 let chart;
 	 let gradesObject = {
 		"average": 0,
@@ -40,27 +47,52 @@
 		"semester": []
 	 };
 
-	// Dummy data for average grades
+	
+
+	/**
+	 * @param {any} subjectsJSON
+	 */
+	async function processAverages(subjectsJSON) {
+	  try {
+	    const result = await averages(subjectsJSON);
+	    gradesObject.average = result.avg;
+	    gradesObject.weightedAverage = result.weighted_avg;
+	    gradesObject.grades = result.grades;
+	    gradesObject.ects = result.ects;
+	  } catch (error) {
+	    console.error(error);
+	  }
+	  
+	}
+
+	/**
+	 * @param {null | undefined} subjectsJSON
+	 */
+	async function processAveragesPerSemester(subjectsJSON) {
+	  try {
+	    const result = await averagesPerSemester(subjectsJSON);
+	    gradesObject.averagesPerSemester = result;
+
+	    for (let i = 1; i <= result.length+1; i++) {
+	      gradesObject.semester[i - 1] = i;
+	    }
+	  } catch (error) {
+	    console.error(error);
+	  }
+	}
+
+	async function gatherData() {		
+		await processAverages(subjectsJSON);
+		await processAveragesPerSemester(subjectsJSON);
+	}
+
+
+
+
 
 	onMount(() => {
-		averages().then((result) => {
-			gradesObject.average = result.avg;
-			gradesObject.weightedAverage = result.weighted_avg;
-			gradesObject.grades = result.grades;
-			gradesObject.ects = result.ects;
-		});
 
-
-		  averagesPerSemester().then((result) => {
-
-			gradesObject.averagesPerSemester = result;
-			
-			for (let i = 1; i < result.length+1; i++) {
-				gradesObject.semester[i-1] = i;
-			}
-
-			
-		});
+		gatherData();
 
 	});
 
@@ -139,7 +171,7 @@
 					<h2>{gradesObject.weightedAverage}</h2>
 				</ion-text>
 			</ion-item>
-			<ion-item class="ion-padding-bottom">
+			<ion-item>
 				<ion-label>M.O απλός</ion-label>
 				<ion-text color="tertiary">
 					<h2>{gradesObject.average}</h2>
@@ -174,9 +206,6 @@
 		color: var(--app-color-primary-dark);
 	}
 
-	ion-icon {
-		color: var(--app-color-primary-dark);
-	}
 
 	circle-progress::part(base) {
 		width: 120px; 

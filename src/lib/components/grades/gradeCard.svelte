@@ -4,7 +4,7 @@
 	export let semesterAverage: any = {};
 	import AppCard from '$shared/AppCard.svelte';
 
-	
+
 </script>
 <span class="scroll" id={semesterId}></span>
 
@@ -49,11 +49,11 @@
 				
 					{#if course.grade !== null}
 						{#if course.grade * 10 >= 5}
-							<ion-text class="ion-padding-start success gradeNumber">
+							<ion-text class="success gradeNumber">
 								<h2>{course.formattedGrade}</h2>
 							</ion-text>
 						{:else}
-							<ion-text class="ion-padding-start danger gradeNumber">
+							<ion-text class="danger gradeNumber">
 								<h2>{course.formattedGrade}</h2>
 							</ion-text>
 						{/if}
@@ -67,6 +67,7 @@
 </div>
 
 <style>
+
 
 
 
@@ -91,8 +92,9 @@ h2 {
 }
 
 .scroll {
+	scroll-margin-top: 7rem;
 	display: block;
-	height: 2rem;
+	height: 1rem;
 }
 
 .containerFlex {
@@ -101,7 +103,7 @@ h2 {
 	justify-content: space-between;
 	min-width: 100%;
 	padding: 0.5rem;
-	padding-left: 0.7rem;
+	/* padding-left: 0.7rem; */
 }
 
 .titlesFlex {
