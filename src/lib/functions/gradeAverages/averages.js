@@ -1,5 +1,5 @@
 import { onMount } from "svelte";
-import { universisGet } from "$lib/dataService";
+import { neoUniversisGet } from "$lib/dataService";
 
 // HTML elements
 let _g_avg = "";
@@ -9,7 +9,7 @@ let _w_avg = "";
 export async function averages(subjectsJSON = null) {
 
 	// Fetch exam data for the current student
-	let exams = await universisGet("students/me/grades?$top=-1&$filter=isPassed eq 1");
+	let exams = await neoUniversisGet("students/me/grades?$top=-1&$filter=isPassed eq 1");
 
 	// Fetch a list of courses for the current student
 	let courses;
@@ -19,7 +19,7 @@ export async function averages(subjectsJSON = null) {
 		courses = subjectsJSON;
 	}
 	else {
-		courses = (await universisGet("students/me/courses?$top=-1")).value;
+		courses = (await neoUniversisGet("students/me/courses?$top=-1",{lifetime: 600})).value;
 	}
 
 	let k = 0;

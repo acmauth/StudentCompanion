@@ -1,4 +1,4 @@
-import { universisGet } from '$lib/dataService';
+import { neoUniversisGet } from '$lib/dataService';
 
 
 // returns the courses by each semester
@@ -11,7 +11,7 @@ export async function coursesPerSemester(subjectsJSON = null) {
 	}
 	 
 	else {
-		subjects = (await universisGet('students/me/courses?$top=-1')).value;
+		subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 	}
 
 	// Group the courses by semester

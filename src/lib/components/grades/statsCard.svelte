@@ -235,16 +235,7 @@
 		font-weight: medium;
 	}
 
-	.stats {
-		box-shadow: none;
-	}
 
-	.chip {
-		margin-top: 1.5rem;
-		background-color: rgba(236, 242, 252, 1);	
-		color: var(--app-color-primary-dark);
-		font-weight: 700;
-	}
 	
 
 

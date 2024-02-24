@@ -1,4 +1,4 @@
-import { universisGet } from "$lib/dataService";
+import { neoUniversisGet } from "$lib/dataService";
 
 
 
@@ -10,7 +10,7 @@ export async function averagesPerSemester(subjectsJSON = null) {
 			subjects = subjectsJSON;
 		}
 		else {
-			 subjects = (await universisGet('students/me/courses?$top=-1')).value;
+			 subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 		}
 		
 		courseBySemester = subjects.reduce((/** @type {{ [x: string]: any[]; }} */ acc, /** @type {{ semester: { id: string | number; }; }} */ course) => {

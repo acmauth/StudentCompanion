@@ -1,5 +1,5 @@
 
-   	import { universisGet } from "$lib/dataService";
+   	import { neoUniversisGet } from "$lib/dataService" 
 
     let courses;
     let registrations;
@@ -36,10 +36,10 @@
             season = "";
 
         // Getting an array with courses
-        courses = (await universisGet("students/me/courses?$top=-1")).value;
+        courses = (await neoUniversisGet("students/me/courses?$top=-1",{lifetime: 600})).value;
 
         // Getting an array with user's registered courses and information about them
-        registrations = (await universisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false")).value;
+        registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false",{lifetime: 600})).value;
 
 
         // Finding the course and storing informations about it in variables

@@ -2,18 +2,18 @@
 	import Grades from '$lib/components/grades/grades.svelte';
 	// @ts-ignore
 	import 'js-circle-progress'
-	import { universisGet } from '$lib/dataService';
+	import { neoUniversisGet } from '$lib/dataService';
 	import Stats from '$lib/components/grades/statsCard.svelte';
 	import {coursesPerSemester} from '$lib/functions/coursePerSemester/coursesPerSemester';
 	import Chips from '$lib/components/grades/chips.svelte';
 	import { Capacitor } from '@capacitor/core';
 	import GradesSkeleton from '$components/grades/gradesSkeleton.svelte';
 	import Flipper from "$components/shared/Flipper.svelte";
-	import TestComponentB from '../test/testComponentB.svelte';
 	import { flipped } from "./flipstore"; 
 	import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
 	import { writable } from 'svelte/store';
 	import Fuse from 'fuse.js';
+	import Card from '$components/degreeCalculator/card.svelte';      
 
 
 	let courseBySemester = writable([]);
@@ -84,7 +84,7 @@
 	}
 
 	async function gatherData() {
-		subjects = (await universisGet('students/me/courses?$top=-1')).value;
+		subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 
 		subjectsJSON = subjects;
 
@@ -126,7 +126,7 @@
 <ion-tab tab="grades">
   <ion-header collapse="condense" mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-      <ion-title class="ion-padding-vertical" size="large">Βαθμοί</ion-title>
+      <ion-title class="ion-padding-vertical" size="large">Πρόοδος</ion-title>
     
 
       <ion-searchbar class="searchbar" debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
@@ -145,7 +145,7 @@
 	<!-- Show content after loading is completed -->
 	<Flipper reactToHeight bind:flipped={$flipped}>
         <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
-        <TestComponentB slot="back"/>
+        <Card flip={flip} slot="back"/>
     </Flipper>
 		
 		
@@ -157,7 +157,8 @@
 		<p>{error.message}</p>
 	{/await}
 </ion-content>
-	
+
+</ion-tab>
 
 <style>
 

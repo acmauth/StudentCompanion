@@ -6,6 +6,10 @@
     import CoursesSkeleton from '$components/degreeCalculator/coursesSkeleton.svelte';
     import AvGrades from '$components/degreeCalculator/avGrades.svelte';
     import Course from '$components/degreeCalculator/course.svelte';
+	import Chip from '$components/shared/chip.svelte';
+    import * as allIonicIcons from 'ionicons/icons';
+
+    export let flip;
 
 
     let unpassed_courses: { title: string; id:string; semester: number; grade: number; input_grade: string; ects: number;}[] = [];
@@ -37,7 +41,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<ion-card style="overflow-y: auto;">
+<ion-card style="overflow-y: auto;" class="ion-padding-vertical">
     <ion-card-title>Πρόβλεψη Μέσου Όρου</ion-card-title>
     <ion-card-subtitle>Βάλε τους βαθμούς που περιμένεις να λάβεις για να δεις πώς επηρεάζεται ο Μ.Ο. σου</ion-card-subtitle>
 
@@ -64,7 +68,11 @@
             {/each}
         {/if}
 
-        <AvGrades degree_grade={degree_grade}/>
+        <div class="columnFlex">
+            <AvGrades degree_grade={degree_grade}/>
+
+            <Chip chipIcon ={allIonicIcons.cellular} text="Πρόοδος" flip = {flip} />
+        </div>
 
     {/await}
 
@@ -83,7 +91,8 @@
         font-weight: 550;
         margin-top: 1.5rem;
         text-align: center;
-        color: #515151;
+        color: var(--app-color-primary-dark);
+        
     }
 
     ion-card-subtitle {
@@ -94,6 +103,13 @@
         margin-top: 0.3rem;
         margin-bottom: 2.5rem;
         margin-inline: 12%;
+    }
+
+
+    .columnFlex {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .input-box {

@@ -12,16 +12,16 @@
 
 		<ion-item button>
 			<ion-icon size="small" icon={allIonicIcons.people} />
-			<ion-label class="ion-padding-start">About Us</ion-label>
+			<ion-label class="ion-padding-start">Σχετικά με εμάς</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 			
 		</ion-item>
 
-		<ion-item button>
+		<!-- <ion-item button>
 			<ion-icon size="small" icon={allIonicIcons.brush} />
 			<ion-label class="ion-padding-start">Change Theme</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-		</ion-item>
+		</ion-item> -->
 
 		<ion-item button>
 			<ion-icon size="small" icon={allIonicIcons.helpCircle} />
