@@ -24,6 +24,7 @@
 	  threshold: 0.3,
 	};
 
+
 	let searchQuery = '';
 	let subjects = 0;
 	let passedSubjects = 0;

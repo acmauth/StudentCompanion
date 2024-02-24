@@ -8,16 +8,19 @@
 </script>
 <span class="scroll" id={semesterId}></span>
 
+
 <div class="container">
 {#if filteredSubjects.length > 0}
 <div class="ion-padding-start ion-padding-vertical semester">
 	<ion-text class="title"><b>{semesterId}ο Εξάμηνο</b></ion-text>
+
 		{#if semesterAverage}
 		<ion-text class="subtitle">Μ.Ο Εξαμήνου: {semesterAverage}</ion-text>
 		{:else}
 		<ion-text class="subtitle">Μ.Ο Εξαμήνου: -</ion-text>
 		{/if}
 		
+
 </div>
 
 	
@@ -44,16 +47,14 @@
 						<ion-label class="examPeriod">-</ion-label>
 					{/if}
 
-						</div>
-				<!-- -->
-				
+					</div>
 					{#if course.grade !== null}
 						{#if course.grade * 10 >= 5}
-							<ion-text class="success gradeNumber">
+							<ion-text class="ion-padding-start success gradeNumber">
 								<h2>{course.formattedGrade}</h2>
 							</ion-text>
 						{:else}
-							<ion-text class="danger gradeNumber">
+							<ion-text class="ion-padding-start danger gradeNumber">
 								<h2>{course.formattedGrade}</h2>
 							</ion-text>
 						{/if}
@@ -69,7 +70,9 @@
 <style>
 
 
-
+.gradeNumber h2{
+	margin: 0 !important;
+}
 
 h2 {
 	font-size: 1.5rem;
@@ -97,13 +100,14 @@ h2 {
 	height: 1rem;
 }
 
+
 .containerFlex {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	min-width: 100%;
 	padding: 0.5rem;
-	/* padding-left: 0.7rem; */
+	padding-left: 0.7rem;
 }
 
 .titlesFlex {
@@ -120,12 +124,15 @@ h2 {
 	gap: 0.5rem !important;
 }
 
+
 .success {
 	color: var(--app-color-green-dark);
 }
 
 .danger {
 	color: var(--app-color-orange-dark);
+
+
 }
 
 .examPeriod{
@@ -133,6 +140,13 @@ h2 {
 	color: grey
 }
 
+.semester {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	gap: 1rem;
+}
+
 .success {
 	color: var(--app-color-green-dark);
 }
@@ -145,13 +159,17 @@ h2 {
 	font-size: 0.8rem;
 }
 
+.success {
+	color: var(--app-color-green-dark);
+}
 
+.danger {
+	color: var(--app-color-orange-dark);
+}
 
-
-
-
-
-
+.examPeriod{
+	font-size: 0.8rem;
+}
 
 
 

@@ -8,6 +8,8 @@
 
 
 
+
+
 	/**
 	 * @type {any}
 	 */
@@ -30,7 +32,6 @@
 	 /**
 	 * @type {Chart<"line", number[], string>}
 	 */
-	
 
 	 const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-primary-dark').trim();
 
@@ -165,13 +166,14 @@
 		<circle-progress max={subjects} value={passedSubjects} ></circle-progress>
 	{/if}
 		<ion-list>
+
 			<ion-item>
 				<ion-label>M.O με συντελεστές</ion-label>
 				<ion-text color="tertiary">
 					<h2>{gradesObject.weightedAverage}</h2>
 				</ion-text>
 			</ion-item>
-			<ion-item>
+			<ion-item class="ion-padding-bottom">
 				<ion-label>M.O απλός</ion-label>
 				<ion-text color="tertiary">
 					<h2>{gradesObject.average}</h2>
@@ -191,6 +193,8 @@
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<Chip chipIcon ={allIonicIcons.calculator} text="Πρόβλεψη Μ.Ο." flip = {flip} />
+
+
 
 		</ion-list>
 
@@ -224,7 +228,6 @@
 		font-weight: bold;
 		fill: var(--app-color-primary-dark);
 	}
-
 
 
 	.subtitle {
