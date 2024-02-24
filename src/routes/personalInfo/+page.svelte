@@ -68,7 +68,26 @@
 		{:catch error}
 			<p>{error.message}</p>
 		{/await}
+
+	{:then} 
+	<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} />
+	
+	<Settings logOut = {logOut} />
+
+	{:catch error}
+        <p>Παρουσιάστηκε σφάλμα :&#40;</p>
+		<p>{error.message}</p>
+	{/await}
+
 	</ion-content>
-</ion-tab>
+
 	
+<style>
 	
+	ion-content {
+--padding-end: 0.6rem;
+--padding-start: 0.6rem;
+}
+	
+</style>
+

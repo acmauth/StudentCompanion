@@ -96,7 +96,7 @@ h2 {
 }
 
 .scroll {
-	scroll-margin-top: 8rem;
+	scroll-margin-top: 7rem;
 	display: block;
 	height: 1rem;
 }

@@ -11,8 +11,18 @@
 	import Flipper from "$components/shared/Flipper.svelte";
 	import TestComponentB from '../test/testComponentB.svelte';
 	import { flipped } from "./flipstore"; 
+	import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
+	import { writable } from 'svelte/store';
+	import Fuse from 'fuse.js';
 
 
+	let courseBySemester = writable([]);
+	let filteredSubjects = writable([]);
+
+	const fuseOptions = {
+	  keys: ['course', 'courseTitle'],
+	  threshold: 0.3,
+	};
 
 
 	let searchQuery = '';
@@ -126,27 +136,28 @@
     </ion-toolbar>
   </ion-header>
 
-<!-- Show skeleton while loading -->
-<ion-content fullscreen={true} class="content">
-   {#await getSubjects()}
-	   <ion-progress-bar type="indeterminate"/>
-	   <GradesSkeleton/>
-	   <NotifSkeleton/>
-   {:then}
-   
-   <!-- Show content after loading is completed -->
-   <Flipper reactToHeight bind:flipped={$flipped}>
-	   <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} slot="front" />
-	   <TestComponentB slot="back"/>
-   </Flipper>
-	   
-	   <Grades semesterId = {semesterId} searchQuery = {searchQuery}  />
+ <!-- Show skeleton while loading -->
+ <ion-content fullscreen={true}>
+	{#await gatherData()}
+		<ion-progress-bar type="indeterminate"/>
+		<GradesSkeleton/>
+	{:then}
+	<!-- Show content after loading is completed -->
+	<Flipper reactToHeight bind:flipped={$flipped}>
+        <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
+        <TestComponentB slot="back"/>
+    </Flipper>
+		
+		
+	  
+		<Grades semesterId = {semesterId} searchQuery = {searchQuery} filteredSubjects = {filteredSubjects} />
 
-      {:catch error}
-          <p>{error.message}</p>
-    {/await}
-  </ion-content>
-</ion-tab>	
+		{:catch error}
+        <p>Παρουσιάστηκε σφάλμα :&#40;</p>
+		<p>{error.message}</p>
+	{/await}
+</ion-content>
+	
 
 <style>
 
