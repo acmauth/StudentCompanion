@@ -1,16 +1,18 @@
 import { universisGet } from "$lib/dataService";
 
 
-/**
- * @type {number[]}
- */
 
-
-export async function averagesPerSemester() {
+export async function averagesPerSemester(subjectsJSON = null) {
 
 		let courseBySemester = [];
-
-		let subjects = (await universisGet('students/me/courses?$top=-1')).value;
+		let subjects;
+		if (subjectsJSON) {
+			subjects = subjectsJSON;
+		}
+		else {
+			 subjects = (await universisGet('students/me/courses?$top=-1')).value;
+		}
+		
 		courseBySemester = subjects.reduce((/** @type {{ [x: string]: any[]; }} */ acc, /** @type {{ semester: { id: string | number; }; }} */ course) => {
 			if (!acc[course.semester.id]) {
 				acc[course.semester.id] = [];

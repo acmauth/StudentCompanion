@@ -1,6 +1,5 @@
 <script>
 	import { universisGet } from '$lib/dataService';
-	import { onMount } from 'svelte';
 	import { invalidateAuth } from '$lib/authentication/authValidator';
 	import { goto } from '$app/navigation';
 	import InfoItem  from '$lib/components/personalInfo/infoItem.svelte'
