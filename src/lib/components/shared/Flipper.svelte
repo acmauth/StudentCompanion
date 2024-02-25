@@ -48,12 +48,17 @@
 
 <style>
 
+.flip-container, .flipper, .front, .back {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
 /*  */
 .flip-container {
-  -webkit-perspective: 1000;
-  -moz-perspective: 1000;
-  -o-perspective: 1000;
-  perspective: 1000;
+  -webkit-perspective: 1000px;
+  -moz-perspective: 1000px;
+  -o-perspective: 1000px;
+  perspective: 1000px;
   transition: 0.2s;
   -webkit-transition: 0.2s;
   -moz-transition: 0.2s;
