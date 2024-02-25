@@ -54,6 +54,11 @@
   -moz-perspective: 1000;
   -o-perspective: 1000;
   perspective: 1000;
+  transition: 0.2s;
+  -webkit-transition: 0.2s;
+  -moz-transition: 0.2s;
+  -o-transition: 0.2s;
+  -ms-transition: 0.2s;
 }
 
 /* When flipClass is active, rotate the whole contents of flipper 180 */
