@@ -2,7 +2,8 @@
 	import man from '$lib/assets/man.png';
 	import woman from '$lib/assets/woman.png';
 	import * as allIonicIcons from 'ionicons/icons';
-	import '../../../theme/variables.css';
+	import Settings from "./settings.svelte";
+
 	/**
 	 * @type {string}
 	 */
@@ -49,12 +50,9 @@
 	 /**
 	 * @type {any}
 	 */
-	  export let logOut;
 </script>
 
 
-
-<ion-content>
 	<ion-card class="ion-padding">
 		<ion-card-header class="ion-text-center info">
 			{#if gender === 'Α'}
@@ -120,23 +118,16 @@
 			{/if}
 
 			{#if semester}
-			<ion-item>
+			<ion-item lines="none">
 				<ion-icon size="small" icon={allIonicIcons.analytics} />
 
 				<ion-label class="ion-padding-start">{semester}ο Εξάμηνο</ion-label>
 			</ion-item>
 			{/if}
 
-			<ion-item lines="none" on:click={logOut}>
-				<ion-icon color="danger" size="small" icon={allIonicIcons.exit} />
 
-				<ion-label color="danger" class="ion-padding-start">Αποσύνδεση</ion-label>
-			</ion-item>
-
-
-		</ion-card-content>
 	</ion-card>
-</ion-content>
+	
 
 
 

@@ -2,7 +2,9 @@
 	import IonPage from 'ionic-svelte/components/IonPage.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
 	import { onMount } from 'svelte';
-
+	const isProduction = process.env.NODE_ENV === 'production';
+	import { getMenu } from "$lib/menuScrapper/scraper"
+	import SubPageHeader from '$shared/subPageHeader.svelte';
 	/**
 	 * @type {any[]}
 	 */
@@ -38,26 +40,28 @@
 	}
 
 	onMount(async () => {
-		const response = await fetch('/menu', { method: 'GET' });
-
-		if (response.ok) {
-			// cafeteriaData = await response.json();
-			const jsonStr = await response.text(); // Get the JSON string
-			cafeteriaData = JSON.parse(jsonStr); // Parse the JSON string into an array
-		} else {
-			console.error('Error fetching cafeteria data:', response.statusText);
+		if (!isProduction){
+			const response = await fetch('/menu', { method: 'GET' });
+			if (response.ok) {
+				// cafeteriaData = await response.json();
+				const jsonStr = await response.text(); // Get the JSON string
+				cafeteriaData = JSON.parse(jsonStr); // Parse the JSON string into an array
+			} else {
+				console.error('Error fetching cafeteria data:', response.statusText);
+			}
 		}
+		else {
+			cafeteriaData = await getMenu();
+		}
+
+		
 		console.log(cafeteriaData);
 		console.log(today);
 	});
 </script>
 
 <IonPage>
-	<ion-header>
-		<ion-toolbar>
-			<ion-title>Μενού Λέσχης</ion-title>
-		</ion-toolbar>
-	</ion-header>
+	<SubPageHeader title="Μενού Λέσχης" />
 	<ion-content class="ion-padding">
 		<div class="ion-text-center">
 			<ion-chip {color}><ion-icon icon={allIonicIcons.timeOutline} /> &nbsp; {message}</ion-chip>

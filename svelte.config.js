@@ -3,6 +3,7 @@ import adapterStatic from '@sveltejs/adapter-static';
 import preprocess from "svelte-preprocess";
 
 const isProduction = process.env.NODE_ENV === 'production';
+console.log("isProduction", isProduction);
 
 const config = {
 	preprocess: preprocess(),
@@ -18,6 +19,7 @@ const config = {
 			alias: {
 				$stores: "src/stores",
 				$components: "src/lib/components",
+				$shared: "src/lib/components/shared",
 				$images: "src/lib/static/images",
 				$types: "src/lib/types",
 			},

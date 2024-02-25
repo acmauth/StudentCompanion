@@ -6,24 +6,26 @@ import * as cryptoAUTH from 'crypto';
 import * as base64urlAUTH from 'base64url';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
+import fetch from 'cross-fetch';
+import makeFetchCookie from 'fetch-cookie'
 
 
-function stripData(page: cheerio.CheerioAPI, formElements: cheerio.Cheerio<cheerio.Element>, param:string) {
+// function stripData(page: cheerio.CheerioAPI, formElements: cheerio.Cheerio<cheerio.Element>, param:string) {
   
-    const urls: string[] = [];
-    formElements.each((index, element) => {
-      const url = page(element).attr(param);
-      if (url) {
-          urls.push(url);
-        }
-    });
+//     const urls: string[] = [];
+//     formElements.each((index, element) => {
+//       const url = page(element).attr(param);
+//       if (url) {
+//           urls.push(url);
+//         }
+//     });
   
-    if (urls.length > 0) {
-        return urls[0];
-    } else {
-        throw Error("Empty urls list");
-    }
-}
+//     if (urls.length > 0) {
+//         return urls[0];
+//     } else {
+//         throw Error("Empty urls list");
+//     }
+// }
 
 
 export default async function authenticate(username: string, password: string) {
@@ -31,17 +33,21 @@ export default async function authenticate(username: string, password: string) {
     
     // Creating an axios session
     const jar = new CookieJar();
-    axios.defaults.withCredentials = true
-    const session = wrapper(axios.create({ jar }));
-
+    // axios.defaults.withCredentials = true
+    // const session = wrapper(axios.create({ jar }));
+    const sessionFetch = makeFetchCookie(fetch, jar);
   
     // Setting the parameters
     const initialUrl = "https://elearning.auth.gr/auth/saml/index.php?wantsurl=https://elearning.auth.gr/";
 
     // Step 1: Initial GET request
-    const response1 = await session.get(initialUrl, {withCredentials: true});
+    // const response1 = await session.get(initialUrl, {withCredentials: true});
+    const response1 = await sessionFetch(initialUrl, {method: 'GET'});
+    console.log("Step1: " + response1.status);
+    console.log(await response1.text());
     
-    const resp_url1 = response1.request.res.responseUrl;
+    // const resp_url1 = response1.request.res.responseUrl;
+    const resp_url1 = response1.url;
 
     const auth_state1 = resp_url1.split("?AuthState=")[1];
     const post_url1 = resp_url1.split("?AuthState=")[0];
@@ -55,10 +61,11 @@ export default async function authenticate(username: string, password: string) {
     }
     
     // Important: The content-type header must be set to application/x-www-form-urlencoded, otherwise the request will fail
-    const response2 = await session.post(post_url1, form_data2, {withCredentials: true, headers: {'content-type': 'application/x-www-form-urlencoded'}});
+    // const response2 = await session.post(post_url1, form_data2, {withCredentials: true, headers: {'content-type': 'application/x-www-form-urlencoded'}});
+    const response2 = await sessionFetch(post_url1, {method: 'POST', body:  new URLSearchParams(form_data2), headers: {'content-type': 'application/x-www-form-urlencoded'}});
     
 
-    const response_page2 = cheerio.load(response2.data);
+    const response_page2 = cheerio.load(await response2.text());
     
     const form2_url = response_page2('form').attr('action');
     const saml_response = response_page2('input[name="SAMLResponse"]').attr('value');
@@ -68,14 +75,22 @@ export default async function authenticate(username: string, password: string) {
     const form_data3 = {
         "SAMLResponse": saml_response,
         "RelayState": relay_state,
-        }
+    }
 
     if (!form2_url) {
             return {error: "Step2: form2_url is undefined"};
     }
 
-    const response3 = await session.post(form2_url, form_data3, {withCredentials: true, headers: {'content-type': 'application/x-www-form-urlencoded'}});
-    const response_page3 = cheerio.load(response3.data);
+    const { SAMLResponse, RelayState } = form_data3;
+    const updatedFormData = {
+        SAMLResponse: SAMLResponse || '',
+        RelayState: RelayState || '',
+    };
+
+    // const response3 = await session.post(form2_url, updatedFormData, {withCredentials: true, headers: {'content-type': 'application/x-www-form-urlencoded'}});
+    const response3 = await sessionFetch(form2_url, {method: 'POST', body:  new URLSearchParams(updatedFormData), headers: {'content-type': 'application/x-www-form-urlencoded'}});
+    // const response_page3 = cheerio.load(response3.data);
+    const response_page3 = cheerio.load(await response3.text());
 
     // Step 4, parsing the returned data
     

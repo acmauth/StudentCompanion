@@ -1,63 +1,57 @@
 <script lang="ts">
-	import * as allIonicIcons from 'ionicons/icons';
-	import { activeTask} from './activeTask';
-	import type { TaskItem } from './TaskItem';
+	import {documentText, star} from 'ionicons/icons';
+	import { TaskType, type TaskItem } from './TaskItem';
+	import { getDayByIndex } from '../day/days';
+	import {timeOutline, map} from 'ionicons/icons';
 	import { onMount } from 'svelte';
-	export let task: TaskItem;
-	export let start: string;
-	export let end: string;
+	
+	export let taskItem: TaskItem;
+	
+	let startDay: string = getDayByIndex(new Date(taskItem.date.startDate).getDay(), 'el', true); 
+	let endDay: string = getDayByIndex(new Date(taskItem.date.endDate).getDay(), 'el', true);
+	let isPastDate: boolean = false;
+	let isTest: boolean = false;
+	let isProject: boolean = false;
 
-	function setActiveTask() {
-		activeTask.set(task);
-	}
+	onMount(async() => {
+		isPastDate = new Date().getTime() > new Date(taskItem.date.endDate).getTime();
+		isTest = taskItem.type == TaskType.TEST;
+		isProject = taskItem.type == TaskType.PROJECT;
+	});
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<ion-card href="/schedule/editTask" class="card" on:click={setActiveTask}>
+<style>
+	@import '../ScheduleCard.css';
+	.pastDate {
+        opacity: 0.5;
+    }
+	.test {
+		--background: var(--ion-color-warning);
+	}
+	.project {
+		--background: var(--ion-color-secondary);
+	}
+</style>
+
+<ion-card href={`/tasks/editTask/${taskItem.id}`} class="card {isPastDate? 'pastDate' : null} {isTest? 'test' : null} {isProject? 'project' : null}" style="padding: 10px;">
 	<ion-grid>
-		<ion-row class="ion-justify-content-start">
-			<ion-col style="padding: 0%">
-				<ion-card-header>
-					<ion-card-subtitle>{start + " - " + end}</ion-card-subtitle>
-					<ion-card-title color="primary">{task.title}</ion-card-title>
-
-					<div class="icons">
-						<ion-icon icon={allIonicIcons.personOutline} />
-						<ion-card-subtitle>{task.professor}</ion-card-subtitle>
-					</div>
-
-					<div class="icons">
-						<ion-icon icon={allIonicIcons.map} />
-						<ion-card-subtitle>{task.classroom}</ion-card-subtitle>
-					</div>
-				</ion-card-header>
-			</ion-col>
+		<ion-row>
+			{startDay} &nbsp;
+			<span>{new Date(taskItem.date.startDate).toLocaleTimeString().split(':')[0] + ':' + new Date(taskItem.date.startDate).toLocaleString().split(':')[1]}</span>
+			&nbsp; - &nbsp;
+			{#if endDay != startDay} 
+				<div class="day">{endDay}</div> &nbsp; 	
+			{/if}
+			<span>{new Date(taskItem.date.endDate).toLocaleTimeString().split(':')[0] + ':' + new Date(taskItem.date.endDate).toLocaleTimeString().split(':')[1]}</span>
+		</ion-row>
+			<ion-row class="ion-align-items-center ion-justify-content-start">
+			<ion-card-header class="examCardHeader">
+				<ion-card-title color="primary">{taskItem.title}</ion-card-title>
+				<div class="icons">
+					<ion-icon icon={documentText} />
+					<ion-card-subtitle>{taskItem.description}</ion-card-subtitle>
+				</div>
+			</ion-card-header>
 		</ion-row>
 	</ion-grid>
 </ion-card>
-
-
-
-<style>
-	.card {
-		display: flex;
-		align-items: center;
-		justify-content: start;
-	}
-
-	ion-card {
-		transition: all ease-in-out 0.2s;
-	}
-
-	ion-card:active {
-		transform: scale(0.95);
-	}
-
-	.icons {
-		display: flex;
-		gap: 0.5rem;
-		padding-top: 2%;
-		align-items: center;
-	}
-</style>

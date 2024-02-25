@@ -1,7 +1,5 @@
 <script lang='ts'>
-    import { tokenGrab } from "$lib/universisAuthentication/tokenGeneratorWorker"
     import { userCreds, userTokens } from "$stores/credentials.store";
-    import userInfoStore from "$stores/userinfo.store";
     import { goto } from '$app/navigation';
     import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDataService";
     import { IonButton } from "@ionic/core/components/ion-button";
@@ -9,6 +7,8 @@
     import { invalidateAuth } from "$lib/authentication/authValidator";
     import Vector from "$lib/components/loginService/Vector.svg"
     import Vector1 from "$lib/components/loginService/Vector(1).svg"
+    import { onMount } from 'svelte';
+
 
     let username = '';
     let password = '';
@@ -16,52 +16,83 @@
     let invalidData = false;
     let isVisible = false;
 
+
     async function submit(){
         
         isVisible = true;
+
         username = (document.getElementById('usernameInput') as HTMLInputElement).value;
         password = (document.getElementById('passwordInput') as HTMLInputElement)?.value;
         
         let universisOutput = await getUniversisToken(username, password);
         let elearningOutput = await getElearningToken(username, password);
         
+
         if (universisOutput || elearningOutput) { 
             isVisible = false;
             invalidData = true;
+            outputMessage = universisOutput + ",-," + elearningOutput;
         }
         else {
             isVisible = false;
             goto("/");
         }
 
+
     }
 
+    function handleKeyboardVisibility(event: { type: string; }) {
+        const formContainer = document.getElementById('formContainer');
+        if (formContainer) {
+            if (event.type === 'focusin') {
+                // Adjust your layout when the keyboard is shown
+                formContainer.style.transform = 'translateY(-50px)';
+            } else {
+                // Adjust your layout when the keyboard is hidden
+                formContainer.style.transform = 'translateY(0)';
+            }
+        }
+    }
+
+    onMount(() => {
+        const usernameInput = document.getElementById('usernameInput');
+        const passwordInput = document.getElementById('passwordInput');
+
+        if (usernameInput && passwordInput) {
+            // Attach event listeners to handle keyboard visibility
+            usernameInput.addEventListener('focusin', handleKeyboardVisibility);
+            passwordInput.addEventListener('focusin', handleKeyboardVisibility);
+            usernameInput.addEventListener('focusout', handleKeyboardVisibility);
+            passwordInput.addEventListener('focusout', handleKeyboardVisibility);
+        }
+    });
 
 </script>
 
-    <div style="position: relative; width: 100%; height: 55%; ">
-        <img src={Vector} alt="Vector" style="position: absolute; width: 100%; height:80%">
-        <img src={Vector1} alt="Overlay Icon" style="width: 100%; height:95%">
-    </div>
+<div style="position: relative; width: 100%; height: 55%; ">
+    <img src={Vector} alt="Vector" style="position: absolute; width: 100%; height:80%">
+    <img src={Vector1} alt="Overlay Icon" style="width: 100%; height:95%">
 
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: top; height: 80%; padding-top: 2px; padding-right:20px; padding-left:20px;">
-        <ion-input id='usernameInput' class="custom" placeholder="Username" fill="outline" style="margin-bottom: 10px;"></ion-input> 
-        <ion-input id='passwordInput' class="custom" type="password" placeholder="Password" fill="outline" style="margin-bottom: 10px;" ></ion-input>
-        {#if invalidData}
-            <ion-label class="error"> Invalid username or password</ion-label>
-        {/if}
-        {#if isVisible}
-            <div class="loading-panel">
-                <ion-spinner></ion-spinner>
-                <p>Loading...</p>
-            </div>
-        {/if}
+</div>
 
-        <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">Log In</ion-button>
-        <ion-checkbox label-placement="start" style="margin-bottom:15px" class="custom" checked="true"> 
-            <ion-label class="custom"> Remember me</ion-label>
-        </ion-checkbox>
-    </div>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: top; height: 80%; padding-top: 2px; padding-right:20px; padding-left:20px;">
+    <ion-input id='usernameInput' class="custom" placeholder="Username" fill="outline" style="margin-bottom: 10px;"></ion-input> 
+    <ion-input id='passwordInput' class="custom" type="password" placeholder="Password" fill="outline" style="margin-bottom: 10px;" ></ion-input>
+    {#if invalidData}
+        <ion-label class="error"> Invalid username or password</ion-label>
+    {/if}
+    {#if isVisible}
+        <div class="loading-panel">
+            <ion-spinner class="loginSpinner"></ion-spinner>
+            <p class="loginP">Loading...</p>
+        </div>
+    {/if}
+
+    <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">Log In</ion-button>
+    <ion-checkbox label-placement="start" style="margin-bottom:15px" class="custom" checked="true"> 
+        <ion-label class="custom"> Remember me</ion-label>
+    </ion-checkbox>
+</div>
   
 <style>
     ion-input.custom {
@@ -95,7 +126,6 @@
     ion-label.custom {
         color: #3b8abf;
         font-size: 1rem;
-        text-decoration: underline;
     }
 
     ion-label.error {
@@ -116,12 +146,12 @@
         z-index: 1000;
     }
 
-  ion-spinner {
+  ion-spinner.loginSpinner {
     --color: white;
     margin-right: 10px; /* Adjust the margin as needed */
   }
 
-  p {
+  p.loginP {
     color: white;
     margin: 0; /* Remove default margin */
   }

@@ -6,6 +6,7 @@
 	import restaurant from '$lib/assets/restaurant.png';
 	import sportsfitness from '$lib/assets/sportsfitness.png';
 	import departmentLogo from '$lib/assets/departmentLogo.png';
+	import SubPageHeader from '$shared/subPageHeader.svelte';
 
 	let department = '';
 	let departmentName = '';
@@ -70,17 +71,9 @@
 	});
 </script>
 
-<ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
-	<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md' : undefined}>
-		<ion-title>Quick Links</ion-title>
-	</ion-toolbar>
-</ion-header>
+
+<SubPageHeader title="Quick Links" />
 <ion-content>
-	<ion-header collapse="condense" mode="ios">
-		<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md' : undefined}>
-			<ion-title size="large">Quick Links</ion-title>
-		</ion-toolbar>
-	</ion-header>
 	{#each links as { linktitle, linkaddress, imagelink }}
 		<LinkCard {linktitle} {linkaddress} {imagelink} />
 	{/each}

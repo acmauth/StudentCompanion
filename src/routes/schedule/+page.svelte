@@ -1,61 +1,108 @@
 <script lang="ts">
-	import Days from '$lib/components/schedule/day/dayList.svelte';
-    import * as allIonicIcons from 'ionicons/icons';
-    import { taskStore } from '$lib/components/schedule/task/taskStore';
-    import { activeDay } from '$lib/components/schedule/day/activeDay';
-	import TaskCard from '$lib/components/schedule/task/taskCard.svelte';
-    import type { TaskItem } from '$lib/components/schedule/task/TaskItem';
-    
-    // Uncomment the following to reset the task store.
-    // taskStore.set([]);
+    import type { ClassItemFlat } from '$lib/components/schedule/class/ClassItem';
+    import {add, bookOutline, createOutline, schoolOutline} from 'ionicons/icons';
+    import { Capacitor } from '@capacitor/core';
+    import ClassCard from '$components/schedule/class/classCard.svelte';
+    import { universisGet } from '$lib/dataService';
+    import { getDayByIndex, getDayIndex, weekdays } from "$lib/components/schedule/day/days";
+    import { classStore } from '$components/schedule/class/classStore';
 
-    $: currentTasks = $taskStore.filter((task) => {
-        // Get only the tasks that have a slot on the active day.
-        if (task.slots.filter((slot) => {
-            if (slot.day.toLowerCase().startsWith($activeDay)) { return slot; }
-        }).length > 0) { return task; } })
-    // Flatten the array of tasks and slots into an array of objects with a task and a slot.
-    .flatMap((task) => {
-        return {
-            task: task,
-            slots: task.slots.filter((slot) => { if (slot.day.toLowerCase().startsWith($activeDay)) { return slot; } })   
-        }; })
-    // Flatten the array so that each task has only one slot, for each slot.
-    .flatMap((task) => {
-        let occurences: Array<{task: TaskItem, slot: any }> = [];
-        task.slots.forEach((slot) => {
-            occurences.push({
-                task: task.task,
-                slot: slot
-            });
-        });
-        return occurences; })
-    // Sort the array by the start time of the slot.
-    .sort((a,b) => new Date("1970-01-01T" + a.slot.timeStart) < new Date("1970-01-01T" + b.slot.timeStart) ? -1 : 0)
-    // Rename the properties of the array to match the names of the props of the TaskCard component.
-    .map(({ task, slot }) => ({ taskItem: task, start: slot.timeStart, end: slot.timeEnd }));
+    // Clear class store
+    // $classStore = [];
+
+	let activeDay: string;
+    $: activeDay = getDayByIndex(new Date().getDay()).toLowerCase();
+
+    let currentClasses: ClassItemFlat[];
+    $: currentClasses = $classStore.flatMap(item =>
+        item.slots.map(slot => ({
+            id: item.id,
+            title: item.title,
+            professor: item.professor,
+            classroom: item.classroom,
+            day: slot.day,
+            startTime: new Date(slot.startTime).toTimeString().substring(0, 5),
+            endTime: new Date(slot.endTime).toTimeString().substring(0, 5)
+        }))).filter(slot => slot.day === (weekdays.findIndex((day) => Object.keys(day)[0] === activeDay))).sort((a, b) => a.startTime.localeCompare(b.startTime));
+
+    // classes = (await universisGet('students/me/teachingEvents?$expand=location,performer&$filter=startDate ne null&$top=-1&$orderby=startDate')).value;
+
 </script>
 
-<ion-page style="overflow-y: auto;">
-    <ion-fab horizontal="end" vertical="bottom">
-        <ion-fab-button href="/schedule/addTask" color="primary">
-            <ion-icon icon={allIonicIcons.add} />
-        </ion-fab-button>
-    </ion-fab>
+<ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
+    <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+      <ion-title>Πρόγραμμα μαθημάτων</ion-title>
+      <ion-buttons slot="end">
+        <ion-button href="/classes/addClass">
+          <ion-icon slot="icon-only" icon={add}></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-fab horizontal="start" vertical="bottom">
+    <ion-fab-button href="/tasks" color="secondary">
+        <ion-icon icon={createOutline} />
+    </ion-fab-button>
+</ion-fab>
+
+<ion-fab horizontal="end" vertical="bottom">
+    <ion-fab-button href="/exams" color="primary">
+        <ion-icon icon={schoolOutline} />
+    </ion-fab-button>
+</ion-fab>
+
+<ion-tab tab="schedule"></ion-tab>
+
+<ion-content fullscreen={true}>
+    <div>
+        <ion-segment id="day-list" value={activeDay} scrollable on:ionChange={() => {activeDay = (document.getElementById("day-list")).value}} mode='md'>
+            {#each weekdays as day}
+                {#each Object.keys(day) as key }
+                    <ion-segment-button value={key}>
+                        <ion-label>{getDayByIndex(getDayIndex(key.charAt(0).toUpperCase() + key.slice(1)), 'el', true)}</ion-label>
+                    </ion-segment-button>
+                {/each}
+            {/each}
+    </div>
 
     <ion-grid style="padding: 0%">
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Schedule</ion-title>
-            </ion-toolbar>
-        </ion-header>
-
-        <ion-row style="position: relative; z-index: 1000">
-            <Days />
-        </ion-row>
-
-        {#each currentTasks as task}
-            <TaskCard task={task.taskItem} start={task.start} end={task.end}/>
+        {#each currentClasses as courseClass}
+            <ClassCard classItem={courseClass} />
         {/each}
     </ion-grid>
-</ion-page>
+
+    <ion-row class="custom-center-label">
+        {#if currentClasses.length === 0}
+            <ion-icon icon={bookOutline} size="large" style="padding: 15px"></ion-icon>
+            <ion-label>Δεν υπάρχουν προγραμματισμένα μαθήματα αυτή τη μέρα.</ion-label>
+        {/if}
+    </ion-row>
+</ion-content>
+
+<style>
+    ion-segment-button {
+        --color-checked: var(--ion-color-primary);
+    }
+
+    ion-segment-button::part(indicator-background) {
+        background: var(--ion-color-primary);
+    }
+
+    ion-segment {
+        margin-top: 5px;
+        --background: #fff;
+    }
+
+    .custom-center-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
