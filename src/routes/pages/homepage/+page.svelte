@@ -1,5 +1,4 @@
 <script>
-	import IonPage from 'ionic-svelte/components/IonPage.svelte';
 	import AppCard from '$shared/AppCard.svelte';
 	import AppletsSlides from './appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
@@ -10,6 +9,7 @@
 	import woman from '$lib/assets/woman.png';
 	import RecentGrades from "$components/recentGrades/recentGrades.svelte";
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
+	import AnnouncementBanner from '$shared/announcementBanner.svelte';
 
 	let givenName = '';
 	let gender = '';
@@ -51,6 +51,14 @@
 
 <ion-tab tab="homepage">
     <ion-content class="" fullscreen>
+		<AnnouncementBanner>
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<ion-text color="light" on:click={() => {window.open("https://forms.google.com", '_blank');}} aria-label="feedback form">
+				<ion-label>Early Access Beta - Η γνώμη σου μετράει!</ion-label>
+				<ion-icon icon={open} />
+			</ion-text>
+		</AnnouncementBanner>
       <div class="info-container">
         <div class="Person-tag">
           {#if gender === 'Α'}
