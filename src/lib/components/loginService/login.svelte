@@ -83,8 +83,8 @@
     {/if}
     {#if isVisible}
         <div class="loading-panel">
-            <ion-spinner></ion-spinner>
-            <p>Loading...</p>
+            <ion-spinner class="loginSpinner"></ion-spinner>
+            <p class="loginP">Loading...</p>
         </div>
     {/if}
 
@@ -146,12 +146,12 @@
         z-index: 1000;
     }
 
-  ion-spinner {
+  ion-spinner.loginSpinner {
     --color: white;
     margin-right: 10px; /* Adjust the margin as needed */
   }
 
-  p {
+  p.loginP {
     color: white;
     margin: 0; /* Remove default margin */
   }
