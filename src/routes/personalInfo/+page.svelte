@@ -1,6 +1,5 @@
 <script>
-	import { universisGet } from '$lib/dataService';
-	import { onMount } from 'svelte';
+	import { neoUniversisGet } from '$lib/dataService';
 	import { invalidateAuth } from '$lib/authentication/authValidator';
 	import { goto } from '$app/navigation';
 	import InfoItem  from '$lib/components/personalInfo/infoItem.svelte'
@@ -25,9 +24,9 @@
 	// Get personal details and department details
 
 	async function getPersonalInfo() {
-		let personalData = await universisGet('Students/me/');
-		let department = await universisGet('Students/me/department');
-		let user = await universisGet('Users/me');
+		let personalData = await neoUniversisGet('Students/me/',{lifetime: 86000});
+		let department = await neoUniversisGet('Students/me/department',{lifetime: 86000});
+		let user = await neoUniversisGet('Users/me',{lifetime: 86000});
 		aem = personalData.studentIdentifier;
 		inscriptionYear = personalData.inscriptionYear.name;
 		schoolGraduated = personalData.schoolGraduated;
@@ -53,7 +52,7 @@
 <ion-tab tab="personalInfo">
 	<ion-header collapse="condense" mode="ios">
 		<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-			<ion-title class="ion-padding-vertical" size="large">Personal Info</ion-title>
+			<ion-title class="ion-padding-vertical" size="large">Πληροφορίες</ion-title>
 		
 		</ion-toolbar>
 	</ion-header>
@@ -62,14 +61,28 @@
 		{#await getPersonalInfo()}		
 			<PersonSkeleton />
 			<Settings logOut = {logOut} />
+
+
 		{:then} 
-			<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} />
-			
-			<Settings logOut = {logOut} />
+		<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} />
+		
+		<Settings logOut = {logOut} />
+
 		{:catch error}
+	        <p>Παρουσιάστηκε σφάλμα :&#40;</p>
 			<p>{error.message}</p>
 		{/await}
+
 	</ion-content>
+
 </ion-tab>
 	
+<style>
 	
+	ion-content {
+--padding-end: 0.6rem;
+--padding-start: 0.6rem;
+}
+	
+</style>
+

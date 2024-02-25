@@ -118,7 +118,7 @@
 			{/if}
 
 			{#if semester}
-			<ion-item>
+			<ion-item lines="none">
 				<ion-icon size="small" icon={allIonicIcons.analytics} />
 
 				<ion-label class="ion-padding-start">{semester}ο Εξάμηνο</ion-label>

@@ -1,11 +1,16 @@
 <script>
-	import * as allIonicIcons from 'ionicons/icons';
 /**
-	 * @type {any}
+	 * @type {boolean}
 	 */
  export let flip;
- export let text;
- export let chipIcon;
+ /**
+	 * @type {any}
+	 */
+  export let text;
+ /**
+	 * @type {any}
+	 */
+  export let chipIcon;
 
 </script>
 

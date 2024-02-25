@@ -1,18 +1,26 @@
 import { onMount } from "svelte";
-import { universisGet } from "$lib/dataService";
+import { neoUniversisGet } from "$lib/dataService";
 
 // HTML elements
 let _g_avg = "";
 let _w_avg = "";
 
 // This code runs when the component is mounted to the DOM
-export async function averages() {
+export async function averages(subjectsJSON = null) {
 
 	// Fetch exam data for the current student
-	let exams = await universisGet("students/me/grades?$top=-1&$filter=isPassed eq 1");
+	let exams = await neoUniversisGet("students/me/grades?$top=-1&$filter=isPassed eq 1");
 
 	// Fetch a list of courses for the current student
-	let courses = (await universisGet("students/me/courses?$top=-1")).value;
+	let courses;
+
+
+	if (subjectsJSON) {
+		courses = subjectsJSON;
+	}
+	else {
+		courses = (await neoUniversisGet("students/me/courses?$top=-1",{lifetime: 600})).value;
+	}
 
 	let k = 0;
 	let passed_courses = [];

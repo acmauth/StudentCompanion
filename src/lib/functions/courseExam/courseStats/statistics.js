@@ -1,4 +1,4 @@
-import { universisGet } from '$lib/dataService';
+import { neoUniversisGet } from '$lib/dataService';
 
 let examCode;
 let myGrade;
@@ -42,7 +42,7 @@ export async function statistics(courseCode) {
 
     try {
 
-	let courses = await universisGet('students/me/courses?$top=-1');
+	let courses = await neoUniversisGet('students/me/courses?$top=-1');
 
 	let courseExam = '';
 
@@ -56,7 +56,7 @@ export async function statistics(courseCode) {
 		}
 	}
 
-	let statistic = await universisGet(`students/me/exams/${courseExam}/statistics?$top=-1&`);
+	let statistic = await neoUniversisGet(`students/me/exams/${courseExam}/statistics?$top=-1&`,{lifetime: 600});
 
 	for (const exam of statistic) {
 		if (myGrade > exam.examGrade) {

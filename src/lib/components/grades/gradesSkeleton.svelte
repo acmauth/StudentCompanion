@@ -1,5 +1,4 @@
-<script lang="ts">
-</script>
+
 
 <ion-card class="ion-padding-vertical">
 
@@ -21,15 +20,12 @@
         </ion-label>
 		
 
-        <ion-item>
+        <ion-item lines="none">
           <ion-label class="ion-text-wrap">
             <ion-skeleton-text animated style="width: 100%" />
           </ion-label>
 
           <ion-text class="ion-padding-left ion-padding-start">
-            <h2>
-              <ion-skeleton-text animated style="width: 50%" />
-            </h2>
           </ion-text>
         </ion-item>
 
@@ -60,34 +56,36 @@
       </div>
 
       <!-- Repeat the skeleton structure for each courseDetails block -->
-
     </ion-list>
   </ion-card-content>
 </ion-card>
 
-<ion-item>
-		<ion-thumbnail slot="start">
-	   <ion-skeleton-text />
-	</ion-thumbnail>
-	<ion-label>
-		<h3 style="display: flex; flex-direction: row; gap:1rem;">
-			<ion-skeleton-text animated style="width: 30%" /> <ion-skeleton-text animated style="width: 10%" />
-		</h3>
-		<p>
-			<ion-skeleton-text animated style="width: 60%" />
-		</p>
-		<p>
-			<ion-skeleton-text animated style="width: 80%" />
-	   </p>
-	   
-	</ion-label>
 
+{#each [1,2,3] as item}
+<ion-card>
+
+  <ion-item>
+    <ion-thumbnail slot="end">
+      <ion-skeleton-text />
+   </ion-thumbnail>
+
+  <ion-label>
+      <p>
+          <ion-skeleton-text animated style="width: 80%" />
+      </p>
+      <p>
+          <ion-skeleton-text animated style="width: 80%" />
+     </p>
+
+  </ion-label>
 </ion-item>
+</ion-card>
+{/each}
 
 <style>
 
   .courseDetails {
-	height: 50vh;
+	height: 35vh;
     display: flex;
     flex-direction: column;
   }
