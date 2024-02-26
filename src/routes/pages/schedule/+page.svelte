@@ -29,9 +29,9 @@
 
 </script>
 
-<ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
+<ion-header collapse="condense" mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-      <ion-title>Πρόγραμμα μαθημάτων</ion-title>
+      <ion-title class="ion-padding-vertical" size="large">Πρόγραμμα μαθημάτων</ion-title>
       <ion-buttons slot="end">
         <ion-button href="/pages/classes/addClass">
           <ion-icon slot="icon-only" icon={add}></ion-icon>

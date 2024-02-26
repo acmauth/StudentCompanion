@@ -25,9 +25,9 @@
 
 <ion-tab tab="schedule"></ion-tab>
 
-<ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
+<ion-header collapse="condense" mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-      <ion-title>Συμβάντα</ion-title>
+      <ion-title class="ion-padding-vertical" size="large">Συμβάντα</ion-title>
       <ion-buttons slot="end">
         <ion-button href="/pages/tasks/addTask">
           <ion-icon slot="icon-only" icon={add}></ion-icon>
@@ -35,6 +35,8 @@
       </ion-buttons>
     </ion-toolbar>
 </ion-header>
+
+
 
 <ion-fab horizontal="start" vertical="bottom">
     <ion-fab-button href="/pages/exams" color="secondary">

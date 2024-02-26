@@ -9,6 +9,7 @@
 	import man from '$lib/assets/man.png';
 	import woman from '$lib/assets/woman.png';
 	import RecentGrades from "$components/recentGrades/recentGrades.svelte";
+	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
 
 	let givenName = '';
 	let gender = '';
@@ -59,7 +60,7 @@
           {/if}
 		  	<div>
 			  <h5 class="h5">Γεια σου</h5>
-			  <h5 class="h5"><b>{givenName}!</b></h5>
+			  <h5 class="h5"><b>{getVocativeCase(givenName)}!</b></h5>
 			</div>
 		</div>
         <div class="student-id">
