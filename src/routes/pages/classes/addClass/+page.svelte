@@ -22,7 +22,7 @@
     }
 
     function onCancel() {
-        goto('/schedule');
+        goto('/pages/schedule');
     }
     
     async function onSubmit(event: Event) {
@@ -57,7 +57,7 @@
 
         $classStore = $classStore.concat(formData);
         
-        goto('/schedule');
+        goto('/pages/schedule');
     }
 
 </script>

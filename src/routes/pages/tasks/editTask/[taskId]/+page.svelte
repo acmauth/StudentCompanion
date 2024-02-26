@@ -13,7 +13,7 @@
     
     if (taskItem == undefined) {
         alert("Το συμβάν δεν βρέθηκε.");
-        goto('/schedule/tasks');
+        goto('/pages/tasks');
     }
 
     let startDate = new Date(taskItem?.date.startDate || new Date());
@@ -32,7 +32,7 @@
 
 
     function onCancel() {
-        goto('/tasks');
+        goto('/pages/tasks');
     }
 
     function onDelete() {
@@ -41,7 +41,7 @@
             const newArray = oldArray.filter(item => item.id !== taskItem?.id);
             return newArray;
         });
-        goto('/tasks');
+        goto('/pages/tasks');
     }
 
     async function onSubmit() {
@@ -68,7 +68,7 @@
         };
 
         if (formData == taskItem) {
-            goto('/tasks');
+            goto('/pages/tasks');
             return;
         }
 
@@ -83,7 +83,7 @@
             return [...oldArray];
         });
 
-        goto('/tasks');
+        goto('/pages/tasks');
     }
 </script>
 
