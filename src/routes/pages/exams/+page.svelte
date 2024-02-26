@@ -27,39 +27,40 @@
 </script>
 
 
-    <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
-        <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-            <ion-title>Πρόγραμμα Εξετάσεων</ion-title>
-        </ion-toolbar>
-    </ion-header>
+<ion-header collapse="condense" mode="ios">
+    <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+      <ion-title class="ion-padding-vertical" size="large">Πρόγραμμα εξετάσεων</ion-title>
+    </ion-toolbar>
+</ion-header>
 
-    <ion-fab horizontal="start" vertical="bottom">
-        <ion-fab-button href="/pages/tasks" color="secondary">
-            <ion-icon icon={createOutline} />
-        </ion-fab-button>
-    </ion-fab>
 
-    <ion-fab horizontal="end" vertical="bottom">
-        <ion-fab-button href="/pages/schedule" color="primary">
-            <ion-icon icon={bookOutline} />
-        </ion-fab-button>
-    </ion-fab>
-        
-    <ion-content class="ion-padding">
-        <div class="examCardList">
-            {#each exams as examItem}
-            <ExamCard {examItem} />
-            {/each}
+<ion-fab horizontal="start" vertical="bottom">
+    <ion-fab-button href="/pages/tasks" color="secondary">
+        <ion-icon icon={createOutline} />
+    </ion-fab-button>
+</ion-fab>
+
+<ion-fab horizontal="end" vertical="bottom">
+    <ion-fab-button href="/pages/schedule" color="primary">
+        <ion-icon icon={bookOutline} />
+    </ion-fab-button>
+</ion-fab>
+    
+<ion-content class="ion-padding">
+    <div class="examCardList">
+        {#each exams as examItem}
+        <ExamCard {examItem} />
+        {/each}
+    </div>
+    {#if exams.length === 0}
+    <div class="custom-center-label">
+        <div class="middle">
+            <ion-icon icon={schoolOutline} size="large" style="padding: 15px"></ion-icon>
+            <ion-label>Δεν υπάρχουν προγραμματισμένες εξετάσεις.</ion-label>
         </div>
-        {#if exams.length === 0}
-        <div class="custom-center-label">
-            <div class="middle">
-                <ion-icon icon={schoolOutline} size="large" style="padding: 15px"></ion-icon>
-                <ion-label>Δεν υπάρχουν προγραμματισμένες εξετάσεις.</ion-label>
-            </div>
-        </div>
-        {/if}
-    </ion-content>
+    </div>
+    {/if}
+</ion-content>
     
 <style>
 

@@ -7,6 +7,7 @@
 	import PersonSkeleton from '$components/personalInfo/personSkeleton.svelte';
 	import { Capacitor } from '@capacitor/core';
 	import Settings from '$components/personalInfo/settings.svelte';
+	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 
 	// Keep personal info
 
@@ -51,14 +52,19 @@
 
 
 <ion-tab tab="personalInfo">
-	<ion-header collapse="condense" mode="ios">
+    <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
 		<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-			<ion-title class="ion-padding-vertical" size="large">Personal Info</ion-title>
-		
+		  <ion-title>Προσωπικές πληροφορίες</ion-title>
 		</ion-toolbar>
 	</ion-header>
-		
+
 	<ion-content fullscreen={true}>
+		<ion-header collapse="condense" mode="ios">
+			<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+				<ion-title size="large">Προσωπικές πληροφορίες</ion-title>
+			</ion-toolbar>
+		</ion-header>
+	
 		{#await getPersonalInfo()}		
 			<PersonSkeleton />
 			<Settings logOut = {logOut} />
@@ -67,7 +73,7 @@
 			
 			<Settings logOut = {logOut} />
 		{:catch error}
-			<p>{error.message}</p>
+			<ErrorLandingCard errorMsg={error.message}/>
 		{/await}
 	</ion-content>
 </ion-tab>
