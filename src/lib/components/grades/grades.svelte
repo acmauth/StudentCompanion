@@ -5,12 +5,14 @@
 	export let semesterId;
 	export let filteredSubjects;
 	
-
  </script>
   
 
 	{#each $filteredSubjects as semester}
-	  <Card semesterAverage={semester.average} semesterId={semester.semesterId} filteredSubjects={semester.courses} semesterName = {semester.courses[0].semester.name} />
+
+	 {#if semester.courses.length > 0}
+        <Card semesterAverage={semester.average} semesterId={semester.semesterId} filteredSubjects={semester.courses} semesterName={semester.courses[0].semester.name} />
+    {/if}
 	{/each}
 
   
