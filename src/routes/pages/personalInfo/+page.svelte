@@ -76,6 +76,7 @@
 
 		{:catch error}
 			<ErrorLandingCard errorMsg={error.message}/>
+			<Settings logOut = {logOut} />
 		{/await}
 
 	</ion-content>
