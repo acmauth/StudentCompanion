@@ -1,3 +1,17 @@
+<script>
+	import { goto } from '$app/navigation';
+	import { getLoginStatus } from '$lib/authentication/authValidator';
+	import { onMount } from 'svelte';
+	
+	// Handling the redirect to the homepage
+	onMount(async () => {
+		if (await getLoginStatus()) {
+			goto('pages/homepage');
+		} else {
+			goto('login');}
+		}
+	);
+</script>
 <ion-page style="overflow-y: auto;">
 	<ion-card>
 		<ion-card-header>

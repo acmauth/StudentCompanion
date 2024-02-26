@@ -5,7 +5,7 @@
 	export let classItem: ClassItemFlat;
 </script>
 
-<AppCard href={`/classes/editClass/${classItem.id}`}>
+<AppCard href={`/pages/classes/editClass/${classItem.id}`}>
 	<ion-grid>
 		<ion-row class="ion-justify-content-start">
 			<ion-col style="padding: 0%">

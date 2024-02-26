@@ -7,6 +7,7 @@
     import { flip } from "svelte/animate";
     import { quintOut } from 'svelte/easing';
     import NotifSkeleton from './notifSkeleton.svelte';
+	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 
     let refresher: HTMLIonRefresherElement;
     let notificationsPromise = gatherNotifications();
@@ -57,7 +58,7 @@
             {/each}
       
         {:catch error}
-            <p>{error.message}</p>
+            <ErrorLandingCard errorMsg={error.message}/>
         {/await}
     </ion-content>
 </ion-tab>
