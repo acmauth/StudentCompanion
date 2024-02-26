@@ -53,12 +53,7 @@
 <ion-tab tab="personalInfo">
     <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
 		<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-<<<<<<< HEAD
-			<ion-title class="ion-padding-vertical" size="large">Πληροφορίες</ion-title>
-		
-=======
-		  <ion-title>Προσωπικές πληροφορίες</ion-title>
->>>>>>> 79501e6fe10a45c5af2ccd379e6aec49f8964036
+			<ion-title class="ion-padding-vertical" size="large">Προσωπικές πληροφορίες</ion-title>
 		</ion-toolbar>
 	</ion-header>
 
@@ -80,12 +75,7 @@
 		<Settings logOut = {logOut} />
 
 		{:catch error}
-<<<<<<< HEAD
-	        <p>Παρουσιάστηκε σφάλμα :&#40;</p>
-			<p>{error.message}</p>
-=======
 			<ErrorLandingCard errorMsg={error.message}/>
->>>>>>> 79501e6fe10a45c5af2ccd379e6aec49f8964036
 		{/await}
 
 	</ion-content>
