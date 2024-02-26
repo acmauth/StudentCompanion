@@ -35,7 +35,7 @@
         }
         else {
             isVisible = false;
-            goto("/");
+            goto("/pages/homepage");
         }
 
 

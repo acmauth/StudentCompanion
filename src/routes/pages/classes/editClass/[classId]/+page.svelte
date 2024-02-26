@@ -61,7 +61,7 @@
         }
 
         function onCancel() {
-            goto('/schedule');
+            goto('/pages/schedule');
         }
 
         function onDelete() {
@@ -70,7 +70,7 @@
                 const newArray = oldArray.filter(item => item.id !== classItem?.id);
                 return newArray;
             });
-            goto('/schedule');
+            goto('/pages/schedule');
         }
 
         async function onSubmit(event: Event) {
@@ -120,7 +120,7 @@
                 return [...oldArray];
             });
 
-            goto('/schedule');
+            goto('/pages/schedule');
         }
 
     </script>
