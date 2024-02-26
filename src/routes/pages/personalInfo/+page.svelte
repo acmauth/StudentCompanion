@@ -66,18 +66,12 @@
 	
 		{#await getPersonalInfo()}		
 			<PersonSkeleton />
-			<Settings logOut = {logOut} />
-
-
 		{:then} 
-		<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} />
-		
-		<Settings logOut = {logOut} />
-
+			<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} />
 		{:catch error}
 			<ErrorLandingCard errorMsg={error.message}/>
-			<Settings logOut = {logOut} />
 		{/await}
+		<Settings logOut = {logOut} />
 
 	</ion-content>
 
