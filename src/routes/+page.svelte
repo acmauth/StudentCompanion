@@ -1,11 +1,11 @@
 <script>
 	import { goto } from '$app/navigation';
-	import { getLoginStatus } from '$lib/authentication/authValidator';
+	import { judgeAuth } from '$lib/authentication/authValidator';
 	import { onMount } from 'svelte';
 	
 	// Handling the redirect to the homepage
 	onMount(async () => {
-		if (await getLoginStatus()) {
+		if (await judgeAuth()) {
 			goto('pages/homepage');
 		} else {
 			goto('login');}
