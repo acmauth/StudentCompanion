@@ -32,7 +32,7 @@ export async function averagesPerSemester(subjectsJSON = null) {
 			
 			
 			for (const course of courseBySemester[semester]) {
-				if (course.isPassed) {
+				if (course.isPassed && course.calculateUnits == 1) {
 					sum += course.grade;
 					count++;
 				}

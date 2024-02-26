@@ -31,7 +31,7 @@ export async function coursesPerSemester() {
 			// let w_sum = 0;
 			
 			for (const course of courseBySemester[semester]) {
-				if (course.isPassed) {
+				if (course.isPassed && course.calculateUnits == 1) {
 					sum += course.grade;
 					// ects_list[count] = course.ects;
 					// w_sum += course.grade * course.ects;

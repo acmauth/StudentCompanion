@@ -71,6 +71,7 @@
 		{:catch error}
 	        <p>Παρουσιάστηκε σφάλμα :&#40;</p>
 			<p>{error.message}</p>
+			<Settings logOut = {logOut} />
 		{/await}
 
 	</ion-content>
