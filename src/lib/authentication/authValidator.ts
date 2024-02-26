@@ -16,7 +16,6 @@ export async function judgeAuth() {
 
     const onLineStatus = (await Network.getStatus()).connected;
     const _userCreds: any = get(userCreds);
-    console.log(_userCreds);
     
     if (!_userCreds.password || !_userCreds.username) return false; // If we don't have any credentials, we're not logged in
     if (!onLineStatus) return true;                                 // If we're offline, there is no way to check if we're logged in, so we assume we are and use cached data
