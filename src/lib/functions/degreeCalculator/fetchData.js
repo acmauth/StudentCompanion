@@ -1,4 +1,4 @@
-import { universisGet } from "$lib/dataService";
+import { neoUniversisGet } from "$lib/dataService";
 
 /**
  * @param {{title: any;id: any;semester: any;grade: any;input_grade: string;ects: any;}[]} unpassed_courses
@@ -8,7 +8,7 @@ export async function fetchData(unpassed_courses, sums)
 {   
     let not_passed_all_courses = false;
 
-    let courses = (await universisGet("students/me/courses?$top=-1")).value;
+    let courses = (await neoUniversisGet("students/me/courses?$top=-1", {lifetime: 60 * 5})).value;
     
 
     courses.sort((/** @type {{ semester: { id: number; }; }} */ a, /** @type {{ semester: { id: number; }; }} */ b) => a.semester.id - b.semester.id);

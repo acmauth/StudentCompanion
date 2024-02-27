@@ -137,8 +137,6 @@ h2 {
 
 .danger {
 	color: var(--app-color-orange-dark);
-
-
 }
 
 .examPeriod{
