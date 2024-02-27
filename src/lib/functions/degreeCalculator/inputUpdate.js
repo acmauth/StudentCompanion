@@ -3,9 +3,9 @@ import { numberCheck } from './numberCheck.js';
 import { degreeGradeUpdate } from './degreeGradeUpdate.js';
 
 /**
- * @param {any} unpassed_courses
- * @param {{ ects: { ect: any; }; simple: { passed: any; }; }} sums
- * @param {any} degree_grade
+ * @param { any } unpassed_courses
+ * @param { { ects: { ect: any; }, simple: { passed: any; }; } } sums
+ * @param { any } degree_grade
  */
 
 export function inputUpdate(unpassed_courses, sums, degree_grade){

@@ -8,7 +8,7 @@
     import Course from '$components/degreeCalculator/course.svelte';
 
 
-    let unpassed_courses: { title: string; id:string; semester: number; grade: number; input_grade: string; ects: number;}[] = [];
+    let unpassed_courses: { title: string; id: string; semester_id: number, semester_name: string, grade: number; input_grade: string; ects: number;}[] = [];
     
     let degree_grade = { ects: {value:0, stringed:''}, simple: {value: 0, stringed: ''} };
 
@@ -21,7 +21,7 @@
         not_passed_all_courses = await main(unpassed_courses, sums, degree_grade); 
     }
 
-    /** @param {{ target: { value: string; }; }} element */
+    /** @param { { target: { value: string; }; } } element */
     function clickInput(element: { target: { value: string; }; }){
         element.target.value = '';
         inputUpdate(unpassed_courses, sums, degree_grade);
@@ -50,7 +50,7 @@
             {#each unpassed_courses as course}
             <div class="courses-box">
                 
-                <Course course_title={course.title} course_semester={course.semester} />
+                <Course course_title={course.title} course_semester_id={course.semester_id} course_semester_name={course.semester_name}/>
                 
                 <div class="input-box"> 
                     <input type="text" inputmode="decimal" 
