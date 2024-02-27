@@ -9,7 +9,6 @@ export async function fetchData(unpassed_courses, sums)
     let not_passed_all_courses = false;
 
     let courses = (await universisGet("students/me/courses?$top=-1")).value;
-    
 
     courses.sort((/** @type {{ semester: { id: number; }; }} */ a, /** @type {{ semester: { id: number; }; }} */ b) => a.semester.id - b.semester.id);
     courses = courses.filter((/** @type {{ calculateGrade: number; }} */ course) => course.calculateGrade == 1);

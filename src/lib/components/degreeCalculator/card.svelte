@@ -99,6 +99,7 @@
     .input-box {
         display: flex;
         align-items: center;
+        justify-content: center;
         flex: 0.75; /* Takes 1/8 of the available space */
     }
 

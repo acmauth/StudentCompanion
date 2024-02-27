@@ -26,5 +26,4 @@ export function inputUpdate(unpassed_courses, sums, degree_grade){
     }
 
     degreeGradeUpdate(degree_grade, sums, sums_guess);
-    console.log(degree_grade.ects.stringed);
 }
