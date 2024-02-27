@@ -13,7 +13,8 @@
 	import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
 	import { writable } from 'svelte/store';
 	import Fuse from 'fuse.js';
-	import Card from '$components/degreeCalculator/card.svelte';      
+	import Card from '$components/degreeCalculator/card.svelte';
+	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 
 
 	let courseBySemester = writable([]);
@@ -153,8 +154,7 @@
 		<Grades semesterId = {semesterId} searchQuery = {searchQuery} filteredSubjects = {filteredSubjects} />
 
 		{:catch error}
-        <p>Παρουσιάστηκε σφάλμα :&#40;</p>
-		<p>{error.message}</p>
+		        <ErrorLandingCard errorMsg={error.message} />
 	{/await}
 </ion-content>
 
