@@ -12,6 +12,7 @@
 	import Flipper from "$components/shared/Flipper.svelte";
 	import TestComponentB from '../../test/testComponentB.svelte';
 	import { flipped } from "./flipstore"; 
+	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 
 
 
@@ -87,8 +88,8 @@
 	   <Grades semesterId = {semesterId} searchQuery = {searchQuery}  />
 
       {:catch error}
-          <p>{error.message}</p>
-    {/await}
+   		<ErrorLandingCard errorMsg={error.message} />
+	  {/await}
   </ion-content>
 </ion-tab>	
 
