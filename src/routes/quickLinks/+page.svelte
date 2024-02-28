@@ -62,15 +62,12 @@
 		departmentName = department.name;
 		// @ts-ignore
 		departmentURL = department.url;
-		console.log(department);
-		console.log(departmentURL);
 		links = [
 			{ linktitle: departmentName, linkaddress: departmentURL, imagelink: departmentLogo },
 			...links
 		];
 	});
 </script>
-
 
 <SubPageHeader title="Χρήσιμοι σύνδεσμοι" />
 <ion-content>
