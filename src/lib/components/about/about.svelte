@@ -117,7 +117,6 @@
   box-shadow: var(--ion-shadow-md);
 }
 
-
 .card-content {
   padding: 20px;
 }
@@ -142,28 +141,14 @@
   color: var(--ion-color-primary);
   margin-bottom: 15px;
 }
-  
-
-.avatar-circle ion-img {
-  border-radius: 50%;
-}
 
 .member-info {
   display: flex;
   align-items: center;
 }
 
-.avatar-circle {
-  width: 50px; /* Adjust the width of the avatar */
-  height: 50px; /* Adjust the height of the avatar */
-}
-
 .member-name {
   margin-left: 10px; /* Adjust as needed */
-}
-  
-.scroll-content {
-  overflow-y: auto; 
 }
 
 .social-icons {
