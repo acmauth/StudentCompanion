@@ -32,6 +32,7 @@
     <ion-spinner name="dots" color="secondary" style="scale: 150%;"/>
 </ion-grid>
 
+
 <style>
 	ion-grid {
 		&.center-grid {
@@ -45,3 +46,4 @@
 		transition: all ease-in-out 0.2s;
 	}
 </style>
+
