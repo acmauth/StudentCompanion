@@ -2,13 +2,11 @@
 	import AppCard from '$shared/AppCard.svelte';
 	import AppletsSlides from './appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
-	import { universisGet } from '$lib/dataService';
-	import { onMount } from 'svelte';
-	import { wallet } from 'ionicons/icons';
+	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
 	import woman from '$lib/assets/woman.png';
-	import RecentGrades from "$components/recentGrades/recentGrades.svelte";
-	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
+	import RecentGrades from '$components/recentGrades/recentGrades.svelte';
+	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import AnnouncementBanner from '$shared/announcementBanner.svelte';
 
 	let givenName = '';
@@ -17,12 +15,11 @@
 	let subjects = 0;
 	let average = 0;
 
-	onMount(async () => {
-		let personalData = await universisGet('Students/me/');
+	async function getInfo() {
+		let personalData = await neoUniversisGet('Students/me/');
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
-
-		subjects = (await universisGet('students/me/courses?$top=-1')).value;
+		subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
 		// @ts-ignore
 		passedSubjects = subjects.filter(
 			(/** @type {{ grade: number; }} */ course) => course.grade * 10 >= 5
@@ -30,82 +27,86 @@
 		averages().then((result) => {
 			average = result.weighted_avg;
 			let progressAvg = 0;
-			console.log(average);
 			let progressBarAvg = document.querySelector('.progress-avg');
 			while (progressAvg < average / 10) {
 				progressBarAvg.value = progressAvg += 0.01;
 			}
-		});
-		// @ts-ignore
-		subjects = subjects.length;
-		// @ts-ignore
-		passedSubjects = passedSubjects.length;
+			// @ts-ignore
+			subjects = subjects.length;
+			// @ts-ignore
+			passedSubjects = passedSubjects.length;
 
-		let progressCourses = 0;
-		let progressBarCourses = document.querySelector('.progress-courses');
-		while (progressCourses < passedSubjects / subjects) {
-			progressBarCourses.value = progressCourses += 0.01;
-		}
-	});
+			let progressCourses = 0;
+			let progressBarCourses = document.querySelector('.progress-courses');
+			while (progressCourses < passedSubjects / subjects) {
+				progressBarCourses.value = progressCourses += 0.01;
+			}
+		});
+	}
 </script>
 
 <ion-tab tab="homepage">
-    <ion-content class="" fullscreen>
-		<AnnouncementBanner>
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<ion-text color="light" on:click={() => {window.open("https://forms.google.com", '_blank');}} aria-label="feedback form">
-				<ion-label>Early Access Beta - Η γνώμη σου μετράει!</ion-label>
-				<ion-icon icon={open} />
-			</ion-text>
-		</AnnouncementBanner>
-      <div class="info-container">
-        <div class="Person-tag">
-          {#if gender === 'Α'}
-            <img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
-          {:else}
-            <img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
-          {/if}
-		  	<div>
-			  <h5 class="h5">Γεια σου</h5>
-			  <h5 class="h5"><b>{getVocativeCase(givenName)}!</b></h5>
+	<ion-content class="" fullscreen>
+		{#await getInfo()}
+			<HomepageSkeleton />
+		{:then}
+			<AnnouncementBanner>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<ion-text
+					color="light"
+					on:click={() => {
+						window.open('https://forms.google.com', '_blank');
+					}}
+					aria-label="feedback form"
+				>
+					<ion-label>Early Access Beta - Η γνώμη σου μετράει!</ion-label>
+					<ion-icon icon={open} />
+				</ion-text>
+			</AnnouncementBanner>
+			<div class="info-container">
+				<div class="Person-tag">
+					{#if gender === 'Α'}
+						<img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
+					{:else}
+						<img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
+					{/if}
+					<div>
+						<h5 class="h5">Γεια σου</h5>
+						<h5 class="h5"><b>{givenName}!</b></h5>
+					</div>
+				</div>
 			</div>
-		</div>
-        <div class="student-id">
-          <AppCard margin={false} shadow={true} href="/id">
-            <div style="background-color: #f3faff">
-              <ion-icon class="id-icon" icon={wallet} />
-            </div>
-          </AppCard>
-        </div>
-      </div>
-      <div class="card-container">
-        <AppCard colour="primary" margin={false}>
-          <div class="courses-passed">
-            <ion-card-title><b> {passedSubjects}/{subjects} </b></ion-card-title>
-            <ion-card-subtitle>Περασμένα</ion-card-subtitle>
+			<div class="card-container">
+				<AppCard colour="primary" margin={false} href="/pages/grades">
+					<div class="courses-passed">
+						<ion-card-title><b> {passedSubjects}/{subjects} </b></ion-card-title>
+						<ion-card-subtitle>Περασμένα</ion-card-subtitle>
 
-            <ion-progress-bar class="progress-courses" />
-          </div>
-        </AppCard>
+						<ion-progress-bar class="progress-courses" />
+					</div>
+				</AppCard>
 
-        <AppCard colour="primary" margin={false}>
-          <div class="avg-grade-grid">
-            <div class="avg-grade">
-              <ion-card-title> <b>{average} </b></ion-card-title>
-              <ion-card-subtitle>M.O.</ion-card-subtitle>
-            </div>
-            <div>
-              <ion-progress-bar class="progress-avg" />
-            </div>
-          </div>
-        </AppCard>
-      </div>
-      <p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
-      <AppletsSlides />
-      <p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
-	  <RecentGrades />
-    </ion-content>
+				<AppCard colour="primary" margin={false} href="/pages/grades">
+					<div class="avg-grade-grid">
+						<div class="avg-grade">
+							<ion-card-title> <b>{average} </b></ion-card-title>
+							<ion-card-subtitle>M.O.</ion-card-subtitle>
+						</div>
+						<div>
+							<ion-progress-bar class="progress-avg" />
+						</div>
+					</div>
+				</AppCard>
+			</div>
+			<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
+			<AppletsSlides />
+			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
+			<RecentGrades />
+		{:catch error}
+			<p>{error.message}</p>
+		{/await}
+	</ion-content>
 </ion-tab>
 
 <style>
@@ -136,7 +137,7 @@
 
 	.id-icon {
 		margin: 0.7rem;
-		font-size: 2.0rem;
+		font-size: 2rem;
 		color: var(--app-color-primary-dark);
 	}
 
