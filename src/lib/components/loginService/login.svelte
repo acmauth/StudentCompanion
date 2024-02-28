@@ -3,7 +3,7 @@
     import { getUniversisToken, getElearningToken} from "./helpers"
     import Vector from "$lib/components/loginService/Vector.svg"
     import Vector1 from "$lib/components/loginService/Vector(1).svg"
-    import Logo from "$lib/assets/Logo_full_white.png";
+    import Logo from "$lib/assets/Logo_head.png";
     import { onMount } from 'svelte';
 
 
@@ -67,13 +67,12 @@
 </script>
 
 <div style="position: relative; width: 100%; height: 40%; ">
-    <img src={Vector} alt="Vector" style="position: absolute; width: 100%; height:80%">
-    <img src={Vector1} alt="Overlay Icon" style="width: 100%; height:95%">
-    <img src={Logo} alt="Aristomate logo" style="position: absolute; top: 20%; left: 20%; width: 60%">
+    <img src={Vector} alt="Vector" style="position: absolute; width: 110%; height:70%">
+    <img src={Vector1} alt="Overlay Icon" style="width: 110%; height:85%">
 </div>
 
-<div style="display: flex; flex-direction: column; align-items: center; justify-content: top; padding-top: 2px; padding-right:20px; padding-left:20px;">
-    <ion-title color="primary" size="large" style="padding-bottom: 30px;">Σύνδεση</ion-title>
+<div style="display: flex; flex-direction: column; align-items: center; margin-top: -40px; justify-content: top; padding-right:20px; padding-left:20px;">
+    <img src={Logo} alt="Aristomate logo" style="width: 30%; margin-bottom: 25px;">
     <ion-input id='usernameInput' class="custom" placeholder="Όνομα χρήστη" fill="outline" style="margin-bottom: 10px;"></ion-input> 
     <ion-input id='passwordInput' class="custom" type="password" placeholder="Κωδικός πρόσβασης" fill="outline" style="margin-bottom: 10px;" ></ion-input>
     {#if invalidData}
@@ -93,7 +92,7 @@
 </div>
 
 <div class="footer">
-    <ion-title size="small" color="primary" style="padding-bottom: 10px; font-size: small;">Powered by ACM AUTH</ion-title>
+    <ion-title size="small" color="primary" style="padding-bottom: 10px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
 </div>
   
 <style>
@@ -109,7 +108,7 @@
 
     ion-input.custom {
       --background:#F9FAFB;
-      --color: #024f82;
+      --color: var(--ion-color-primary);
       --placeholder-color: #98BDD6;
       --placeholder-opacity: 0.8;
       --border-color: #98BDD6;
@@ -119,10 +118,11 @@
     }
 
     ion-button.custom {
-        --background: #55BBFF;
+        --background: var(--ion-color-primary);
         --color: var(--ion-color-light);
         --border-radius: 1rem; 
-        width: 40%; 
+        --box-shadow: var(--shadow-sort-md);
+        width: 60%; 
         height: 3rem; 
     }
 
