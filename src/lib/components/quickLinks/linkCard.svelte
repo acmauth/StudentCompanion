@@ -11,7 +11,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <ion-card button on:click={goToLinkaddress}>
-	<ion-item>
+	<ion-item lines="none">
 		<ion-thumbnail slot="start">
 			<!-- svelte-ignore a11y-missing-attribute -->
 			<img src={imagelink} />
