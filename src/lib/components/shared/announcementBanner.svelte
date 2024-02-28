@@ -8,7 +8,7 @@
     <div class="betaBanner">
         <slot/>
     </div>
-    <div class="triangle"></div>
+    <!-- <div class="triangle"></div> -->
 </div>
 
 <style>
