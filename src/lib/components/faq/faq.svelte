@@ -11,10 +11,6 @@
         { id: 7, title: "Εντόπισα λάθος στα δεδομένα της εφαρμογής. Τι κάνω; ", answer: "Οι πληροφορίες για τα μαθήματα, τις επιδόσεις σου και τα προσωπικά σου στοιχεία λαμβάνονται από κατάλληλα συστήματα του ΑΠΘ. Η διαλειτουργικότητα μεταξύ συστημάτων πάντα ενέχει την πιθανότητα ελλείψεων ή παραλλαγμένης παρουσίασης των δεδομένων. Αν σε προβληματίζει κάτι που βλέπεις στην εφαρμογή, βασίσου στις πληροφορίες που παρουσιάζονται online απευθείας από το πανεπιστήμιο. Ωστόσο, θα μας βοηθούσε πολύ να επικοινωνήσεις μαζί μας στο <a href='mailto:aristomate@auth.acm.org'>aristomate@auth.acm.org</a> για να μας περιγράψεις το πρόβλημα!" },
     ];
 
-    function toggleFullTitle(faq) {
-    faq.showFullTitle = !faq.showFullTitle;
-  }
-
     onMount(() => {
         faqs.forEach(faq => {
         const answerDiv = document.getElementById(`faq-answer-${faq.id}`);
@@ -23,7 +19,6 @@
     });
 </script>
 
-<!-- FAQ.svelte -->
 <ion-content class="ion-padding">
     <ion-accordion-group expand="inset">
         {#each faqs as faq}
@@ -39,8 +34,4 @@
         </ion-accordion-group>       
 </ion-content>
 
-  
-<style>
-
-</style>
 

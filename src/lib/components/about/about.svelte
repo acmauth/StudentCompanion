@@ -6,7 +6,7 @@
   
   async function fetchTeamMembers() {
     try {
-      const response = await fetch('contributors.json'); 
+      const response = await fetch('/src/lib/components/about/contributors.json'); 
       const data = await response.json();
 
       const members = data.contributors;
@@ -26,6 +26,7 @@
 <!-- About Us Card -->
 <div class="about-card">
   <div class="card-content">
+
     <!-- Introduction -->
     <div class="section">
       <h2 class="section-title">Ποιοι είμαστε</h2>
@@ -37,13 +38,12 @@
     <!-- Meet the Team -->
     <div class="section">
       <h2 class="section-title">Γνώρισε την ομάδα μας</h2>
-        <!-- Use reactive statement to update UI when teamMembers changes -->
         {#each $teamMembers as member}
           <ion-card href={member.personal_link}>
             <ion-card-content class="team-card-content">
               <div class="member-info">
                 <ion-avatar slot="start">
-                  <img src={member.imageUrl} alt={member.name}>
+                  <img src={member.image_url} alt={member.name}>
                 </ion-avatar>
                 <h3 class="member-name">{member.name}</h3>
               </div>
@@ -85,7 +85,7 @@
 </ion-content>
 
 <style>
-/* Custom styles */
+  
 .card-content {
   padding: 20px;
 }
@@ -99,34 +99,32 @@
   color: var(--ion-color-primary);
 }
 
-
 .member-info {
   display: flex;
   align-items: center;
 }
 
 .member-name {
-  margin-left: 10px; /* Adjust as needed */
+  margin-left: 10px; 
 }
 
 .social-icons {
-display: flex;
-justify-content: center;
-align-items: center;
-margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .social-icon {
-  width: 40px; /* Adjust the size of the icons */
+  width: 40px;
   height: 40px;
   margin: 0 15px;
-  transition: transform 0.3s ease; /* Smooth transition on hover */
+  transition: transform 0.3s ease;
 }
 
 .social-icon:hover {
-  transform: scale(1.2); /* Increase size on hover */
+  transform: scale(1.2);
 }
-
 
 </style>
   
