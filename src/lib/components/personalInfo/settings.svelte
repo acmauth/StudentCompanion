@@ -10,7 +10,7 @@
 <ion-card>
 	<ion-card-content>
 
-		<ion-item button href="/routes/about/+page.svelte">
+		<ion-item button href="/about">
 			<ion-icon size="small" icon={allIonicIcons.people} />
 			<ion-label class="ion-padding-start">Σχετικά με εμάς</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
