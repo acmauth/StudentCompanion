@@ -1,4 +1,4 @@
-import { universisGet } from "$lib/dataService";
+import { neoUniversisGet } from "$lib/dataService";
 
 
 /**
@@ -10,7 +10,7 @@ export async function coursesPerSemester() {
 
 		let courseBySemester = [];
 
-		let subjects = (await universisGet('students/me/courses?$top=-1')).value;
+		let subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 		courseBySemester = subjects.reduce((/** @type {{ [x: string]: any[]; }} */ acc, /** @type {{ semester: { id: string | number; }; }} */ course) => {
 			if (!acc[course.semester.id]) {
 				acc[course.semester.id] = [];
@@ -31,7 +31,7 @@ export async function coursesPerSemester() {
 			// let w_sum = 0;
 			
 			for (const course of courseBySemester[semester]) {
-				if (course.isPassed) {
+				if (course.isPassed && course.calculateUnits == 1) {
 					sum += course.grade;
 					// ects_list[count] = course.ects;
 					// w_sum += course.grade * course.ects;

@@ -43,10 +43,10 @@
             </tr>
             <tr>
             <td align="center" valign="top" width="25%">
-                <a href="https://github.com/RogZero">
+                <a href="https://github.com/VirtualVirtuosoV1">
                     <img src="https://avatars.githubusercontent.com/u/110724304?v=4?s=100" width="100px;" alt="Michalis Karypidis"/>
                     <br />
-                    <sub><b>Michalis Karypidis</b></sub>
+                    <sub><b>Michalis Karipidis</b></sub>
                 </a>
             </td>
             <td align="center" valign="top" width="25%">

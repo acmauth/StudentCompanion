@@ -1,4 +1,5 @@
 <script>
+
     /** @type { { ects: {value: number, stringed: string}, simple: {value: number, stringed: string} } } */
     export let degree_grade;
     
@@ -20,6 +21,7 @@
         <p class="grade-subtext">Απλός</p> 
     </div>
 </div>  
+
 
 
 

@@ -1,12 +1,27 @@
+<script>
+	import { goto } from '$app/navigation';
+	import { judgeAuth } from '$lib/authentication/authValidator';
+	import { onMount } from 'svelte';
+	
+	// Handling the redirect to the homepage
+	onMount(async () => {
+		if (await judgeAuth()) {
+			goto('pages/homepage');
+		} else {
+			goto('login');}
+		}
+	);
+</script>
 <ion-page style="overflow-y: auto;">
 	<ion-card>
 		<ion-card-header>
 			<ion-card-subtitle>Student companion (test) homepage</ion-card-subtitle>
 		</ion-card-header>
+		<ion-button href="/homepage">Homepage</ion-button>
 		<ion-card-content>
 			Let's list here our quick page links, before we get navigation figured out
 		</ion-card-content>
-		<ion-button href="/loginService">Log in/Log out</ion-button>
+		<ion-button href="/login">Log in</ion-button>
 	</ion-card>
 
 	<ion-card>
@@ -16,7 +31,6 @@
 		<ion-button href="/grades">Grades</ion-button>
 	</ion-card>
 
-
 <ion-card>
 	<ion-card-header>
 		<ion-card-subtitle>Personal Info Page</ion-card-subtitle>
@@ -25,7 +39,7 @@
 </ion-card>
 
 <ion-card>
-	<ion-button href="/schedule">Schedule</ion-button>
+	<ion-button href="/schedule/classes">Schedule</ion-button>
 	<ion-button href="/notifications">Notifications</ion-button>
 </ion-card>
 
@@ -44,6 +58,7 @@
 		<ion-button href="/menu">Weekly Menu</ion-button>
 	</ion-card>
 
-
+	<ion-card>
+		<ion-button href="/quickLinks">Quick Links</ion-button>
+	</ion-card>
 </ion-page>
-
