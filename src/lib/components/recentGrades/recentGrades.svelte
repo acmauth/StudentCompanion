@@ -108,13 +108,16 @@
             if (id === recentGrade.courseExam.id){
                 // recentGrades.push(recentGrade);
                 recentGrades = [...recentGrades, recentGrade];
-                console.log(recentGrades);
-                console.log(allRecentGrades);
+                let temp = [];     
+                for (const grade of allRecentGrades){
+                    if (recentGrades.includes(grade)){
+                        temp.push(grade);
+                    }
+                }
+                recentGrades = [...temp]; //To force svelte to rerender the component
+                return;
             }
         }
-        // if (deletedCards.length === 0){
-        //     showRestore = false;
-        // }
     }
 
 </script>
@@ -149,8 +152,8 @@
 
     .button-container {
         position: fixed;
-        bottom: 20px;
-        right: 20px;
+        bottom: 1rem;
+        right: 1rem;
         z-index: 999;
     }
     .undoButton {
