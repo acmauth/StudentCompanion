@@ -1,15 +1,19 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  
+  import discord from "$lib/assets/discord.svg";
+  import instagram from "$lib/assets/instagram.svg";
+  import github from "$lib/assets/github.svg";
+  import linkedin from "$lib/assets/linkedin.svg";
+  import facebook from "$lib/assets/facebook.svg";
+  import contributors from "$lib/components/about/contributors.json";
+
   const teamMembers = writable([]);
   
   async function fetchTeamMembers() {
     try {
-      const response = await fetch('/src/lib/components/about/contributors.json'); 
-      const data = await response.json();
 
-      const members = data.contributors;
+      const members = contributors.contributors;
 
       teamMembers.set(members);
     } catch (error) {
@@ -63,19 +67,19 @@
       <h2 class="section-title">Βρες μας</h2>
       <div class="social-icons">
         <a href="https://www.facebook.com/acmauth" target="_blank">
-          <img src="src/lib/assets/facebook.svg" alt="Facebook" class="social-icon facebook">
+          <img src={facebook} alt="Facebook" class="social-icon facebook">
         </a>
         <a href="https://www.instagram.com/acmauth/" target="_blank">
-          <img src="src/lib/assets/instagram.svg" alt="Instagram" class="social-icon instagram">
+          <img src={instagram} alt="Instagram" class="social-icon instagram">
         </a>
         <a href="https://github.com/acmauth/StudentCompanion" target="_blank">
-          <img src="src/lib/assets/github.svg" alt="GitHub" class="social-icon github">
+          <img src={github} alt="GitHub" class="social-icon github">
         </a>
         <a href="https://www.linkedin.com/company/acm-auth-student-chapter/" target="_blank">
-          <img src="src/lib/assets/linkedin.svg" alt="LinkedIn" class="social-icon linkedin">
+          <img src={linkedin} alt="LinkedIn" class="social-icon linkedin">
         </a>
         <a href="https://discord.gg/dUYrkbEj7q" target="_blank">
-          <img src="src/lib/assets/discord.svg" alt="Discord" class="social-icon discord">
+          <img src={discord} alt="Discord" class="social-icon discord">
         </a>
       </div>
     </div>
