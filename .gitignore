@@ -11,7 +11,36 @@ vite.config.ts.timestamp-*
 package-lock.json
 /.env
 .temp
-android/*
-android
 ios
 ios/*
+
+android/.gradle/
+android/build
+android/local.properties
+android/.idea
+android/.idea/*
+android/*.log
+
+android/app/build
+android/captures
+android/.externalNativeBuild/
+android/.cxx/
+android/*.apk
+android/output.json
+
+# IntelliJ
+android/*.iml
+android/.idea/
+android/misc.xml
+android/deploymentTargetDropDown.xml
+android/render.experimental.xml
+
+# Keystore files
+android/*.jks
+android/*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+android/google-services.json
+
+# Android Profiling
+android/*.hprof
