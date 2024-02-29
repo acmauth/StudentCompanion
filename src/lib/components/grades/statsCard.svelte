@@ -91,13 +91,12 @@
 
 
 
-	onMount(() => {
+	 onMount(async () => {
+       await gatherData();
+    });
 
-		gatherData();
 
-	});
-
-	afterUpdate(() => {
+	afterUpdate( () => {
 		if (chart) {
 			chart.destroy();
 		}
@@ -148,8 +147,8 @@
 	}
 
 	});
-
 	
+
 </script>
 
 {#if !searchQuery.length}
@@ -187,8 +186,11 @@
 				</ion-text>
 			</ion-item>
 
-			
-			<canvas id="gradeChart"></canvas>
+
+			<canvas id="gradeChart" />
+
+
+
 
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->

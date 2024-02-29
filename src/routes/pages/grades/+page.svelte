@@ -26,11 +26,15 @@
 	};
 
 
+	// Variables regarding grades and subjects
 	let searchQuery = '';
 	let subjects = 0;
 	let passedSubjects = 0;
 	let coursesBySemester = {};
 	let subjectsJSON: number | null | undefined;
+
+
+
 	/**
 	 * @type {string}
 	 */
@@ -41,10 +45,12 @@
 	 */
 	
 
+	 // Search
 	function handleChange(event: { target: { value: string; }; }) {
 		searchQuery = event.target.value;
 	}
 
+	// Flipper toggle
 	function flip() {
 		$flipped = !$flipped;
 	}
@@ -84,6 +90,8 @@
 		 return semesters;
 	}
 
+	
+
 	async function gatherData() {
 		subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 
@@ -120,6 +128,8 @@
 }
 
 
+//Stats
+
 
 
 </script>
@@ -132,8 +142,9 @@
 
       <ion-searchbar class="searchbar" debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
       
-      
-      <Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />
+      {#if Object.entries(coursesBySemester).length > 1}
+      	<Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />
+	  {/if}
     </ion-toolbar>
   </ion-header>
 
@@ -144,6 +155,7 @@
 		<GradesSkeleton/>
 	{:then}
 	<!-- Show content after loading is completed -->
+
 	<Flipper reactToHeight bind:flipped={$flipped}>
         <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
         <Card flip={flip} slot="back"/>
