@@ -7,8 +7,6 @@
 	 * @param {string} semId
 	 */
 	function handleClick(semId: string) {
-
-		
 			semesterId = semId;
 			const element = document.getElementById(semesterId);
 			if (element) {
@@ -23,15 +21,18 @@
 	
 	
 
+
+
 </script>
 
 
 <div class="chipsrow">
 
+
 	{#each Object.entries(coursesBySemester) as [id, courses]}
 	    <!-- svelte-ignore a11y-click-events-have-key-events -->
 	    <!-- svelte-ignore a11y-no-static-element-interactions -->
-		{#if courses[id-1].semester.id <= 24}
+		{#if courses[0].semester.id <= 24}
 	    <ion-chip on:click={handleClick(id)} color="primary">
 	        <ion-label>{id}ο εξάμηνο</ion-label>
 	    </ion-chip>
@@ -41,6 +42,8 @@
 	    </ion-chip>
 		{/if}
 	{/each}
+
+
 
 
 </div>	

@@ -28,12 +28,13 @@
 			<ion-label class="ion-padding-start">FAQ</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
+
 	
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<ion-item button lines="none" on:click={logOut}>
 			<ion-icon color="danger" size="small" icon={allIonicIcons.exit} />
-
+			
 			<ion-label color="danger" class="ion-padding-start">Αποσύνδεση</ion-label>
 			<ion-icon color="danger" size="small" icon={allIonicIcons.chevronForwardCircle} />
 			
@@ -47,8 +48,9 @@
 
 	<style>
 
-		ion-icon {
-		color: var(--ion-color-primary);
-		}
+	ion-icon {
+		color: var(--app-color-primary-dark);
+	}
 
 	</style>
+ 

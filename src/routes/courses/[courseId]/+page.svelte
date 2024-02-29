@@ -33,10 +33,6 @@
 		gradesCount: {}
 	};
 
-	let gradeData = [];
-	let grades = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-	let maximum = 0;
-	let chart;
 	let result;
 
 	// Extract courseCode from the URL
@@ -47,6 +43,7 @@
 		// Fetch course information
 		result = await courseInformation(courseCode);
 		if (result) {
+			
 			// Assign values from the result to course
 		course.title = result.courseTitle;
 		course.code = courseCode;

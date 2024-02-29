@@ -139,7 +139,7 @@
 	}
 
 	ion-icon {
-		color: var(--ion-color-primary);
+		color: var(--app-color-primary-dark);
 	}
 
 
