@@ -41,7 +41,7 @@
 </script>
 
 
-<ion-page>
+<ion-content fullscreen>
     
     <div style="position: relative; width: 100%; height: 40%; ">
         <img src={Vector} alt="Vector" style="position: absolute; width: 110%; height:70%">
@@ -72,7 +72,7 @@
         <ion-title size="small" color="primary" style="padding-bottom: 10px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
     </div>
 
-</ion-page>   
+</ion-content>   
 
   
 <style>
