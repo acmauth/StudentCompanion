@@ -38,62 +38,42 @@
 
     }
 
-    function handleKeyboardVisibility(event: { type: string; }) {
-        const formContainer = document.getElementById('formContainer');
-        if (formContainer) {
-            if (event.type === 'focusin') {
-                // Adjust your layout when the keyboard is shown
-                formContainer.style.transform = 'translateY(-50px)';
-            } else {
-                // Adjust your layout when the keyboard is hidden
-                formContainer.style.transform = 'translateY(0)';
-            }
-        }
-    }
-
-    onMount(() => {
-        const usernameInput = document.getElementById('usernameInput');
-        const passwordInput = document.getElementById('passwordInput');
-
-        if (usernameInput && passwordInput) {
-            // Attach event listeners to handle keyboard visibility
-            usernameInput.addEventListener('focusin', handleKeyboardVisibility);
-            passwordInput.addEventListener('focusin', handleKeyboardVisibility);
-            usernameInput.addEventListener('focusout', handleKeyboardVisibility);
-            passwordInput.addEventListener('focusout', handleKeyboardVisibility);
-        }
-    });
-
 </script>
 
-<div style="position: relative; width: 100%; height: 40%; ">
-    <img src={Vector} alt="Vector" style="position: absolute; width: 110%; height:70%">
-    <img src={Vector1} alt="Overlay Icon" style="width: 110%; height:85%">
-</div>
 
-<div style="display: flex; flex-direction: column; align-items: center; margin-top: -40px; justify-content: top; padding-right:20px; padding-left:20px;">
-    <img src={Logo} alt="Aristomate logo" style="width: 30%; margin-bottom: 25px;">
-    <ion-input id='usernameInput' class="custom" placeholder="Όνομα χρήστη" fill="outline" style="margin-bottom: 10px;"></ion-input> 
-    <ion-input id='passwordInput' class="custom" type="password" placeholder="Κωδικός πρόσβασης" fill="outline" style="margin-bottom: 10px;" ></ion-input>
-    {#if invalidData}
-        <ion-label class="error">Λανθασμένα στοιχεία σύνδεσης</ion-label>
-    {/if}
-    {#if isVisible}
-        <div class="loading-panel">
-            <ion-spinner class="loginSpinner"></ion-spinner>
-            <p class="loginP">Περιμένετε...</p>
-        </div>
-    {/if}
+<ion-page>
+    
+    <div style="position: relative; width: 100%; height: 40%; ">
+        <img src={Vector} alt="Vector" style="position: absolute; width: 110%; height:70%">
+        <img src={Vector1} alt="Overlay Icon" style="width: 110%; height:85%">
+    </div>
 
-    <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">ΕΙΣΟΔΟΣ</ion-button>
-    <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked="true"> 
-        <ion-label class="custom" style="font-size:small;">Διατήρηση σύνδεσης</ion-label>
-    </ion-checkbox>
-</div>
+    <div style="display: flex; flex-direction: column; align-items: center; margin-top: -40px; justify-content: top; padding-right:20px; padding-left:20px;">
+        <img src={Logo} alt="Aristomate logo" style="width: 30%; margin-bottom: 25px;">
+        <ion-input id='usernameInput' class="custom" placeholder="Όνομα χρήστη" fill="outline" style="margin-bottom: 10px;"></ion-input> 
+        <ion-input id='passwordInput' class="custom" type="password" placeholder="Κωδικός πρόσβασης" fill="outline" style="margin-bottom: 10px;" ></ion-input>
+        {#if invalidData}
+            <ion-label class="error">Λανθασμένα στοιχεία σύνδεσης</ion-label>
+        {/if}
+        {#if isVisible}
+            <div class="loading-panel">
+                <ion-spinner class="loginSpinner"></ion-spinner>
+                <p class="loginP">Περιμένετε...</p>
+            </div>
+        {/if}
+    
+        <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">ΕΙΣΟΔΟΣ</ion-button>
+        <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked="true"> 
+            <ion-label class="custom" style="font-size:small;">Διατήρηση σύνδεσης</ion-label>
+        </ion-checkbox>
+    </div>
+    
+    <div class="footer">
+        <ion-title size="small" color="primary" style="padding-bottom: 10px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
+    </div>
 
-<div class="footer">
-    <ion-title size="small" color="primary" style="padding-bottom: 10px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
-</div>
+</ion-page>   
+
   
 <style>
     .footer {
@@ -115,6 +95,7 @@
       --border-radius: 1rem; 
       --border-width: 1.8px;
       width: 80%;
+
     }
 
     ion-button.custom {
@@ -160,12 +141,12 @@
 
     ion-spinner.loginSpinner {
         --color: white;
-        margin-right: 10px; /* Adjust the margin as needed */
+        margin-right: 10px; 
     }
 
     p.loginP {
         color: white;
-        margin: 0; /* Remove default margin */
+        margin: 0; 
     }
 
 </style>
