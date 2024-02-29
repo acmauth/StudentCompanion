@@ -2,50 +2,23 @@
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
   
-  let personal_links = [
-    "https://github.com/TolisSth",
-    "https://www.linkedin.com/in/christos-balaktsis/",
-    "https://github.com/dangelidou",
-    "https://github.com/Kostaga",
-    "https://github.com/VirtualVirtuosoV1",
-    "https://gr.linkedin.com/in/myrto-gkogkou-67b004260",
-    "https://www.linkedin.com/in/neronmkp/",
-    "https://github.com/VasilisMicha"
-  ];
-
-  // Define a writable store for team members
   const teamMembers = writable([]);
   
-  // Function to fetch team members from the GitHub Markdown file
   async function fetchTeamMembers() {
     try {
-      const response = await fetch('https://raw.githubusercontent.com/acmauth/StudentCompanion/dev/README.md');
-      const markdownText = await response.text();
+      const response = await fetch('/src/lib/components/about/contributors.json'); 
+      const data = await response.json();
 
-      // Regular expression to match the table containing team members
-      const regex = /<table>(.*?)<\/table>/gs;
-      const tableMatch = regex.exec(markdownText);
-      if (!tableMatch) {
-        throw new Error('Table not found in the Markdown file');
-      }
+      const members = data.contributors;
 
-      // Regular expression to extract image URLs and names from table rows
-      const memberRegex = /<img src="(.*?)" .*?alt="(.*?)"\/>/g;
-      let members = [];
-      let match;
-      while ((match = memberRegex.exec(tableMatch[1])) !== null) {
-        members.push({ imageUrl: match[1], name: match[2] });
-      }
-
-      // Update the teamMembers store with the fetched data
       teamMembers.set(members);
     } catch (error) {
       console.error('Error fetching team members:', error);
     }
   }
 
-  // Fetch team members on component mount
   onMount(fetchTeamMembers);
+
 </script>
 
 <ion-content class="ion-padding">
@@ -53,6 +26,7 @@
 <!-- About Us Card -->
 <div class="about-card">
   <div class="card-content">
+
     <!-- Introduction -->
     <div class="section">
       <h2 class="section-title">Ποιοι είμαστε</h2>
@@ -64,13 +38,12 @@
     <!-- Meet the Team -->
     <div class="section">
       <h2 class="section-title">Γνώρισε την ομάδα μας</h2>
-        <!-- Use reactive statement to update UI when teamMembers changes -->
-        {#each $teamMembers as member, index}
-          <ion-card href={personal_links[index]}>
+        {#each $teamMembers as member}
+          <ion-card href={member.personal_link}>
             <ion-card-content class="team-card-content">
               <div class="member-info">
                 <ion-avatar slot="start">
-                  <img src={member.imageUrl} alt={member.name}>
+                  <img src={member.image_url} alt={member.name}>
                 </ion-avatar>
                 <h3 class="member-name">{member.name}</h3>
               </div>
@@ -112,7 +85,7 @@
 </ion-content>
 
 <style>
-/* Custom styles */
+  
 .card-content {
   padding: 20px;
 }
@@ -126,34 +99,32 @@
   color: var(--ion-color-primary);
 }
 
-
 .member-info {
   display: flex;
   align-items: center;
 }
 
 .member-name {
-  margin-left: 10px; /* Adjust as needed */
+  margin-left: 10px; 
 }
 
 .social-icons {
-display: flex;
-justify-content: center;
-align-items: center;
-margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .social-icon {
-  width: 40px; /* Adjust the size of the icons */
+  width: 40px;
   height: 40px;
   margin: 0 15px;
-  transition: transform 0.3s ease; /* Smooth transition on hover */
+  transition: transform 0.3s ease;
 }
 
 .social-icon:hover {
-  transform: scale(1.2); /* Increase size on hover */
+  transform: scale(1.2);
 }
-
 
 </style>
   
