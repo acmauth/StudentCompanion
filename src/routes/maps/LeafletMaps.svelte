@@ -1,6 +1,7 @@
 <script>
     import { onMount, onDestroy } from 'svelte';
     import { browser } from '$app/environment';
+    import 'leaflet/dist/leaflet.css';
 
     let mapElement;
     let map; 
@@ -23,15 +24,15 @@
             leaflet.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
-
+        
             // Key locations markers loop
 	    for(const key in keyPoints){
-		const {name, coordinates} = keyPoints[key]; 
-		//adding marker
-            	leaflet.marker(coordinates).addTo(map)
-                	.bindPopup(name)
-                	.openPopup();
-	    }
+            const {name, coordinates} = keyPoints[key]; 
+            const marker = leaflet.marker(coordinates);
+            marker.addTo(map)
+                .bindPopup(name)
+                .openPopup();
+        }
         }
     });
 
@@ -48,7 +49,6 @@
 </main>
 
 <style>
-    @import 'leaflet/dist/leaflet.css';
     main div {
         height: 100vh;
 	width: 100vw; 
