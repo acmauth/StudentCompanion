@@ -11,6 +11,7 @@
 	// Keep personal info
 
 	let aem = '';
+	let apm = '';
 	let inscriptionYear = '';
 	let schoolGraduated = '';
 	let birthDate = '';
@@ -29,6 +30,7 @@
 		let department = await neoUniversisGet('Students/me/department',{lifetime: 86000});
 		let user = await neoUniversisGet('Users/me',{lifetime: 86000});
 		aem = personalData.studentIdentifier;
+		apm = personalData.uniqueIdentifier;
 		inscriptionYear = personalData.inscriptionYear.name;
 		schoolGraduated = personalData.schoolGraduated;
 		birthDate = personalData.person.birthDate.slice(0, 10);
@@ -67,7 +69,8 @@
 		{#await getPersonalInfo()}		
 			<PersonSkeleton />
 		{:then} 
-			<InfoItem gender = {gender} aem = {aem} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName} username = {username} departmentName = {departmentName} semester = {semester} />
+			<InfoItem gender = {gender} aem = {aem} apm = {apm} schoolGraduated = {schoolGraduated} birthDate = {birthDate} email = {email} familyName = {familyName} givenName = {givenName}
+			 	username = {username} departmentName = {departmentName} semester = {semester} />
 		{:catch error}
 			<ErrorLandingCard errorMsg={error.message}/>
 		{/await}
