@@ -1,0 +1,52 @@
+[
+    {
+        "name": "Faculty of Sciences",
+        "name_el": "Σχολή Θετικών Επιστημών",
+        "coordinates": { "lng": 22.956504569317843, "lat": 40.63405427059443 }
+    },
+    {
+        "name": "AHEPA Hospital",
+        "name_el": "Νοσοκομείο ΑΧΕΠΑ",
+        "coordinates": { "lng": 22.96007956112098, "lat": 40.62982479657748 }
+    },
+    {
+        "name": "Polytechnic School",
+        "name_el": "Πολυτεχνείο",
+        "coordinates": { "lng": 22.958852460402234, "lat": 40.6290132419089 }
+    },
+    {
+        "name": "Department of Architectural Engineering",
+        "name_el": "Τμήμα Αρχιτεκτόνων Μηχανικών",
+        "coordinates": { "lng": 22.95949074444663, "lat": 40.62833414523201 }
+    },
+    {
+        "name": "Department of Civil Engineering",
+        "name_el": "Τμήμα Πολιτικών Μηχανικών",
+        "coordinates": { "lng": 22.959769231195068, "lat": 40.628040832340574 }
+    },
+    {
+        "name": "Department of Electrical and Computer Engineering",
+        "name_el": "Τμήμα Ηλεκτρολόγων Μηχανικών και Μηχανικών Υπολογιστών",
+        "coordinates": { "lng": 22.9599038231896, "lat": 40.62736347881813 }
+    },
+    {
+        "name": "Department of Chemical Engineering", 
+        "name_el": "Τμήμας Χημικών Μηχανικών", 
+        "coordinates": { "lng": 22.960192655603613, "lat": 40.62702851410389 }
+    },
+    {
+        "name": "Panagis Panagiotopoulos Auditorium",
+        "name_el": "Αμφιθέατρο Παναγή Παναγιωτόπουλου",
+        "coordinates": { "lng": 22.958276751252285, "lat": 40.628667223751066 }
+    },
+    {
+        "name": "Cafeteria of Polytechnic School of AUTh",
+        "name_el": "Κυλικείο Πολυτεχνικής Σχολής Α.Π.Θ",
+        "coordinates": { "lng": 22.9587158400118, "lat": 40.62822263640539 }
+    },
+    {
+        "name": "Main AUTh Campus",
+        "name_el": "Κύριος χώρος του ΑΠΘ",
+        "coordinates": { "lng": 22.959049527401312, "lat": 40.63182425082954 }
+    }
+]
