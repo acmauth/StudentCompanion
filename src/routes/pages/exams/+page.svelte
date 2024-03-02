@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {bookOutline, createOutline, schoolOutline} from 'ionicons/icons';
+    import {bookOutline, createOutline, ellipsisHorizontalOutline, schoolOutline} from 'ionicons/icons';
     import type { ExamItem } from '$components/schedule/exam/ExamItem';
     import ExamCard from '$components/schedule/exam/examCard.svelte';
     import { getDayByIndex } from '$components/schedule/day/days';
@@ -34,17 +34,21 @@
 </ion-header>
 
 
-<ion-fab horizontal="start" vertical="bottom">
-    <ion-fab-button href="/pages/tasks" color="secondary">
-        <ion-icon icon={createOutline} />
-    </ion-fab-button>
-</ion-fab>
-
 <ion-fab horizontal="end" vertical="bottom">
-    <ion-fab-button href="/pages/schedule" color="primary">
-        <ion-icon icon={bookOutline} />
+    <ion-fab-button color="light">
+       <ion-icon icon={ellipsisHorizontalOutline} />
     </ion-fab-button>
-</ion-fab>
+    <ion-fab-list side="top">
+       <ion-fab-button color="primary" href="/pages/tasks" data-desc="Συμβάντα">
+          <ion-icon icon={createOutline} />
+       </ion-fab-button>
+       <ion-fab-button color="secondary" href="/pages/schedule" data-desc="Μαθήματα">
+          <ion-icon icon={bookOutline} />
+       </ion-fab-button>
+    </ion-fab-list>
+ </ion-fab>
+
+
     
 <ion-content class="ion-padding">
     <div class="examCardList">
@@ -85,5 +89,21 @@
         justify-content: center;
         align-items: center;
         width: 50%;
-        }
+    }
+
+    ion-fab-button[data-desc] {
+        position: relative;
+    }
+
+    ion-fab-button[data-desc]::after {
+        position: absolute;
+        content: attr(data-desc);
+        z-index: 1;
+        right: 40px;
+        bottom: 4px;
+        padding: 9px;
+        border-radius: 15px;
+        color: var(--ion-color-dark);
+        text-align: end;
+    }
 </style>

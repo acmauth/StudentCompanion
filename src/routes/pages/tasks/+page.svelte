@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {bookOutline, schoolOutline, add, createOutline} from 'ionicons/icons';
+    import {bookOutline, schoolOutline, add, createOutline, ellipsisHorizontalOutline} from 'ionicons/icons';
     import { taskStore } from '$lib/components/schedule/task/taskStore';
     import type { TaskItem } from '$lib/components/schedule/task/TaskItem';
 	import TaskCard from '$components/schedule/task/taskCard.svelte';
@@ -38,17 +38,21 @@
 
 
 
-<ion-fab horizontal="start" vertical="bottom">
-    <ion-fab-button href="/pages/exams" color="secondary">
-        <ion-icon icon={schoolOutline} />
-    </ion-fab-button>
-</ion-fab>
-
 <ion-fab horizontal="end" vertical="bottom">
-    <ion-fab-button href="/pages/schedule" color="primary">
-        <ion-icon icon={bookOutline} />
+    <ion-fab-button color="light">
+       <ion-icon icon={ellipsisHorizontalOutline} />
     </ion-fab-button>
-</ion-fab>
+    <ion-fab-list side="top">
+       <ion-fab-button color="primary" href="/pages/schedule" data-desc="Μαθήματα">
+          <ion-icon icon={bookOutline} />
+       </ion-fab-button>
+       <ion-fab-button color="secondary" href="/pages/exams" data-desc="Εξετάσεις">
+          <ion-icon icon={schoolOutline} />
+       </ion-fab-button>
+    </ion-fab-list>
+ </ion-fab>
+
+
 
 <ion-content style="overflow-y: auto;">
     <ion-grid>
@@ -80,5 +84,21 @@
         text-align: center;
         justify-content: center;
         align-items: center;
+    }
+    
+    ion-fab-button[data-desc] {
+        position: relative;
+    }
+
+    ion-fab-button[data-desc]::after {
+        position: absolute;
+        content: attr(data-desc);
+        z-index: 1;
+        right: 40px;
+        bottom: 4px;
+        padding: 9px;
+        border-radius: 15px;
+        color: var(--ion-color-dark);
+        text-align: end;
     }
 </style>
