@@ -1,8 +1,7 @@
 <script>
     import { MapLibre, DefaultMarker, Popup, Marker} from 'svelte-maplibre';
-    import coordinates from "$components/map/coordinates.json"
+    import coordinates from "$lib/components/map/coordinates.json"
     const points = coordinates;
-
 </script>
 
 <ion-page>
