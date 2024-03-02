@@ -1,12 +1,13 @@
 <script>
     import { MapLibre, DefaultMarker, Popup, Marker} from 'svelte-maplibre';
     import coordinates from "$components/map/coordinates.json"
+    import SubPageHeader from '$shared/subPageHeader.svelte';
     const points = coordinates;
 
 </script>
 
 <ion-page>
-
+    <SubPageHeader title="Χάρτης του Campus" />
     <MapLibre
     center={[22.959049527401312, 40.63182425082954]}
     zoom={15}
