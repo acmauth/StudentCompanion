@@ -1,8 +1,8 @@
 <script>
-  import LeafletMap from './LeafletMaps.svelte';
+  import Map from "$components/map/map.svelte"
   import SubPageHeader from '$shared/subPageHeader.svelte';
 </script>
-<ion-page>
-    <SubPageHeader title="Χάρτης του Campus" />
-    <LeafletMap />
-</ion-page>
+
+<SubPageHeader title="Χάρτης του Campus" />
+<Map/>
+
