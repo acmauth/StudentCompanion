@@ -1,8 +1,10 @@
 <script>
-    /** @type {string} */
+    /** @type { string } */
     export let course_title;
-    /** @type {number} */
-    export let course_semester;
+    /** @type { number } */
+    export let course_semester_id;
+    /** @type { any } */
+    export let course_semester_name;
 </script>
 
 
@@ -10,7 +12,12 @@
 
     <div> <ion-text class="course-name">{course_title}</ion-text> </div>
 
-    <div> <p class="course-semester">{course_semester}ο Εξάμηνο</p> </div>
+    {#if course_semester_id <= 24}
+    <div> <p class="course-semester">{course_semester_id}ο Εξάμηνο</p> </div>
+    {:else}
+    <div> <p class="course-semester">{course_semester_name}</p> </div>
+    {/if}
+    
 
 </div>
 

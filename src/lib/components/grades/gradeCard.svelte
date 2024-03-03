@@ -2,8 +2,10 @@
 	export let filteredSubjects: any = {};
 	export let semesterId: any = {};
 	export let semesterAverage: any = {};
+	export let semesterName: string;
 	import AppCard from '$shared/AppCard.svelte';
 
+	
 
 </script>
 <span class="scroll" id={semesterId}></span>
@@ -12,8 +14,11 @@
 <div class="container">
 {#if filteredSubjects.length > 0}
 <div class="ion-padding-start ion-padding-vertical semester">
+	{#if semesterId <= 24}
 	<ion-text class="title"><b>{semesterId}ο Εξάμηνο</b></ion-text>
-
+	{:else}
+	<ion-text class="title"><b>{semesterName}</b></ion-text>
+	{/if}
 		{#if semesterAverage}
 		<ion-text class="subtitle">Μ.Ο Εξαμήνου: {semesterAverage}</ion-text>
 		{:else}
@@ -48,7 +53,7 @@
 					{/if}
 
 					</div>
-					{#if course.grade !== null}
+					{#if course.grade !== null && !(isNaN(course.grade))}
 						{#if course.grade * 10 >= 5}
 							<ion-text class="success gradeNumber">
 								<h2>{course.formattedGrade}</h2>
@@ -96,7 +101,7 @@ h2 {
 }
 
 .scroll {
-	scroll-margin-top: 7rem;
+	scroll-margin-top: 8.2rem;
 	display: block;
 	height: 1rem;
 }
@@ -132,8 +137,6 @@ h2 {
 
 .danger {
 	color: var(--app-color-orange-dark);
-
-
 }
 
 .examPeriod{

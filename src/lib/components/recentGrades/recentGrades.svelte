@@ -3,12 +3,26 @@
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
     import GradeCard from "$components/recentGrades/recentGradesCard.svelte";
-    import { dismissedGrades } from "$components/recentGrades/dismissedGrades"
-;
+    import { dismissedGrades } from "$components/recentGrades/dismissedGrades";
+    import { refresh } from "ionicons/icons";
 
     let examPeriod = [];
+    /**
+	 * @type {any[]}
+	 */
     let recentGrades = [];
+    /**
+	 * @type {any[]}
+	 */
+    let allRecentGrades = []; //used to bring back recent grades with restore button
+    /**
+	 * @type {string | any[]}
+	 */
     let grades = [];
+    /**
+	 * @type {any[]}
+	 */
+    let recentlyDismissedGrades = [];
 
     // Subscribe to changes in dismissedGrades
     const unsubscribe = dismissedGrades.subscribe(value => {
@@ -18,9 +32,13 @@
     // Adding the grade from the deleted cards
     function addToDismissedGrades(id){
         dismissedGrades.update(ids => [...ids, id]);
+        recentlyDismissedGrades = [...recentlyDismissedGrades, id];
     }
 
     function removeFromDismissedGrades(id){
+        dismissedGrades.update(grades => grades.filter(grade => grade !== id));
+    }
+    function emptyDismissedGrades(){
         dismissedGrades.update(grades => grades.filter(grade => false));
     }
 
@@ -62,7 +80,7 @@
 
             // getting recent grades from the previous period
             recentGrades = (await universisGet('students/me/grades?$filter=courseExam/year eq ' + lastYear + ' and courseExam/examPeriod eq ' + lastPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
-            
+            allRecentGrades = [...recentGrades];
         }
 
         // removing the grades that are already deleted
@@ -82,9 +100,30 @@
         addToDismissedGrades(examId);
     }
 
+    function restoreDeletedCard(){
+        let id = recentlyDismissedGrades[recentlyDismissedGrades.length - 1];
+        recentlyDismissedGrades = recentlyDismissedGrades.slice(0, -1);
+        removeFromDismissedGrades(id);
+        for (const recentGrade of allRecentGrades){
+            if (id === recentGrade.courseExam.id){
+                // recentGrades.push(recentGrade);
+                recentGrades = [...recentGrades, recentGrade];
+                let temp = [];     
+                for (const grade of allRecentGrades){
+                    if (recentGrades.includes(grade)){
+                        temp.push(grade);
+                    }
+                }
+                recentGrades = [...temp]; //To force svelte to rerender the component
+                return;
+            }
+        }
+    }
+
 </script>
 
 <div class="recentGrades ion-padding">
+
     {#if recentGrades.length === 0}
         <ion-card>
             <ion-card-content>
@@ -95,6 +134,13 @@
     {#each recentGrades as recentGrade } 
         <GradeCard subject = {recentGrade} on:delete-card={deleteCard}/>
     {/each}
+
+    <div class="button-container">
+        {#if recentlyDismissedGrades.length > 0}
+          <ion-button class="undoButton ion-padding" on:click={restoreDeletedCard} aria-hidden><ion-icon icon={refresh}></ion-icon></ion-button>
+        {/if}
+    </div>
+    
 </div>
 
 <style>
@@ -102,6 +148,17 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+    }
+
+    .button-container {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        z-index: 999;
+    }
+    .undoButton {
+        --border-radius: 1rem;
+        --box-shadow: var(--shadow-short-md);
     }
 </style>
 

@@ -3,8 +3,9 @@
 	import * as allIonicIcons from 'ionicons/icons';
 	import { onMount } from 'svelte';
 	const isProduction = process.env.NODE_ENV === 'production';
-	import { getMenu } from "$lib/menuScrapper/scraper"
+	import { getMenu } from '$lib/menuScrapper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
+	import MenuSkeleton from './menuSkeleton.svelte';
 	/**
 	 * @type {any[]}
 	 */
@@ -39,8 +40,8 @@
 		color = 'danger';
 	}
 
-	onMount(async () => {
-		if (!isProduction){
+	async function getMenuData() {
+		if (!isProduction) {
 			const response = await fetch('/menu', { method: 'GET' });
 			if (response.ok) {
 				// cafeteriaData = await response.json();
@@ -49,77 +50,78 @@
 			} else {
 				console.error('Error fetching cafeteria data:', response.statusText);
 			}
-		}
-		else {
+		} else {
 			cafeteriaData = await getMenu();
 		}
-
-		
-		console.log(cafeteriaData);
-		console.log(today);
-	});
+	}
 </script>
 
 <IonPage>
 	<SubPageHeader title="Μενού Λέσχης" />
 	<ion-content class="ion-padding">
-		<div class="ion-text-center">
-			<ion-chip {color}><ion-icon icon={allIonicIcons.timeOutline} /> &nbsp; {message}</ion-chip>
-		</div>
+		{#await getMenuData()}
+			<MenuSkeleton />
+		{:then}
+			<div class="ion-text-center">
+				<ion-chip {color}><ion-icon icon={allIonicIcons.timeOutline} /> &nbsp; {message}</ion-chip>
+			</div>
 
-		<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> Σημερινό Μενού</h1>
-		<ion-card color="light">
-			<ion-card-content>
-				<div>{@html cafeteriaData[today]}</div>
-			</ion-card-content>
-		</ion-card>
+			<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> Σημερινό Μενού</h1>
+			<ion-card color="light">
+				<ion-card-content>
+					<div>{@html cafeteriaData[today]}</div>
+				</ion-card-content>
+			</ion-card>
 
-		&nbsp;
+			&nbsp;
 
-		<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> Το Μενού της Εβδομάδας</h1>
-		<ion-accordion-group expand="inset">
-			<ion-accordion value="first">
-				<ion-item slot="header" color="light">
-					<ion-label>Δευτέρα</ion-label>
-				</ion-item>
-				<div class="ion-padding" slot="content">{@html cafeteriaData[0]}</div>
-			</ion-accordion>
-			<ion-accordion value="second">
-				<ion-item slot="header" color="light">
-					<ion-label>Τρίτη</ion-label>
-				</ion-item>
-				<div class="ion-padding" slot="content">{@html cafeteriaData[1]}</div>
-			</ion-accordion>
-			<ion-accordion value="third">
-				<ion-item slot="header" color="light">
-					<ion-label>Τετάρτη</ion-label>
-				</ion-item>
-				<div class="ion-padding" slot="content">{@html cafeteriaData[2]}</div>
-			</ion-accordion>
-			<ion-accordion value="fourth">
-				<ion-item slot="header" color="light">
-					<ion-label>Πέμπτη</ion-label>
-				</ion-item>
-				<div class="ion-padding" slot="content">{@html cafeteriaData[3]}</div>
-			</ion-accordion>
-			<ion-accordion value="fifth">
-				<ion-item slot="header" color="light">
-					<ion-label>Παρασκευή</ion-label>
-				</ion-item>
-				<div class="ion-padding" slot="content">{@html cafeteriaData[4]}</div>
-			</ion-accordion>
-			<ion-accordion value="sixth">
-				<ion-item slot="header" color="light">
-					<ion-label>Σάββατο</ion-label>
-				</ion-item>
-				<div class="ion-padding" slot="content">{@html cafeteriaData[5]}</div>
-			</ion-accordion>
-			<ion-accordion value="seventh">
-				<ion-item slot="header" color="light">
-					<ion-label>Κυριακή</ion-label>
-				</ion-item>
-				<div class="ion-padding" slot="content">{@html cafeteriaData[6]}</div>
-			</ion-accordion>
-		</ion-accordion-group>
+			<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> Το Μενού της Εβδομάδας</h1>
+			<ion-accordion-group expand="inset">
+				<ion-accordion value="first">
+					<ion-item slot="header" color="light">
+						<ion-label>Δευτέρα</ion-label>
+					</ion-item>
+					<div class="ion-padding" slot="content">{@html cafeteriaData[0]}</div>
+				</ion-accordion>
+				<ion-accordion value="second">
+					<ion-item slot="header" color="light">
+						<ion-label>Τρίτη</ion-label>
+					</ion-item>
+					<div class="ion-padding" slot="content">{@html cafeteriaData[1]}</div>
+				</ion-accordion>
+				<ion-accordion value="third">
+					<ion-item slot="header" color="light">
+						<ion-label>Τετάρτη</ion-label>
+					</ion-item>
+					<div class="ion-padding" slot="content">{@html cafeteriaData[2]}</div>
+				</ion-accordion>
+				<ion-accordion value="fourth">
+					<ion-item slot="header" color="light">
+						<ion-label>Πέμπτη</ion-label>
+					</ion-item>
+					<div class="ion-padding" slot="content">{@html cafeteriaData[3]}</div>
+				</ion-accordion>
+				<ion-accordion value="fifth">
+					<ion-item slot="header" color="light">
+						<ion-label>Παρασκευή</ion-label>
+					</ion-item>
+					<div class="ion-padding" slot="content">{@html cafeteriaData[4]}</div>
+				</ion-accordion>
+				<ion-accordion value="sixth">
+					<ion-item slot="header" color="light">
+						<ion-label>Σάββατο</ion-label>
+					</ion-item>
+					<div class="ion-padding" slot="content">{@html cafeteriaData[5]}</div>
+				</ion-accordion>
+				<ion-accordion value="seventh">
+					<ion-item slot="header" color="light">
+						<ion-label>Κυριακή</ion-label>
+					</ion-item>
+					<div class="ion-padding" slot="content">{@html cafeteriaData[6]}</div>
+				</ion-accordion>
+			</ion-accordion-group>
+		{:catch error}
+			<p>{error.message}</p>
+		{/await}
 	</ion-content>
 </IonPage>

@@ -1,6 +1,9 @@
 <script>
+// @ts-nocheck
+
     import { onMount } from "svelte";
     import { createEventDispatcher } from 'svelte';
+    import AppCard from '$shared/AppCard.svelte';
     export let subject;
 
     let dispatch = createEventDispatcher();
@@ -70,39 +73,68 @@
 
 </script>
 
-<ion-card class="grade-card grade-card-{subject.courseExam.id}" href={`/courses/${subject.course.id}`} on:touchstart={handleTouchStart} on:touchmove={handleTouchMove} on:touchend={handleTouchEnd}>
-  <ion-card-content>  
-    <div style="display:flex; flex-direction: row;justify-content: space-between;">
 
-        <ion-label class="ion-text-wrap">{subject.course.name}</ion-label>
+<ion-card href={`/courses/${subject.course.id}`} class="grade-card grade-card-{subject.courseExam.id}" on:touchstart={handleTouchStart} on:touchmove={handleTouchMove} on:touchend={handleTouchEnd}>
+  <ion-item lines="none" class="ion-no-padding">
+      <div class="containerFlex">
+        <div class="titlesFlex">
+          <ion-label class="ion-text-wrap courseTitle">{subject.course.name}</ion-label>
+          <ion-label class="subjectID">{subject.course.id}</ion-label>
+        </div>
         {#if subject.examGrade * 10 >= 5}
-          <ion-text class="ion-padding-left ion-padding-start" color="success">
-            <h2>{subject.formattedGrade}</h2>
-          </ion-text>
-        {:else}
-          <ion-text class="ion-padding-left ion-padding-start" color="danger">
-            <h2>{subject.formattedGrade}</h2>
-          </ion-text>
-        {/if}
-
-      </div>
-      <ion-label>{subject.course.id}</ion-label>
-  </ion-card-content>
+        <ion-text class="success gradeNumber">
+          <h2>{subject.formattedGrade}</h2>
+        </ion-text>
+      {:else}
+        <ion-text class="danger gradeNumber">
+          <h2>{subject.formattedGrade}</h2>
+        </ion-text>
+      {/if}
+    </div>
+  </ion-item>
 </ion-card>
 
 
-
 <style>
-    .grade-card {
-        /* border-radius: 15px;
-        position: relative; */
-        margin: 0;
-        transition: transform 0.3s ease;
-        /* touch-action: pan-x;  */
+
+    .gradeNumber h2{
+      margin: 0 !important;
     }
 
-    /* .grade-card.swiping {
-        pointer-events: none;
-    } */
+    .containerFlex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 100%;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+
+    .courseTitle {
+      font-size: 1rem;
+    }
+
+    .grade-card {
+        margin: 0;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+    }
+
+    .success {
+      color: var(--app-color-green-dark);
+    }
+
+    .danger {
+      color: var(--app-color-orange-dark);
+    }
+
+    .subjectID{
+      font-size: 0.8rem;
+      color: grey
+    }
 
 </style>
