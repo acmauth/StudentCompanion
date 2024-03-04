@@ -8,6 +8,7 @@
 	import RecentGrades from '$components/recentGrades/recentGrades.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import AnnouncementBanner from '$shared/announcementBanner.svelte';
+	import { goto } from '$app/navigation';
 
 	let givenName = '';
 	let gender = '';
@@ -24,22 +25,26 @@
 		passedSubjects = subjects.filter(
 			(/** @type {{ grade: number; }} */ course) => course.grade * 10 >= 5
 		);
+		// @ts-ignore
+		subjects = subjects.length;
+		// @ts-ignore
+		passedSubjects = passedSubjects.length;
+
 		averages().then((result) => {
 			average = result.weighted_avg;
-			let progressAvg = 0;
-			let progressBarAvg = document.querySelector('.progress-avg');
-			while (progressAvg < average / 10) {
-				progressBarAvg.value = progressAvg += 0.01;
-			}
-			// @ts-ignore
-			subjects = subjects.length;
-			// @ts-ignore
-			passedSubjects = passedSubjects.length;
 
-			let progressCourses = 0;
+			// onMount(async () => {
 			let progressBarCourses = document.querySelector('.progress-courses');
+			let progressCourses = 0;
 			while (progressCourses < passedSubjects / subjects) {
-				progressBarCourses.value = progressCourses += 0.01;
+				progressCourses += 0.01;
+				progressBarCourses.value = progressCourses;
+			}
+			let progressBarAvg = document.querySelector('.progress-avg');
+			let progressAvg = 0;
+			while (progressAvg < average / 10) {
+				progressAvg += 0.01;
+				progressBarAvg.value = progressAvg;
 			}
 		});
 	}
@@ -65,7 +70,9 @@
 				</ion-text>
 			</AnnouncementBanner>
 			<div class="info-container">
-				<div class="Person-tag">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div class="Person-tag" on:click={() => goto('/pages/personalInfo')}>
 					{#if gender === 'Α'}
 						<img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
 					{:else}
