@@ -39,13 +39,11 @@
                 const { name, name_el, coordinates, pointer } = point;
                 if (pointer == "blue"){
                     leaflet.marker([coordinates.lat, coordinates.lng], { icon: blueIcon }).addTo(map)
-                        .bindPopup(name_el)
-                        .openPopup();
+                        .bindPopup(name_el);
                 }
                 else {
                     leaflet.marker([coordinates.lat, coordinates.lng], { icon: redIcon }).addTo(map)
-                        .bindPopup(name_el)
-                        .openPopup();
+                        .bindPopup(name_el);
                 }
                     
                 
