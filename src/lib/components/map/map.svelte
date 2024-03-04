@@ -1,61 +1,3 @@
-<!-- <script>
-    import { MapLibre, DefaultMarker, Popup, Marker} from 'svelte-maplibre';
-    import coordinates from "$lib/components/map/coordinates.json"
-    import SubPageHeader from '$shared/subPageHeader.svelte';
-    const points = coordinates;
-</script>
-
-
-<ion-content>
-    <SubPageHeader title="Χάρτης του Campus" />
-</ion-content>
-    
-    <div class="map-container">
-        <MapLibre
-            style="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-            center={[22.959049527401312, 40.63182425082954]}
-            zoom={15}
-            standardControls
-  
-        >
-            {#each points as { name, name_el, coordinates }}
-                <DefaultMarker lngLat={coordinates} class="">
-                    <Popup>
-                        <div class="popup-title-el">{name_el}</div>
-                        <div class="popup-title-eng">{name}</div>
-                    </Popup>
-                </DefaultMarker>
-            {/each}
-        </MapLibre>
-    </div>
-
-
-<style>
-    .popup-title-el {
-        font-size: 13px;
-        font-weight: bold;
-        align-items: center;
-    }
-
-    .popup-title-eng {
-        font-size: 12px;
-        align-items: center;
-    }
-
-    .map-container {
-        position: relative;
-        height: calc(100vh - 56px); /* Subtract the height of the subheader */
-    }
-
-    .map {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-</style> -->
-
 <script>
     import { onMount, onDestroy } from 'svelte';
     import { browser } from '$app/environment';
@@ -128,6 +70,6 @@
     @import 'leaflet/dist/leaflet.css';
 
     .map-container {
-        height: 100vh; /* Set the height of the map container to fill the viewport */
+        height: 100vh; 
     }
 </style>
