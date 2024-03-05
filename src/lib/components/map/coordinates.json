@@ -2,128 +2,133 @@
     {
         "name": "Faculty of Sciences",
         "name_el": "Σχολή Θετικών Επιστημών",
-        "coordinates": { "lng": 22.956504569317843, "lat": 40.63405427059443 }
-    },
-    {
-        "name": "AHEPA Hospital",
-        "name_el": "Νοσοκομείο ΑΧΕΠΑ",
-        "coordinates": { "lng": 22.96007956112098, "lat": 40.62982479657748 }
-    },
-    {
-        "name": "Polytechnic School",
-        "name_el": "Πολυτεχνείο",
-        "coordinates": { "lng": 22.958852460402234, "lat": 40.6290132419089 }
+        "coordinates": { "lng": 22.956504569317843, "lat": 40.63405427059443 },
+        "pointer": "blue"
     },
     {
         "name": "Department of Architectural Engineering",
         "name_el": "Τμήμα Αρχιτεκτόνων Μηχανικών",
-        "coordinates": { "lng": 22.95949074444663, "lat": 40.62833414523201 }
+        "coordinates": { "lng": 22.95949074444663, "lat": 40.62833414523201 },
+        "pointer": "blue"
     },
     {
         "name": "Department of Civil Engineering",
         "name_el": "Τμήμα Πολιτικών Μηχανικών",
-        "coordinates": { "lng": 22.959769231195068, "lat": 40.628040832340574 }
+        "coordinates": { "lng": 22.959769231195068, "lat": 40.628040832340574 },
+        "pointer": "blue"
     },
     {
         "name": "Department of Electrical and Computer Engineering",
         "name_el": "Τμήμα Ηλεκτρολόγων Μηχανικών και Μηχανικών Υπολογιστών",
-        "coordinates": { "lng": 22.9599038231896, "lat": 40.62736347881813 }
+        "coordinates": { "lng": 22.9599038231896, "lat": 40.62736347881813 },
+        "pointer": "blue"
     },
     {
         "name": "Department of Chemical Engineering", 
         "name_el": "Τμήμα Χημικών Μηχανικών", 
-        "coordinates": { "lng": 22.960192655603613, "lat": 40.62702851410389 }
-    },
-    {
-        "name": "Panagis Panagiotopoulos Auditorium",
-        "name_el": "Αμφιθέατρο Παναγή Παναγιωτόπουλου",
-        "coordinates": { "lng": 22.958276751252285, "lat": 40.628667223751066 }
-    },
-    {
-        "name": "Cafeteria of Polytechnic School",
-        "name_el": "Κυλικείο Πολυτεχνικής Σχολής",
-        "coordinates": { "lng": 22.9587158400118, "lat": 40.62822263640539 }
+        "coordinates": { "lng": 22.960192655603613, "lat": 40.62702851410389 },
+        "pointer": "blue"
     },
     {
         "name": "Department of Agriculture",
         "name_el": "Τμήμα Γεωπονίας",
-        "coordinates": { "lng": 22.958085140492127, "lat": 40.633393059062776 }
+        "coordinates": { "lng": 22.958085140492127, "lat": 40.633393059062776 },
+        "pointer": "blue"
     },
     {
         "name": "Faculty of Philosophy",
         "name_el": "Φιλοσοφική Σχολή",
-        "coordinates": { "lng": 22.955360016391538, "lat": 40.63159364694488 }
+        "coordinates": { "lng": 22.955360016391538, "lat": 40.63159364694488 },
+        "pointer": "blue"
     },
     {
         "name": "Law School",
         "name_el": "Νομική Σχολή",
-        "coordinates": { "lng": 22.956679663129158, "lat": 40.631210960263545 }  
+        "coordinates": { "lng": 22.956679663129158, "lat": 40.631210960263545 },
+        "pointer": "blue"
     },
     {
         "name": "Department Of Economics",
         "name_el": "Τμήμα Οικονομικών Επιστημών",
-        "coordinates": { "lng": 22.95705517239328, "lat": 40.63093412173016 }
+        "coordinates": { "lng": 22.95705517239328, "lat": 40.63093412173016 },
+        "pointer": "blue"
     },
     {
         "name": "Ceremony Hall",
         "name_el": "Αίθουσα Τελετών",
-        "coordinates": { "lng": 22.956353846940697, "lat": 40.63005543155283 }
+        "coordinates": { "lng": 22.956353846940697, "lat": 40.63005543155283 },
+        "pointer": "red"
     },
     {
         "name": "Central Library",
         "name_el": "Κεντρική Βιβλιοθήκη",
-        "coordinates": { "lng": 22.95797390106965, "lat": 40.62972973340975 }
+        "coordinates": { "lng": 22.95797390106965, "lat": 40.62972973340975 },
+        "pointer": "red"
     },
     {
         "name": "School of Chemistry",
         "name_el": "Tμήμα Χημείας",
-        "coordinates": { "lng": 22.956246558467114, "lat": 40.63256325401762 }
+        "coordinates": { "lng": 22.956246558467114, "lat": 40.63256325401762 },
+        "pointer": "blue"
     },
     {
         "name": "Biology Department",
         "name_el": "Tμήμα Βιολογίας",
-        "coordinates": { "lng": 22.9572926199534, "lat": 40.63318205286701 }
+        "coordinates": { "lng": 22.9572926199534, "lat": 40.63318205286701 },
+        "pointer": "blue"
     },
     {
         "name": "Faculty of Theology",
         "name_el": "Θεολογική Σχολή",
-        "coordinates": { "lng": 22.955109301937426, "lat": 40.63079231772927 }
+        "coordinates": { "lng": 22.955109301937426, "lat": 40.63079231772927 },
+        "pointer": "blue"
     },
     {
         "name": "Veterinary Medicine School",
         "name_el": "Τμήμα Κτηνιατρικής",
-        "coordinates": { "lng": 22.95913797967473, "lat": 40.63220907051348 }
+        "coordinates": { "lng": 22.95913797967473, "lat": 40.63220907051348 },
+        "pointer": "blue"
     },
     {
         "name": "Medical School",
         "name_el": "Ιατρική Σχολή",
-        "coordinates": { "lng": 22.960935059635318, "lat": 40.631028445269706 }
-    },
-    {
-        "name": "Central Library",
-        "name_el": "Κεντρική Βιβλιοθήκη",
-        "coordinates": { "lng": 22.95797926556047, "lat": 40.62972973340748 }
+        "coordinates": { "lng": 22.960935059635318, "lat": 40.631028445269706 },
+        "pointer": "blue"
     },
     {
         "name": "Faculty of Education",
         "name_el": "Παιδαγωγική Σχολή",
-        "coordinates": { "lng": 22.961517993250336, "lat": 40.62762959660288 }
+        "coordinates": { "lng": 22.961517993250336, "lat": 40.62762959660288 },
+        "pointer": "blue"
     },
     {
-        "name": "Τμήμα Οδοντιατρικής",
-        "name_el": "School of Dentistry",
-        "coordinates": { "lng": 22.9615877306832, "lat": 40.62995023417895 }
+        "name": "School of Dentistry",
+        "name_el": "Τμήμα Οδοντιατρικής",
+        "coordinates": { "lng": 22.9615877306832, "lat": 40.62995023417895 },
+        "pointer": "blue"
     },
     {
         "name": "Observatory",
         "name_el": "Αστεροσκοπείο",
-        "coordinates": { "lng":  22.958845895176307, "lat": 40.630735260674165 }
+        "coordinates": { "lng":  22.958845895176307, "lat": 40.630735260674165 },
+        "pointer": "red"
     },
     {
         "name": "School of History and Archaeology",
         "name_el": "Τμήμα Ιστορίας και Αρχαιολογίας",
-        "coordinates": { "lng":  22.955569535156393, "lat": 40.63186623741631 }
+        "coordinates": { "lng":  22.955569535156393, "lat": 40.63186623741631 },
+        "pointer": "blue"
+    },
+    {
+        "name": "Gym",
+        "name_el": "Πανεπιστημιακό Γυμναστήριο",
+        "coordinates": { "lng":  22.963580223050336, "lat": 40.62640355601469 },
+        "pointer": "red"
+    },
+    {
+        "name": "University Student Restaurant Club",
+        "name_el": "Πανεπιστημιακή Φοιτητική Λέσχη",
+        "coordinates": { "lng":  22.960629793286632, "lat": 40.625825409102205 },
+        "pointer": "red"
     }
-
 ]
-
