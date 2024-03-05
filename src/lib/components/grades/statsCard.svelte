@@ -7,9 +7,6 @@
 	import Chip from "$components/shared/chip.svelte";
 
 
-
-
-
 	/**
 	 * @type {any}
 	 */
@@ -139,8 +136,10 @@
 						text: 'Εξέλιξη Μέσου όρου',
 						font: {
 							size: 15
-						}
-					}
+						},
+						color: primaryColor
+					},
+					
 				},
 			},
 		});
@@ -151,7 +150,6 @@
 
 </script>
 
-{#if !searchQuery.length}
 <ion-card class="ion-text-center ion-padding-vertical stats">
 	<ion-card-header>
 		<ion-card-subtitle>
@@ -197,14 +195,12 @@
 			<Chip chipIcon ={allIonicIcons.calculator} text="Πρόβλεψη Μ.Ο." flip = {flip} />
 
 
-
 		</ion-list>
 
 	</ion-card-content>
 		
 	
 </ion-card>
-{/if}
 
 <style>
 

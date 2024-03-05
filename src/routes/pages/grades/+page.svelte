@@ -156,10 +156,12 @@
 	{:then}
 	<!-- Show content after loading is completed -->
 
+	{#if !searchQuery.length}
 	<Flipper reactToHeight bind:flipped={$flipped}>
         <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
         <Card flip={flip} slot="back"/>
     </Flipper>
+	{/if}
 		
 		
 	  

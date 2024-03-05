@@ -1,29 +1,23 @@
 import { neoUniversisGet } from "$lib/dataService";
+import {course} from "$lib/types/courseType"
+import { coursesPerSemester } from "../coursePerSemester/coursesPerSemester";
 
+export async function averagesPerSemester(subjectsJSON: course[] | null | undefined = null) {
 
-
-export async function averagesPerSemester(subjectsJSON = null) {
-
-		let courseBySemester = [];
-		let subjects;
+		let courseBySemester: { [key: string]: course[] } = {};
+		let subjects: course[] = [];
 		if (subjectsJSON) {
 			subjects = subjectsJSON;
 		}
 		else {
 			 subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 		}
-		
-		courseBySemester = subjects.reduce((/** @type {{ [x: string]: any[]; }} */ acc, /** @type {{ semester: { id: string | number; }; }} */ course) => {
-			if (!acc[course.semester.id]) {
-				acc[course.semester.id] = [];
-			}
-			acc[course.semester.id].push(course);
-			return acc;
-		}, {});
+
+			
+		courseBySemester = await coursesPerSemester(subjects);
 
 
-
-		let averages = {};
+		let averages: { [key: string]: string } = {};
 
 		// find average for each semester
 		for (const semester in courseBySemester) {
@@ -32,7 +26,7 @@ export async function averagesPerSemester(subjectsJSON = null) {
 			
 			
 			for (const course of courseBySemester[semester]) {
-				if (course.isPassed && course.calculateUnits == 1) {
+				if (course.isPassed && course.calculateUnits) {
 					sum += course.grade;
 					count++;
 				}
