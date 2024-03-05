@@ -1,7 +1,6 @@
 import { App as capacitorApp } from '@capacitor/app';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
-import { NavigationBar } from '@capgo/capacitor-navigation-bar';
 
 export function nativeSettings() {
     /* Capacitor back button handling */
@@ -19,6 +18,5 @@ export function nativeSettings() {
 
     if (Capacitor.getPlatform() === 'android') {
         StatusBar.setBackgroundColor({color: '#FCFCFC'});
-        NavigationBar.setNavigationBarColor({color: '#FCFCFC'});
     }
 }
