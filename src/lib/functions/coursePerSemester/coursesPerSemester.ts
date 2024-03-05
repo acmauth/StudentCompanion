@@ -1,5 +1,5 @@
 import { neoUniversisGet } from '$lib/dataService';
-import {course} from '$lib/types/courseType';
+import type {course} from '$lib/types/courseType';
 
 // returns the courses by each semester
 export async function coursesPerSemester(subjectsJSON: course[] | null | undefined = null) {

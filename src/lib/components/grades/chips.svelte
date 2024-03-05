@@ -38,7 +38,7 @@
 	    </ion-chip>
 		{:else}
 		<ion-chip on:click={handleClick(id)} color="primary">
-	        <ion-label>{courses[id-1].semester.name}</ion-label>
+	        <ion-label>{courses[0].semester.name}</ion-label>
 	    </ion-chip>
 		{/if}
 	{/each}
