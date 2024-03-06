@@ -7,9 +7,6 @@
 	import Chip from "$components/shared/chip.svelte";
 
 
-
-
-
 	/**
 	 * @type {any}
 	 */
@@ -91,13 +88,12 @@
 
 
 
-	onMount(() => {
+	 onMount(async () => {
+       await gatherData();
+    });
 
-		gatherData();
 
-	});
-
-	afterUpdate(() => {
+	afterUpdate( () => {
 		if (chart) {
 			chart.destroy();
 		}
@@ -140,19 +136,20 @@
 						text: 'Εξέλιξη Μέσου όρου',
 						font: {
 							size: 15
-						}
-					}
+						},
+						color: primaryColor
+					},
+					
 				},
 			},
 		});
 	}
 
 	});
-
 	
+
 </script>
 
-{#if !searchQuery.length}
 <ion-card class="ion-text-center ion-padding-vertical stats">
 	<ion-card-header>
 		<ion-card-subtitle>
@@ -187,13 +184,15 @@
 				</ion-text>
 			</ion-item>
 
-			
-			<canvas id="gradeChart"></canvas>
+
+			<canvas id="gradeChart" />
+
+
+
 
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<Chip chipIcon ={allIonicIcons.calculator} text="Πρόβλεψη Μ.Ο." flip = {flip} />
-
 
 
 		</ion-list>
@@ -202,7 +201,6 @@
 		
 	
 </ion-card>
-{/if}
 
 <style>
 

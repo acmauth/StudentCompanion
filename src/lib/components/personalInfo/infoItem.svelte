@@ -26,6 +26,10 @@
 	 * @type {any}
 	 */
 	 export let aem;
+	 /**
+	 * @type {any}
+	 */
+	 export let apm;
 	/**
 	 * @type {any}
 	 */
@@ -84,6 +88,14 @@
 			</ion-item>
 			{/if}
 
+			{#if apm}
+			<ion-item>
+				<ion-icon size="small" icon={allIonicIcons.idCard} />
+
+				<ion-label class="ion-padding-start">{apm}</ion-label>
+			</ion-item>
+			{/if}
+
 			{#if birthDate}
 			<ion-item>
 				<ion-icon size="small" icon={allIonicIcons.calendar} />
@@ -139,7 +151,7 @@
 	}
 
 	ion-icon {
-		color: var(--ion-color-primary);
+		color: var(--app-color-primary-dark);
 	}
 
 

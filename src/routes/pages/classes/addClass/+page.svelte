@@ -88,7 +88,7 @@
         />
         
         <ion-input			
-            placeholder="Κύριος Ξερώλας"
+            placeholder="Κύριος Ξερόλας"
             label="Διδάσκων"
             label-placement="stacked"
             id="professor"

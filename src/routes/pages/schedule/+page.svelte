@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ClassItemFlat } from '$lib/components/schedule/class/ClassItem';
-    import {add, bookOutline, createOutline, schoolOutline} from 'ionicons/icons';
+    import {add, bookOutline, calendar, calendarClearOutline, createOutline, ellipsisHorizontalOutline, reload, reloadCircle, reloadOutline, schoolOutline} from 'ionicons/icons';
     import { Capacitor } from '@capacitor/core';
     import ClassCard from '$components/schedule/class/classCard.svelte';
     import { universisGet } from '$lib/dataService';
@@ -40,17 +40,20 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-fab horizontal="start" vertical="bottom">
-    <ion-fab-button href="/pages/tasks" color="secondary">
-        <ion-icon icon={createOutline} />
-    </ion-fab-button>
-</ion-fab>
-
 <ion-fab horizontal="end" vertical="bottom">
-    <ion-fab-button href="/pages/exams" color="primary">
-        <ion-icon icon={schoolOutline} />
+    <ion-fab-button color="light">
+       <ion-icon icon={ellipsisHorizontalOutline} />
     </ion-fab-button>
-</ion-fab>
+    <ion-fab-list side="top">
+       <ion-fab-button color="primary" href="/pages/tasks" data-desc="Συμβάντα">
+          <ion-icon icon={createOutline} />
+       </ion-fab-button>
+       <ion-fab-button color="secondary" href="/pages/exams" data-desc="Εξετάσεις">
+          <ion-icon icon={schoolOutline} />
+       </ion-fab-button>
+    </ion-fab-list>
+ </ion-fab>
+
 
 <ion-tab tab="schedule"></ion-tab>
 
@@ -80,13 +83,14 @@
     </ion-row>
 </ion-content>
 
+
 <style>
     ion-segment-button {
         --color-checked: var(--ion-color-primary);
-    }
 
-    ion-segment-button::part(indicator-background) {
-        background: var(--ion-color-primary);
+        &::part(indicator-background) {
+            background: var(--ion-color-primary);
+        }
     }
 
     ion-segment {
@@ -104,5 +108,20 @@
         justify-content: center;
         align-items: center;
     }
-</style>
+    
+    ion-fab-button[data-desc] {
+        position: relative;
+    }
 
+    ion-fab-button[data-desc]::after {
+        position: absolute;
+        content: attr(data-desc);
+        z-index: 1;
+        right: 40px;
+        bottom: 4px;
+        padding: 9px;
+        border-radius: 15px;
+        color: var(--ion-color-dark);
+        text-align: end;
+    }
+</style>

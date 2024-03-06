@@ -60,9 +60,9 @@ async function getElearningNotifications(refresh: boolean = false) {
             }
         }
     ];
-    
-    const response_Read = await neoElearningGet(body_Read, {forceFresh: refresh});
-    const response_Unread = await neoElearningGet(body_Unread, {forceFresh: refresh});
+    const options = {forceFresh: refresh, lifetime: 60 * 15}
+    const response_Read = await neoElearningGet(body_Read, options);
+    const response_Unread = await neoElearningGet(body_Unread, options);
 
     let messages: elearningMessages;
 
@@ -93,7 +93,8 @@ async function getElearningNotifications(refresh: boolean = false) {
 }
 
 async function getUniversisNotifications(refresh: boolean = false) {
-    let messages: messages = await neoUniversisGet("students/me/messages?$top=3", {forceFresh: refresh});//&$filter=dateReceived eq null");
+    const options = {forceFresh: refresh, lifetime: 60 * 60 * 24}
+    let messages: messages = await neoUniversisGet("students/me/messages?$top=3", options);//&$filter=dateReceived eq null");
     
 
     let cleanMessages = messages.value.map((message) => {

@@ -1,20 +1,33 @@
-<script lang="ts">
+
+
+<script lang='ts'>
+
 	import AppCard from '$shared/AppCard.svelte';
 	import AppletsSlides from './appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
+	import { wallet } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
 	import RecentGrades from '$components/recentGrades/recentGrades.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import AnnouncementBanner from '$shared/announcementBanner.svelte';
+
 	import { goto } from '$app/navigation';
+
+	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
+	import QRGenerator from '$lib/components/wallet/QRGenerator.svelte';
+    import { qrStore } from '$lib/components/wallet/qrStore';
+    import type { qrItem } from '$lib/components/wallet/qrItem';
+	import { onMount } from 'svelte';
 
 	let givenName = '';
 	let gender = '';
 	let numPassedSubjects = 0;
 	let numSubjects = 0;
 	let average = 0;
+	
+	let modalOpen = false;
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet('Students/me/');
@@ -49,6 +62,15 @@
 			}
 		});
 	}
+
+	function addQR() {
+		let qrCode = document.querySelector('ion-input');
+		if (!qrCode || qrCode.value === '') return;
+
+		const newQR: qrItem = { data: String(qrCode.value), title: 'Πάσο' };
+		$qrStore = $qrStore.concat(newQR);
+	}
+
 </script>
 
 <ion-tab tab="homepage">
@@ -81,9 +103,52 @@
 					{/if}
 					<div>
 						<h5 class="h5">Γεια σου</h5>
-						<h5 class="h5"><b>{givenName}!</b></h5>
+						<h5 class="h5"><b>{getVocativeCase(givenName)}!</b></h5>
 					</div>
 				</div>
+
+				<div class="student-id" on:click={() => {modalOpen = true;}}>
+					<AppCard margin={false} shadow={true} >
+						<div style="background-color: #f3faff">
+							<ion-icon class="id-icon" icon={wallet} />
+						</div>
+					</AppCard>
+				</div>
+
+				<ion-modal
+					is-open={modalOpen}
+					initial-breakpoint={$qrStore.length > 0? 0.3 : 0.2}
+					on:ionModalDidDismiss={() => {modalOpen = false;}}
+					breakpoints={[0, 0.1, 0.2, 0.3, 0.5]}>
+					<ion-content>
+						<ion-grid>
+							{#if $qrStore.length == 0}
+								<ion-col style="display: flex; justify-content: center; margin: 30px;">
+									<ion-input placeholder="Κωδικός QR πάσου" type="number"/>
+									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary"
+												on:ionFocus={addQR}>Προσθήκη</ion-button>
+								</ion-col>
+							
+							<!-- Uncomment if adding gym pass/id is implemented -->
+						
+							<!-- {:else if $qrStore.length == 1}
+								<ion-col>
+									<QRGenerator qr1={$qrStore[0]}/>
+								</ion-col>
+								<ion-col style="display: flex; justify-content: center;">
+									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary">QR</ion-button>
+								</ion-col> -->
+							{:else}
+								{#each $qrStore as item}	
+									<ion-col>
+										<QRGenerator qr1={item}/>
+									</ion-col>
+								{/each}
+							{/if}
+						</ion-grid>
+					</ion-content>
+				</ion-modal>
+
 			</div>
 			<div class="card-container">
 				<AppCard colour="primary" margin={false} href="/pages/grades">
@@ -223,5 +288,11 @@
 		margin-top: 2rem;
 		margin-bottom: 0;
 		font-size: 0.8rem;
+	}
+
+	ion-grid {
+		display: flex;
+		justify-content: center;
+		align-items: center; 
 	}
 </style>

@@ -152,7 +152,11 @@
 
 				<ion-item lines ="full">
 					<ion-label>Εξάμηνο</ion-label>
+					{#if course.semester <= 24}
 					<ion-text slot="end">{course.semester}ο</ion-text>
+					{:else}
+					<ion-text slot="end">{course.season}</ion-text>
+					{/if}
 				</ion-item>
 				<ion-item lines ="full">
 					<ion-label>Περίοδος</ion-label>
@@ -231,6 +235,7 @@
 				</ion-item>
 			</ion-list>
 		{/if}
+	
 		<canvas id="gradeChart" />
 	</ion-card-content>
 	</ion-card>
