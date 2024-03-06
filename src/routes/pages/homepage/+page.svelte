@@ -6,7 +6,7 @@
 	import man from '$lib/assets/man.png';
 	import { wallet } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
-	import RecentGrades from '$components/recentGrades/recentGrades.svelte';
+	import RecentGrades from '$components/recentResults/recentResults.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import AnnouncementBanner from '$shared/announcementBanner.svelte';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';

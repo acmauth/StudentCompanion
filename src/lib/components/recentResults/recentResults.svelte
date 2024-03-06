@@ -1,11 +1,17 @@
 <script>
+    // @ts-ignore
 
     import { onMount } from "svelte";
     import { universisGet } from "$lib/dataService";
-    import GradeCard from "$components/recentGrades/recentGradesCard.svelte";
-    import { dismissedGrades } from "$components/recentGrades/dismissedGrades";
+    import { dismissedGrades } from "$components/recentResults/dismissedGrades";
     import { refresh } from "ionicons/icons";
+    import { gatherNotifications } from '../../../routes/pages/notifications/notifications';
+    import SwipeCard from "$components/recentResults/swipeCard.svelte";
+    import RecentGrades from "$components/recentResults/recentGrades.svelte";
 
+    /**
+	 * @type {any[]}
+	 */
     let examPeriod = [];
     /**
 	 * @type {any[]}
@@ -23,30 +29,41 @@
 	 * @type {any[]}
 	 */
     let recentlyDismissedGrades = [];
+    /**
+	 * @type {any[]}
+	 */
+    let notifications = [];
 
     // Subscribe to changes in dismissedGrades
     const unsubscribe = dismissedGrades.subscribe(value => {
         grades = value;
     });   
 
-    // Adding the grade from the deleted cards
+    /**
+     * Adding the course to the dismissed grades
+	 * @param {any} id
+	 */
     function addToDismissedGrades(id){
         dismissedGrades.update(ids => [...ids, id]);
         recentlyDismissedGrades = [...recentlyDismissedGrades, id];
     }
 
+    /**
+     * Removing the course from the dismissed grades
+	 * @param {any} id
+	 */
     function removeFromDismissedGrades(id){
         dismissedGrades.update(grades => grades.filter(grade => grade !== id));
-    }
-    function emptyDismissedGrades(){
-        dismissedGrades.update(grades => grades.filter(grade => false));
     }
 
 
     onMount(async () => {
+        notifications = await gatherNotifications();
+
         // getting the current period and year 
         examPeriod = (await universisGet("students/me/department?$expand=departmentConfiguration($expand=examYear,examPeriod)&$top=1&$skip=0&$count=false"));
 
+        // exam periods: 1-2 winter, 3-4 sprint, 5-6 september
         let currentPeriod = examPeriod.currentPeriod;
         if (currentPeriod === 2) currentPeriod = 1;
         if (currentPeriod === 4) currentPeriod = 3;
@@ -62,7 +79,7 @@
             let lastPeriod;
             let lastYear;
 
-            // exam periods: 1-2 winter, 3-4 sprint, 5-6 september
+            // switch to the previous exam period
             switch (currentPeriod){
                 case 1:
                     lastPeriod = 5;
@@ -80,6 +97,7 @@
 
             // getting recent grades from the previous period
             recentGrades = (await universisGet('students/me/grades?$filter=courseExam/year eq ' + lastYear + ' and courseExam/examPeriod eq ' + lastPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
+            
             allRecentGrades = [...recentGrades];
         }
 
@@ -89,12 +107,10 @@
                 recentGrades = recentGrades.filter((grade) => grade.courseExam.id !== recentGrade.courseExam.id);
             }
         }
-    
-
     });       
 
     // remove card when swipped
-    const deleteCard = (id) => {
+    const deleteCard = (/** @type {{ detail: number; }} */ id) => {
         const examId = id.detail;
         recentGrades = recentGrades.filter((course) => course.courseExam.id !== examId);
         addToDismissedGrades(examId);
@@ -106,7 +122,6 @@
         removeFromDismissedGrades(id);
         for (const recentGrade of allRecentGrades){
             if (id === recentGrade.courseExam.id){
-                // recentGrades.push(recentGrade);
                 recentGrades = [...recentGrades, recentGrade];
                 let temp = [];     
                 for (const grade of allRecentGrades){
@@ -125,15 +140,14 @@
 <div class="recentGrades ion-padding">
 
     {#if recentGrades.length === 0}
-        <ion-card>
-            <ion-card-content>
-                    <p>Δεν υπάρχουν πρόσφατες βαθμολογίες</p>
-            </ion-card-content>
-        </ion-card>
+            <p>Δεν υπάρχουν πρόσφατες αποτελέσματα</p>
+    {:else}
+        {#each recentGrades as recentGrade } 
+                <SwipeCard id={recentGrade.courseExam.id} on:delete-card={deleteCard} > 
+                    <RecentGrades subject={recentGrade}/>
+                </SwipeCard>
+        {/each}
     {/if}
-    {#each recentGrades as recentGrade } 
-        <GradeCard subject = {recentGrade} on:delete-card={deleteCard}/>
-    {/each}
 
     <div class="button-container">
         {#if recentlyDismissedGrades.length > 0}
