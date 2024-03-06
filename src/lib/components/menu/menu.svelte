@@ -1,15 +1,12 @@
-<script>
+<script lang="ts">
 	import IonPage from 'ionic-svelte/components/IonPage.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
-	import { onMount } from 'svelte';
 	const isProduction = process.env.NODE_ENV === 'production';
 	import { getMenu } from '$lib/menuScrapper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
-	/**
-	 * @type {any[]}
-	 */
-	let cafeteriaData = [];
+
+	let cafeteriaData: string | any[] = [];
 
 	const date = new Date();
 	let today = date.getDay();
@@ -44,14 +41,13 @@
 		if (!isProduction) {
 			const response = await fetch('/menu', { method: 'GET' });
 			if (response.ok) {
-				// cafeteriaData = await response.json();
 				const jsonStr = await response.text(); // Get the JSON string
 				cafeteriaData = JSON.parse(jsonStr); // Parse the JSON string into an array
 			} else {
 				console.error('Error fetching cafeteria data:', response.statusText);
 			}
 		} else {
-			cafeteriaData = await getMenu();
+			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
 		}
 	}
 </script>
@@ -63,10 +59,14 @@
 			<MenuSkeleton />
 		{:then}
 			<div class="ion-text-center">
-				<ion-chip {color}><ion-icon icon={allIonicIcons.timeOutline} /> &nbsp; {message}</ion-chip>
+				<ion-chip class="ion-padding" {color}
+					><ion-icon icon={allIonicIcons.timeOutline} /> &nbsp; {message}</ion-chip
+				>
 			</div>
 
-			<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> Σημερινό Μενού</h1>
+			<h1 class="ion-padding">
+				<ion-icon icon={allIonicIcons.restaurantOutline} /> Σημερινό Μενού
+			</h1>
 			<ion-card color="light">
 				<ion-card-content>
 					<div>{@html cafeteriaData[today]}</div>
@@ -75,7 +75,9 @@
 
 			&nbsp;
 
-			<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> Το Μενού της Εβδομάδας</h1>
+			<h1 class="ion-padding">
+				<ion-icon icon={allIonicIcons.restaurantOutline} /> Το Μενού της Εβδομάδας
+			</h1>
 			<ion-accordion-group expand="inset">
 				<ion-accordion value="first">
 					<ion-item slot="header" color="light">

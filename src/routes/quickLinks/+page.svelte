@@ -1,14 +1,19 @@
-<script>
+<script lang="ts">
 	import LinkCard from '$components/quickLinks/linkCard.svelte';
-	import { Capacitor } from '@capacitor/core';
 	import { onMount } from 'svelte';
 	import { universisGet } from '$lib/dataService';
-	import restaurant from '$lib/assets/restaurant.png';
-	import sportsfitness from '$lib/assets/sportsfitness.png';
-	import departmentLogo from '$lib/assets/departmentLogo.png';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
+	import departmentLogo from '$lib/assets/departmentLogo.png';
+	import authLogo from '$lib/assets/authLogo.png';
+	import elearningLogo from '$lib/assets/elearningLogo.png';
+	import webmailLogo from '$lib/assets/webmailLogo.png';
+	import itLogo from '$lib/assets/itLogo.png';
+	import sisLogo from '$lib/assets/sisLogo.png';
+	import eudoxusLogo from '$lib/assets/eudoxusLogo.png';
+	import restaurantLogo from '$lib/assets/restaurantLogo.png';
+	import gymLogo from '$lib/assets/gymLogo.png';
 
-	let department = '';
+	let department: any;
 	let departmentName = '';
 	let departmentURL = '';
 
@@ -16,51 +21,48 @@
 		{
 			linktitle: 'Ιστότοπος ΑΠΘ',
 			linkaddress: 'https://www.auth.gr',
-			imagelink: 'https://www.auth.gr/wp-content/uploads/LogoAUTH300ppi.png'
+			imagelink: authLogo
 		},
 		{
 			linktitle: 'eLearning',
 			linkaddress: 'https://elearning.auth.gr',
-			imagelink:
-				'https://elearning.auth.gr/pluginfile.php/2374889/block_html/content/elearning-59F.png'
+			imagelink: elearningLogo
 		},
 		{
 			linktitle: 'Ηλεκτρονικό Ταχυδρομείο',
 			linkaddress: 'https://webmail.auth.gr',
-			imagelink: 'https://it.auth.gr/wp-content/uploads/2022/01/mail59F-2.png'
+			imagelink: webmailLogo
 		},
 		{
 			linktitle: 'Κέντρο Ηλεκτρονικής Διακυβέρνησης',
 			linkaddress: 'https://it.auth.gr',
-			imagelink: 'https://it.auth.gr/wp-content/uploads/2023/10/it-auth-logo.png'
+			imagelink: itLogo
 		},
 		{
 			linktitle: 'Ηλεκτρονική Γραμματεία Φοιτητών',
 			linkaddress: 'https://students.auth.gr',
-			imagelink: 'https://sis.auth.gr/assets/sis-128.png'
+			imagelink: sisLogo
 		},
 		{
 			linktitle: 'Εύδοξος',
 			linkaddress: 'http://eudoxus.gr',
-			imagelink: 'https://service.eudoxus.gr/search/images/eudoxus-logo.png'
+			imagelink: eudoxusLogo
 		},
 		{
 			linktitle: 'Φοιτητική Λέσχη',
 			linkaddress: 'http://www.pfl.auth.gr',
-			imagelink: restaurant
+			imagelink: restaurantLogo
 		},
 		{
 			linktitle: 'Πανεπιστημιακό Γυμναστήριο',
 			linkaddress: 'https://gym.auth.gr',
-			imagelink: sportsfitness
+			imagelink: gymLogo
 		}
 	];
 
 	onMount(async () => {
 		department = await universisGet('Students/me/department');
-		// @ts-ignore
 		departmentName = department.name;
-		// @ts-ignore
 		departmentURL = department.url;
 		links = [
 			{ linktitle: departmentName, linkaddress: departmentURL, imagelink: departmentLogo },

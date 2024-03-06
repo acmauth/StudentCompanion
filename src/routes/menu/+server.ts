@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
 import axios from 'axios';
 import cheerio from 'cheerio';
@@ -7,16 +6,15 @@ import cheerio from 'cheerio';
 let scrapedHTML: Array<string> = []; // Initialize the array
 export const GET: RequestHandler = async ({ url }) => {
     try {
-        // data = ... 
+        // data = ...
         // getting the data from the cafeteria website
         const response = await axios.get('https://www.auth.gr/weekly-menu/');
         const htmlContent = response.data;
         const $ = cheerio.load(htmlContent);
 
-        const days = $('.kt-blocks-accordion-title');
         const dailyMenus = $('.kt-accordion-panel-inner');
         dailyMenus.each(function (idx, el) {
-            scrapedHTML[idx] = $(el).html();
+            scrapedHTML[idx] = $(el).html() as string;
         });
 
     } catch (error) {

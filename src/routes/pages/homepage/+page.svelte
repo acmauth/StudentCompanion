@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import AppCard from '$shared/AppCard.svelte';
 	import AppletsSlides from './appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
@@ -12,39 +12,40 @@
 
 	let givenName = '';
 	let gender = '';
-	let passedSubjects = 0;
-	let subjects = 0;
+	let numPassedSubjects = 0;
+	let numSubjects = 0;
 	let average = 0;
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet('Students/me/');
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
-		subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
-		// @ts-ignore
-		passedSubjects = subjects.filter(
-			(/** @type {{ grade: number; }} */ course) => course.grade * 10 >= 5
+		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
+
+		let passedSubjects = subjects.filter(
+			(/** @type {{ grade: number; }} */ course: { grade: number }) => course.grade * 10 >= 5
 		);
-		// @ts-ignore
-		subjects = subjects.length;
-		// @ts-ignore
-		passedSubjects = passedSubjects.length;
+
+		numSubjects = subjects.length;
+
+		numPassedSubjects = passedSubjects.length;
 
 		averages().then((result) => {
-			average = result.weighted_avg;
+			average = (result as { weighted_avg: number }).weighted_avg;
 
-			// onMount(async () => {
 			let progressBarCourses = document.querySelector('.progress-courses');
 			let progressCourses = 0;
-			while (progressCourses < passedSubjects / subjects) {
-				progressCourses += 0.01;
-				progressBarCourses.value = progressCourses;
+			while (progressCourses < numPassedSubjects / numSubjects) {
+				if (progressBarCourses) {
+					(progressBarCourses as HTMLIonProgressBarElement).value = progressCourses += 0.01;
+				}
 			}
 			let progressBarAvg = document.querySelector('.progress-avg');
 			let progressAvg = 0;
 			while (progressAvg < average / 10) {
-				progressAvg += 0.01;
-				progressBarAvg.value = progressAvg;
+				if (progressBarAvg) {
+					(progressBarAvg as HTMLIonProgressBarElement).value = progressAvg += 0.01;
+				}
 			}
 		});
 	}
@@ -87,7 +88,7 @@
 			<div class="card-container">
 				<AppCard colour="primary" margin={false} href="/pages/grades">
 					<div class="courses-passed">
-						<ion-card-title><b> {passedSubjects}/{subjects} </b></ion-card-title>
+						<ion-card-title><b> {numPassedSubjects}/{numSubjects} </b></ion-card-title>
 						<ion-card-subtitle>Περασμένα</ion-card-subtitle>
 
 						<ion-progress-bar class="progress-courses" />
