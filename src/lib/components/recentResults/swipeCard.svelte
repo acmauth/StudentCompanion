@@ -26,8 +26,8 @@
       dispatch("delete-card", id);
     };
   
-    // event that happens when the user touches a card
     /**
+   * event that happens when the user touches a card
 	 * @param {{ touches: { clientX: any; }[]; }} event
 	 */
     function handleTouchStart(event) {
@@ -35,8 +35,8 @@
       card.style.transition = "none";
     }
   
-    // swipe motion when user moves the card
-    /**
+  /**
+   * swipe motion when user moves the card
 	 * @param {{ touches: { clientX: any; }[]; }} event
 	 */
     function handleTouchMove(event) {
@@ -46,8 +46,8 @@
       card.style.transform = `translateX(${deltaX}px)`;
     }
   
-    // delete the card after the card crosses a certain point left or right
-    /**
+  /**
+   * delete the card after the card crosses a certain point left or right
 	 * @param {{ changedTouches: { clientX: any; }[]; }} event
 	 */
     function handleTouchEnd(event) {

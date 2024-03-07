@@ -1,13 +1,14 @@
 <script lang="ts">
     import { Capacitor } from '@capacitor/core';
     import Chips from './chips.svelte';
-    import { gatherNotifications } from './notifications';
-    import Notification from './notification.svelte';
+    import { gatherNotifications } from '../../../lib/components/notifications/notifications';
+    import Notification from '../../../lib/components/notifications/notification.svelte';
     import { toggles } from './notificationToggles';
     import { flip } from "svelte/animate";
     import { quintOut } from 'svelte/easing';
     import NotifSkeleton from './notifSkeleton.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
+	import AppCard from '$components/shared/AppCard.svelte';
 
     let refresher: HTMLIonRefresherElement;
     let notificationsPromise = gatherNotifications();
@@ -52,7 +53,9 @@
             {#each notifications as notification (notification.id)}
                 <div animate:flip={{ duration: 500, easing: quintOut }}>
                     {#if $toggles.all || ($toggles.universis && notification.type === 'universis') || ($toggles.elearning && notification.type === 'elearning') || ($toggles.elSystem && notification.type === 'system')}
-                        <Notification {notification}/>
+                        <AppCard padding>
+                            <Notification {notification}/>
+                        </AppCard>
                     {/if}
                 </div>    
             {/each}
