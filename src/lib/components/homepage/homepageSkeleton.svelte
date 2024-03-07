@@ -13,9 +13,9 @@
 			<ion-skeleton-text animated style="width: 70%;" />
 		</h5>
 	</ion-label>
-	<!-- <ion-thumbnail slot="end">
+	<ion-thumbnail slot="end">
 		<ion-skeleton-text animated />
-	</ion-thumbnail> -->
+	</ion-thumbnail>
 </ion-item>
 <div style="margin:1rem; display: grid; grid-template-columns: 1.5fr 1fr; height:6rem">
 	<ion-card>

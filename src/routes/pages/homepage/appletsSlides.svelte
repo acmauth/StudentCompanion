@@ -3,7 +3,6 @@
 	import { fastFood, map, link } from 'ionicons/icons';
 </script>
 
-
 <ion-content
 	scroll-x={true}
 	scroll-y={false}
@@ -75,15 +74,6 @@
 		width: max-content;
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
-	}
-
-	.scrollingApplets {
-		/* --offset-bottom: 0.5rem!important;
-        --overflow: scroll-x!important;
-        overflow: auto;
-        &::-webkit-scrollbar {
-            display: none;
-        } */
 	}
 
 	.appletcontent {

@@ -1,8 +1,7 @@
-import { error } from '@sveltejs/kit';
 import axios from 'axios';
 import cheerio from 'cheerio';
 
-export async function getMenu(){
+export async function getMenu() {
     let scrapedHTML: Array<string> = []; // Initialize the array
     try {
         // data = ... 
@@ -11,13 +10,11 @@ export async function getMenu(){
         const htmlContent = response.data;
         const $ = cheerio.load(htmlContent);
 
-        const days = $('.kt-blocks-accordion-title');
         const dailyMenus = $('.kt-accordion-panel-inner');
         dailyMenus.each(function (idx, el) {
-            scrapedHTML[idx] = $(el).html();
+            scrapedHTML[idx] = $(el).html() ?? '';
         });
-        console.log(scrapedHTML);
-        
+
         return scrapedHTML;
 
     } catch (error) {

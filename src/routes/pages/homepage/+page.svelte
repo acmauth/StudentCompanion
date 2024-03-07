@@ -1,4 +1,7 @@
+
+
 <script lang='ts'>
+
 	import AppCard from '$shared/AppCard.svelte';
 	import AppletsSlides from './appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
@@ -9,6 +12,9 @@
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import AnnouncementBanner from '$shared/announcementBanner.svelte';
+
+	import { goto } from '$app/navigation';
+
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
 	import QRGenerator from '$lib/components/wallet/QRGenerator.svelte';
     import { qrStore } from '$lib/components/wallet/qrStore';
@@ -17,8 +23,8 @@
 
 	let givenName = '';
 	let gender = '';
-	let passedSubjects = 0;
-	let subjects = 0;
+	let numPassedSubjects = 0;
+	let numSubjects = 0;
 	let average = 0;
 	
 	let modalOpen = false;
@@ -27,27 +33,32 @@
 		let personalData = await neoUniversisGet('Students/me/');
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
-		subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
-		// @ts-ignore
-		passedSubjects = subjects.filter(
-			(/** @type {{ grade: number; }} */ course) => course.grade * 10 >= 5
-		);
-		averages().then((result) => {
-			average = result.weighted_avg;
-			let progressAvg = 0;
-			let progressBarAvg = document.querySelector('.progress-avg');
-			while (progressAvg < average / 10) {
-				progressBarAvg.value = progressAvg += 0.01;
-			}
-			// @ts-ignore
-			subjects = subjects.length;
-			// @ts-ignore
-			passedSubjects = passedSubjects.length;
+		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
 
-			let progressCourses = 0;
+		let passedSubjects = subjects.filter(
+			(/** @type {{ grade: number; }} */ course: { grade: number }) => course.grade * 10 >= 5
+		);
+
+		numSubjects = subjects.length;
+
+		numPassedSubjects = passedSubjects.length;
+
+		averages().then((result) => {
+			average = (result as { weighted_avg: number }).weighted_avg;
+
 			let progressBarCourses = document.querySelector('.progress-courses');
-			while (progressCourses < passedSubjects / subjects) {
-				progressBarCourses.value = progressCourses += 0.01;
+			let progressCourses = 0;
+			while (progressCourses < numPassedSubjects / numSubjects) {
+				if (progressBarCourses) {
+					(progressBarCourses as HTMLIonProgressBarElement).value = progressCourses += 0.01;
+				}
+			}
+			let progressBarAvg = document.querySelector('.progress-avg');
+			let progressAvg = 0;
+			while (progressAvg < average / 10) {
+				if (progressBarAvg) {
+					(progressBarAvg as HTMLIonProgressBarElement).value = progressAvg += 0.01;
+				}
 			}
 		});
 	}
@@ -82,7 +93,9 @@
 				</ion-text>
 			</AnnouncementBanner>
 			<div class="info-container">
-				<div class="Person-tag">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div class="Person-tag" on:click={() => goto('/pages/personalInfo')}>
 					{#if gender === 'Α'}
 						<img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
 					{:else}
@@ -140,7 +153,7 @@
 			<div class="card-container">
 				<AppCard colour="primary" margin={false} href="/pages/grades">
 					<div class="courses-passed">
-						<ion-card-title><b> {passedSubjects}/{subjects} </b></ion-card-title>
+						<ion-card-title><b> {numPassedSubjects}/{numSubjects} </b></ion-card-title>
 						<ion-card-subtitle>Περασμένα</ion-card-subtitle>
 
 						<ion-progress-bar class="progress-courses" />
