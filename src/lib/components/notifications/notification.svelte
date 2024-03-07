@@ -18,30 +18,31 @@
         var interval = seconds / 31536000;
       
         if (interval > 1) {
-          return Math.floor(interval) + " years";
+          return Math.floor(interval) + " χρόνια";
         }
         interval = seconds / 2592000;
         if (interval > 1) {
-          return Math.floor(interval) + " months";
+          return Math.floor(interval) + " μήνες";
         }
         interval = seconds / 86400;
         if (interval > 1) {
-          return Math.floor(interval) + " days";
+          return Math.floor(interval) + " μέρες";
         }
         interval = seconds / 3600;
         if (interval > 1) {
-          return Math.floor(interval) + " hours";
+          return Math.floor(interval) + " ώρες";
         }
         interval = seconds / 60;
         if (interval > 1) {
-          return Math.floor(interval) + " minutes";
+          return Math.floor(interval) + " λεπτά";
         }
-        return Math.floor(seconds) + " seconds";
+        return Math.floor(seconds) + " δευτερόλεπτα";
       
     }
 </script>
 
-<AppCard onClick={() => {inlineModalOpen = true}} class="ion-padding">
+
+<div aria-hidden on:click ={() => {inlineModalOpen = true}} class="card-link">
     <div class="top">
             <img alt="Service logo" src={notification.type == "universis" ? universisLogo : elearningLogo} />
             
@@ -50,10 +51,10 @@
     <ion-item lines="none" class="ion-no-padding">
         <ion-label>
             <h2>{notification.subject}</h2>
-            <p>{notification.body}</p>
         </ion-label>
     </ion-item>
-</AppCard>
+</div>
+
 
 <ion-modal
       is-open={inlineModalOpen}
@@ -132,5 +133,9 @@
         .top img {
             object-fit: contain;
             height: 100%;
+        }
+
+        .card-link {
+            text-decoration: none;
         }
 </style>
