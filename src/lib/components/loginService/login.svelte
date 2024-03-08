@@ -64,20 +64,21 @@
         <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked={true}> 
             <ion-label class="custom" style="font-size:small;">Διατήρηση σύνδεσης</ion-label>
         </ion-checkbox>
-    </div>
-</ion-content>   
 
-<ion-footer>
-    <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
-</ion-footer>
+        <div class="footer">
+            <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
+        </div>
+    </div>
+
+</ion-content>   
   
 <style>
-    ion-footer {
+    .footer {
         display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
-        box-shadow: none;
+        padding-top: 35px;
     }
 
     ion-input.custom {

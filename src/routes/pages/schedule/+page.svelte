@@ -6,6 +6,7 @@
     import { universisGet } from '$lib/dataService';
     import { getDayByIndex, getDayIndex, weekdays } from "$lib/components/schedule/day/days";
     import { classStore } from '$components/schedule/class/classStore';
+    import { swipe } from 'svelte-gestures';
 
     // Clear class store
     // $classStore = [];
@@ -26,6 +27,14 @@
         }))).filter(slot => slot.day === (weekdays.findIndex((day) => Object.keys(day)[0] === activeDay))).sort((a, b) => a.startTime.localeCompare(b.startTime));
 
     // classes = (await universisGet('students/me/teachingEvents?$expand=location,performer&$filter=startDate ne null&$top=-1&$orderby=startDate')).value;
+
+    function handler(event) {
+        let direction = event.detail.direction;
+        if (direction == "right")
+            activeDay = getDayByIndex(getDayIndex(activeDay) + 1).toLowerCase();
+        else if (direction == "left")
+            activeDay = getDayByIndex(getDayIndex(activeDay) - 1).toLowerCase();
+    }
 
 </script>
 
@@ -69,18 +78,20 @@
             {/each}
     </div>
 
-    <ion-grid style="padding: 0%">
-        {#each currentClasses as courseClass}
-            <ClassCard classItem={courseClass} />
-        {/each}
-    </ion-grid>
+    <div use:swipe={{ timeframe: 300, minSwipeDistance: 100, touchAction: 'pan-y' }} on:swipe={handler} style="width:500px;height:500px;border:1px;">
+        <ion-grid style="padding: 0%">
+            {#each currentClasses as courseClass}
+                <ClassCard classItem={courseClass} />
+            {/each}
+        </ion-grid>
 
-    <ion-row class="custom-center-label">
-        {#if currentClasses.length === 0}
-            <ion-icon icon={bookOutline} size="large" style="padding: 15px"></ion-icon>
-            <ion-label>Δεν υπάρχουν προγραμματισμένα μαθήματα αυτή τη μέρα.</ion-label>
-        {/if}
-    </ion-row>
+        <ion-row class="custom-center-label">
+            {#if currentClasses.length === 0}
+                <ion-icon icon={bookOutline} size="large" style="padding: 15px"></ion-icon>
+                <ion-label>Δεν υπάρχουν προγραμματισμένα μαθήματα αυτή τη μέρα.</ion-label>
+            {/if}
+        </ion-row>
+    </div>
 </ion-content>
 
 
