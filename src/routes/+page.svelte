@@ -16,7 +16,7 @@
 
 	// Handling the redirect to the homepage
 	onMount(async () => {
-		await delay(2000);
+		await delay(1000);
 		if (await judgeAuth()) {
 			await preFlightCache();
 			goto('pages/homepage');
