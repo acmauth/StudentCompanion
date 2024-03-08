@@ -31,9 +31,9 @@
     function handler(event) {
         let direction = event.detail.direction;
         if (direction == "right")
-            activeDay = getDayByIndex(getDayIndex(activeDay) + 1).toLowerCase();
-        else if (direction == "left")
             activeDay = getDayByIndex(getDayIndex(activeDay) - 1).toLowerCase();
+        else if (direction == "left")
+            activeDay = getDayByIndex(getDayIndex(activeDay) + 1).toLowerCase();
     }
 
 </script>
