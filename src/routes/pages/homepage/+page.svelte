@@ -71,6 +71,23 @@
 		$qrStore = $qrStore.concat(newQR);
 	}
 
+	// Define a reactive variable to control focus behavior of QR Code input element
+	let shouldFocus = false;
+
+	$: {
+		if (shouldFocus) {
+			// Get the input field reference using the ref attribute
+			const inputField = document.getElementById('qrcode-input') as HTMLIonInputElement | null;
+
+			// Check if the input field reference exists and then focus on it
+			if (inputField) {
+				inputField.setFocus();
+			}
+
+			// Reset the shouldFocus variable to false to avoid multiple focus attempts
+			shouldFocus = false;
+		}
+	}
 </script>
 
 <ion-tab tab="homepage">
@@ -119,12 +136,13 @@
 					is-open={modalOpen}
 					initial-breakpoint={$qrStore.length > 0? 0.3 : 0.2}
 					on:ionModalDidDismiss={() => {modalOpen = false;}}
+					on:ionModalDidPresent={() => {shouldFocus = true;}}
 					breakpoints={[0, 0.1, 0.2, 0.3, 0.5]}>
 					<ion-content>
 						<ion-grid>
 							{#if $qrStore.length == 0}
 								<ion-col style="display: flex; justify-content: center; margin: 30px;">
-									<ion-input placeholder="Κωδικός QR πάσου" type="number"/>
+									<ion-input id="qrcode-input" placeholder="Κωδικός QR πάσου" type="number"/>
 									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary"
 												on:ionFocus={addQR}>Προσθήκη</ion-button>
 								</ion-col>
