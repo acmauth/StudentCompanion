@@ -192,7 +192,7 @@
 			</div>
 			<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
 			<AppletsSlides />
-			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
+			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατα</b></p>
 			<RecentItems />
 		{:catch error}
 			<p>{error.message}</p>

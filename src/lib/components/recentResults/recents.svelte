@@ -108,7 +108,7 @@
 <div class="recentGrades ion-padding">
 
     {#if recentItems.length === 0}
-            <p>Δεν υπάρχουν πρόσφατες αποτελέσματα</p>
+            <p class="ion-padding">Δεν υπάρχουν πρόσφατα</p>
     {:else}
         {#each recentItems as recentItem } 
             {#if recentItem.type === "recentGrade"}
