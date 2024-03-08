@@ -4,8 +4,6 @@
     import Vector from "$lib/components/loginService/Vector.svg"
     import Vector1 from "$lib/components/loginService/Vector(1).svg"
     import Logo from "$lib/assets/Logo_head.png";
-    import { onMount } from 'svelte';
-
 
     let username = '';
     let password = '';
@@ -63,27 +61,23 @@
         {/if}
     
         <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">ΕΙΣΟΔΟΣ</ion-button>
-        <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked="true"> 
+        <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked={true}> 
             <ion-label class="custom" style="font-size:small;">Διατήρηση σύνδεσης</ion-label>
         </ion-checkbox>
     </div>
-    
-    <div class="footer">
-        <ion-title size="small" color="primary" style="padding-bottom: 10px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
-    </div>
-
 </ion-content>   
 
+<ion-footer>
+    <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
+</ion-footer>
   
 <style>
-    .footer {
+    ion-footer {
         display: flex;
         justify-content: center;
         align-items: center;
         text-align: center;
-        position: absolute;
-        top: 95%;
-        width: 100%;
+        box-shadow: none;
     }
 
     ion-input.custom {
