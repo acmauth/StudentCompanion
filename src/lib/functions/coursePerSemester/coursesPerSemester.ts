@@ -27,7 +27,6 @@ export async function coursesPerSemester(subjectsJSON: course[] | null | undefin
 		return accumulator;
 	}, {});
 
-	console.log(courseBySemester);
 	
 	return courseBySemester;
 
