@@ -142,7 +142,7 @@
 
       <ion-searchbar class="searchbar" debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
       
-      {#if Object.entries(coursesBySemester).length > 1}
+      {#if Object.entries(coursesBySemester).length > 0}
       	<Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />
 	  {/if}
     </ion-toolbar>
