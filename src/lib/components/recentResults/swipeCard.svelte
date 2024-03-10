@@ -77,9 +77,9 @@
       const deltaX = endX - startX;
 
       if (!isScrolling){
-        if (deltaX < -100) {
+        if (deltaX < -50) {
           // Swipe left, smoothly transition to the left
-          card.style.transition = "transform 0.2s ease";
+          card.style.transition = "transform 0.3s ease";
           card.style.transform = `translateX(-100%)`;
     
           // Trigger delete after the transition is complete
@@ -87,9 +87,9 @@
             handleDelete(id);
             resetCardTransform();
           }, 300);
-        } else if (deltaX > 100) {
+        } else if (deltaX > 50) {
           // Swipe right, smoothly transition to the right
-          card.style.transition = "transform 0.2s ease";
+          card.style.transition = "transform 0.3s ease";
           card.style.transform = `translateX(100%)`;
     
           // Trigger delete after the transition is complete
@@ -99,7 +99,7 @@
           }, 300);
         } else {
           // Reset position if not swiped far enough
-          card.style.transition = "transform 0.2s ease";
+          card.style.transition = "transform 0.3s ease";
           card.style.transform = "translateX(0)";
         }
       }else{
