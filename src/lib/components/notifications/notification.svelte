@@ -2,8 +2,7 @@
 	import type { notification } from "./notifications";
     import universisLogo from "$images/universis.png";
     import elearningLogo from "$images/elearning.png";
-    import { openOutline, open } from 'ionicons/icons';
-    import AppCard from "$shared/AppCard.svelte";
+    import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
 
     export let notification: notification;
@@ -13,6 +12,7 @@
     
     const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
 
+    let content = notification.body;
     
 </script>
 
@@ -52,8 +52,8 @@
                             <ion-label>{notification.sender}</ion-label>
                         </ion-chip>
                         {#if notification.url}
-                        <ion-item lines="none" href={notification.url} target="blank">
-                            <ion-chip color="primary">
+                        <ion-item lines="none"> 
+                            <ion-chip color="primary" on:click={()=>{window.location = notification.url}} aria-hidden>
                                 <ion-icon icon={open} ></ion-icon>
                                 <ion-label>Άνοιγμα</ion-label>
                             </ion-chip>
@@ -63,13 +63,10 @@
                     <ion-item-divider>
                         <ion-label>Περιεχόμενο </ion-label>
                       </ion-item-divider>                    
-                    <ion-item lines="none">
-                        <ion-text>
-                            <p>
-                                {@html notification.body.replaceAll('\n', '&nbsp;')}
-                            </p>
-                                
-                        </ion-text>
+                    <ion-item lines="none" class="item-text-wrap">
+                        <div class="notifContent">
+                            {@html content.replaceAll("\n", "<br>")}
+                        </div>
                     </ion-item>
                     <ion-item>
                         <ion-text>
@@ -84,6 +81,11 @@
     </ion-modal>
 
     <style>
+        .notifContent {
+            white-space: pre-line;
+            max-width: 100%;
+            user-select: text;
+        }
 
         .mainContainer {
             padding: 0.5rem;
@@ -108,6 +110,10 @@
         .top img {
             object-fit: contain;
             height: 100%;
+        }
+
+        .top p {
+            margin: 0;
         }
 
         .card-link {
