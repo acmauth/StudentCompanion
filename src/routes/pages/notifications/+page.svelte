@@ -65,3 +65,10 @@
         {/await}
     </ion-content>
 </ion-tab>
+
+<style>
+    ion-content {
+	--padding-end: 0.6rem;
+	--padding-start: 0.6rem;
+    }
+</style>
