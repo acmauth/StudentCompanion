@@ -95,9 +95,7 @@
 		{#await getInfo()}
 			<HomepageSkeleton />
 		{:then}
-			<AnnouncementBanner>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<!-- <AnnouncementBanner>
 				<ion-text
 					color="light"
 					on:click={() => {
@@ -108,7 +106,7 @@
 					<ion-label>Early Access Beta - Η γνώμη σου μετράει!</ion-label>
 					<ion-icon icon={open} />
 				</ion-text>
-			</AnnouncementBanner>
+			</AnnouncementBanner> -->
 			<div class="info-container">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->

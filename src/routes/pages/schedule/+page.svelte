@@ -78,7 +78,7 @@
             {/each}
     </div>
 
-    <div use:swipe={{ timeframe: 300, minSwipeDistance: 100, touchAction: 'pan-y' }} on:swipe={handler} style="width:500px;height:500px;border:1px;">
+    <div use:swipe={{ timeframe: 300, minSwipeDistance: 100, touchAction: 'pan-y' }} on:swipe={handler} style="width:auto;height:80%;border:1px;">
         <ion-grid style="padding: 0%">
             {#each currentClasses as courseClass}
                 <ClassCard classItem={courseClass} />
@@ -106,7 +106,7 @@
 
     ion-segment {
         margin-top: 5px;
-        --background: #fff;
+        /* --background: #fff; */
     }
 
     .custom-center-label {

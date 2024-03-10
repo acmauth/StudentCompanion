@@ -92,16 +92,38 @@
 
 
   --shadow-xl: 0px -2px 40.6px -1px rgba(0, 0, 0, 0.10), 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
-  --shadow-sm: 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0px 4px 18px -1px rgba(0, 0, 0, 0.06);
   --shadow-md: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   --shadow-short: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   --shadow-short-md: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  --shadow-complicated:
+      0px 1.2px 1.1px -11px rgba(0, 0, 0, 0.016),
+      0px 3.4px 3.1px -11px rgba(0, 0, 0, 0.025),
+      0px 8.1px 7.5px -11px rgba(0, 0, 0, 0.035),
+      0px 27px 25px -11px rgba(0, 0, 0, 0.07)
+    ;
+
 
   ion-card {
     border-radius: 1rem !important;
     border: 0.1rem solid #EBEBEB;
-    box-shadow: var(--shadow-short-md);
+    /* box-shadow: var(--shadow-short-md); */
+    box-shadow: var(--shadow-sm);
     /* margin: 0 !important; */
+  }
+
+  --ion-background-color: #FBFBF9;
+  /* --ion-tab-bar-color: #999999; */
+  --ion-toolbar-background: #FBFBF9;
+  --ion-tab-bar-color-selected: var(--app-color-primary-dark);
+  --ion-tab-bar-background: #FBFBF9;
+
+  ion-card {
+    --background: white;
+  }
+
+  ion-list {
+    background-color: white !important;
   }
 
   ion-searchbar {
@@ -119,9 +141,9 @@
     /* --color: inherit !important; */
   }
 
-  .tab-selected {
+  /* .tab-selected {
     color: var(--app-color-primary-dark) !important;
-  }
+  } */
 
   ion-progress-bar {
     --progress-background: var(--app-color-primary-dark);
