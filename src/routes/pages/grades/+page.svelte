@@ -15,7 +15,18 @@
 	import Fuse from 'fuse.js';
 	import Card from '$components/degreeCalculator/card.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
+	import { onMount } from 'svelte';
 
+	
+	// Fix for flipper covering content
+	onMount(async () => {
+		// Making sure the flipper is not flipped when the page is loaded
+		// This is because the flipper maintains it's state when loaded, even when the flipper component is in an invalid state
+		// Due to the following components not having loaded fully yet. So with the onMount we can reset the state.
+		// Note for future reference: If we want it to retain it's flipped state, we can do a dual assignment to trigger the store update.
+		// So setting it to ~flipped and then flipped again, will trigger the store update.
+		$flipped = false;
+	});
 
 	let courseBySemester = writable([]);
 	let filteredSubjects = writable([]);
@@ -157,10 +168,10 @@
 	<!-- Show content after loading is completed -->
 
 	{#if !searchQuery.length}
-	<Flipper reactToHeight bind:flipped={$flipped}>
-        <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
-        <Card flip={flip} slot="back"/>
-    </Flipper>
+		<Flipper reactToHeight bind:flipped={$flipped}>
+			<Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
+			<Card flip={flip} slot="back"/>
+		</Flipper>
 	{/if}
 		
 		
