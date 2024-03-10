@@ -4,6 +4,7 @@
     import elearningLogo from "$images/elearning.png";
     import { openOutline, open } from 'ionicons/icons';
     import AppCard from "$shared/AppCard.svelte";
+    import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
 
     export let notification: notification;
 
@@ -12,33 +13,7 @@
     
     const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
 
-    function timeSinceDate(date:Date){
-        var seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-      
-        var interval = seconds / 31536000;
-      
-        if (interval > 1) {
-          return Math.floor(interval) + " χρόνια";
-        }
-        interval = seconds / 2592000;
-        if (interval > 1) {
-          return Math.floor(interval) + " μήνες";
-        }
-        interval = seconds / 86400;
-        if (interval > 1) {
-          return Math.floor(interval) + " μέρες";
-        }
-        interval = seconds / 3600;
-        if (interval > 1) {
-          return Math.floor(interval) + " ώρες";
-        }
-        interval = seconds / 60;
-        if (interval > 1) {
-          return Math.floor(interval) + " λεπτά";
-        }
-        return Math.floor(seconds) + " δευτερόλεπτα";
-      
-    }
+    
 </script>
 
 
