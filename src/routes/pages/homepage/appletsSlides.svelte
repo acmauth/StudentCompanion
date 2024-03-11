@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AppCard from '$shared/AppCard.svelte';
-	import { fastFood, map, link } from 'ionicons/icons';
+	import { fastFood, map, link, barbell } from 'ionicons/icons';
 </script>
 
 <ion-content
@@ -47,6 +47,12 @@
 			<div class="appletcontent">
 				<ion-icon icon={link} />
 				<ion-label><span class="overflowingtext">Σύνδεσμοι</span></ion-label>
+			</div>
+		</AppCard>
+		<AppCard colour="blue" margin={false} shadow={false} class="applet" maxWidth="9rem" href="/gym">
+			<div class="appletcontent">
+				<ion-icon icon={barbell} />
+				<ion-label><span class="overflowingtext">Γυμναστήριο</span></ion-label>
 			</div>
 		</AppCard>
 	</div>
