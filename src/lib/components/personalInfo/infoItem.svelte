@@ -2,7 +2,6 @@
 	import man from '$lib/assets/man.png';
 	import woman from '$lib/assets/woman.png';
 	import * as allIonicIcons from 'ionicons/icons';
-	import Settings from "./settings.svelte";
 
 	/**
 	 * @type {string}

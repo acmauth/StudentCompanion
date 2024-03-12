@@ -4,8 +4,11 @@
 	export let semesterAverage: any = {};
 	export let semesterName: string;
 	import AppCard from '$shared/AppCard.svelte';
+	import * as allIonicIcons from 'ionicons/icons';
 
-	
+	// {#if course.childCourses && course.childCourses.length > 0}
+			// <ion-icon size="small" icon={allIonicIcons.arrowDown} />
+	// {/if}
 
 </script>
 <span class="scroll" id={semesterId}></span>
@@ -30,45 +33,91 @@
 
 	
 
-		{#each filteredSubjects as course}
+	{#each filteredSubjects as course}
+	<AppCard href={`/courses/${course.course}`} padding>
+		<!-- Card content for course -->
+		<ion-item lines="none" class="ion-no-padding">
+			<div class="containerFlex">
+
+				<div class="titlesFlex">
+				<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
+
+		{#if course.examPeriod !== null}
+			<ion-label class="examPeriod">
+				{#if course.examPeriod && course.gradeYear}
+					{course.examPeriod.name} {course.gradeYear.name}
+				{:else}
+					ΔΗΛΩΜΕΝΟ
+				{/if}
+			</ion-label>
+
+		{:else}
+			<ion-label class="examPeriod">-</ion-label>
+		{/if}
+
+		</div>
+		{#if course.grade !== null && !(isNaN(course.grade))}
+			{#if course.grade * 10 >= 5}
+				<ion-text class="success gradeNumber">
+					<h2>{course.formattedGrade}</h2>
+				</ion-text>
+			{:else}
+				<ion-text class="danger gradeNumber">
+					<h2>{course.formattedGrade}</h2>
+				</ion-text>
+			{/if}
+		{/if}
+		</div>
 		
-		<AppCard href={`/courses/${course.course}`} padding>
-				<ion-item lines="none" class="ion-no-padding">
-						<div class="containerFlex">
+	</ion-item>
+	
 
-							<div class="titlesFlex">
-							<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
-
-					{#if course.examPeriod !== null}
-						<ion-label class="examPeriod">
-							{#if course.examPeriod && course.gradeYear}
-								{course.examPeriod.name} {course.gradeYear.name}
+	<!-- If the current course has children courses, add them below -->
+	{#if course.childCourses && course.childCourses.length > 0}
+		<div class="children"></div>
+			{#each course.childCourses as childCourse, index}
+				<!-- Card content for child course -->
+				<ion-item href={`/courses/${course.course}`} lines="none" class="ion-no-padding">
+					<div class="containerFlex">
+						<div class="titlesFlex">
+							<ion-label class="ion-text-wrap courseTitle">{childCourse.courseTitle}</ion-label>
+							{#if childCourse.examPeriod !== null}
+								<ion-label class="examPeriod">
+									{#if childCourse.examPeriod && childCourse.gradeYear}
+										{childCourse.examPeriod.name} {childCourse.gradeYear.name}
+									{:else}
+										ΔΗΛΩΜΕΝΟ
+									{/if}
+								</ion-label>
 							{:else}
-								ΔΗΛΩΜΕΝΟ
+								<ion-label class="examPeriod">-</ion-label>
 							{/if}
-						</ion-label>
-		
-					{:else}
-						<ion-label class="examPeriod">-</ion-label>
-					{/if}
-
-					</div>
-					{#if course.grade !== null && !(isNaN(course.grade))}
-						{#if course.grade * 10 >= 5}
-							<ion-text class="success gradeNumber">
-								<h2>{course.formattedGrade}</h2>
-							</ion-text>
-						{:else}
-							<ion-text class="danger gradeNumber">
-								<h2>{course.formattedGrade}</h2>
-							</ion-text>
+						</div>
+						{#if childCourse.grade !== null && !(isNaN(childCourse.grade))}
+							{#if childCourse.grade * 10 >= 5}
+								<ion-text class="success gradeNumber">
+									<h2>{childCourse.formattedGrade}</h2>
+								</ion-text>
+							{:else}
+								<ion-text class="danger gradeNumber">
+									<h2>{childCourse.formattedGrade}</h2>
+								</ion-text>
+							{/if}
 						{/if}
-					{/if}
 					</div>
 				</ion-item>
+			{/each}
+	
+		<button on:click={() => course.showChildren = !course.showChildren}>
+			<ion-icon size="small" icon={allIonicIcons.arrowDown} />
+		</button>
+	{/if}
 	</AppCard>
-	{/each}
 
+		
+
+	{/each}
+				
 {/if}
 </div>
 
@@ -77,6 +126,8 @@
 
 .gradeNumber h2{
 	margin: 0 !important;
+	margin-right: -0.5rem !important;
+	
 }
 
 
@@ -88,6 +139,7 @@ h2 {
 
 .courseTitle {
 	font-size: 1rem;
+	margin-right: 0.5rem;
 }
 
 .title {
@@ -151,40 +203,15 @@ h2 {
 	gap: 1rem;
 }
 
-.success {
-	color: var(--app-color-green-dark);
-}
-
-.danger {
-	color: var(--app-color-orange-dark);
-}
 
 .examPeriod{
 	font-size: 0.8rem;
 }
 
-.success {
-	color: var(--app-color-green-dark);
-}
 
-.danger {
-	color: var(--app-color-orange-dark);
-}
-
-.examPeriod{
-	font-size: 0.8rem;
-}
-
-.success {
-	color: var(--app-color-green-dark);
-}
-
-.danger {
-	color: var(--app-color-orange-dark);
-}
-
-.examPeriod{
-	font-size: 0.8rem;
+.children {
+	overflow: hidden;
+	transition: 0.3s;
 }
 
 
