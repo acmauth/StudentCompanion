@@ -14,7 +14,7 @@
     let notificationsPromise = gatherNotifications();
     
     const refreshNotifications = async () => {
-        notificationsPromise = gatherNotifications(true);
+        notificationsPromise = gatherNotifications({refresh: true});
         refresher.complete();
     }
 

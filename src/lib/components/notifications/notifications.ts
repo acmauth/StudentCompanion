@@ -115,7 +115,7 @@ type options = {
     days?: number | undefined;
 }
 
-export async function gatherNotifications(options: options){
+export async function gatherNotifications(options?: options){
     if (!options) options = {};
 
     let elearningNotifications = await getElearningNotifications(options.refresh);
