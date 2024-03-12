@@ -110,13 +110,22 @@ async function getUniversisNotifications(refresh: boolean = false) {
     return cleanMessages;
 }
 
-export async function gatherNotifications(refresh: boolean = false){
+type options = {
+    refresh?: boolean | undefined;
+    days?: number | undefined;
+}
 
-    let elearningNotifications = await getElearningNotifications(refresh);
-    let universisNotifications = await getUniversisNotifications(refresh);
+export async function gatherNotifications(options: options){
+    if (!options) options = {};
 
-    let notifications = elearningNotifications.concat(universisNotifications).sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
+    let elearningNotifications = await getElearningNotifications(options.refresh);
+    let universisNotifications = await getUniversisNotifications(options.refresh);
     
+    let notifications = elearningNotifications.concat(universisNotifications).sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
+
+    if (options.days){
+        notifications = notifications.filter((notification) => Math.floor((new Date().getTime() - notification.dateReceived.getTime()) / 1000) <= options.days * 86400);
+    }
     return notifications;
 }
 

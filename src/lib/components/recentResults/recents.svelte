@@ -77,7 +77,7 @@
 
     onMount(async () => {
 
-        let notifications = await gatherNotifications();
+        let notifications = await gatherNotifications({days: 7});
         let recentGrades = await gatherRecentGrades();
 
         // @ts-ignore
