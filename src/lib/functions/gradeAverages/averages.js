@@ -6,7 +6,6 @@ export async function averages(subjectsJSON = null) {
 
 	// Fetch exam data for the current student
 	let exams = await neoUniversisGet("students/me/grades?$top=-1&$filter=isPassed eq 1");
-
 	// Fetch a list of courses for the current student
 	let courses;
 
@@ -23,7 +22,7 @@ export async function averages(subjectsJSON = null) {
 
 	// Loop through the courses to find the passed ones
 	for (const course of courses)
-		if (course.isPassed == 1)
+		if (course.isPassed == 1 && course.parentCourse == null)
 			passed_courses[k++] = course;
 
 	let i = 0, j = 0;
@@ -43,14 +42,14 @@ export async function averages(subjectsJSON = null) {
 		if (!isNaN(exam.formattedGrade)) {
 			g_grades[i] = exam.formattedGrade * 1;
 			courses_codes[i++] = exam.course;
-		}	
+		}
 	}
 
 	// Calculate the sum of grades and their average
 	g_sum = g_grades.reduce((total, currentValue) => total + currentValue, 0);
 	if (g_grades.length > 0)
 		g_avg = Number((g_sum / g_grades.length).toFixed(2));
-	
+
 
 	// Loop through course codes to find their corresponding ECTS values
 	for (const code of courses_codes)
@@ -67,14 +66,9 @@ export async function averages(subjectsJSON = null) {
 	w_avg = Number((w_sum / ects_list.reduce((total, currentValue) => total + currentValue, 0)).toFixed(2));
 
 	//	Calculate total ects
-	
+
 	for (const ects of ects_list)
 		ects_sum += ects;
-
-
-
-
-
 
 	grades = {
 		"grades": g_grades,
@@ -82,8 +76,6 @@ export async function averages(subjectsJSON = null) {
 		"weighted_avg": w_avg,
 		"ects": ects_sum,
 	};
-	
 
 	return grades;
-
 };
