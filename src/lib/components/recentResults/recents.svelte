@@ -77,7 +77,7 @@
 
     onMount(async () => {
 
-        let notifications = await gatherNotifications();
+        let notifications = await gatherNotifications({days: 7});
         let recentGrades = await gatherRecentGrades();
 
         // @ts-ignore
@@ -112,7 +112,7 @@
     {:else}
         {#each recentItems as recentItem } 
             {#if recentItem.type === "recentGrade"}
-                <SwipeCard id={recentItem.content.courseExam.id} on:delete-card={deleteCard} > 
+                <SwipeCard id={recentItem.id} on:delete-card={deleteCard} > 
                     <RecentGrade subject={recentItem.content}/>
                 </SwipeCard>
             {/if}
@@ -120,7 +120,7 @@
 
         {#each recentItems as recentItem } 
             {#if recentItem.type === "notification"}
-                <SwipeCard id={recentItem.content.id} on:delete-card={deleteCard}>
+                <SwipeCard id={recentItem.id} on:delete-card={deleteCard}>
                     <Notification notification={recentItem.content}/>
                 </SwipeCard>
             {/if}
