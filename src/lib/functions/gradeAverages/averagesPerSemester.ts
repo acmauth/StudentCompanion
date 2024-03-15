@@ -1,5 +1,5 @@
 import { neoUniversisGet } from "$lib/dataService";
-import {course} from "$lib/types/courseType"
+import type { course } from "$lib/types/courseType";
 import { coursesPerSemester } from "../coursePerSemester/coursesPerSemester";
 
 export async function averagesPerSemester(subjectsJSON: course[] | null | undefined = null) {
@@ -13,7 +13,7 @@ export async function averagesPerSemester(subjectsJSON: course[] | null | undefi
 			 subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 		}
 
-			
+
 		courseBySemester = await coursesPerSemester(subjects);
 
 
@@ -23,10 +23,10 @@ export async function averagesPerSemester(subjectsJSON: course[] | null | undefi
 		for (const semester in courseBySemester) {
 			let sum = 0;
 			let count = 0;
-			
-			
+
+
 			for (const course of courseBySemester[semester]) {
-				if (course.isPassed && course.calculateUnits) {
+				if (course.isPassed && course.calculateUnits && course.parentCourse == null) {
 					sum += course.grade;
 					count++;
 				}
@@ -39,9 +39,5 @@ export async function averagesPerSemester(subjectsJSON: course[] | null | undefi
 			}
 
 		}
-
-
-
 		return averages;
-
 	}

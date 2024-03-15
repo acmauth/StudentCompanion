@@ -161,5 +161,6 @@ export type course = {
       "isComplete": true
     },
     "gradeExam": 0,
-    "studyProgramSpecialty": "string"
+    "studyProgramSpecialty": "string",
+    "childCourses"?: course[]
   }

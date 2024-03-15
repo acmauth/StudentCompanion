@@ -71,7 +71,7 @@
 		
 		coursesBySemester = await coursesPerSemester(subjectsJSON);
 		// @ts-ignore
-		passedSubjects = subjects.filter((/** @type {{ grade: number; }} */ course) => course.grade*10 >=5);
+		passedSubjects = subjects.filter((/** @type {{ grade: number; }} */ course) => course.grade*10 >=5).filter((/** @type {{parentCourse: string;}} */ course => course.parentCourse === null));
 		
 		// @ts-ignore
 		subjects = subjects.length;
@@ -106,6 +106,7 @@
 	async function gatherData() {
 		subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 
+
 		subjectsJSON = subjects;
 
 		await getSubjects(subjectsJSON);
@@ -139,7 +140,6 @@
 }
 
 
-//Stats
 
 
 
@@ -190,7 +190,7 @@
 	ion-header {
 		position: sticky;
 		top: 0;
-		z-index: 100;
+		z-index: 1;
 	}
 
 	ion-content {
