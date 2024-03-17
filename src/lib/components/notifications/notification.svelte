@@ -4,7 +4,7 @@
     import elearningLogo from "$images/elearning.png";
     import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
-
+    import { onMount } from 'svelte';
     export let notification: notification;
 
     let inlineModalOpen = false;
@@ -13,15 +13,24 @@
     const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
 
     let content = notification.body;
-    
+
 </script>
 
 
 <div aria-hidden on:click ={() => {inlineModalOpen = true}} class="card-link">
     <div class="top">
             <img alt="Service logo" src={notification.type == "universis" ? universisLogo : elearningLogo} />
+            <ion-label class="notification-label sender">
+                <p>{notification.sender}</p>
+              </ion-label>
+              <p>-</p>
+              <ion-label class="notification-label date">
+                <p>{timeSinceDate(notification.dateReceived)}</p>
+              </ion-label>
+              
             
-            <ion-label><p>{notification.sender} - {timeSinceDate(notification.dateReceived)}</p></ion-label>
+  
+            <!-- <ion-label><p>{notification.sender} - {timeSinceDate(notification.dateReceived)}</p></ion-label> -->
     </div>
     <ion-item lines="none" class="ion-no-padding">
         <ion-label>
@@ -119,4 +128,21 @@
         .card-link {
             text-decoration: none;
         }
+
+        .notification-label {
+            white-space: nowrap;
+            display: block; 
+        }
+
+        .sender {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            max-width: calc(100% - 80px); /* Adjust as needed */
+        }
+
+        .date p {
+            white-space: nowrap;
+        }
+
 </style>
