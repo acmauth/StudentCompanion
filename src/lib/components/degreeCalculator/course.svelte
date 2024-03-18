@@ -24,7 +24,9 @@
 
 <style>
     .course-box { 
-        padding-left: 1rem;
+        padding-left: 1em;
+        padding-right: 0.5em;
+        margin-bottom: 0.3em;
         flex: 3.25; /* Takes 3/4 of the available space */
     }
 

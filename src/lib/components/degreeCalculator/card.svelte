@@ -120,16 +120,17 @@
     }
 
     .courses-box {
-        margin-bottom: 0.3em; 
+        margin-bottom: 0.3m; 
         display: flex;
     }
 
     .inputCustom {
     text-align: center;
-    border: 0.1em solid #ccc;
+    border: 0.15em solid #ccc;
     border-radius: 0.8em;
     font-size: 0.7em;
-    width: 4em;
+    font-weight: bold;
+    width: 5em;
     height: 2.5em;
     box-sizing: border-box;
     outline: none;
