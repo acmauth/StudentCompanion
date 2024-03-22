@@ -59,7 +59,7 @@
                 <div class="input-box"> 
                     <input type="text" inputmode="decimal" 
                     id="{course.id}" class="inputCustom"
-                    on:click={clickInput} placeholder="0.00"
+                    on:click={clickInput} placeholder="5.00"
                     on:input={gradeInput} />      
                 </div>
 
@@ -134,6 +134,11 @@
     height: 2.5em;
     box-sizing: border-box;
     outline: none;
+    }
+
+    ::placeholder
+    {
+        color: rgba(207, 207, 207, 0.747);
     }
     
 </style>
