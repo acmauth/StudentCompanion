@@ -86,9 +86,12 @@ export async function statistics(courseCode) {
 		Math.round((totalPassedGrades / studentsPassed + Number.EPSILON) * 100) / 100;
 	totalStudents = studentsPassed + studentsFailed;
 
+	myGrade *= 10;
+	myGrade = Number.isInteger(myGrade) ? myGrade : Number((myGrade).toFixed(3)).toFixed(1);
+
 	const stats = {
 		courseCode: courseCode,
-		myGrade: myGrade * 10,
+		myGrade: myGrade,
 		studentsBetterThanMe: studentsBetterThanMe,
 		studentsLikeMe: studentsLikeMe,
 		studentsWorseThanMe: studentsWorseThanMe,

@@ -63,7 +63,6 @@ export async function coursesPerSemester(subjectsJSON: course[] | null | undefin
 		}
 	}
 
-	console.log(courseBySemester);
 	
 	return courseBySemester;
 

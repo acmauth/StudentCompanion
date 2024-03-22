@@ -1,4 +1,4 @@
-<script lang="ts">  ;
+<script lang="ts">
 	export let filteredSubjects: any = {};
 	export let semesterId: any = {};
 	export let semesterAverage: any = {};
@@ -12,7 +12,6 @@
     function toggleChildren(index: number) {
         childrenOpen[index] = !childrenOpen[index];
     }
-
 
 </script>
 <span class="scroll" id={semesterId}></span>
