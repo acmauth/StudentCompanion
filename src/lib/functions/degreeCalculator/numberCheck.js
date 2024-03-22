@@ -9,13 +9,15 @@ export function numberCheck(course) {
 
     if (input_element == null || input_element.value.length === 0)
     {
+        course.input_grade = "";
         input_element.value = "";
+        
         return 1;  
     }
 
     var grade = +(input_element.value);
 
-    if (isNaN(grade) || grade < 0 || grade >= 100)
+    if (isNaN(grade) || grade != 1 && grade < 5 || grade >= 100)
     {
         if (course.input_grade == "")
         {
@@ -26,6 +28,9 @@ export function numberCheck(course) {
         input_element.value = course.input_grade;
         grade = parseFloat(course.input_grade);  
     }    
+
+    if (grade == 1)
+        grade = 10;
 
     var temp = "";
 
@@ -51,4 +56,3 @@ export function numberCheck(course) {
     
     return 0;
 };
-    

@@ -36,6 +36,14 @@
         inputUpdate(unpassed_courses, sums, degree_grade);
         degree_grade = degree_grade;
     }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Backspace' && event.target.value == '10') {
+            event.target.value = '';
+            inputUpdate(unpassed_courses, sums, degree_grade);
+            degree_grade = degree_grade;
+        }
+    }
     
 </script>
 
@@ -59,8 +67,9 @@
                 <div class="input-box"> 
                     <input type="text" inputmode="decimal" 
                     id="{course.id}" class="inputCustom"
-                    on:click={clickInput} placeholder="0.00"
-                    on:input={gradeInput} />      
+                    on:click={clickInput} placeholder="5.00"
+                    on:input={gradeInput}
+                    on:keydown={handleKeyDown} />      
                 </div>
 
             </div>      
@@ -120,19 +129,25 @@
     }
 
     .courses-box {
-        margin-bottom: 0.3em; 
+        margin-bottom: 0.3m; 
         display: flex;
     }
 
     .inputCustom {
     text-align: center;
-    border: 0.1em solid #ccc;
+    border: 0.15em solid #ccc;
     border-radius: 0.8em;
     font-size: 0.7em;
-    width: 4em;
+    font-weight: bold;
+    width: 5em;
     height: 2.5em;
     box-sizing: border-box;
     outline: none;
+    }
+
+    ::placeholder
+    {
+        color: rgba(207, 207, 207, 0.747);
     }
     
 </style>
