@@ -1,6 +1,6 @@
 {
 		"webDir":"build",
-		"appId":"studentCompanionUI.ionic.io",
+		"appId":"app.aristomate.gr",
 		"appName":"Aristomate",
 		"_server": {
 		  "url": "http://172.20.32.1:5173/",
