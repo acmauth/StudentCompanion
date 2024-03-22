@@ -118,6 +118,7 @@
 		}
 	});
 
+
 	
 </script>
 
@@ -135,7 +136,7 @@
 				<ion-text><b>-</b></ion-text>
 				<br>
 				<ion-text class="danger">Δεν έχεις βαθμολογήθει ακόμα στο μάθημα</ion-text>
-			{:else if stats.grade * 10 >= 5}
+			{:else if stats.grade >= 5}
 				<ion-text class="success" id="number">{stats.grade}</ion-text>
 			{:else}
 				<ion-text class="danger" id="number">{stats.grade}</ion-text>
