@@ -17,7 +17,7 @@ export function numberCheck(course) {
 
     var grade = +(input_element.value);
 
-    if (isNaN(grade) || grade < 5 || grade >= 100)
+    if (isNaN(grade) || grade != 1 && grade < 5 || grade >= 100)
     {
         if (course.input_grade == "")
         {
@@ -28,6 +28,9 @@ export function numberCheck(course) {
         input_element.value = course.input_grade;
         grade = parseFloat(course.input_grade);  
     }    
+
+    if (grade == 1)
+        grade = 10;
 
     var temp = "";
 

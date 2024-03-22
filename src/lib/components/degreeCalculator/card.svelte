@@ -36,6 +36,14 @@
         inputUpdate(unpassed_courses, sums, degree_grade);
         degree_grade = degree_grade;
     }
+
+    function handleKeyDown(event) {
+        if (event.key === 'Backspace' && event.target.value == '10') {
+            event.target.value = '';
+            inputUpdate(unpassed_courses, sums, degree_grade);
+            degree_grade = degree_grade;
+        }
+    }
     
 </script>
 
@@ -60,7 +68,8 @@
                     <input type="text" inputmode="decimal" 
                     id="{course.id}" class="inputCustom"
                     on:click={clickInput} placeholder="5.00"
-                    on:input={gradeInput} />      
+                    on:input={gradeInput}
+                    on:keydown={handleKeyDown} />      
                 </div>
 
             </div>      
