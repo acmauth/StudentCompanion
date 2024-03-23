@@ -7,7 +7,6 @@
     import { dismissedGrades } from "$components/recentResults/dismissedGrades";
     import { onMount } from "svelte";
     import { refresh } from "ionicons/icons";
-	import Course from "$components/degreeCalculator/course.svelte";
 
     /**
      * @type any[]
@@ -77,29 +76,40 @@
 
     onMount(async () => {
 
-        let notifications = await gatherNotifications({days: 7});
+        let notifications = await gatherNotifications({days: 18});
         let recentGrades = await gatherRecentGrades();
-
+        
         // @ts-ignore
-        recentItems = recentItems.concat(notifications.map( (notification) => {return {
-            type: "notification", 
-            content: notification,
-            id: notification.id
-        }}),
-        // @ts-ignore
-        recentGrades.map( ( recentGrade ) => {return {
+        recentItems = recentItems.concat(recentGrades.map( ( recentGrade ) => {return {
             type: "recentGrade",
             content: recentGrade,
             id: recentGrade.courseExam.id
+        }}),
+        // @ts-ignore
+        notifications.map( (notification) => {return {
+            type: "notification", 
+            content: notification,
+            id: notification.id
         }}));
 
         allRecentItems = [...recentItems];
-
+        
         // removing from recentGrades the exams that are already deleted
         for (const recentItem of recentItems){           
             if (storedItems.includes(recentItem.id)){
                 recentItems = recentItems.filter((item) => item.id !== recentItem.id);
             }
+        }
+        // keeping all the recent grades and removing the excess notifications
+        const maxNumOfCard = 8;
+        let numOfGrades = 0;
+        for (const recentItem of recentItems){
+            if (recentItem.type == "recentGrade") numOfGrades++;
+        }
+        if (numOfGrades+3 > maxNumOfCard){ // ensuring that there are always at least 3 notifications
+            recentItems = recentItems.slice(0, numOfGrades+3); 
+        } else {
+            recentItems = recentItems.slice(0, maxNumOfCard); // can do that because recent grades are stored first
         }
     });
 </script>
