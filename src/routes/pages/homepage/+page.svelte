@@ -20,6 +20,7 @@
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import { onMount } from 'svelte';
+	import Banner from '$components/shared/banner.svelte';
 
 	let givenName = '';
 	let gender = '';
@@ -190,6 +191,7 @@
 			</div>
 			<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
 			<AppletsSlides />
+			<Banner altText="Πες μας τη γνώμη σου" />
 			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατα</b></p>
 			<RecentItems />
 		{:catch error}

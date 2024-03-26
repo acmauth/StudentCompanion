@@ -16,6 +16,7 @@
 	import Card from '$components/degreeCalculator/card.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { onMount } from 'svelte';
+	import Banner from '$components/shared/banner.svelte';
 
 	
 	// Fix for flipper covering content
@@ -175,7 +176,7 @@
 	{/if}
 		
 		
-	  
+		<Banner margin="0.5" altText="Πες μας τη γνώμη σου" />
 		<Grades semesterId = {semesterId} searchQuery = {searchQuery} filteredSubjects = {filteredSubjects} />
 
 		{:catch error}
