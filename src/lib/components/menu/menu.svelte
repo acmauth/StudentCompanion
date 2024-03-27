@@ -5,6 +5,7 @@
 	import { getMenu } from '$lib/menuScrapper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
+	import Banner from '$components/shared/banner.svelte';
 
 	let cafeteriaData: string | any[] = [];
 
@@ -63,6 +64,7 @@
 					><ion-icon icon={allIonicIcons.timeOutline} /> &nbsp; {message}</ion-chip
 				>
 			</div>
+
 
 			<h1 class="ion-padding">
 				<ion-icon icon={allIonicIcons.restaurantOutline} /> Σημερινό Μενού
