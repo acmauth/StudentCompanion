@@ -65,7 +65,6 @@
 				>
 			</div>
 
-			<Banner margin="0.5" altText="Πες μας τη γνώμη σου" />
 
 			<h1 class="ion-padding">
 				<ion-icon icon={allIonicIcons.restaurantOutline} /> Σημερινό Μενού

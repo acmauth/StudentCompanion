@@ -176,7 +176,7 @@
 	{/if}
 		
 		
-		<Banner margin="0.5" altText="Πες μας τη γνώμη σου" />
+		
 		<Grades semesterId = {semesterId} searchQuery = {searchQuery} filteredSubjects = {filteredSubjects} />
 
 		{:catch error}
