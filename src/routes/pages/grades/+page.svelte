@@ -16,9 +16,10 @@
 	import Card from '$components/degreeCalculator/card.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { onMount } from 'svelte';
-	import Banner from '$components/shared/banner.svelte';
-
+	import { flag } from './debugFlag';
 	
+	// $flag = true;
+
 	// Fix for flipper covering content
 	onMount(async () => {
 		// Making sure the flipper is not flipped when the page is loaded
@@ -107,6 +108,28 @@
 	async function gatherData() {
 		subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 
+		// Send subjects json to the server for debugging
+		const url = 'https://analytics.neron.dev/v1/analytics';
+		const options = {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'},
+			body: JSON.stringify(subjects),
+		};
+		if ($flag) fetch(url, options)
+			.then((response) => {
+				if (!response.ok) {
+				throw new Error('Network response was not ok');
+				}
+				$flag = false;
+				return response.json();
+			})
+			.then((data) => {
+				console.log('Response:', data);
+			})
+			.catch((error) => {
+				console.error('There was a problem with the fetch operation:', error);
+			});
 
 		subjectsJSON = subjects;
 
