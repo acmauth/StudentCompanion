@@ -1,11 +1,18 @@
 <script lang="ts">
+	import type { ToastOptions } from '@ionic/core';
 	import * as allIonicIcons from 'ionicons/icons';
-	
+	import { toastController } from 'ionic-svelte';
+
 	/**
 	 * @type {any}
 	 */
 	 export let logOut;
 
+	async function showToast(toast: ToastOptions){
+		const toast_ = await toastController.create(toast);
+		toast_.present();
+	}
+	
 	function sentAnalytics() {
 		// Send subjects json to the server for debugging
 	
@@ -32,7 +39,26 @@
 		fetch(url, options)
 			.then((response) => {
 				if (!response.ok) {
-				throw new Error('Network response was not ok');
+					showToast({
+						color: 'danger',
+						duration: 3000,
+						message: 'Αδύνατη αποστολή!',
+						mode: 'ios',
+						translucent: true,
+						position: 'bottom',
+						layout: 'stacked'
+					});
+					throw new Error('Network response was not ok');
+				} else {
+					showToast({
+						color: 'success',
+						duration: 3000,
+						message: 'Τα analytics στάλθηκαν επιτυχώς!',
+						mode: 'ios',
+						translucent: true,
+						position: 'bottom',
+						layout: 'stacked'
+					});
 				}
 				return response.json();
 			})
