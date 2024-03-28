@@ -38,6 +38,7 @@
 
 </script>
 
+<ion-tab tab="schedule">
 <ion-header collapse="condense" mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
       <ion-title class="ion-padding-vertical" size="large">Πρόγραμμα μαθημάτων</ion-title>
@@ -64,7 +65,6 @@
  </ion-fab>
 
 
-<ion-tab tab="schedule"></ion-tab>
 
 <ion-content fullscreen={true}>
     <div>
@@ -89,11 +89,13 @@
             {#if currentClasses.length === 0}
                 <ion-icon icon={bookOutline} size="large" style="padding: 15px"></ion-icon>
                 <ion-label>Δεν υπάρχουν προγραμματισμένα μαθήματα αυτή τη μέρα.</ion-label>
+            {:else}
+                <div style="height: 5rem;"/>
             {/if}
         </ion-row>
     </div>
 </ion-content>
-
+</ion-tab>
 
 <style>
     ion-segment-button {

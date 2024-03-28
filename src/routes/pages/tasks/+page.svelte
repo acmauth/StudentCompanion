@@ -20,6 +20,7 @@
             }
             groupedTasks[weekday].push(task);
         });
+        console.log(tasks)
     });
 </script>
 
@@ -35,8 +36,6 @@
       </ion-buttons>
     </ion-toolbar>
 </ion-header>
-
-
 
 <ion-fab horizontal="end" vertical="bottom">
     <ion-fab-button color="light">
@@ -70,6 +69,8 @@
         {#if tasks.length === 0}
             <ion-icon icon={createOutline} size="large" style="padding: 15px"></ion-icon>
             <ion-label>Δεν υπάρχουν συμβάντα.</ion-label>
+        {:else}
+            <div style="height: 5rem;"/>
         {/if}
     </ion-row>
 </ion-content>

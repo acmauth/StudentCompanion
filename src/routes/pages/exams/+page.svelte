@@ -33,6 +33,8 @@
     </ion-toolbar>
 </ion-header>
 
+<ion-tab tab="schedule"></ion-tab>
+
 
 <ion-fab horizontal="end" vertical="bottom">
     <ion-fab-button color="light">
@@ -53,7 +55,7 @@
 <ion-content class="ion-padding">
     <div class="examCardList">
         {#each exams as examItem}
-        <ExamCard {examItem} />
+            <ExamCard {examItem} />
         {/each}
     </div>
     {#if exams.length === 0}
@@ -63,6 +65,8 @@
             <ion-label>Δεν υπάρχουν προγραμματισμένες εξετάσεις.</ion-label>
         </div>
     </div>
+    {:else}
+        <div style="height: 5rem;"/>
     {/if}
 </ion-content>
     
