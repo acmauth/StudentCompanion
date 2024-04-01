@@ -4,7 +4,7 @@
     import SwipeCard from "./swipeCard.svelte";
     import RecentGrade from "./recentGrades.svelte";
     import Notification from "$components/notifications/notification.svelte";
-    import { dismissedGrades } from "$components/recentResults/dismissedGrades";
+    import { dismissedItems } from "$components/recentResults/dismissedItems";
     import { onMount } from "svelte";
     import { refresh } from "ionicons/icons";
 
@@ -25,26 +25,26 @@
      */
     let allRecentItems = [];
 
-    // Subscribe to changes in dismissedGrades
-    const unsubscribe = dismissedGrades.subscribe(value => {
+    // Subscribe to changes in dismissedItems
+    const unsubscribe = dismissedItems.subscribe(value => {
         storedItems = value;
     });   
 
     /**
-     * Adding the exam to the dismissed grades
+     * Adding the exam to the dismissed items
 	 * @param {any} id
 	 */
     function addToDismissedItems(id){
-        dismissedGrades.update(ids => [...ids, id]);
+        dismissedItems.update(ids => [...ids, id]);
         recentlyDismissedItems = [...recentlyDismissedItems, id];
     }
 
     /**
-     * Removing the exam from the dismissed grades
+     * Removing the exam from the dismissed items
 	 * @param {any} id
 	 */
     function removeFromDismissedItems(id){
-        dismissedGrades.update((items) => items.filter((item) => item !== id));
+        dismissedItems.update((items) => items.filter((item) => item !== id));
     }
 
     // remove card when swipped
@@ -76,7 +76,7 @@
 
     onMount(async () => {
 
-        let notifications = await gatherNotifications({days: 18});
+        let notifications = await gatherNotifications({days: 7});
         let recentGrades = await gatherRecentGrades();
         
         // @ts-ignore
@@ -128,7 +128,7 @@
             {/if}
         {/each}
 
-        {#each recentItems as recentItem } 
+        {#each recentItems as recentItem (recentItem.id)} 
             {#if recentItem.type === "notification"}
                 <SwipeCard id={recentItem.id} on:delete-card={deleteCard}>
                     <Notification notification={recentItem.content}/>
