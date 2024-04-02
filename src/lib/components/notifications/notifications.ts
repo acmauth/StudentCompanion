@@ -1,9 +1,13 @@
 import { neoUniversisGet, neoElearningGet } from "$lib/dataService";
 // import UserInfoStore from "$stores/userinfo.store";
+import { simpleParser } from 'mailparser';
 import { userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
 import { persisted } from "svelte-persisted-store";
+import { connect } from 'imap-simple';
+import { getInbox } from "$lib/-webmail/plugins/native/dataservice";
+
 let userID = get(userTokens).elearning.userID;
 
 // Storing the IDs of notifications that have been read in a persisted store
@@ -27,6 +31,7 @@ function cleanUpFullMessage(fullMessage: string) {
      return fullMessage;
     }
 }
+
 
 async function getElearningNotifications(refresh: boolean = false) {
     const body_Read = [
@@ -95,7 +100,7 @@ async function getElearningNotifications(refresh: boolean = false) {
 async function getUniversisNotifications(refresh: boolean = false) {
     const options = {forceFresh: refresh, lifetime: 60 * 60 * 24}
     let messages: messages = await neoUniversisGet("students/me/messages?$top=3", options);//&$filter=dateReceived eq null");
-    
+
 
     let cleanMessages = messages.value.map((message) => {
         return {
@@ -118,9 +123,10 @@ type options = {
 export async function gatherNotifications(options?: options){
     if (!options) options = {};
 
+    getInbox({username: "mpalaktsc", password: "XXXX", server: "imap.gmail.com", port: "993"});
     let elearningNotifications = await getElearningNotifications(options.refresh);
     let universisNotifications = await getUniversisNotifications(options.refresh);
-    
+
     let notifications = elearningNotifications.concat(universisNotifications).sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
 
     if (options.days){
