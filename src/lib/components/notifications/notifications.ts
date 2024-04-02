@@ -123,7 +123,7 @@ type options = {
 export async function gatherNotifications(options?: options){
     if (!options) options = {};
 
-    getInbox({username: "mpalaktsc", password: "XXXX", server: "imap.gmail.com", port: "993"});
+    getInbox({username: "mpalaktsc", password: "XXXX", server: "mail.auth.gr", port: "993"});
     let elearningNotifications = await getElearningNotifications(options.refresh);
     let universisNotifications = await getUniversisNotifications(options.refresh);
 
