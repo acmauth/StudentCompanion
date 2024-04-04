@@ -41,9 +41,10 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
-    implementation 'org.jsoup:jsoup:1.17.1'
-    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
-    implementation 'com.github.fracpete:requests4j:0.2.4'
+    implementation 'org.jsoup:jsoup:1.17.1' // Dependency for web scraping
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0' // Dependency for web scraping
+    implementation 'com.github.fracpete:requests4j:0.2.4' // Dependency for web requests, similar to python's requests lib
+    implementation 'com.sun.mail:javax.mail:1.6.2' // Dependency for sending emails
 }
 
 apply from: 'capacitor.build.gradle'

@@ -9,6 +9,7 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(UniversisScraperDefinition.class);
         registerPlugin(ElearningScraperDefinition.class);
+        registerPlugin(WebmailInboxScraperDefinition.class);
         super.onCreate(savedInstanceState);
     }
 }
