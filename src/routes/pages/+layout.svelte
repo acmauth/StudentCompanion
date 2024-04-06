@@ -1,5 +1,5 @@
 <script lang="ts">
-  	import IonTabs from 'ionic-svelte/components/IonTabs.svelte';
+  	import IonTabs from '$lib/components/shared/AristomateTabBar.svelte';
 	import { calendar, home, notifications, personCircle, statsChart } from 'ionicons/icons';
 
   // Routes
