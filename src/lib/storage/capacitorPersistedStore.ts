@@ -1,5 +1,7 @@
 import { Preferences } from '@capacitor/preferences';
-import { writable, type Writable } from 'svelte/store';
+import type { Writable } from 'svelte/store';
+// import { writable, type Writable } from 'svelte/store';
+import { persisted } from 'svelte-persisted-store';
 import type { GetResult } from '@capacitor/preferences';
 
 /**
@@ -18,7 +20,8 @@ class CapacitorPersistedStore<T> {
     constructor(initialValue: T, key: string) {
         const storedValue = this.getStoredValue(key);
         this.key = key;
-        this.store = writable(initialValue);
+        // this.store = writable(initialValue);
+        this.store = persisted("capPeristedWorkaround_"+key, initialValue);
     }
     
     /**
