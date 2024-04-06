@@ -1,10 +1,10 @@
-import { persisted } from 'svelte-persisted-store'
+import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore'
 
 // Store for the user's credentials
-export const elearningCredentials = persisted('elearningCredentials', {
+export const elearningCredentials = new CapacitorPersistedStore({
     username: "",
     password: "",
     sesskey: "",
     userID: "",
     moodleSession: ""
-})
+}, 'elearningCredentials')
