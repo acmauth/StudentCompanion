@@ -10,7 +10,7 @@ export async function averages(subjectsJSON = null) {
 		courses = subjectsJSON;
 	}
 	else {
-		courses = (await neoUniversisGet("students/me/courses?$top=-1",{lifetime: 600})).value;
+		courses = (await neoUniversisGet("students/me/courses?$top=-1", { lifetime: 600 })).value;
 	}
 
 	let k = 0;
@@ -48,16 +48,32 @@ export async function averages(subjectsJSON = null) {
 		g_avg = Number((g_sum / g_grades.length).toFixed(3)).toFixed(2);
 
 	// Calculate the weighted sum of grades
-	i = 0;
-	for (const g of g_grades)
-		w_sum += g * ects_list[i++];
+	// i = 0;
+	// for (const g of g_grades)
+	// 	w_sum += g * ects_list[i++];
 
 	//	Calculate total ects
-	for (const ects of ects_list)
-		ects_sum_countable += ects;
+	// for (const ects of ects_list)
+	// 	ects_sum_countable += ects;
+
 
 	// Calculate the weighted average
-	w_avg = Number((w_sum / ects_sum_countable).toFixed(3)).toFixed(2);
+	let coefficients = 0;
+	for (const course of passed_courses)
+		coefficients += course.coefficient;
+
+	if (coefficients > 0) {
+		w_sum = 0;
+		for (const course of passed_courses)
+			w_sum += course.grade * course.coefficient;
+
+		w_avg = Number((w_sum * 10 / coefficients).toFixed(3)).toFixed(2);
+
+	}
+
+
+	// Calculate the weighted average
+	// w_avg = Number((w_sum / ects_sum_countable).toFixed(3)).toFixed(2);
 
 	grades = {
 		"grades": g_grades,
