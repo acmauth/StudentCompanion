@@ -126,7 +126,7 @@ export async function gatherNotifications(options?: options){
     // TODO: Use credentials from the credentials store and invoke them in the -webmail folder, instead of here for consistency (see -universis authentication)
     // So the call in here should look like this: webmailDataservice.getInbox();
     // Also might be worth to consider caching in the future
-    getInbox({username: "mpalaktsc", password: "XXXX", server: "mail.auth.gr", port: "993"});
+    await getInbox();
     let elearningNotifications = await getElearningNotifications(options.refresh);
     let universisNotifications = await getUniversisNotifications(options.refresh);
 

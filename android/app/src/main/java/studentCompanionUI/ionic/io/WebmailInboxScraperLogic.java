@@ -1,12 +1,15 @@
 package studentCompanionUI.ionic.io;
 
 import com.getcapacitor.JSObject;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.Arrays;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Properties;
-import javax.mail.*;
+import jakarta.mail.*;
 
 public class WebmailInboxScraperLogic {
 
@@ -20,27 +23,32 @@ public class WebmailInboxScraperLogic {
             props.setProperty("mail.imap.port", port);
 
             // Connect to the server
-            Session session = Session.getDefaultInstance(props);
+            Session session = Session.getInstance(props, new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+                }
+            });
             Store store = session.getStore("imaps");
             store.connect(server, Integer.parseInt(port), username, password);
 
-            // Open the inbox folder
             Folder inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_ONLY);
-
-            // Fetch messages
-            Message[] messages = inbox.getMessages();
+            int lastMessageNo =  inbox.getMessageCount() >= 21 ? inbox.getMessageCount() - 21 : 1;
+            Message[] messages = inbox.getMessages(lastMessageNo, inbox.getMessageCount());
 
             // Create JSON array to hold email details
             JSONArray emailsArray = new JSONArray();
 
             // Iterate through messages and extract details
-            for (Message message : messages) {
+
+            for (int i = messages.length - 1; i >= 0; i--) {
                 JSONObject emailJson = new JSONObject();
-                emailJson.put("From", Arrays.toString(message.getFrom()));
-                emailJson.put("Subject", message.getSubject());
-                emailJson.put("Date", message.getSentDate().toString());
-                emailJson.put("Content", message.getContent().toString());
+                if (messages[i].getFrom()[0].toString().split("<[^>]+>").length > 1)
+                    emailJson.put("From_Name", messages[i].getFrom()[0].toString().split("<[^>]+>")[0].trim());
+                emailJson.put("From_Address", messages[i].getFrom()[0].toString());
+                emailJson.put("Subject", messages[i].getSubject().trim());
+                emailJson.put("Date", messages[i].getSentDate().toString());
+                emailJson.put("Content", getTextFromMessage(messages[i]));
                 emailsArray.put(emailJson);
             }
 
@@ -60,7 +68,23 @@ public class WebmailInboxScraperLogic {
 
         var response = new JSObject();
         response.put("error", true);
-        System.out.println(response);
         return response;
+    }
+
+    private static String getTextFromMessage(Message message) throws MessagingException, IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(message.getInputStream()));
+
+        StringBuilder contentBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            contentBuilder.append(line);
+            contentBuilder.append("\n");
+        }
+
+        // Get content as string
+        String content = contentBuilder.toString();
+
+        reader.close();
+        return content;
     }
 }
