@@ -1,16 +1,14 @@
 <script>
-    import { capacitorPersistedStore } from "$lib/storage/capacitorPersistedStore";
+    import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
     import { onMount } from 'svelte';
 
-    async function doThing(){
-        setTimeout(() => {
-            console.log("Hello world!");
-        }, 0);
-    }
-    console.log("1");
-    doThing();
-    console.log("2");
-    // const storeThing = await capacitorPersistedStore('test', {count: 0});
+    let myStore = new CapacitorPersistedStore("testValue", 'myStore');
+    let myOtherStore = new CapacitorPersistedStore("testValue", 'myOtherStore');
+
+    onMount( async () => {
+        await myStore.loadFromStorage();
+        await myOtherStore.loadFromStorage();
+    });
 
 </script>
 
@@ -20,7 +18,10 @@
             <ion-card-title>Δοκιμή</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-            <p></p>
+            <p>{$myStore}</p>
+            <ion-button onClick={() => myStore.set('Δοκιμή')}>Αλλαγή</ion-button>
+            <p>{$myOtherStore}</p>
+            <ion-button onClick={() => myOtherStore.set('Δεύτερη Δοκιμή')}>Αλλαγή</ion-button>
         </ion-card-content>
     </ion-card>
 </ion-content>
