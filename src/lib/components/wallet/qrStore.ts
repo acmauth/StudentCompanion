@@ -1,4 +1,4 @@
-import { persisted } from 'svelte-persisted-store'
 import type { qrItem } from './qrItem';
+import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
 
-export const qrStore = persisted('qrStore', new Array<qrItem>());
+export const qrStore = new CapacitorPersistedStore(new Array<qrItem>(), 'qrStore');

@@ -4,7 +4,7 @@
     import SwipeCard from "./swipeCard.svelte";
     import RecentGrade from "./recentGrades.svelte";
     import Notification from "$components/notifications/notification.svelte";
-    import { dismissedItems } from "./dismissedItems_old";
+    import { dismissedItems } from "$components/recentResults/dismissedItems";
     import { onMount } from "svelte";
     import { refresh } from "ionicons/icons";
 
@@ -25,6 +25,10 @@
      */
     let allRecentItems = [];
 
+    // Subscribe to changes in dismissedItems
+    const unsubscribe = dismissedItems.subscribe(value => {
+        storedItems = value;
+    });   
 
     /**
      * Adding the exam to the dismissed items
@@ -74,7 +78,6 @@
 
         let notifications = await gatherNotifications({days: 7});
         let recentGrades = await gatherRecentGrades();
-        storedItems = await dismissedItems.get();
         
         // @ts-ignore
         recentItems = recentItems.concat(recentGrades.map( ( recentGrade ) => {return {

@@ -1,4 +1,4 @@
 import type { TaskItem } from "./TaskItem";
-import { persisted } from 'svelte-persisted-store'
+import CapacitorPersistedStore from "$lib/storage/capacitorPersistedStore";
 
-export const taskStore = persisted('taskStore', new Array<TaskItem>());
+export const taskStore = new CapacitorPersistedStore(new Array<TaskItem>(), 'taskStore');
