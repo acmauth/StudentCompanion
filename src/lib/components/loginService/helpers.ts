@@ -1,6 +1,5 @@
 // import { tokenGrab } from "$lib/universisAuthentication/tokenGeneratorWorker"
-import { userCreds, userTokens } from "$stores/credentials.store";
-import { elearningFetchNewToken } from "$lib/elearningAuthentication/elearningDataService";
+import { userCreds } from "$stores/credentials.store";
 import sisAuthenticator from "$lib/-universis/authenticator/core";
 import elearningAuthenticator from "$lib/-elearning/authenticator/core";
 
