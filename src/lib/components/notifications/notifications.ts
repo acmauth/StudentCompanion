@@ -1,11 +1,8 @@
 import { neoUniversisGet, neoElearningGet } from "$lib/dataService";
-// import UserInfoStore from "$stores/userinfo.store";
-import { simpleParser } from 'mailparser';
 import { userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
 import { persisted } from "svelte-persisted-store";
-import { connect } from 'imap-simple';
 import { getInbox } from "$lib/-webmail/plugins/native/dataservice";
 
 let userID = get(userTokens).elearning.userID;
@@ -13,7 +10,6 @@ let userID = get(userTokens).elearning.userID;
 // Storing the IDs of notifications that have been read in a persisted store
 //TODO: Add a way to remove notifications from the list
 export const readNotifications = persisted("ReadNotifications", []);
-
 
 
 function cleanUpFullMessage(fullMessage: string) {
@@ -115,6 +111,54 @@ async function getUniversisNotifications(refresh: boolean = false) {
     return cleanMessages;
 }
 
+async function getWebmailNotifications(refresh: boolean = false) {
+
+    const messages = await getInbox();
+    if (messages.error) return [];
+    
+    let cleanMessages = messages.received.map((message) => {
+        return {
+            type: "webmail",
+            subject: message.Subject ? new String(message.Subject).split(" ").map(encodedWordsToText).join("") : "Χωρίς θέμα",
+            body: message.Body ? formatWebmailBody(new String(message.Body)) : "Χωρίς περιεχόμενο",
+            sender: message.From_Name ? new String(message.From_Name).split(" ").map(encodedWordsToText).join("") : message.From_Address,
+            dateReceived: new Date(message.Date),
+            url: "https://webmail.auth.gr",
+            id: parseInt(message.Id)
+        };});
+
+    return cleanMessages;
+}
+
+function formatWebmailBody(body: String) {
+    if (body.includes("MIME format") && body.includes("Content-Type:")) {
+        return (body.toString());
+    } else if (body.includes("=?UTF-8")) {
+        return body.split(" ").map(encodedWordsToText).join("")
+    } else {
+        return body;
+    }
+
+}
+
+function encodedWordsToText(encodedWords: string): string {     
+    const encodedWordRegex = /\=\?(.+)\?([B|Q])\?(.+)\?\=/;
+    const match = encodedWords.match(encodedWordRegex);
+    if (!match) {
+        return " " + encodedWords + " ";
+    }
+    const [, charset, encoding, encodedText] = match;
+    let byteString: Buffer;
+    if (encoding === 'B') {
+        byteString = Buffer.from(encodedText, 'base64');
+    } else if (encoding === 'Q') {
+        byteString = Buffer.from(encodedText, 'binary');
+    } else {
+        return " " + encodedWords + " ";
+    }
+    return byteString.toString(charset);
+}
+
 type options = {
     refresh?: boolean | undefined;
     days?: number | undefined;
@@ -126,11 +170,11 @@ export async function gatherNotifications(options?: options){
     // TODO: Use credentials from the credentials store and invoke them in the -webmail folder, instead of here for consistency (see -universis authentication)
     // So the call in here should look like this: webmailDataservice.getInbox();
     // Also might be worth to consider caching in the future
-    await getInbox();
+    let webmailNotifications = await getWebmailNotifications();
     let elearningNotifications = await getElearningNotifications(options.refresh);
     let universisNotifications = await getUniversisNotifications(options.refresh);
 
-    let notifications = elearningNotifications.concat(universisNotifications).sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
+    let notifications = elearningNotifications.concat(webmailNotifications).concat(universisNotifications).sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
 
     if (options.days){
         notifications = notifications.filter((notification) => Math.floor((new Date().getTime() - notification.dateReceived.getTime()) / 1000) <= options.days * 86400);

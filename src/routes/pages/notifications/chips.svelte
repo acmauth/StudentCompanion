@@ -2,7 +2,7 @@
    import universisLogo from "$images/universis.png";
    import elearningLogo from "$images/elearning.png";
    import { toggles } from './notificationToggles';
-   import { checkmark  } from "ionicons/icons"; 
+   import { checkmark, mailOpen  } from "ionicons/icons"; 
 </script>
 
 <div class="chipsrow">
@@ -30,6 +30,15 @@
             <ion-icon icon={checkmark}></ion-icon>
         {/if}
     </ion-chip>
+    <ion-chip color="secondary" outline={!$toggles.webmail} on:click={() => {toggles.toggleWebmail()}} aria-hidden>
+        <ion-avatar>
+           <img src={mailOpen} alt="mail icon"/>
+        </ion-avatar>
+        <ion-label>Webmail</ion-label>
+        {#if $toggles.webmail}
+             <ion-icon icon={checkmark}></ion-icon>
+         {/if}
+     </ion-chip>
      <ion-chip color="warning" outline={!$toggles.elSystem} on:click={() => {toggles.toggleelSystem()}} aria-hidden>
         <ion-avatar>
            <img src={elearningLogo} alt="elearning logo"/>

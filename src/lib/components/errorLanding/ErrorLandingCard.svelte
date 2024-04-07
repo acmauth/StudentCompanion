@@ -14,7 +14,7 @@
                  <ion-label color="medium">Περισσότερες λεπτομέρειες</ion-label>
               </ion-item>
               <ion-list slot="content">
-                 <ion-item class="custom-accordion-item">
+                 <ion-item class="custom-accordion-item" text-wrap>
                     <ion-label color="medium">{errorMsg}</ion-label>
                  </ion-item>
               </ion-list>

@@ -33,22 +33,25 @@ public class WebmailInboxScraperLogic {
 
             Folder inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_ONLY);
-            int lastMessageNo =  inbox.getMessageCount() >= 21 ? inbox.getMessageCount() - 21 : 1;
+            int lastMessageNo = inbox.getMessageCount() >= 8 ? inbox.getMessageCount() - 8 : 1;
             Message[] messages = inbox.getMessages(lastMessageNo, inbox.getMessageCount());
 
             // Create JSON array to hold email details
             JSONArray emailsArray = new JSONArray();
 
             // Iterate through messages and extract details
-
             for (int i = messages.length - 1; i >= 0; i--) {
                 JSONObject emailJson = new JSONObject();
-                if (messages[i].getFrom()[0].toString().split("<[^>]+>").length > 1)
-                    emailJson.put("From_Name", messages[i].getFrom()[0].toString().split("<[^>]+>")[0].trim());
+
+                if (messages[i].getFrom()[0].toString().split("<[^>]+>").length >= 1) {
+                    String name = messages[i].getFrom()[0].toString().split("<[^>]+>")[0].trim().replace("\"", "");
+                    emailJson.put("From_Name", name);
+                }
                 emailJson.put("From_Address", messages[i].getFrom()[0].toString());
                 emailJson.put("Subject", messages[i].getSubject().trim());
                 emailJson.put("Date", messages[i].getSentDate().toString());
-                emailJson.put("Content", getTextFromMessage(messages[i]));
+                emailJson.put("Body", getTextFromMessage(messages[i]));
+                emailJson.put("Id", String.valueOf(i));
                 emailsArray.put(emailJson);
             }
 
@@ -59,9 +62,7 @@ public class WebmailInboxScraperLogic {
             var response = new JSObject();
             response.put("error", null);
             response.put("received", emailsArray);
-            System.out.println(response);
             return response;
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,13 +79,20 @@ public class WebmailInboxScraperLogic {
         String line;
         while ((line = reader.readLine()) != null) {
             contentBuilder.append(line);
-            contentBuilder.append("\n");
+            if (!isWhitespaceOnly(line) && !line.isEmpty())
+                contentBuilder.append("\n");
         }
-
-        // Get content as string
         String content = contentBuilder.toString();
-
         reader.close();
         return content;
+    }
+
+    public static boolean isWhitespaceOnly(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            if (!Character.isWhitespace(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

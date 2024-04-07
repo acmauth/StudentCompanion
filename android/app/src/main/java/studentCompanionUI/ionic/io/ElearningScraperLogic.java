@@ -134,7 +134,7 @@ public class ElearningScraperLogic {
 
             // Scraping the MoodleSession cookie!
             var elearningCookies = session.cookies().getCookieStore().get(new URI("https://elearning.auth.gr"));
-            for (HttpCookie cookie: elearningCookies) {
+                for (HttpCookie cookie: elearningCookies) {
                 if (cookie.getName().equalsIgnoreCase("MoodleSession")){
                     moodleSession = cookie.getValue();
                 }

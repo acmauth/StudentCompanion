@@ -10,12 +10,10 @@ export async function getInbox(): Promise<WebmailInboxRequestResponse> {
     const port = '993';
     const response = await WebMailInboxPlugins.getInbox({username, password, server, port});
 
-    console.log(response);
-
     if (response.error) {
         return {error: response.error};
     } else {
-        let data = JSON.parse(response.received);
+        let data = response.received;
         return {error: null, received : data};
     }
 }
