@@ -47,16 +47,7 @@ public class WebmailInboxScraperLogic {
             // Iterate through messages and extract details
             for (int i = messages.length - 1; i >= 0; i--) {
                 JSONObject emailJson = new JSONObject();
-
-                if (messages[i].getFrom()[0].toString().split("<[^>]+>").length >= 1) {
-                    String name = messages[i].getFrom()[0].toString().split("<[^>]+>")[0].trim().replace("\"", "");
-                    emailJson.put("From_Name", name);
-                }
-                emailJson.put("From_Address", messages[i].getFrom()[0].toString());
-                emailJson.put("Subject", messages[i].getSubject().trim());
-                emailJson.put("Date", messages[i].getSentDate().toString());
-                emailJson.put("Body", getRawMessageSource(messages[i]));
-                emailJson.put("Id", String.valueOf(messages[i].getMessageNumber()));
+                emailJson.put("data", getRawMessageSource(messages[i]));
                 emailsArray.put(emailJson);
             }
 
@@ -81,29 +72,5 @@ public class WebmailInboxScraperLogic {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         message.writeTo(outputStream);
         return outputStream.toString();
-    }
-
-    private static String getTextFromMessage(Message message) throws MessagingException, IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(message.getInputStream()));
-
-        StringBuilder contentBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            contentBuilder.append(line);
-            if (!isWhitespaceOnly(line) && !line.isEmpty())
-                contentBuilder.append("\n");
-        }
-        String content = contentBuilder.toString();
-        reader.close();
-        return content;
-    }
-
-    public static boolean isWhitespaceOnly(String str) {
-        for (int i = 0; i < str.length(); i++) {
-            if (!Character.isWhitespace(str.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
     }
 }

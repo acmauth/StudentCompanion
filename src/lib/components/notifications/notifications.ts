@@ -5,8 +5,6 @@ import type { messages, elearningMessages } from "$types/messages";
 import { persisted } from "svelte-persisted-store";
 import { getInbox } from "$lib/-webmail/plugins/native/dataservice";
 import { parseMail } from '@protontech/jsmimeparser';
-// import * as DOMPurify from 'dompurify';
-
 
 let userID = get(userTokens).elearning.userID;
 
@@ -126,18 +124,18 @@ async function getWebmailNotifications(refresh: boolean = false) {
             to,
             date,
             ...rest
-        } = parseMail(message.Body);
+        } = parseMail(message.data);
         
-        // const cleanBody = DOMPurify.sanitize(body.html ?? body.text ?? "").trim().replace(/<br>/g, "\n").replace(/<[^>]*>?/gm, '');
+        const cleanBody = (body.html ?? body.text ?? "").trim().replace(/<br>/g, "\n").replace(/<[^>]*>?/gm, '');
 
         return {
             type: "webmail",
             subject: subject ? subject : "Χωρίς θέμα",
-            body: body.html ?? body.text ?? "",
-            sender: from.name !== "" ? from.name : message.From_Address ?? "Άγνωστος αποστολέας",
+            body: cleanBody,
+            sender: from.name !== "" ? from.name : from.email ?? "Άγνωστος αποστολέας",
             dateReceived: date,
             url: "https://webmail.auth.gr",
-            id: parseInt(message.Id)
+            id: date?.getTime() ?? new Date().getTime()
         };
     });
     return cleanMessages;
