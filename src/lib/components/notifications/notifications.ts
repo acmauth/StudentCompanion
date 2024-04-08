@@ -5,6 +5,9 @@ import type { messages, elearningMessages } from "$types/messages";
 import { persisted } from "svelte-persisted-store";
 import { getInbox } from "$lib/-webmail/plugins/native/dataservice";
 import { parseMail } from '@protontech/jsmimeparser';
+// import * as DOMPurify from 'dompurify';
+
+
 let userID = get(userTokens).elearning.userID;
 
 // Storing the IDs of notifications that have been read in a persisted store
@@ -27,7 +30,6 @@ function cleanUpFullMessage(fullMessage: string) {
      return fullMessage;
     }
 }
-
 
 async function getElearningNotifications(refresh: boolean = false) {
     const body_Read = [
@@ -117,26 +119,27 @@ async function getWebmailNotifications(refresh: boolean = false) {
     
     let cleanMessages = messages.received.map((message) => {
         const {
-            attachments, // [{ contentType: 'image/gif', fileName: 'smile.gif', content: Uint8Array[71, 73, 70..], ... }]
-            body, // { text: 'Hello Alice.\nThis is..', html: '' }
-            subject, // 'Test message'
-            from, // // { name: 'Bob Example', email: 'bob@internet.com' }
-            to, // [{ name: 'Alice Example', email: 'alice@internet.com' }]
-            date, // Date('Wed, 20 Aug 2003 16:02:43 -0500')
-            ...rest // headers and more
+            attachments,
+            body,
+            subject,
+            from,
+            to,
+            date,
+            ...rest
         } = parseMail(message.Body);
+        
+        // const cleanBody = DOMPurify.sanitize(body.html ?? body.text ?? "").trim().replace(/<br>/g, "\n").replace(/<[^>]*>?/gm, '');
 
         return {
             type: "webmail",
             subject: subject ? subject : "Χωρίς θέμα",
-            body: body.html ? body.html : body.text,
-            sender: from ? from.name : message.From_Address,
+            body: body.html ?? body.text ?? "",
+            sender: from.name !== "" ? from.name : message.From_Address ?? "Άγνωστος αποστολέας",
             dateReceived: date,
             url: "https://webmail.auth.gr",
             id: parseInt(message.Id)
         };
     });
-
     return cleanMessages;
 }
 

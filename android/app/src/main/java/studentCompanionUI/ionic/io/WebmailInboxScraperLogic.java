@@ -56,7 +56,7 @@ public class WebmailInboxScraperLogic {
                 emailJson.put("Subject", messages[i].getSubject().trim());
                 emailJson.put("Date", messages[i].getSentDate().toString());
                 emailJson.put("Body", getRawMessageSource(messages[i]));
-                emailJson.put("Id", String.valueOf(i));
+                emailJson.put("Id", String.valueOf(messages[i].getMessageNumber()));
                 emailsArray.put(emailJson);
             }
 
