@@ -112,12 +112,10 @@ async function getUniversisNotifications(refresh: boolean = false) {
 }
 
 async function getWebmailNotifications(refresh: boolean = false) {
-
     const messages = await getInbox();
     if (messages.error) return [];
     
     let cleanMessages = messages.received.map((message) => {
-
         const {
             attachments, // [{ contentType: 'image/gif', fileName: 'smile.gif', content: Uint8Array[71, 73, 70..], ... }]
             body, // { text: 'Hello Alice.\nThis is..', html: '' }
@@ -126,9 +124,9 @@ async function getWebmailNotifications(refresh: boolean = false) {
             to, // [{ name: 'Alice Example', email: 'alice@internet.com' }]
             date, // Date('Wed, 20 Aug 2003 16:02:43 -0500')
             ...rest // headers and more
-          } = parseMail(message.Body);
+        } = parseMail(message.Body);
 
-          return {
+        return {
             type: "webmail",
             subject: subject ? subject : "Χωρίς θέμα",
             body: body.html ? body.html : body.text,
@@ -136,48 +134,10 @@ async function getWebmailNotifications(refresh: boolean = false) {
             dateReceived: date,
             url: "https://webmail.auth.gr",
             id: parseInt(message.Id)
-          }
-
-        return {
-            type: "webmail",
-            subject: message.Subject ? new String(message.Subject).split(" ").map(encodedWordsToText).join("") : "Χωρίς θέμα",
-            body: message.Body ? formatWebmailBody(new String(message.Body)) : "Χωρίς περιεχόμενο",
-            sender: message.From_Name ? new String(message.From_Name).split(" ").map(encodedWordsToText).join("") : message.From_Address,
-            dateReceived: new Date(message.Date),
-            url: "https://webmail.auth.gr",
-            id: parseInt(message.Id)
-        };});
+        };
+    });
 
     return cleanMessages;
-}
-
-function formatWebmailBody(body: String) {
-    if (body.includes("MIME format") && body.includes("Content-Type:")) {
-        return (body.toString());
-    } else if (body.includes("=?UTF-8")) {
-        return body.split(" ").map(encodedWordsToText).join("")
-    } else {
-        return body;
-    }
-
-}
-
-function encodedWordsToText(encodedWords: string): string {     
-    const encodedWordRegex = /\=\?(.+)\?([B|Q])\?(.+)\?\=/;
-    const match = encodedWords.match(encodedWordRegex);
-    if (!match) {
-        return " " + encodedWords + " ";
-    }
-    const [, charset, encoding, encodedText] = match;
-    let byteString: Buffer;
-    if (encoding === 'B') {
-        byteString = Buffer.from(encodedText, 'base64');
-    } else if (encoding === 'Q') {
-        byteString = Buffer.from(encodedText, 'binary');
-    } else {
-        return " " + encodedWords + " ";
-    }
-    return byteString.toString(charset);
 }
 
 type options = {
