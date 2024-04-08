@@ -75,7 +75,7 @@
                       </ion-item-divider>                    
                     <ion-item lines="none" class="item-text-wrap">
                         <div class="notifContent">
-                            {@html content.replaceAll("\n", "<br>")}
+                            {@html content}
                         </div>
                     </ion-item>
                     <ion-item>

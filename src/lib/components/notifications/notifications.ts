@@ -4,7 +4,7 @@ import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
 import { persisted } from "svelte-persisted-store";
 import { getInbox } from "$lib/-webmail/plugins/native/dataservice";
-
+import { parseMail } from '@protontech/jsmimeparser';
 let userID = get(userTokens).elearning.userID;
 
 // Storing the IDs of notifications that have been read in a persisted store
@@ -117,6 +117,27 @@ async function getWebmailNotifications(refresh: boolean = false) {
     if (messages.error) return [];
     
     let cleanMessages = messages.received.map((message) => {
+
+        const {
+            attachments, // [{ contentType: 'image/gif', fileName: 'smile.gif', content: Uint8Array[71, 73, 70..], ... }]
+            body, // { text: 'Hello Alice.\nThis is..', html: '' }
+            subject, // 'Test message'
+            from, // // { name: 'Bob Example', email: 'bob@internet.com' }
+            to, // [{ name: 'Alice Example', email: 'alice@internet.com' }]
+            date, // Date('Wed, 20 Aug 2003 16:02:43 -0500')
+            ...rest // headers and more
+          } = parseMail(message.Body);
+
+          return {
+            type: "webmail",
+            subject: subject ? subject : "Χωρίς θέμα",
+            body: body.html ? body.html : body.text,
+            sender: from ? from.name : message.From_Address,
+            dateReceived: date,
+            url: "https://webmail.auth.gr",
+            id: parseInt(message.Id)
+          }
+
         return {
             type: "webmail",
             subject: message.Subject ? new String(message.Subject).split(" ").map(encodedWordsToText).join("") : "Χωρίς θέμα",

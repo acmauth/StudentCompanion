@@ -9,7 +9,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
-import jakarta.mail.*;
+
+import java.io.ByteArrayOutputStream;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.io.ByteArrayOutputStream;
+import java.util.*;
 
 public class WebmailInboxScraperLogic {
 
@@ -50,7 +55,7 @@ public class WebmailInboxScraperLogic {
                 emailJson.put("From_Address", messages[i].getFrom()[0].toString());
                 emailJson.put("Subject", messages[i].getSubject().trim());
                 emailJson.put("Date", messages[i].getSentDate().toString());
-                emailJson.put("Body", getTextFromMessage(messages[i]));
+                emailJson.put("Body", getRawMessageSource(messages[i]));
                 emailJson.put("Id", String.valueOf(i));
                 emailsArray.put(emailJson);
             }
@@ -70,6 +75,12 @@ public class WebmailInboxScraperLogic {
         var response = new JSObject();
         response.put("error", true);
         return response;
+    }
+
+    private static String getRawMessageSource(Message message) throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        message.writeTo(outputStream);
+        return outputStream.toString();
     }
 
     private static String getTextFromMessage(Message message) throws MessagingException, IOException {
