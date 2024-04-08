@@ -5,7 +5,7 @@
     import { mailOpen } from "ionicons/icons";
     import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
-    import { onMount } from 'svelte';
+    import sanitizeHtml from 'sanitize-html';
     export let notification: notification;
 
     let inlineModalOpen = false;
@@ -13,7 +13,7 @@
     
     const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
 
-    let content = notification.body;
+    let content = sanitizeHtml(notification.body);
 
 </script>
 
