@@ -45,7 +45,7 @@ export async function averages(subjectsJSON = null) {
 	// Calculate the sum of grades and their average
 	g_sum = g_grades.reduce((total, currentValue) => total + currentValue, 0);
 	if (g_grades.length > 0)
-		g_avg = Number((g_sum / g_grades.length).toFixed(3)).toFixed(2);
+		g_avg = Number((g_sum / g_grades.length)).toFixed(2);
 
 	// Calculate the weighted sum of grades
 	// i = 0;
