@@ -5,7 +5,8 @@
     import { mailOpen } from "ionicons/icons";
     import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
-    import sanitizeHtml from 'sanitize-html';
+    import DOMPurify from 'dompurify';
+
     export let notification: notification;
 
     let inlineModalOpen = false;
@@ -13,8 +14,7 @@
     
     const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
 
-    let content = sanitizeHtml(notification.body);
-
+    let content = DOMPurify.sanitize(notification.body);
 </script>
 
 
