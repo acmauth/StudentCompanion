@@ -149,14 +149,26 @@ type options = {
 export async function gatherNotifications(options?: options){
     if (!options) options = {};
 
-    // TODO: Use credentials from the credentials store and invoke them in the -webmail folder, instead of here for consistency (see -universis authentication)
-    // So the call in here should look like this: webmailDataservice.getInbox();
-    // Also might be worth to consider caching in the future
     let webmailNotifications = await getWebmailNotifications();
     let elearningNotifications = await getElearningNotifications(options.refresh);
     let universisNotifications = await getUniversisNotifications(options.refresh);
 
-    let notifications = elearningNotifications.concat(webmailNotifications).concat(universisNotifications).sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
+    let notifications = elearningNotifications.concat(webmailNotifications)
+                        .filter((notification, index, self) => {
+                            if (notification.type === "webmail") {
+                                const hasMatchingElearning = self.some((otherNotification, otherIndex) => {
+                                    return (
+                                        otherIndex !== index &&
+                                        ( otherNotification.type === "elearning" || otherNotification.type === "system" ) &&
+                                        otherNotification.subject === notification.subject
+                                    );
+                                });
+                                return !hasMatchingElearning;
+                            }
+                            return true;
+                        })
+                        .concat(universisNotifications)
+                        .sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
 
     if (options.days){
         notifications = notifications.filter((notification) => Math.floor((new Date().getTime() - notification.dateReceived.getTime()) / 1000) <= options.days * 86400);
