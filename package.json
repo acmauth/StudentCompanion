@@ -35,6 +35,7 @@
 	"dependencies": {
 		"@capacitor/android": "^5.5.1",
 		"@capacitor/app": "^5.0.7",
+		"@capacitor/clipboard": "^5.0.7",
 		"@capacitor/core": "^5.5.1",
 		"@capacitor/network": "^5.0.7",
 		"@capacitor/status-bar": "^5.0.6",

@@ -8,50 +8,50 @@
 	 */
 	 export let gender;
 	/**
-	 * @type {any}
+	 * @type {string}
 	 */
 	 export let username;
 	/**
-	 * @type {any}
+	 * @type {string}
 	 */
 
 	 export let familyName;
 	/**
-	 * @type {any}
+	 * @type {string}
 	 */
 
 	 export let givenName;
 	/**
-	 * @type {any}
+	 * @type {string}
 	 */
 	 export let aem;
 	 /**
-	 * @type {any}
+	 * @type {string}
 	 */
 	 export let apm;
 	/**
-	 * @type {any}
+	 * @type {string}
 	 */
 	 export let schoolGraduated;
 	/**
-	 * @type {any}
+	 * @type {string}
 	 */
 	 export let birthDate;
 	/**
-	 * @type {any}
+	 * @type {string}
 	 */
 	 export let email;
 
 	/**
-	 * @type {any}
+	 * @type {string}
 	 */
 	 export let departmentName;
 	/**
-	 * @type {any}
+	 * @type {string}
 	 */
 	 export let semester;
 	 /**
-	 * @type {any}
+	 * @type {string}
 	 */
 </script>
 
