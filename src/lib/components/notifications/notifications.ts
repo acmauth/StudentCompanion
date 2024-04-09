@@ -3,7 +3,7 @@ import { userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
 import { persisted } from "svelte-persisted-store";
-import { getInbox } from "$lib/-webmail/plugins/native/dataservice";
+import { webmailInboxRequest } from "$lib/-webmail/dataService/core";
 import { parseMail } from '@protontech/jsmimeparser';
 
 let userID = get(userTokens).elearning.userID;
@@ -112,7 +112,7 @@ async function getUniversisNotifications(refresh: boolean = false) {
 }
 
 async function getWebmailNotifications(refresh: boolean = false) {
-    const messages = await getInbox();
+    const messages = await webmailInboxRequest();
     if (messages.error) return [];
     
     let cleanMessages = messages.received.map((message) => {

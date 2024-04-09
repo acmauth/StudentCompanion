@@ -1,7 +1,7 @@
 import { WebMailInboxPlugins } from "./nativeDefinitions";
 import { userCreds } from "$stores/credentials.store";
 import { get } from "svelte/store";
-import type { WebmailInboxRequest, WebmailInboxRequestResponse } from "./nativeDefinitions";
+import type { WebmailInboxRequestResponse } from "$lib/-webmail/types.ts";
 
 export async function getInbox(): Promise<WebmailInboxRequestResponse> {
     const username = get(userCreds).username;
