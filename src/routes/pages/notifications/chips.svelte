@@ -1,18 +1,18 @@
 <script lang="ts">
    import universisLogo from "$images/universis.png";
    import elearningLogo from "$images/elearning.png";
-   import { toggles } from './notificationToggles';
+   import { toggleAll, toggleElearning, toggleUniversis, toggleelSystem, toggles } from './notificationToggles';
    import { checkmark  } from "ionicons/icons"; 
 </script>
 
 <div class="chipsrow">
-    <ion-chip color="primary" outline={!$toggles.all} on:click={() => {toggles.toggleAll()}} aria-hidden>
+    <ion-chip color="primary" outline={!$toggles.all} on:click={() => {toggleAll()}} aria-hidden>
        <ion-label>Όλες οι ειδοποιήσεις</ion-label>
        {#if $toggles.all}
             <ion-icon icon={checkmark}></ion-icon>
         {/if}
     </ion-chip>
-    <ion-chip color="warning" outline={!$toggles.elearning} on:click={() => {toggles.toggleElearning()}} aria-hidden>
+    <ion-chip color="warning" outline={!$toggles.elearning} on:click={() => {toggleElearning()}} aria-hidden>
         <ion-avatar>
            <img src={elearningLogo} alt="elearning logo"/>
         </ion-avatar>
@@ -21,7 +21,7 @@
             <ion-icon icon={checkmark}></ion-icon>
         {/if}
      </ion-chip>
-    <ion-chip color="tertiary" outline={!$toggles.universis} on:click={() => {toggles.toggleUniversis()}} aria-hidden>
+    <ion-chip color="tertiary" outline={!$toggles.universis} on:click={() => {toggleUniversis()}} aria-hidden>
        <ion-avatar>
           <img src={universisLogo} alt="universis logo"/>
        </ion-avatar>
@@ -30,7 +30,7 @@
             <ion-icon icon={checkmark}></ion-icon>
         {/if}
     </ion-chip>
-     <ion-chip color="warning" outline={!$toggles.elSystem} on:click={() => {toggles.toggleelSystem()}} aria-hidden>
+     <ion-chip color="warning" outline={!$toggles.elSystem} on:click={() => {toggleelSystem()}} aria-hidden>
         <ion-avatar>
            <img src={elearningLogo} alt="elearning logo"/>
         </ion-avatar>

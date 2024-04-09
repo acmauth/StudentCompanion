@@ -3,12 +3,11 @@ import { neoUniversisGet, neoElearningGet } from "$lib/dataService";
 import { userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
-import { persisted } from "svelte-persisted-store";
 let userID = get(userTokens).elearning.userID;
 
 // Storing the IDs of notifications that have been read in a persisted store
 //TODO: Add a way to remove notifications from the list
-export const readNotifications = persisted("ReadNotifications", []);
+// export const readNotifications = persisted("ReadNotifications", []);
 
 
 
