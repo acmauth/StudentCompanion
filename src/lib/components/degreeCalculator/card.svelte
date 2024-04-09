@@ -37,21 +37,13 @@
         degree_grade = degree_grade;
     }
 
-    function handleKeyDown(event) {
-        if (event.key === 'Backspace' && event.target.value == '10') {
-            event.target.value = '';
-            inputUpdate(unpassed_courses, sums, degree_grade);
-            degree_grade = degree_grade;
-        }
-    }
-    
 </script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 <ion-card style="overflow-y: auto;" class="ion-padding-vertical">
     <ion-card-title>Πρόβλεψη Μέσου Όρου</ion-card-title>
-    <ion-card-subtitle>Βάλε τους βαθμούς που περιμένεις να λάβεις για να δεις πώς επηρεάζεται ο Μ.Ο. σου</ion-card-subtitle>
+    <ion-card-subtitle>Βάλε τους βαθμούς, μεγαλύτερους ή ίσους του 5, που περιμένεις να λάβεις για να δεις πώς επηρεάζεται ο Μ.Ο. σου</ion-card-subtitle>
 
     {#await universis()}
         <CoursesSkeleton />
@@ -68,8 +60,7 @@
                     <input type="text" inputmode="decimal" 
                     id="{course.id}" class="inputCustom"
                     on:click={clickInput} placeholder="5.00"
-                    on:input={gradeInput}
-                    on:keydown={handleKeyDown} />      
+                    on:input={gradeInput}/>      
                 </div>
 
             </div>      
