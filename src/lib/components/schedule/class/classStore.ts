@@ -1,4 +1,4 @@
 import type { ClassItem } from "./ClassItem";
-import { persisted } from 'svelte-persisted-store'
+import CapacitorPersistedStore from "$lib/storage/capacitorPersistedStore";
 
-export const classStore = persisted('classStore', new Array<ClassItem>());
+export const classStore = new CapacitorPersistedStore(new Array<ClassItem>(), 'classStore');

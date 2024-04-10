@@ -33,7 +33,7 @@ export async function averagesPerSemester(subjectsJSON: course[] | null | undefi
 			}
 
 			if (count) {
-				let avg = Number(((sum*10 /count).toFixed(3))).toFixed(2);
+				let avg = Number(((sum*10 /count))).toFixed(2);
 				const s_avg = String(avg);
 				averages[semester] = s_avg;
 			}

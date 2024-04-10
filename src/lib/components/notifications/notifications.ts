@@ -10,7 +10,7 @@ let userID = get(userTokens).elearning.userID;
 
 // Storing the IDs of notifications that have been read in a persisted store
 //TODO: Add a way to remove notifications from the list
-export const readNotifications = persisted("ReadNotifications", []);
+// export const readNotifications = persisted("ReadNotifications", []);
 
 
 function cleanUpFullMessage(fullMessage: string) {
