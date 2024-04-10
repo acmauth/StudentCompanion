@@ -52,7 +52,7 @@
 			{#if gender === 'Άντρας'}
 				<img class="avatar ion-padding-vertical" alt="man" src={man} width="60px" />
 			{:else}
-				<img class="avatar ion-padding-vertical" alt="man" src={woman} width="60px" />
+				<img class="avatar ion-padding-vertical" alt="woman" src={woman} width="60px" />
 			{/if}
 			<ion-card-title>{givenName} {familyName}</ion-card-title>
 			<ion-item lines="none">
