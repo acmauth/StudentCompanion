@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { neoUniversisGet } from '$lib/dataService';
 	import { invalidateAuth } from '$lib/authentication/authValidator';
 	import { goto } from '$app/navigation';
@@ -10,18 +10,18 @@
 
 	// Keep personal info
 
-	let aem = '';
-	let apm = '';
-	let inscriptionYear = '';
-	let schoolGraduated = '';
-	let birthDate = '';
-	let email = '';
-	let familyName = '';
-	let givenName = '';
-	let username = '';
-	let gender = '';
-	let departmentName = '';
-	let semester = '';
+	let aem: String = '';
+	let apm: String = '';
+	let inscriptionYear: String = '';
+	let schoolGraduated: String = '';
+	let birthDate: String = '';
+	let email: String = '';
+	let familyName: String = '';
+	let givenName: String = '';
+	let username: String = '';
+	let gender: String = '';
+	let departmentName: String = '';
+	let semester: String = '';
 
 	// Get personal details and department details
 
