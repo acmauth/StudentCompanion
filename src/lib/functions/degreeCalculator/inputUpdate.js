@@ -4,12 +4,12 @@ import { degreeGradeUpdate } from './degreeGradeUpdate.js';
 
 /**
  * @param { any } unpassed_courses
- * @param { { coefficients: { coefficient: any; }, simple: { passed: any; }; } } sums
+ * @param { any } sums
  * @param { any } degree_grade
  */
 
 export function inputUpdate(unpassed_courses, sums, degree_grade){
-    let sums_guess = { coefficients: {grade_sum:0, coefficient_all: sums.coefficients.coefficient}, simple: {grade_sum: 0, passed_all: sums.simple.passed} };
+    let sums_guess = { based: {grade_sum:0, coefficient: sums.based.coefficient}, simple: {grade_sum: 0, passed: sums.simple.passed} };
 
     for (var course of unpassed_courses)
     {
@@ -18,11 +18,11 @@ export function inputUpdate(unpassed_courses, sums, degree_grade){
         
         course = checkPrecision(course);
         
-        sums_guess.coefficients.grade_sum += course.grade * course.coefficient;
-        sums_guess.coefficients.coefficient_all += course.coefficient;
+        sums_guess.based.grade_sum += course.grade * course.coefficient;
+        sums_guess.based.coefficient += course.coefficient;
 
         sums_guess.simple.grade_sum += course.grade;
-        sums_guess.simple.passed_all++;
+        sums_guess.simple.passed++;
     }
 
     degreeGradeUpdate(degree_grade, sums, sums_guess);

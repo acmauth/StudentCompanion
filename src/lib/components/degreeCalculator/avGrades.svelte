@@ -1,6 +1,6 @@
 <script>
 
-    /** @type { { coefficients: {value: number, stringed: string}, simple: {value: number, stringed: string} } } */
+    /** @type { { based: {value: number, stringed: string}, simple: {value: number, stringed: string} } } */
     export let degree_grade;
     
 </script>
@@ -10,7 +10,7 @@
 <div id="grades-box">
 
     <div class="grade-box" >
-        <h1 class="grade-text">{degree_grade.coefficients.stringed}</h1>
+        <h1 class="grade-text">{degree_grade.based.stringed}</h1>
         <p class="grade-subtext">Με συντελεστές</p>
     </div>
 

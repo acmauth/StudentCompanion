@@ -14,9 +14,9 @@
 
     let unpassed_courses: { title: string; id: string; semester_id: number, semester_name: string, grade: number; input_grade: string; coefficient: number;}[] = [];
     
-    let degree_grade = { coefficients: {value:0, stringed:''}, simple: {value: 0, stringed: ''} };
+    let degree_grade = { based: {value:0, stringed:''}, simple: {value: 0, stringed: ''} };
 
-    let sums = { coefficients: {grade_sum:0, coefficient: 0}, simple: {grade_sum: 0, passed: 0} };
+    let sums = { based: {grade_sum:0, coefficient: 0}, simple: {grade_sum: 0, passed: 0} };
 
     let not_passed_all_courses = false;
 
