@@ -12,11 +12,11 @@
     export let flip;
 
 
-    let unpassed_courses: { title: string; id: string; semester_id: number, semester_name: string, grade: number; input_grade: string; ects: number;}[] = [];
+    let unpassed_courses: { title: string; id: string; semester_id: number, semester_name: string, grade: number; input_grade: string; coefficient: number;}[] = [];
     
-    let degree_grade = { ects: {value:0, stringed:''}, simple: {value: 0, stringed: ''} };
+    let degree_grade = { coefficients: {value:0, stringed:''}, simple: {value: 0, stringed: ''} };
 
-    let sums = { ects: {grade_sum:0, ect: 0}, simple: {grade_sum: 0, passed: 0} };
+    let sums = { coefficients: {grade_sum:0, coefficient: 0}, simple: {grade_sum: 0, passed: 0} };
 
     let not_passed_all_courses = false;
 

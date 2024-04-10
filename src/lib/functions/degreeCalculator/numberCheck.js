@@ -1,6 +1,6 @@
 // @ts-nocheck
 /**
- * @param { { title: string, id:string, semester_id: number, semester_name: string grade: number, input_grade: string, ects: number, name: string; } } course
+ * @param { { title: string, id:string, semester_id: number, semester_name: string grade: number, input_grade: string, coefficient: number, name: string; } } course
  */
 
 export function numberCheck(course) {

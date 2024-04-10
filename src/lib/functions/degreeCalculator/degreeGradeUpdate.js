@@ -7,8 +7,8 @@ import { gradeString } from  './gradeString.js';
  */
 
 export function degreeGradeUpdate(degree_grade, sums, sums_two) {
-    degree_grade.ects.value = ((sums_two.ects.grade_sum+sums.ects.grade_sum) / sums_two.ects.ect_all);
-    degree_grade.ects.stringed = gradeString(degree_grade.ects.value);
+    degree_grade.coefficients.value = ((sums_two.coefficients.grade_sum+sums.coefficients.grade_sum) / sums_two.coefficients.coefficient_all);
+    degree_grade.coefficients.stringed = gradeString(degree_grade.coefficients.value);
 
     degree_grade.simple.value = ((sums_two.simple.grade_sum+sums.simple.grade_sum) / sums_two.simple.passed_all);
     degree_grade.simple.stringed = gradeString(degree_grade.simple.value);
