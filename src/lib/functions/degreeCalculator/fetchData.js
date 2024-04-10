@@ -19,8 +19,8 @@ export async function fetchData(unpassed_courses, sums)
     {
         if (course.isPassed == 1)
         {
-            sums.ects.grade_sum += course.grade * course.ects * 10;
-            sums.ects.ect += course.ects;
+            sums.ects.grade_sum += course.grade * course.coefficient * 10;
+            sums.ects.ect += course.coefficient;
 
             sums.simple.grade_sum += course.grade * 10;
             sums.simple.passed++;
@@ -28,7 +28,7 @@ export async function fetchData(unpassed_courses, sums)
             continue;
         }
             not_passed_all_courses = true;
-            unpassed_courses.push({ title: course.courseTitle, id: course.id, semester_id: course.semester.id, semester_name: course.semester.name, grade: course.grade, input_grade: "", ects: course.ects, name: course.semester.name}); 
+            unpassed_courses.push({ title: course.courseTitle, id: course.id, semester_id: course.semester.id, semester_name: course.semester.name, grade: course.grade, input_grade: "", ects: course.coefficient, name: course.semester.name}); 
     }
 
     return not_passed_all_courses;
