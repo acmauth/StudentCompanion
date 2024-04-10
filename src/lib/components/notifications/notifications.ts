@@ -129,7 +129,7 @@ async function getWebmailNotifications(refresh: boolean = false) {
             ...rest
         } = parseMail(message.data);
         
-        const cleanBody = (body.html ?? body.text ?? "").trim().replace(/<br>/g, "\n").replace(/<[^>]*>?/gm, '');
+        const cleanBody = (body.html ?? body.text ?? "");//.trim().replace(/<br>/g, "\n").replace(/<[^>]*>?/gm, '');
         
         return {
             type: "webmail",

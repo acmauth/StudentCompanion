@@ -23,13 +23,11 @@ export const POST: RequestHandler = async ({ request }) => {
 	let lock = await client.getMailboxLock('INBOX');
 	try {
 		let message = await client.fetchOne(client.mailbox.exists, { source: true });
-        // console.log(message.source.toString());
-		emails.push(message.source.toString());
+		console.log(message);
 
-        // for await (let message of client.fetch('1:2', { envelope: true })) {
-        //     // console.log(`${message.envelope.subject}`);
-		// 	emails.push(message);
-        // }
+        for await (let message of client.fetch('1:8', { source: true })) {
+			emails.push({data: message.source.toString()});
+        }
 		response = { error: null, received: emails };
 	} catch (err) {
 		response = { error: err.message };
