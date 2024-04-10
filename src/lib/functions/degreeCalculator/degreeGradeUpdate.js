@@ -1,9 +1,9 @@
 import { gradeString } from  './gradeString.js';
 
 /**
- * @param { any } degree_grade
- * @param { any } sums
- * @param { any } sums_two
+ * @param { { based: {value: number, stringed: string}, simple: {value: number, stringed: string}; } } degree_grade
+ * @param { { based: { grade_sum:number, coefficient: number}, simple: {grade_sum: number, passed: number}; } } sums
+ * @param { { based: { grade_sum:number, coefficient: number}, simple: {grade_sum: number, passed: number}; } } sums_two
  */
 
 export function degreeGradeUpdate(degree_grade, sums, sums_two) {

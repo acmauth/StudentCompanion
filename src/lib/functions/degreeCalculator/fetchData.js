@@ -1,7 +1,7 @@
 import { neoUniversisGet } from "$lib/dataService";
 
 /**
- * @param { {title: any, id: any, semester_id: number, semester_name: string, grade: any, input_grade: string, coefficient: any, name: string;}[] } unpassed_courses
+ * @param { {title: string, id: string, semester_id: number, semester_name: string, grade: number, input_grade: string, coefficient: number;}[] } unpassed_courses
  * @param { {based: {grade_sum: number, coefficient: any;}, simple: {grade_sum: number, passed: number;}; } } sums
  */
 export async function fetchData(unpassed_courses, sums)
@@ -27,7 +27,7 @@ export async function fetchData(unpassed_courses, sums)
             continue;
         }
             not_passed_all_courses = true;
-            unpassed_courses.push({ title: course.courseTitle, id: course.id, semester_id: course.semester.id, semester_name: course.semester.name, grade: course.grade, input_grade: "", coefficient: course.coefficient, name: course.semester.name}); 
+            unpassed_courses.push({ title: course.courseTitle, id: course.id, semester_id: course.semester.id, semester_name: course.semester.name, grade: course.grade, input_grade: "", coefficient: course.coefficient}); 
     }
 
     return not_passed_all_courses;

@@ -3,9 +3,9 @@ import { numberCheck } from './numberCheck.js';
 import { degreeGradeUpdate } from './degreeGradeUpdate.js';
 
 /**
- * @param { any } unpassed_courses
- * @param { any } sums
- * @param { any } degree_grade
+ * @param { { title: string, id: string, semester_id: number, semester_name: string, grade: number, input_grade: string, coefficient: number; }[] } unpassed_courses
+ * @param { { based: { grade_sum:number, coefficient: number}, simple: {grade_sum: number, passed: number}; } } sums
+ * @param { { based: {value: number, stringed: string}, simple: {value: number, stringed: string}; } } degree_grade
  */
 
 export function inputUpdate(unpassed_courses, sums, degree_grade){

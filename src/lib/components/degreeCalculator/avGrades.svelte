@@ -1,6 +1,6 @@
 <script>
 
-    /** @type { { based: {value: number, stringed: string}, simple: {value: number, stringed: string} } } */
+    /** @type { { based: {value: number, stringed: string}, simple: {value: number, stringed: string}; } } */
     export let degree_grade;
     
 </script>
