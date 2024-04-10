@@ -13,6 +13,8 @@ export async function getInbox(): Promise<WebmailInboxRequestResponse> {
                                 count : 8
                               })
     });
+
+    let response = await inboxData.json();
     
-    return (await inboxData.json()) as WebmailInboxRequestResponse;
+    return response as WebmailInboxRequestResponse;
 }

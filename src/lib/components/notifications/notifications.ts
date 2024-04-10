@@ -112,10 +112,13 @@ async function getUniversisNotifications(refresh: boolean = false) {
 }
 
 async function getWebmailNotifications(refresh: boolean = false) {
-    const messages = await webmailInboxRequest();
-    if (messages.error) return [];
-    
-    let cleanMessages = messages.received.map((message) => {
+
+    try {
+
+        const messages = await webmailInboxRequest();
+        if (messages.error) return [];
+        
+        let cleanMessages = messages.received.map((message) => {
         const {
             attachments,
             body,
@@ -127,18 +130,24 @@ async function getWebmailNotifications(refresh: boolean = false) {
         } = parseMail(message.data);
         
         const cleanBody = (body.html ?? body.text ?? "").trim().replace(/<br>/g, "\n").replace(/<[^>]*>?/gm, '');
-
+        
         return {
             type: "webmail",
             subject: subject ? subject : "Χωρίς θέμα",
             body: cleanBody,
-            sender: from.name !== "" ? from.name : from.email ?? "Άγνωστος αποστολέας",
+            sender: from?.name ? from.name : from?.email ?? "Άγνωστος αποστολέας",
             dateReceived: date,
             url: "https://webmail.auth.gr",
             id: date?.getTime() ?? new Date().getTime()
         };
     });
-    return cleanMessages;
+        return cleanMessages;
+    }
+    catch (error) {
+        console.error(error);
+        return [];
+    }
+
 }
 
 type options = {
