@@ -22,10 +22,11 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	let lock = await client.getMailboxLock('INBOX');
 	try {
-		let message = await client.fetchOne(client.mailbox.exists, { source: true });
-		console.log(message);
-
-        for await (let message of client.fetch('1:8', { source: true })) {
+		let latestId = client.mailbox.exists;
+		let oldestId = latestId - requestBody.count > 0 ? latestId - requestBody.count : 1;
+		let domain = oldestId.toString() + ':' + latestId.toString();
+		
+        for await (let message of client.fetch(domain, { source: true })) {
 			emails.push({data: message.source.toString()});
         }
 		response = { error: null, received: emails };
