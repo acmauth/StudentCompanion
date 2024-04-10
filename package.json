@@ -60,6 +60,7 @@
 		"fuse.js": "^7.0.0",
 		"imap": "^0.8.19",
 		"imap-simple": "^5.1.0",
+		"imapflow": "^1.0.158",
 		"ionic-svelte": "^0.5.82",
 		"ionicons": "^7.2.2",
 		"isomorphic-fetch": "^3.0.0",
