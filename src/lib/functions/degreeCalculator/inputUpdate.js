@@ -13,10 +13,20 @@ export function inputUpdate(unpassed_courses, sums, degree_grade){
 
     for (var course of unpassed_courses)
     {
+        const input_element = document.getElementById(course.id);
+            if (input_element != null)
+                input_element.style.borderColor = "#ccc";
+
         if (numberCheck(course))
             continue
         
         course = checkPrecision(course);
+
+        if (course.grade < 5 && input_element != null)
+        {
+            input_element.style.borderColor = "red";
+            continue;
+        }
         
         sums_guess.ects.grade_sum += course.grade * course.ects;
         sums_guess.ects.ect_all += course.ects;
