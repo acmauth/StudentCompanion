@@ -2,9 +2,11 @@
 	import type { notification } from "./notifications";
     import universisLogo from "$images/universis.png";
     import elearningLogo from "$images/elearning.png";
+    import { mailOpen } from "ionicons/icons";
     import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
-    import { onMount } from 'svelte';
+    import DOMPurify from 'dompurify';
+
     export let notification: notification;
 
     let inlineModalOpen = false;
@@ -12,14 +14,13 @@
     
     const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
 
-    let content = notification.body;
-
+    let content = DOMPurify.sanitize(notification.body);
 </script>
 
 
 <div aria-hidden on:click ={() => {inlineModalOpen = true}} class="card-link">
     <div class="top">
-            <img alt="Service logo" src={notification.type == "universis" ? universisLogo : elearningLogo} />
+            <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail" ? mailOpen : elearningLogo} />
             <ion-label class="notification-label sender">
                 <p>{notification.sender}</p>
               </ion-label>
@@ -54,9 +55,9 @@
                         </ion-text>
                     </ion-item>
                     <ion-item lines="none">
-                        <ion-chip outline color={notification.type == "universis" ? "tertiary" : "warning"}>
+                        <ion-chip outline color={notification.type == "universis" ? "tertiary" : notification.type == "webmail" ? "secondary" : "warning"}>
                             <ion-avatar>
-                                <img alt="Service logo" src={notification.type == "universis" ? universisLogo : elearningLogo} />
+                                <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail"? mailOpen : elearningLogo} />
                             </ion-avatar>
                             <ion-label>{notification.sender}</ion-label>
                         </ion-chip>
@@ -74,7 +75,7 @@
                       </ion-item-divider>                    
                     <ion-item lines="none" class="item-text-wrap">
                         <div class="notifContent">
-                            {@html content.replaceAll("\n", "<br>")}
+                            {@html content}
                         </div>
                     </ion-item>
                     <ion-item>
