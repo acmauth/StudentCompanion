@@ -1,7 +1,8 @@
 // import { universisGet as internalUniversisGet } from "./universisAuthentication/universisDataService";
 import { apiRequest as internalElearningGet } from "./-elearning/dataService/core";
 import { apiRequest as internalUniversisGet } from "./-universis/dataService/core";
-import { cachedUniversisGet, cachedElearningGet } from "./cachedDataService/cachedDataservice";
+import { webmailInboxRequest as internalWebmailInbox} from "./-webmail/dataService/core";
+import { cachedUniversisGet, cachedElearningGet, cachedWebmailInbox } from "./cachedDataService/cachedDataservice";
 
 // This is a wrapper for the Universis API.
 // It's a simple GET request with a token in the header.
@@ -19,4 +20,11 @@ export async function elearningGet(dataArguments: any){
   
 }
 
-export { cachedUniversisGet as neoUniversisGet, cachedElearningGet as neoElearningGet };
+export async function webmailInboxRequest() {
+
+  const response = await internalWebmailInbox();
+  return response;
+
+}
+
+export { cachedUniversisGet as neoUniversisGet, cachedElearningGet as neoElearningGet, cachedWebmailInbox as neoWebmailInbox};

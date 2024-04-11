@@ -1,9 +1,7 @@
-import { neoUniversisGet, neoElearningGet } from "$lib/dataService";
+import { neoUniversisGet, neoElearningGet, neoWebmailInbox } from "$lib/dataService";
 import { userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
-import { persisted } from "svelte-persisted-store";
-import { webmailInboxRequest } from "$lib/-webmail/dataService/core";
 import { parseMail } from '@protontech/jsmimeparser';
 
 let userID = get(userTokens).elearning.userID;
@@ -112,10 +110,11 @@ async function getUniversisNotifications(refresh: boolean = false) {
 }
 
 async function getWebmailNotifications(refresh: boolean = false) {
+    const options = {forceFresh: refresh, lifetime: 60 * 60 * 24}
 
     try {
 
-        const messages = await webmailInboxRequest();
+        const messages = await neoWebmailInbox(options);
         if (messages.error) return [];
         
         let cleanMessages = messages.received.map((message) => {
@@ -158,7 +157,7 @@ type options = {
 export async function gatherNotifications(options?: options){
     if (!options) options = {};
 
-    let webmailNotifications = await getWebmailNotifications();
+    let webmailNotifications = await getWebmailNotifications(options.refresh);
     let elearningNotifications = await getElearningNotifications(options.refresh);
     let universisNotifications = await getUniversisNotifications(options.refresh);
 

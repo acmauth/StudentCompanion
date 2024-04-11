@@ -1,4 +1,4 @@
-import { universisGet, elearningGet } from "$lib/dataService"
+import { universisGet, elearningGet, webmailInboxRequest } from "$lib/dataService"
 import { Network } from '@capacitor/network';
 
 type cachedItem = {
@@ -13,6 +13,19 @@ type cachedItem = {
 type options = {
     forceFresh?: boolean | undefined;
     lifetime?: number | undefined;
+}
+
+export async function cachedWebmailInbox (options?: options): Promise<any> {
+    if (!options) options = {};
+    const key = `webmail_inbox`;
+    const cached = getFromCache(key);
+    if (cached.exists && (!cached.expired && !options.forceFresh || !(await Network.getStatus()).connected)){
+        return cached.value;
+    } else {
+        const response = await webmailInboxRequest();
+        cacheItem(key, response, options.lifetime);
+        return response;
+    }
 }
 
 export async function cachedUniversisGet (endpoint: string, options?: options): Promise<any> {
