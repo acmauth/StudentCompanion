@@ -2,10 +2,12 @@ import { userCreds, userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import reauthenticate from "../-universis/authenticator/reauthenticate.js";
 import { Network } from '@capacitor/network';
+import { Preferences } from "@capacitor/preferences";
 
 // Do we wanna log out? Let's clear our path
 export function invalidateAuth(){
     localStorage.clear();
+    Preferences.clear();
 }
 
 export async function judgeAuth() {
