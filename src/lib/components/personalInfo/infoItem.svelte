@@ -36,7 +36,7 @@
 
 		  showToast({
 						color: 'tertiary',
-						duration: 3000,
+						duration: 300000,
 						message: 'Αντιγράφηκε στο πρόχειρο',
 						mode: 'ios',
 						translucent: true,
