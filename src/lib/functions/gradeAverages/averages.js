@@ -18,7 +18,7 @@ export async function averages(subjectsJSON = null) {
 
 	// Loop through the courses to find the passed ones
 	for (const course of courses)
-		if (course.isPassed == 1 && course.parentCourse == null)
+		if (course.isPassed == 1 && course.parentCourse == null && course.calculateGrade == 1)
 			passed_courses[k++] = course;
 
 	let i = 0;
