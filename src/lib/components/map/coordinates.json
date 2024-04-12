@@ -154,5 +154,31 @@
         "coordinates": { "lng":  22.960629793286632, "lat": 40.625825409102205 },
         "pointer": "lesxi",
         "url": "https://maps.app.goo.gl/y2ZQzoj3BQQHbh5v6"
+    },
+    {
+        "name": "Department of Physical Education and Sports Science",
+        "name_el": "ΤΕΦΑΑ ΑΠΘ",
+        "coordinates": { "lng": 23.002527944898002, "lat": 40.56999897339933 },
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/rGwWqdHgvXxLARsY7"
+    },
+    {
+        "name": "Department of School Of Informatics",
+        "name_el": "Παράρτημα Τμήματος Πληροφορικής",
+        "coordinates": { "lng": 22.961074068376494, "lat": 40.58804146058148 },
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/dobmAKFfcLrwqsfN6"
+    },
+    {
+        "name": "Research Dissemination Center (KEDEA)",
+        "name_el": "Κέντρο Διάδοσης Ερευνητικών Αποτελεσμάτων ΚΕ.Δ.Ε.Α",
+        "coordinates": { "lng": 22.96253536320498, "lat": 40.62688283636431 },
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/3STwTsAvoALq8jzk9"
     }
 ]
+
+
+
+
+ 
