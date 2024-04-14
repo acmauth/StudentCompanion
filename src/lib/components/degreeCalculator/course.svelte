@@ -3,7 +3,7 @@
     export let course_title;
     /** @type { number } */
     export let course_semester_id;
-    /** @type { any } */
+    /** @type { string } */
     export let course_semester_name;
 </script>
 
