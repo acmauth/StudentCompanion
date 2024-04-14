@@ -33,6 +33,7 @@
           currentTabName = tab.tab;
             await goto($navigating.to.url.pathname);
             controller.select(tab.tab);
+            moveTabBarLine(tab.tab);
         }
       });
     }
@@ -140,7 +141,7 @@
       position: absolute;
       transition: 0.4s ease-in-out;
       bottom: 10px;
-      z-index: 1000;
+      /* z-index: 1000; */
       left: 0;
       width: 1rem;
     }
