@@ -17,6 +17,7 @@
   
     let ionTabBarElement;
     let controller;
+    let tabBarLine;
   
     // we need relative path for the goto to function properly and to allow for relative tab definitions
     const { pathname } = $page.url;
@@ -39,14 +40,38 @@
     onMount(async () => {
       // reassignment needed after onMount
       controller = ionTabBarElement;
+      tabBarLine = ionTabBarElement;
       controller.select(currentTabName);
+      tabBarLine = document.querySelector(".tabBarLine2");
+
+      // Calling the function twice to ensure the line is in the correct position
+      // At first load the line is not in the correct position, so we use an approximation initially
+      // and then we call the function again after a short delay to ensure the line is in the correct position
+      moveTabBarLine(currentTabName);
+      setTimeout(() => {moveTabBarLine(currentTabName);}, 5);
     });
   
     const tabBarClick = async (selectedTab) => {
+      moveTabBarLine(selectedTab);
       currentTabName = selectedTab;
       await goto(relativePath + selectedTab);
       controller.select(selectedTab);
     };
+
+    
+    function moveTabBarLine(tab) {
+      const tabButton = document.querySelector(`.tab_${tab}`);
+      const tabButtonRect = tabButton.getBoundingClientRect();
+      const tabBarLineWidth = tabBarLine.clientWidth ? tabBarLine.clientWidth : 16;
+      const tabBar = document.querySelector(".tabbarmain");
+      const parentWidth = tabButtonRect.width ? tabButtonRect.width : window.innerWidth / 5;
+      
+      const finalPosition = tabButtonRect.left + ((parentWidth/2)-(tabBarLineWidth/2));
+      const initialPosition = tabButtonRect.left + (parentWidth/2);
+      
+      tabBarLine.style.transform = `translateX(${finalPosition}px)`;
+    }
+
   </script>
   
   <ion-tabs
@@ -57,29 +82,28 @@
     <slot />
   
     {#if slot === "bottom" || slot === ""}
-      <ion-tab-bar slot="bottom" class="tabbarmain">
+    <ion-tab-bar slot="bottom" class="tabbarmain">
+        <div class="tabBarLine2"></div>
         {#each tabs as tab}
-          <ion-tab-button aria-hidden class="tabbarbutton"
+          <ion-tab-button aria-hidden class="tabbarbutton tab_{tab.tab}"
             tab={tab.tab}
             on:keydown={() => {
-              tabBarClick(tab.tab);
-            }}
-            on:click={() => {
-              tabBarClick(tab.tab);
-            }}
-          >
+                tabBarClick(tab.tab);
+              }}
+              on:click={() => {
+                tabBarClick(tab.tab);
+              }}
+            >
           <ion-label class="tabbarlabel">{tab.label}</ion-label>
           {#if tab.tab !== currentTabName && tab.iconUnselected}
             <ion-icon icon={tab.iconUnselected} class="tabbaricons"/>
           {:else}
             <ion-icon icon={tab.icon} class="tabbaricons"/>
           {/if}
-          <div class="tabbarline"></div>
         </ion-tab-button>
-        {/each}
+      {/each}
       </ion-tab-bar>
     {/if}
-      <!-- <div class="tabBarLine2"></div> -->
     {#if slot === "top"}
       <ion-tab-bar slot="top">
         {#each tabs as tab}
@@ -109,17 +133,16 @@
       transition: all 0.3s ease;
     }
 
-    .tabbarline {
+    .tabBarLine2 {
       background-color: var(--app-color-primary-dark);
-      width: 1rem;
       height: 4px;
       border-radius: 2rem;
-      margin-top: -5px;
-      display: none;
-      transition: 0.8s ease;
+      position: absolute;
+      transition: 0.4s ease-in-out;
+      bottom: 10px;
+      z-index: 1000;
+      left: 0;
+      width: 1rem;
     }
 
-    :global(.tab-selected .tabbarline) {
-      display: block;
-    }
   </style>
