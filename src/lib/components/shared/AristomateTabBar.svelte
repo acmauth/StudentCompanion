@@ -57,9 +57,9 @@
     <slot />
   
     {#if slot === "bottom" || slot === ""}
-      <ion-tab-bar slot="bottom">
+      <ion-tab-bar slot="bottom" class="tabbarmain">
         {#each tabs as tab}
-          <ion-tab-button aria-hidden
+          <ion-tab-button aria-hidden class="tabbarbutton"
             tab={tab.tab}
             on:keydown={() => {
               tabBarClick(tab.tab);
@@ -68,13 +68,18 @@
               tabBarClick(tab.tab);
             }}
           >
-            <ion-label>{tab.label}</ion-label>
-            <ion-icon icon={tab.icon} />
-          </ion-tab-button>
+          <ion-label class="tabbarlabel">{tab.label}</ion-label>
+          {#if tab.tab !== currentTabName && tab.iconUnselected}
+            <ion-icon icon={tab.iconUnselected} class="tabbaricons"/>
+          {:else}
+            <ion-icon icon={tab.icon} class="tabbaricons"/>
+          {/if}
+          <div class="tabbarline"></div>
+        </ion-tab-button>
         {/each}
       </ion-tab-bar>
     {/if}
-  
+      <!-- <div class="tabBarLine2"></div> -->
     {#if slot === "top"}
       <ion-tab-bar slot="top">
         {#each tabs as tab}
@@ -88,10 +93,33 @@
             }}
           >
             <ion-label>{tab.label}</ion-label>
-            <ion-icon icon={tab.icon} />
+            <ion-icon icon={tab.icon} class="tabbaricons"/>
           </ion-tab-button>
         {/each}
       </ion-tab-bar>
     {/if}
   </ion-tabs>
   
+  <style>
+    .tabbaricons {
+      font-size: x-large;
+    }
+
+    ion-tab-button {
+      transition: all 0.3s ease;
+    }
+
+    .tabbarline {
+      background-color: var(--app-color-primary-dark);
+      width: 1rem;
+      height: 4px;
+      border-radius: 2rem;
+      margin-top: -5px;
+      display: none;
+      transition: 0.8s ease;
+    }
+
+    :global(.tab-selected .tabbarline) {
+      display: block;
+    }
+  </style>

@@ -1,6 +1,7 @@
 <script>
     import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
     import { onMount } from 'svelte';
+    import { home } from 'ionicons/icons';
 
     let myStore = new CapacitorPersistedStore("testValue", 'myStore');
     let myOtherStore = new CapacitorPersistedStore("testValue", 'myOtherStore');
@@ -18,10 +19,6 @@
             <ion-card-title>Δοκιμή</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-            <p>{$myStore}</p>
-            <ion-button onClick={() => myStore.set('Δοκιμή')}>Αλλαγή</ion-button>
-            <p>{$myOtherStore}</p>
-            <ion-button onClick={() => myOtherStore.set('Δεύτερη Δοκιμή')}>Αλλαγή</ion-button>
         </ion-card-content>
     </ion-card>
 </ion-content>
