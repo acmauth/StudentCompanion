@@ -133,7 +133,7 @@
 
 				<ion-modal
 					is-open={modalOpen}
-					initial-breakpoint={$qrStore.length > 0? 0.3 : 0.2}
+					initial-breakpoint={$qrStore.length > 0? 0.5 : 0.2}
 					on:ionModalDidDismiss={() => {modalOpen = false;}}
 					on:ionModalDidPresent={() => {shouldFocus = true;}}
 					breakpoints={[0, 0.1, 0.2, 0.3, 0.5]}>

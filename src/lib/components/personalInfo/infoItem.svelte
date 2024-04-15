@@ -40,8 +40,8 @@
 						message: 'Αντιγράφηκε στο πρόχειρο',
 						mode: 'ios',
 						translucent: true,
-						position: 'bottom',
 						layout: 'stacked',
+						positionAnchor: "tab-button-homepage",
 						cssClass: 'custom-toast'
 					});
 	};
