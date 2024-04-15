@@ -44,6 +44,7 @@
       is-open={inlineModalOpen}
       initial-breakpoint={0.5}
       {breakpoints}
+      handle-behavior="cycle"
       on:ionModalDidDismiss={inlineModalDismissed}>
       <ion-content>
             <div class="mainContainer">

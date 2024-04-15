@@ -7,6 +7,8 @@
     import { dismissedItems } from "$components/recentResults/dismissedItems";
     import { onMount } from "svelte";
     import { refresh } from "ionicons/icons";
+    import { flip } from "svelte/animate";
+    import { quintOut } from 'svelte/easing';
 
     /**
      * @type any[]
@@ -100,17 +102,24 @@
                 recentItems = recentItems.filter((item) => item.id !== recentItem.id);
             }
         }
+        
+        // sorting the recentItems so that the recentGrades are always first
+        recentItems = recentItems.sort((a, b) => {
+            if (a.type === "recentGrade" && b.type === "notification") return -1;
+            if (a.type === "notification" && b.type === "recentGrade") return 1;
+            return 0;
+        });
+
         // keeping all the recent grades and removing the excess notifications
-        const maxNumOfCard = 8;
-        let numOfGrades = 0;
-        for (const recentItem of recentItems){
-            if (recentItem.type == "recentGrade") numOfGrades++;
-        }
+        const maxNumOfCard = 6;
+        const numOfGrades = recentItems.filter((recentItem) => recentItem.type === "recentGrade").length;
+        
         if (numOfGrades+3 > maxNumOfCard){ // ensuring that there are always at least 3 notifications
             recentItems = recentItems.slice(0, numOfGrades+3); 
         } else {
             recentItems = recentItems.slice(0, maxNumOfCard); // can do that because recent grades are stored first
         }
+
     });
 </script>
 
@@ -120,20 +129,16 @@
     {#if recentItems.length === 0}
             <p class="ion-padding">Δεν υπάρχουν πρόσφατα</p>
     {:else}
-        {#each recentItems as recentItem } 
-            {#if recentItem.type === "recentGrade"}
-                <SwipeCard id={recentItem.id} on:delete-card={deleteCard} > 
-                    <RecentGrade subject={recentItem.content}/>
-                </SwipeCard>
-            {/if}
-        {/each}
-
         {#each recentItems as recentItem (recentItem.id)} 
-            {#if recentItem.type === "notification"}
-                <SwipeCard id={recentItem.id} on:delete-card={deleteCard}>
-                    <Notification notification={recentItem.content}/>
+            <div animate:flip={{ duration: 500, easing: quintOut }}>
+                <SwipeCard id={recentItem.id} on:delete-card={deleteCard} > 
+                    {#if recentItem.type === "recentGrade"}
+                        <RecentGrade subject={recentItem.content}/>
+                    {:else}
+                        <Notification notification={recentItem.content}/>
+                    {/if}
                 </SwipeCard>
-            {/if}
+            </div>
         {/each}
     {/if}
 

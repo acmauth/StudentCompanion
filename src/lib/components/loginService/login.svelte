@@ -72,10 +72,12 @@
                 <p class="loginP">Περιμένετε...</p>
             </div>
         {/if}
-        <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">ΕΙΣΟΔΟΣ</ion-button>
-        <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked={true}> 
+      
+        <ion-button aria-hidden class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">ΕΙΣΟΔΟΣ</ion-button>
+        <!-- <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked={true}> 
+
             <ion-label class="custom" style="font-size:small;">Διατήρηση σύνδεσης</ion-label>
-        </ion-checkbox>
+        </ion-checkbox> -->
 
         <div class="footer">
             <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>

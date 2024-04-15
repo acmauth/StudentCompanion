@@ -113,7 +113,7 @@
   }
 
   --ion-background-color: #FBFBF9;
-  /* --ion-tab-bar-color: #999999; */
+  --ion-tab-bar-color: #8C8C8C;
   --ion-toolbar-background: #FBFBF9;
   --ion-tab-bar-color-selected: var(--app-color-primary-dark);
   --ion-tab-bar-background: #FBFBF9;
@@ -141,9 +141,7 @@
     /* --color: inherit !important; */
   }
 
-  /* .tab-selected {
-    color: var(--app-color-primary-dark) !important;
-  } */
+  
 
   ion-progress-bar {
     --progress-background: var(--app-color-primary-dark);
