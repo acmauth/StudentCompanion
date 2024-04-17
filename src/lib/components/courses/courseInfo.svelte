@@ -186,13 +186,14 @@
 		<ion-card-header>
 			<ion-card-title class="title">Στατιστικά</ion-card-title>
 			{#if course.period}
-				<ion-card-subtitle>Εξεταστική {course.period}</ion-card-subtitle>
+			<ion-card-subtitle>Εξεταστική {course.period}</ion-card-subtitle>
 			{:else}
-				<ion-card-subtitle>-</ion-card-subtitle>
+			<ion-card-subtitle>-</ion-card-subtitle>
 			{/if}
 		</ion-card-header>
 		<ion-card-content>
-		{#if stats.grade}
+			{#if stats.grade}
+			<canvas id="gradeChart" />
 			<ion-list>
 				<ion-item lines ="full">
 					<ion-label>Βαθμολογημένοι</ion-label>
@@ -237,7 +238,6 @@
 			</ion-list>
 		{/if}
 	
-		<canvas id="gradeChart" />
 	</ion-card-content>
 	</ion-card>
 
