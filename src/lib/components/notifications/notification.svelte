@@ -2,7 +2,7 @@
 	import type { notification } from "./notifications";
     import universisLogo from "$images/universis.png";
     import elearningLogo from "$images/elearning.png";
-    import { mailOpen } from "ionicons/icons";
+    import { mailOpen, notifications } from "ionicons/icons";
     import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
     import DOMPurify from 'dompurify';
@@ -59,7 +59,15 @@
                             <ion-avatar>
                                 <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail"? mailOpen : elearningLogo} />
                             </ion-avatar>
-                            <ion-label>{notification.sender}</ion-label>
+                            <ion-label>
+                                {#if notification.email}
+                                    <a href="mailto:{notification.email}" style="text-decoration: none; color: inherit;">
+                                        {notification.sender}
+                                    </a>
+                                {:else}
+                                    {notification.sender}
+                                {/if}
+                            </ion-label>
                         </ion-chip>
                         {#if notification.url}
                         <ion-item lines="none"> 

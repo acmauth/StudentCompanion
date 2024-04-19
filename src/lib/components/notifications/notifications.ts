@@ -128,13 +128,14 @@ async function getWebmailNotifications(refresh: boolean = false) {
             ...rest
         } = parseMail(message.data);
         
-        const cleanBody = (body.html ?? body.text ?? "");//.trim().replace(/<br>/g, "\n").replace(/<[^>]*>?/gm, '');
+        const cleanBody = (body.html ?? body.text ?? "");
         
         return {
             type: "webmail",
             subject: subject ? subject : "Χωρίς θέμα",
             body: cleanBody,
             sender: from?.name ? from.name : from?.email ?? "Άγνωστος αποστολέας",
+            email: from?.email ?? "Άγνωστος αποστολέας",
             dateReceived: date,
             url: "https://webmail.auth.gr",
             id: date?.getTime() ?? new Date().getTime()
@@ -192,5 +193,6 @@ export type notification = {
     sender: string;
     dateReceived: Date;
     id: number;
+    email?: string;
 };
 
