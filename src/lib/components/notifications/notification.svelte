@@ -34,7 +34,7 @@
     </div>
     <ion-item lines="none" class="ion-no-padding">
         <ion-label>
-            <h2>{notification.subject}</h2>
+            <h2 class="ellipse-no-wrap">{notification.subject}</h2>
         </ion-label>
     </ion-item>
 </div>
@@ -95,6 +95,12 @@
             white-space: pre-line;
             max-width: 100%;
             user-select: text;
+        }
+
+        .ellipse-no-wrap {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .mainContainer {
