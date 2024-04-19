@@ -14,7 +14,7 @@
     
     const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
 
-    let content = DOMPurify.sanitize(notification.body);
+    let content = DOMPurify.sanitize(notification.body, {SANITIZE_NAMED_PROPS: true}).trim().replace(/\s+/g, ' ').replace(/\s+/g, ' ');
 </script>
 
 
@@ -46,7 +46,7 @@
       initial-breakpoint={0.5}
       {breakpoints}
       on:ionModalDidDismiss={inlineModalDismissed}>
-      <ion-content>
+      <ion-content >
             <div class="mainContainer">
                 <ion-item-group>
                     <ion-item lines="none">
@@ -95,6 +95,7 @@
             white-space: pre-line;
             max-width: 100%;
             user-select: text;
+            overflow-x: scroll;
         }
 
         .mainContainer {
