@@ -5,16 +5,30 @@
     import { mailOpen, notifications } from "ionicons/icons";
     import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
-    import DOMPurify from 'dompurify';
+    import DOMPurify, { sanitize } from 'dompurify';
+	import { onMount } from "svelte";
 
     export let notification: notification;
-
+    let iframe: HTMLIFrameElement;
     let inlineModalOpen = false;
     let breakpoints = [0, 0.5, 1];
     
     const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
 
     let content = DOMPurify.sanitize(notification.body, {SANITIZE_NAMED_PROPS: true}).trim().replace(/\s+/g, ' ').replace(/\s+/g, ' ');
+
+    // Adding an event listener to the iframe to set the height of the iframe to the content of the iframe
+    onMount(() => {
+        iframe.addEventListener('load', onMailLoad);
+    });
+
+    // Setting the height and width to the content of the iframe
+    function onMailLoad(){
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 100 + 'px';
+        // iframe.style.width = iframe.contentWindow.document.body.scrollWidth + 'px';
+        iframe.contentDocument.querySelector("html").style.fontFamily = "Roboto, sans-serif";
+        iframe.contentDocument.querySelector("html").style.overflowY = "hidden";
+    }
 </script>
 
 
@@ -81,11 +95,12 @@
                     <ion-item-divider>
                         <ion-label>Περιεχόμενο </ion-label>
                       </ion-item-divider>                    
-                    <ion-item lines="none" class="item-text-wrap">
-                        <!-- <div class="notifContent">
-                            {@html content}
-                        </div> -->
-                        <iframe title="Body" srcdoc={content} style="width: 100%; height: 100%; border: none;"></iframe>
+                    <ion-item lines="none" class="item-text-wrap ion-no-padding">
+                        <iframe bind:this={iframe}
+                        title="Body"
+                        srcdoc={content}
+                        src="about:blank"
+                        style="width: 100%; border: none;"/>
                     </ion-item>
                     <ion-item>
                         <ion-text>
