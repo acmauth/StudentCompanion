@@ -82,9 +82,10 @@
                         <ion-label>Περιεχόμενο </ion-label>
                       </ion-item-divider>                    
                     <ion-item lines="none" class="item-text-wrap">
-                        <div class="notifContent">
+                        <!-- <div class="notifContent">
                             {@html content}
-                        </div>
+                        </div> -->
+                        <iframe title="Body" srcdoc={content} style="width: 100%; height: 100%; border: none;"></iframe>
                     </ion-item>
                     <ion-item>
                         <ion-text>
