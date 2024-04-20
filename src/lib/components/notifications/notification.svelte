@@ -25,9 +25,17 @@
     // Setting the height and width to the content of the iframe
     function onMailLoad(){
         iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 100 + 'px';
-        // iframe.style.width = iframe.contentWindow.document.body.scrollWidth + 'px';
         iframe.contentDocument.querySelector("html").style.fontFamily = "Roboto, sans-serif";
         iframe.contentDocument.querySelector("html").style.overflowY = "hidden";
+        
+        var wC = iframe.contentWindow.document.body.scrollWidth;
+        var wI = parseInt(getComputedStyle(iframe).width);
+        console.log(wC, wI);
+        if (wC > wI) {
+            var scale = wI / wC;
+            iframe.contentDocument.querySelector("html").style.transform = 'scale(' + scale + ')';
+            iframe.contentDocument.querySelector("html").style.transformOrigin = 'top left';
+        }  
     }
 </script>
 
