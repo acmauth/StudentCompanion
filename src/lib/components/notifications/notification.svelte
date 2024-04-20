@@ -2,7 +2,7 @@
 	import type { notification } from "./notifications";
     import universisLogo from "$images/universis.png";
     import elearningLogo from "$images/elearning.png";
-    import { mailOpen, notifications } from "ionicons/icons";
+    import mail from "$images/mail.png";
     import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
     import DOMPurify, { sanitize } from 'dompurify';
@@ -27,22 +27,13 @@
         iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 100 + 'px';
         iframe.contentDocument.querySelector("html").style.fontFamily = "Roboto, sans-serif";
         iframe.contentDocument.querySelector("html").style.overflowY = "hidden";
-        
-        var wC = iframe.contentWindow.document.body.scrollWidth;
-        var wI = parseInt(getComputedStyle(iframe).width);
-        console.log(wC, wI);
-        if (wC > wI) {
-            var scale = wI / wC;
-            iframe.contentDocument.querySelector("html").style.transform = 'scale(' + scale + ')';
-            iframe.contentDocument.querySelector("html").style.transformOrigin = 'top left';
-        }  
     }
 </script>
 
 
 <div aria-hidden on:click ={() => {inlineModalOpen = true}} class="card-link">
     <div class="top">
-            <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail" ? mailOpen : elearningLogo} />
+            <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail" ? mail : elearningLogo} />
             <ion-label class="notification-label sender">
                 <p>{notification.sender}</p>
               </ion-label>
@@ -79,7 +70,7 @@
                     <ion-item lines="none">
                         <ion-chip outline color={notification.type == "universis" ? "tertiary" : notification.type == "webmail" ? "secondary" : "warning"}>
                             <ion-avatar>
-                                <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail"? mailOpen : elearningLogo} />
+                                <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail"? mail : elearningLogo} />
                             </ion-avatar>
                             <ion-label>
                                 {#if notification.email}
