@@ -1,14 +1,14 @@
-import { neoUniversisGet, neoElearningGet } from "$lib/dataService";
-// import UserInfoStore from "$stores/userinfo.store";
+import { neoUniversisGet, neoElearningGet, neoWebmailInbox } from "$lib/dataService";
 import { userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
+import { parseMail } from '@protontech/jsmimeparser';
+
 let userID = get(userTokens).elearning.userID;
 
 // Storing the IDs of notifications that have been read in a persisted store
 //TODO: Add a way to remove notifications from the list
 // export const readNotifications = persisted("ReadNotifications", []);
-
 
 
 function cleanUpFullMessage(fullMessage: string) {
@@ -94,7 +94,7 @@ async function getElearningNotifications(refresh: boolean = false) {
 async function getUniversisNotifications(refresh: boolean = false) {
     const options = {forceFresh: refresh, lifetime: 60 * 60 * 24}
     let messages: messages = await neoUniversisGet("students/me/messages?$top=3", options);//&$filter=dateReceived eq null");
-    
+
 
     let cleanMessages = messages.value.map((message) => {
         return {
@@ -109,6 +109,47 @@ async function getUniversisNotifications(refresh: boolean = false) {
     return cleanMessages;
 }
 
+async function getWebmailNotifications(refresh: boolean = false) {
+    const options = {forceFresh: refresh, lifetime: 60 * 60 * 24}
+
+    try {
+
+        const messages = await neoWebmailInbox(options);
+        if (messages.error) return [];
+        
+        let cleanMessages = messages.received.map((message) => {
+        const {
+            attachments,
+            body,
+            subject,
+            from,
+            to,
+            date,
+            ...rest
+        } = parseMail(message.data);
+        
+        const cleanBody = (body.html ?? body.text ?? "");
+        
+        return {
+            type: "webmail",
+            subject: subject ? subject : "Χωρίς θέμα",
+            body: cleanBody,
+            sender: from?.name ? from.name : from?.email ?? "Άγνωστος αποστολέας",
+            email: from?.email ?? "Άγνωστος αποστολέας",
+            dateReceived: date,
+            url: "https://webmail.auth.gr",
+            id: date?.getTime() ?? new Date().getTime()
+        };
+    });
+        return cleanMessages;
+    }
+    catch (error) {
+        console.error(error);
+        return [];
+    }
+
+}
+
 type options = {
     refresh?: boolean | undefined;
     days?: number | undefined;
@@ -117,10 +158,26 @@ type options = {
 export async function gatherNotifications(options?: options){
     if (!options) options = {};
 
+    let webmailNotifications = await getWebmailNotifications(options.refresh);
     let elearningNotifications = await getElearningNotifications(options.refresh);
     let universisNotifications = await getUniversisNotifications(options.refresh);
-    
-    let notifications = elearningNotifications.concat(universisNotifications).sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
+
+    let notifications = elearningNotifications.concat(webmailNotifications)
+                        .filter((notification, index, self) => {
+                            if (notification.type === "webmail") {
+                                const hasMatchingElearning = self.some((otherNotification, otherIndex) => {
+                                    return (
+                                        otherIndex !== index &&
+                                        ( otherNotification.type === "elearning" || otherNotification.type === "system" ) &&
+                                        otherNotification.subject === notification.subject
+                                    );
+                                });
+                                return !hasMatchingElearning;
+                            }
+                            return true;
+                        })
+                        .concat(universisNotifications)
+                        .sort((a, b) => b.dateReceived.getTime() - a.dateReceived.getTime());
 
     if (options.days){
         notifications = notifications.filter((notification) => Math.floor((new Date().getTime() - notification.dateReceived.getTime()) / 1000) <= options.days * 86400);
@@ -136,5 +193,6 @@ export type notification = {
     sender: string;
     dateReceived: Date;
     id: number;
+    email?: string;
 };
 

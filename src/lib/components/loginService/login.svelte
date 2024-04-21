@@ -17,7 +17,7 @@
         
         isVisible = true;
 
-        username = (document.getElementById('usernameInput') as HTMLInputElement).value;
+        username = (document.getElementById('usernameInput') as HTMLInputElement).value.trim();
         password = (document.getElementById('passwordInput') as HTMLInputElement)?.value;
         
         let universisOutput = await getUniversisToken(username, password);
