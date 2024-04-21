@@ -8,6 +8,7 @@
 	import Banner from '$components/shared/banner.svelte';
 
 	let cafeteriaData: string | any[] = [];
+	let todaydata: string;
 
 	const date = new Date();
 	let today = date.getDay();
@@ -20,22 +21,36 @@
 	const hours = date.getHours();
 	const mins = date.getMinutes();
 	let message = '';
+	let now = '';
+	let next = '';
 	let color = 'success';
 	if (hours >= 8 && mins >= 30 && hours < 10) {
 		message = 'Λέσχη ανοιχτή για Πρωινό - Κλείνει στις 10:00';
+		now = "Πρωινό";
+		next = "Μεσημεριανό";
 	} else if (hours >= 10 && hours < 12) {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 12:00';
 		color = 'danger';
+		now = "Μεσημεριανό";
+		next = "Βραδινό";
 	} else if (hours >= 12 && hours < 16) {
 		message = 'Λέσχη ανοιχτή για Μεσημεριανό - Κλείνει στις 16:00';
+		now = "Μεσημεριανό";
+		next = "Βραδινό";
 	} else if (hours >= 16 && hours < 18) {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 18:00';
 		color = 'danger';
+		now = "Βραδινό";
+		next = "Πρωινό";
 	} else if (hours >= 18 && hours < 21) {
 		message = 'Λέσχη ανοιχτή για Βραδινό - Κλείνει στις 21:00';
+		now = "Βραδινό";
+		next = "Πρωινό";
 	} else {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 08:30';
 		color = 'danger';
+		now = "Πρωινό";
+		next = "Μεσημεριανό";
 	}
 
 	async function getMenuData() {
@@ -50,6 +65,14 @@
 		} else {
 			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
 		}
+		
+		const startString = "<h2 class=\"wp-block-heading\"><strong>" + now + "&nbsp;";
+		const endString = "<h2 class=\"wp-block-heading\"><strong>" + next + "&nbsp;";
+		const regex = new RegExp(`(${startString})(.*?)(?=${endString})`, "si");
+		const match = cafeteriaData[today].match(regex);
+
+		if (match && match[0])
+			todaydata = match[0].trim();
 	}
 </script>
 
@@ -71,7 +94,7 @@
 			</h1>
 			<ion-card color="light">
 				<ion-card-content>
-					<div>{@html cafeteriaData[today]}</div>
+					<div>{@html todaydata}</div>
 				</ion-card-content>
 			</ion-card>
 
