@@ -23,6 +23,7 @@ export function addNetworkListener () {
                 mode: 'ios',
                 translucent: true,
                 position: 'bottom',
+                positionAnchor: "tab-button-homepage",
                 layout: 'stacked'
             })
         }

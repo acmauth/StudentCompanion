@@ -12,19 +12,23 @@ let userID = get(userTokens).elearning.userID;
 
 
 function cleanUpFullMessage(fullMessage: string) {
+    let content = fullMessage;
+
     // Regular expression to match content between dashes
     const regex = /-{5,}\n([\s\S]*?)-{5,}/;
 
     // Extracting the content between dashes
     const match = fullMessage.match(regex);
 
-    // Displaying the result
+    // Encapsulating URLs with anchor tags
     if (match) {
-    const extractedContent = match[1];
-     return extractedContent;
+        const extractedContent = match[1];
+        const replacedContent = extractedContent.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1">$1</a>');
+        return replacedContent;
     } else {
-     return fullMessage;
+        return fullMessage;
     }
+
 }
 
 async function getElearningNotifications(refresh: boolean = false) {
@@ -78,9 +82,11 @@ async function getElearningNotifications(refresh: boolean = false) {
         messages.messages = messages.messages.concat(response_Unread.data.messages);
     }
 
+    console.log(messages.messages);
+
     let cleanMessages = messages.messages.map((message) => {
         return {
-            type: message.useridfrom != -10 ? "elearning" : "system",
+            type: message.useridfrom > 500 ? "elearning" : "system",
             subject: message.subject,
             body: cleanUpFullMessage(message.fullmessage),
             url: message.contexturl,

@@ -46,6 +46,7 @@
 						mode: 'ios',
 						translucent: true,
 						position: 'bottom',
+						positionAnchor: "tab-button-homepage",
 						layout: 'stacked'
 					});
 					throw new Error('Network response was not ok');
@@ -57,6 +58,7 @@
 						mode: 'ios',
 						translucent: true,
 						position: 'bottom',
+						positionAnchor: "tab-button-homepage",
 						layout: 'stacked'
 					});
 				}

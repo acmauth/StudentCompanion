@@ -22,11 +22,43 @@
         iframe.addEventListener('load', onMailLoad);
     });
 
-    // Setting the height and width to the content of the iframe
-    function onMailLoad(){
+
+    // Fixing the height of the iframe
+    function fixIframeHeight() {
         iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 100 + 'px';
-        iframe.contentDocument.querySelector("html").style.fontFamily = "Roboto, sans-serif";
-        iframe.contentDocument.querySelector("html").style.overflowY = "hidden";
+    }
+
+
+    // Fixing the content of the iframe
+    function fixIframeContent(){    
+        // Getting the body of the iframe
+        const body = iframe.contentDocument.querySelector("html");
+        
+        if (body) {
+            // Style reset for the iframe
+            body.style.fontFamily = "Roboto, sans-serif";
+            body.style.overflowY = "hidden";
+            body.style.color = "#374E5C";
+
+            // Adding a base tag to the iframe to open links in a new tab instead of inside the iframe
+            const baseTag = document.createElement('base');
+            baseTag.target = '_blank';
+            body.appendChild(baseTag);
+        }
+    }
+
+
+    // Applying some fixes to the iframe content on the fly
+    function onMailLoad(){
+        fixIframeHeight()
+        
+        fixIframeContent();
+
+        // Janky fix for a race condition where the iframe height is not set correctly
+        setTimeout(() => {
+            fixIframeHeight();
+        }, 1000);
+
     }
 </script>
 
@@ -73,7 +105,7 @@
                             <ion-avatar>
                                 <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail"? mail : elearningLogo} />
                             </ion-avatar>
-                            <ion-label>
+                            <ion-label style="overflow:hidden; white-space: nowrap;">
                                 {#if notification.email}
                                     <a href="mailto:{notification.email}" style="text-decoration: none; color: inherit;">
                                         {notification.sender}
@@ -102,26 +134,15 @@
                         src="about:blank"
                         style="width: 100%; border: none;"/>
                     </ion-item>
-                    <ion-item>
-                        <ion-text>
-                            <p class="date">
-                                Ημερομηνία: {notification.dateReceived.toLocaleString()}
-                            </p>
-                        </ion-text>
-                    </ion-item>
+                    <ion-item-divider >
+                        <ion-label>Ημερομηνία: {notification.dateReceived.toLocaleString()}</ion-label>
+                      </ion-item-divider> 
                 </ion-item-group>
             </div>
         </ion-content>
     </ion-modal>
 
     <style>
-        .notifContent {
-            white-space: pre-line;
-            max-width: 100%;
-            user-select: text;
-            overflow-x: scroll;
-        }
-
         .ellipse-no-wrap {
             white-space: nowrap;
             overflow: hidden;
