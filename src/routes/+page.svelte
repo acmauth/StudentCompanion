@@ -5,6 +5,7 @@
 	import Logo from '$lib/assets/Logo_full.png';
 	import { neoUniversisGet } from '$lib/dataService';
 	import { loadPersistedStores } from './persistedStoreDeclarations';
+	import initializeNotifications from '$lib/-notifications/core';
 	
 	function delay(ms: number) {
  	   return new Promise( resolve => setTimeout(resolve, ms) );
@@ -21,6 +22,7 @@
 		await delay(1000);
 		if (await judgeAuth()) {
 			await preFlightCache();
+			await initializeNotifications();
 			goto('pages/homepage');
 		} else {
 			goto('login');}
