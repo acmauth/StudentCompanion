@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ClassItemFlat } from '$lib/components/schedule/class/ClassItem';
-    import {add, bookOutline, createOutline, ellipsisHorizontalOutline, schoolOutline} from 'ionicons/icons';
+    import {add, bookOutline, createOutline, ellipsisHorizontalOutline, schoolOutline, checkmark, ellipsisVerticalOutline, ellipsisVertical} from 'ionicons/icons';
     import { Capacitor } from '@capacitor/core';
     import ClassCard from '$components/schedule/class/classCard.svelte';
     import { getDayByIndex, getDayIndex, weekdays, weekdaysMonFirst } from "$lib/components/schedule/day/days";
@@ -58,15 +58,31 @@
 <ion-header collapse="condense" mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
       <ion-title class="ion-padding-vertical" size="large">Πρόγραμμα μαθημάτων</ion-title>
-      <ion-buttons slot="end">
+      <ion-buttons slot="secondary">
         <ion-button href="/pages/classes/addClass">
-          <ion-icon slot="icon-only" icon={add}></ion-icon>
+          <ion-icon slot="icon-only" icon={add}></ion-icon>  
         </ion-button>
-      </ion-buttons>
+        <ion-button id="more-button" slot="icon-only">
+          <ion-icon slot="icon-only" icon={ellipsisVertical}></ion-icon>
+        </ion-button>
+
+      <ion-popover trigger="more-button" trigger-action="click" side="bottom" alignment="end"> 
+        <ion-buttons style="display: flex; flex-direction: column;">
+            <ion-button href="/pages/classes/addClass" expand="block">
+                <ion-icon slot="start" icon={schoolOutline}></ion-icon>
+                Εξετάσεις
+            </ion-button>
+            <ion-button href="/pages/classes/addClass" expand="block">
+                <ion-icon slot="start" icon={checkmark}></ion-icon> 
+                Συμβάντα
+            </ion-button>
+        </ion-buttons>
+      </ion-popover>
+    </ion-buttons>
     </ion-toolbar>
 </ion-header>
 
-<ion-fab horizontal="end" vertical="bottom">
+<!-- <ion-fab horizontal="end" vertical="bottom">
     <ion-fab-button color="light">
        <ion-icon icon={ellipsisHorizontalOutline} />
     </ion-fab-button>
@@ -78,7 +94,7 @@
           <ion-icon icon={schoolOutline} />
        </ion-fab-button>
     </ion-fab-list>
- </ion-fab>
+ </ion-fab> -->
 
 
 
@@ -153,5 +169,9 @@
         border-radius: 15px;
         color: var(--ion-color-dark);
         text-align: end;
+    }
+
+    ion-button {
+        text-transform: none;
     }
 </style>
