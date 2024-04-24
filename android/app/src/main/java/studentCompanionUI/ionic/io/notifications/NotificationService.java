@@ -27,7 +27,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -66,8 +68,8 @@ public class NotificationService extends Worker {
     public Result doWork() {
 
         // Workidy-do
-//        var notifications = gatherNotifications((int) (System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)));
-        var notifications = gatherNotifications(1711185542);
+        var notifications = gatherNotifications((int) (System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)));
+//        var notifications = gatherNotifications(1711185542);
 
         Log.d("Notification Content doWork()", "Notifications gathered: " + notifications.length);
 
@@ -128,7 +130,7 @@ public class NotificationService extends Worker {
         for (AristomateNotification notification : notifications){
             // Display the notification on android
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this.context, notification.source)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setSmallIcon(R.drawable.aristomate)
                     .setContentTitle(notification.title)
                     .setContentText(notification.message)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT);
@@ -344,10 +346,13 @@ public class NotificationService extends Worker {
             JSONArray messages = response.getJSONObject("data").getJSONArray("messages");
             var elearningNotifications = new ArrayList<AristomateNotification>();
 
+            Log.e("in get mails","here");
+
             for (int i=0; i < messages.length(); i++) {
                 JSONObject candidateNotification = messages.getJSONObject(i);
                 ZonedDateTime dateReceived = Instant.ofEpochSecond(candidateNotification.getInt("timecreated")).atZone(ZoneOffset.UTC);
 
+                Log.e("In mailQ",dateReceived.toString());
                 if (dateReceived.isAfter(threshHoldTime)){
                     elearningNotifications.add(new AristomateNotification(candidateNotification.getString("subject"),candidateNotification.getString("fullmessage"), candidateNotification.getString("userfromfullname"), (int)dateReceived.toEpochSecond(), "Elearning"));
                 }
@@ -381,10 +386,14 @@ public class NotificationService extends Worker {
 
             for (int i=0; i < received.length(); i++) {
                 JSONObject candidateNotification = received.getJSONObject(i);
-                ZonedDateTime dateReceived = Instant.ofEpochMilli(candidateNotification.getInt("Timestamp")).atZone(ZoneOffset.UTC);
 
+                String notificationSubject = candidateNotification.getString("subject");
+                String notificationSender = candidateNotification.getString("sender");
+                Date notificationDate = (Date) candidateNotification.get("date");
+
+                ZonedDateTime dateReceived = Instant.ofEpochMilli(notificationDate.getTime()).atZone(ZoneOffset.UTC);
                 if (dateReceived.isAfter(threshHoldTime)){
-                    webmailNotifications.add(new AristomateNotification(null,candidateNotification.getString("data"), null, (int)dateReceived.toEpochSecond(), "Webmail"));
+                    webmailNotifications.add(new AristomateNotification(notificationSender,notificationSubject,notificationSender, (int)dateReceived.toEpochSecond(), "Webmail"));
                 }
             }
 

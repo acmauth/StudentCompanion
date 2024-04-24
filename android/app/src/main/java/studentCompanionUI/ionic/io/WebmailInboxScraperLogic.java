@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import java.io.ByteArrayOutputStream;
@@ -15,6 +17,8 @@ import javax.mail.*;
 import javax.mail.internet.*;
 import java.io.ByteArrayOutputStream;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WebmailInboxScraperLogic {
 
@@ -48,6 +52,9 @@ public class WebmailInboxScraperLogic {
             for (int i = messages.length - 1; i >= 0; i--) {
                 JSONObject emailJson = new JSONObject();
                 emailJson.put("data", getRawMessageSource(messages[i]));
+                emailJson.put("subject", getDecodedText(messages[i].getSubject()));
+                emailJson.put("sender", getDecodedText(messages[i].getFrom()[0].toString()));
+                emailJson.put("date", messages[i].getSentDate());
                 emailsArray.put(emailJson);
             }
 
@@ -73,4 +80,25 @@ public class WebmailInboxScraperLogic {
         message.writeTo(outputStream);
         return outputStream.toString();
     }
+
+   private static String getDecodedText(String txt) {
+       StringBuilder out = new StringBuilder();
+       boolean isEncoded = txt.contains("=\\?UTF-8");
+
+       for(String source : txt.split(" ")) {
+           Pattern p = Pattern.compile("=\\?UTF-8\\?B\\?(.*?)\\?=");
+           Matcher m = p.matcher(source);
+           if (!m.matches()) {
+               out.append(" ").append(source);
+           } else {
+               try {
+                   out.append(MimeUtility.decodeText(source));
+               } catch (Exception e) {
+                   e.printStackTrace();
+                   out.append(source);
+               }
+           }
+       }
+       return out.toString().trim();
+   }
 }
