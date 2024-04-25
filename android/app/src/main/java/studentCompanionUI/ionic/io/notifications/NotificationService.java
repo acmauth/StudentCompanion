@@ -71,7 +71,7 @@ public class NotificationService extends Worker {
 
         // Workidy-do
 //        var notifications = gatherNotifications((int) (System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)));
-        var notifications = gatherNotifications(1714057444);
+        var notifications = gatherNotifications(0);
         //1714057444
 
         Log.d("Notification Content doWork()", "Notifications gathered: " + notifications.length);
@@ -129,39 +129,6 @@ public class NotificationService extends Worker {
         }
     }
 
-//    private void displayNotifications (AristomateNotification[] notifications){
-//        for (AristomateNotification notification : notifications){
-//            // Display the notification on android
-//            NotificationCompat.Builder builder = new NotificationCompat.Builder(this.context, notification.source)
-//                    .setSmallIcon(R.drawable.ic_launcher_foreground)
-//                    .setContentTitle(notification.title)
-//                    .setContentText(notification.message)
-//                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-//
-//            NotificationManager notificationManager = getSystemService(this.context, NotificationManager.class);
-//            assert notificationManager != null;
-//            notificationManager.notify(new Random().nextInt(), builder.build());
-//
-//        }
-//    }
-
-//    private void displayNotifications(AristomateNotification[] notifications) {
-//        for (AristomateNotification notification : notifications) {
-//            // Display the notification on Android
-//            NotificationCompat.Builder builder = new NotificationCompat.Builder(this.context, notification.source)
-//                    .setSmallIcon(R.drawable.ic_launcher_foreground)
-//                    .setContentTitle(notification.title)
-//                    .setContentText(notification.message)
-//                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-//
-//            // Create a unique notification ID using the notification timestamp
-//            int notificationId = notification.Timestamp;
-//
-//            NotificationManager notificationManager = getSystemService(this.context, NotificationManager.class);
-//            assert notificationManager != null;
-//            notificationManager.notify(notificationId, builder.build());
-//        }
-//    }
 
     private void displayNotifications(AristomateNotification[] notifications) {
         for (AristomateNotification notification : notifications) {
@@ -210,7 +177,7 @@ public class NotificationService extends Worker {
             } catch (Exception e) {
                 try {
                     updateStoredElearningToken();
-                    var elearningNotifications = getUniversisNotifications(timestamp);
+                    var elearningNotifications = getElearningNotifications(timestamp);
                     notifications.addAll(Arrays.asList(elearningNotifications));
                 } catch (Exception e2) {
                     e2.printStackTrace();
@@ -372,7 +339,7 @@ public class NotificationService extends Worker {
             String moodleSession = elearningCredentials.getString("moodleSession");
             String userID = elearningCredentials.getString("userID");
 
-            JSONObject dataArguments = new JSONObject()
+            JSONArray dataArguments = new JSONArray().put(new JSONObject()
                     .put("index",0)
                     .put("methodname","core_message_get_messages")
                     .put("args",new JSONObject()
@@ -383,14 +350,17 @@ public class NotificationService extends Worker {
                             .put("limitnum",3)
                             .put("newestfirst",1)
                             .put("read", 0)
-                    );
+                    ));
 
             JSONObject response = ElearningDataServiceLogic.get(sesskey, moodleSession, dataArguments.toString());
-            if (response.getBoolean("error")){
+            JSONObject actualData = new JSONArray(response.getString("data")).getJSONObject(0);
+//            Log.d("Notification Content getElearningNotifications()", response.toString());
+
+            if (actualData.getBoolean("error")){
                 throw new RuntimeException("Error in ElearningDataServiceLogic.get");
             }
 
-            JSONArray messages = response.getJSONObject("data").getJSONArray("messages");
+            JSONArray messages = actualData.getJSONObject("data").getJSONArray("messages");
             var elearningNotifications = new ArrayList<AristomateNotification>();
 
             for (int i=0; i < messages.length(); i++) {
