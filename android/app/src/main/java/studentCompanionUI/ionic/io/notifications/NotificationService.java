@@ -4,7 +4,9 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
@@ -22,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import studentCompanionUI.ionic.io.ElearningDataServiceLogic;
 import studentCompanionUI.ionic.io.ElearningScraperLogic;
+import studentCompanionUI.ionic.io.MainActivity;
 import studentCompanionUI.ionic.io.R;
 import studentCompanionUI.ionic.io.UniversisScraperLogic;
 import studentCompanionUI.ionic.io.WebmailInboxScraperLogic;
@@ -67,7 +71,8 @@ public class NotificationService extends Worker {
 
         // Workidy-do
 //        var notifications = gatherNotifications((int) (System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)));
-        var notifications = gatherNotifications(1711185542);
+        var notifications = gatherNotifications(1714057444);
+        //1714057444
 
         Log.d("Notification Content doWork()", "Notifications gathered: " + notifications.length);
 
@@ -124,21 +129,61 @@ public class NotificationService extends Worker {
         }
     }
 
-    private void displayNotifications (AristomateNotification[] notifications){
-        for (AristomateNotification notification : notifications){
-            // Display the notification on android
+//    private void displayNotifications (AristomateNotification[] notifications){
+//        for (AristomateNotification notification : notifications){
+//            // Display the notification on android
+//            NotificationCompat.Builder builder = new NotificationCompat.Builder(this.context, notification.source)
+//                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+//                    .setContentTitle(notification.title)
+//                    .setContentText(notification.message)
+//                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+//
+//            NotificationManager notificationManager = getSystemService(this.context, NotificationManager.class);
+//            assert notificationManager != null;
+//            notificationManager.notify(new Random().nextInt(), builder.build());
+//
+//        }
+//    }
+
+//    private void displayNotifications(AristomateNotification[] notifications) {
+//        for (AristomateNotification notification : notifications) {
+//            // Display the notification on Android
+//            NotificationCompat.Builder builder = new NotificationCompat.Builder(this.context, notification.source)
+//                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+//                    .setContentTitle(notification.title)
+//                    .setContentText(notification.message)
+//                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+//
+//            // Create a unique notification ID using the notification timestamp
+//            int notificationId = notification.Timestamp;
+//
+//            NotificationManager notificationManager = getSystemService(this.context, NotificationManager.class);
+//            assert notificationManager != null;
+//            notificationManager.notify(notificationId, builder.build());
+//        }
+//    }
+
+    private void displayNotifications(AristomateNotification[] notifications) {
+        for (AristomateNotification notification : notifications) {
+            Intent intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, notification.Timestamp, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this.context, notification.source)
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
                     .setContentTitle(notification.title)
                     .setContentText(notification.message)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+
+            int notificationId = notification.Timestamp;
 
             NotificationManager notificationManager = getSystemService(this.context, NotificationManager.class);
             assert notificationManager != null;
-            notificationManager.notify(new Random().nextInt(), builder.build());
-
+            notificationManager.notify(notificationId, builder.build());
         }
     }
+
 
     private AristomateNotification[] gatherNotifications(int timestamp){
         var notifications = new ArrayList<AristomateNotification>();
@@ -266,10 +311,14 @@ public class NotificationService extends Worker {
         return credentialsObject;
     }
 
+
     private AristomateNotification[] getUniversisNotifications(int timestamp){
         try {
-            Instant instant = Instant.ofEpochMilli(timestamp);
+            long timestampInMillis = timestamp * 1000L;
+            Log.d("getUniversisNotifications()", "timestamp: " + timestampInMillis);
+            Instant instant = Instant.ofEpochMilli(timestampInMillis);
             ZonedDateTime threshHoldTime = instant.atZone(ZoneOffset.UTC);
+            Log.d("getUniversisNotifications()", "threshold " + threshHoldTime);
 
             JSONObject tokens = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("userTokens",""));
             String token = tokens.getJSONObject("universis").getString("token");
@@ -296,9 +345,9 @@ public class NotificationService extends Worker {
             for (int i=0; i < result.length(); i++) {
                 JSONObject candidateNotification = result.getJSONObject(i);
                 ZonedDateTime dateReceived = ZonedDateTime.parse(candidateNotification.getString("dateReceived"), formatter);
-
                 if (dateReceived.isAfter(threshHoldTime)){
-                    universisNotifications.add(new AristomateNotification(null,candidateNotification.getString("body"), null ,(int)dateReceived.toEpochSecond(), "Universis"));
+                    String plainText = candidateNotification.getString("body").replaceAll("\\<.*?\\>", "");
+                    universisNotifications.add(new AristomateNotification("Universis: " + candidateNotification.getString("subject"), plainText, "Universis" ,(int)dateReceived.toEpochSecond(), "Universis"));
                 }
             }
 
