@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import studentCompanionUI.ionic.io.ElearningDataServiceLogic;
@@ -71,7 +73,7 @@ public class NotificationService extends Worker {
 
         // Workidy-do
 //        var notifications = gatherNotifications((int) (System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)));
-        var notifications = gatherNotifications(0);
+        var notifications = gatherNotifications(1713780813);
         //1714057444
 
         Log.d("Notification Content doWork()", "Notifications gathered: " + notifications.length);
@@ -314,7 +316,7 @@ public class NotificationService extends Worker {
                 ZonedDateTime dateReceived = ZonedDateTime.parse(candidateNotification.getString("dateReceived"), formatter);
                 if (dateReceived.isAfter(threshHoldTime)){
                     String plainText = candidateNotification.getString("body").replaceAll("\\<.*?\\>", "");
-                    universisNotifications.add(new AristomateNotification("Universis: " + candidateNotification.getString("subject"), plainText, "Universis" ,(int)dateReceived.toEpochSecond(), "Universis"));
+                    universisNotifications.add(new AristomateNotification(candidateNotification.getString("subject"), plainText, "Universis" ,(int)dateReceived.toEpochSecond(), "Universis"));
                 }
             }
 
@@ -367,8 +369,11 @@ public class NotificationService extends Worker {
                 JSONObject candidateNotification = messages.getJSONObject(i);
                 ZonedDateTime dateReceived = Instant.ofEpochSecond(candidateNotification.getInt("timecreated")).atZone(ZoneOffset.UTC);
 
+
+
                 if (dateReceived.isAfter(threshHoldTime)){
-                    elearningNotifications.add(new AristomateNotification(candidateNotification.getString("subject"),candidateNotification.getString("fullmessage"), candidateNotification.getString("userfromfullname"), (int)dateReceived.toEpochSecond(), "Elearning"));
+                    String plainText = cleanUpFullMessage(candidateNotification.getString("fullmessage"));
+                    elearningNotifications.add(new AristomateNotification(candidateNotification.getString("subject"), plainText, candidateNotification.getString("userfromfullname"), (int)dateReceived.toEpochSecond(), "Elearning"));
                 }
             }
 
@@ -379,6 +384,24 @@ public class NotificationService extends Worker {
             throw new RuntimeException(e);
         }
     }
+
+    private String cleanUpFullMessage(String fullMessage) {
+
+        // Regular expression to match content between dashes
+        Pattern pattern = Pattern.compile("-{5,}\n([\\s\\S]*?)-{5,}");
+
+        // Extracting the content between dashes
+        Matcher matcher = pattern.matcher(fullMessage);
+
+        // Encapsulating URLs with anchor tags
+        if (((Matcher) matcher).find()) {
+            String extractedContent = matcher.group(1);
+            return extractedContent;
+        } else {
+            return fullMessage;
+        }
+    }
+
 
     private AristomateNotification[] getWebmailNotifications(int timestamp){
         try {
