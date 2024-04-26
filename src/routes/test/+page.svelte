@@ -4,11 +4,12 @@
   import { getDayByIndex } from '$lib/components/schedule/day/days';
   register();
 
-
   let previousWeek;
   let currentWeek;
   let nextWeek;
   let weeks: Date[] = [];
+
+  let swiperActiveIndex: number;
 
   function getWeekDates(inputDate: Date): Date[] {
     const currentDate = new Date(inputDate);
@@ -53,8 +54,14 @@
     weeks = previousWeek.concat(currentWeek).concat(nextWeek);
 
     const swiperEl = document.querySelector('swiper-container');
+    // Set the active index to today's date
+    swiperEl?.swiper.slideTo(weeks.findIndex((date) => { return date.getTime() === new Date(new Date().setHours(0,0,0,0)).getTime();}), 0, false);
+
+
     swiperEl.addEventListener('swiperslidechange', (event) => {
       const activeIndex = swiperEl?.swiper.activeIndex || 11;
+      swiperActiveIndex = activeIndex;
+
       const currentWeeks = [...weeks];
       const currentIndexDate = new Date(weeks[activeIndex]);
       
@@ -78,17 +85,17 @@
 
 <ion-content>  
   <swiper-container slides-per-view="4.5" speed="500" mousewheel-force-to-axis="true" centered-slides="true" initial-slide="11">
-      {#each weeks as date}
-        <swiper-slide>
-          <ion-card>
-              <ion-card-header>
-                  <ion-card-title>{getDayByIndex(date.getDay(), 'el', true, 3)}</ion-card-title>
-              </ion-card-header>
-              <ion-card-content>
-                  {date.getDate()}
-              </ion-card-content>
-          </ion-card>      
-        </swiper-slide>
+    {#each weeks as date, i}
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title class="{i==swiperActiveIndex? 'active' : ''}">{getDayByIndex(date.getDay(), 'el', true, 3)}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            {date.getDate()}
+          </ion-card-content>
+        </ion-card>      
+      </swiper-slide>
     {/each}
   </swiper-container>
 </ion-content>
@@ -111,4 +118,9 @@
     text-align: center;
     width: auto;
   }
+
+  .active {
+    color: var(--ion-color-primary);
+  }
+
 </style>
