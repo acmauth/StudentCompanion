@@ -1,8 +1,9 @@
 import { neoUniversisGet } from "$lib/dataService";
 
-export async function gatherRecentGrades(){
+export async function gatherRecentGrades(refresh: boolean = false){
+    const options = {forceFresh: refresh, lifetime: 60 * 60 * 24}
     // getting the current period and year 
-    let examPeriod = (await neoUniversisGet("students/me/department?$expand=departmentConfiguration($expand=examYear,examPeriod)&$top=1&$skip=0&$count=false"));
+    let examPeriod = (await neoUniversisGet("students/me/department?$expand=departmentConfiguration($expand=examYear,examPeriod)&$top=1&$skip=0&$count=false", options));
 
     // exam periods: 1-2 winter, 3-4 sprint, 5-6 september
     let currentPeriod = examPeriod.currentPeriod;
@@ -13,7 +14,7 @@ export async function gatherRecentGrades(){
     let currentYear = examPeriod.currentYear;
 
     // getting recent grades based on the current period, if empty that exam period didn't arrive
-    let recentGrades = (await neoUniversisGet('students/me/grades?$filter=courseExam/year eq ' + currentYear + ' and courseExam/examPeriod eq ' + currentPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
+    let recentGrades = (await neoUniversisGet('students/me/grades?$filter=courseExam/year eq ' + currentYear + ' and courseExam/examPeriod eq ' + currentPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false', options)).value;
 
     // if its empty it means that the recent grades are a period prior
     if (recentGrades.length === 0){
@@ -37,7 +38,7 @@ export async function gatherRecentGrades(){
         }
 
         // getting recent grades from the previous period
-        recentGrades = (await neoUniversisGet('students/me/grades?$filter=courseExam/year eq ' + lastYear + ' and courseExam/examPeriod eq ' + lastPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false')).value;
+        recentGrades = (await neoUniversisGet('students/me/grades?$filter=courseExam/year eq ' + lastYear + ' and courseExam/examPeriod eq ' + lastPeriod + '&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false', options)).value;
     }
 
     return recentGrades;
