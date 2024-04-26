@@ -4,31 +4,65 @@
   import { getDayByIndex } from '$lib/components/schedule/day/days';
   register();
 
-  let openDates: Date[] = [];
 
-  function generateCalendarDates(year: number, month: number, day: number) {
-    const firstDate = new Date(year, month, day - 3);
-    const lastDate = new Date(year, month, day + 3);
-    const i = new Date(firstDate);
+  let previousWeek;
+  let currentWeek;
+  let nextWeek;
+  let weeks: Date[] = [];
 
-    $: openDates = [];
-    while (i <= lastDate) {
-      $: openDates.push(new Date(i));
-      i.setDate(i.getDate() + 1);
+  function getWeekDates(inputDate: Date): Date[] {
+    const currentDate = new Date(inputDate);
+    const currentDayOfWeek = currentDate.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+    const diff = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1; // Calculate difference to Monday
+    const firstDayOfWeek = new Date(currentDate);
+    firstDayOfWeek.setDate(firstDayOfWeek.getDate() - diff);
+    firstDayOfWeek.setHours(0,0,0,0);
+
+    const weekDates: Date[] = [];
+    for (let i = 0; i < 7; i++) {
+        const tempDate = new Date(firstDayOfWeek);
+        tempDate.setDate(tempDate.getDate() + i);
+        tempDate.setHours(0,0,0,0);
+        weekDates.push(tempDate);
     }
+    return weekDates;
+  }
+
+  function getNextWeekDates(inputDate: Date): Date[] {
+    const currentDate = new Date(inputDate);
+    const nextWeekDate = new Date(currentDate);
+    nextWeekDate.setDate(nextWeekDate.getDate() + 7);
+    nextWeekDate.setHours(0,0,0,0);
+    return getWeekDates(nextWeekDate);
+  }
+
+  function getPreviousWeekDates(inputDate: Date): Date[] {
+      const currentDate = new Date(inputDate);
+      const previousWeekDate = new Date(currentDate);
+      previousWeekDate.setDate(previousWeekDate.getDate() - 7);
+      previousWeekDate.setHours(0,0,0,0);
+      return getWeekDates(previousWeekDate);
   }
 
   onMount(() => {
-    const today = new Date();
-    generateCalendarDates(today.getFullYear(), today.getMonth(), today.getDay());
+    
+    currentWeek = getWeekDates(new Date());
+    nextWeek = getNextWeekDates(new Date());
+    previousWeek = getPreviousWeekDates(new Date());
+
+    weeks = previousWeek.concat(currentWeek).concat(nextWeek);
 
     const swiperEl = document.querySelector('swiper-container');
-    
     swiperEl.addEventListener('swiperslidechangetransitionend', (event) => {
-      let offset: number = 1;
-      if(swiperEl.swiper.swipeDirection == "next")
-        offset = -1;
-      generateCalendarDates(openDates[offset].getFullYear(), openDates[+ offset].getMonth(), openDates[3 + offset].getDay());
+      const activeIndex = swiperEl?.swiper.activeIndex || 11;
+      const currentWeeks = [...weeks];
+      const currentIndexDate = new Date(weeks[activeIndex]);
+      
+      weeks = getPreviousWeekDates(weeks[activeIndex]).concat(getWeekDates(weeks[activeIndex])).concat(getNextWeekDates(weeks[activeIndex]));
+
+      if (JSON.stringify(currentWeeks) !== JSON.stringify(weeks)) {
+        swiperEl.swiper.slideTo(weeks.findIndex((date) => { return date.getTime() === currentIndexDate.getTime();}), 0, false);
+      }
     });
 
   });
@@ -37,84 +71,23 @@
 </script>
 
 <ion-content>  
-<swiper-container on:swipe{handleSwipe} slides-per-view="5" speed="500" mousewheel-force-to-axis="true" loop="false">
-  {#each openDates as date}
-    <swiper-slide id="day-{date.getDay()}">
-      <ion-card>
-          <ion-card-header>
-              <ion-card-title>{getDayByIndex(date.getDay(), 'el', true, 3)}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <p>{date.getDate()}</p>
-          </ion-card-content>
-      </ion-card>
-    </swiper-slide>
+  <swiper-container slides-per-view="4.5" speed="500" mousewheel-force-to-axis="true" centered-slides="true" initial-slide="11">
+      {#each weeks as date}
+        <swiper-slide>
+          <ion-card>
+              <ion-card-header>
+                  <ion-card-title>{getDayByIndex(date.getDay(), 'el', true, 3)}</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                  {date.getDate()}
+              </ion-card-content>
+          </ion-card>      
+        </swiper-slide>
     {/each}
-  <!-- <swiper-slide id="day-0">
-    <ion-card>
-        <ion-card-header>
-            <ion-card-title>Κυρ</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-        </ion-card-content>
-    </ion-card>
-</swiper-slide>  
-  <swiper-slide id="day-1">
-      <ion-card>
-          <ion-card-header>
-              <ion-card-title>Δευ</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-          </ion-card-content>
-      </ion-card>
-  </swiper-slide>
-  <swiper-slide id="day-2">
-      <ion-card>
-          <ion-card-header>
-              <ion-card-title>Τρι</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-          </ion-card-content>
-      </ion-card>
-  </swiper-slide>
-  <swiper-slide id="day-3">
-    <ion-card>
-        <ion-card-header>
-            <ion-card-title>Τετ</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-        </ion-card-content>
-    </ion-card>
-</swiper-slide>
-<swiper-slide id="day-4">
-  <ion-card>
-    <ion-card-header>
-        <ion-card-title>Πεμ</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-    </ion-card-content>
-</ion-card>
-</swiper-slide>
-<swiper-slide id="day-5">
-<ion-card>
-  <ion-card-header>
-      <ion-card-title>Παρ</ion-card-title>
-  </ion-card-header>
-  <ion-card-content>
-  </ion-card-content>
-</ion-card>
-</swiper-slide>
-<swiper-slide id="day-6">
-  <ion-card>
-      <ion-card-header>
-          <ion-card-title>Σαβ</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-      </ion-card-content>
-  </ion-card>
-</swiper-slide> -->
-</swiper-container>
+  </swiper-container>
 </ion-content>
+
+
 
 <style>
   ion-card-title {
@@ -124,5 +97,12 @@
   ion-card * {
     padding: 5px;
     margin-inline: 4px;
+  }
+  swiper-container{
+  width: 100%;
+  }
+  swiper-slide {
+    text-align: center;
+    width: auto;
   }
 </style>
