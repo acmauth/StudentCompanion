@@ -53,15 +53,21 @@
     weeks = previousWeek.concat(currentWeek).concat(nextWeek);
 
     const swiperEl = document.querySelector('swiper-container');
-    swiperEl.addEventListener('swiperslidechangetransitionend', (event) => {
+    swiperEl.addEventListener('swiperslidechange', (event) => {
       const activeIndex = swiperEl?.swiper.activeIndex || 11;
       const currentWeeks = [...weeks];
       const currentIndexDate = new Date(weeks[activeIndex]);
       
-      weeks = getPreviousWeekDates(weeks[activeIndex]).concat(getWeekDates(weeks[activeIndex])).concat(getNextWeekDates(weeks[activeIndex]));
-
-      if (JSON.stringify(currentWeeks) !== JSON.stringify(weeks)) {
-        swiperEl.swiper.slideTo(weeks.findIndex((date) => { return date.getTime() === currentIndexDate.getTime();}), 0, false);
+      // Update the weeks list with the new weeks based on the active index; if the active index is between 8 and 15, the current week is the active week.
+      // So, there is no need to update the weeks list. Otherwise, the active week is the previous or the next week.
+      if (activeIndex <= 8 || activeIndex >= 15) {
+        weeks = getPreviousWeekDates(weeks[activeIndex]).concat(getWeekDates(weeks[activeIndex])).concat(getNextWeekDates(weeks[activeIndex]));
+      
+        // If the weeks list is updated, it means that the user has changed the week. So the current selected date has a new position in the list.
+        // We need to find the new position of the current selected date and update the swiper's active slide's index.
+        if (JSON.stringify(currentWeeks) !== JSON.stringify(weeks)) {
+          swiperEl.swiper.slideTo(weeks.findIndex((date) => { return date.getTime() === currentIndexDate.getTime();}), 0, false);
+        }
       }
     });
 
