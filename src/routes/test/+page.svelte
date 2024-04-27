@@ -1,126 +1,59 @@
 <script lang="ts">
+	import {documentText, star} from 'ionicons/icons';
+	import { EventType} from '$lib/components/calendar/event/Event';
+	import type { EventFlat } from '$lib/components/calendar/event/Event';
+	import {timeOutline, map} from 'ionicons/icons';
 	import { onMount } from 'svelte';
-  import { register } from 'swiper/element/bundle';
-  import { getDayByIndex } from '$lib/components/schedule/day/days';
-  register();
+	import { getDayByIndex } from '$components/schedule/day/days';
+	import { EventRepeatType } from '$components/calendar/event/Event';
+	
+	let eventItem: EventFlat = {
+    title: "Προγραμματισμός Υπολογιστών",
+    slot: {
+        start: "2022-06-06T08:00:00Z",
+        end: "2022-06-06T10:00:00Z"
+      },
+    location: "Αίθουσα 1",
+    description: "Περιγραφή",
+    professor: "Κύριος Καθηγητής",
+    type: EventType.EXAM,
+    repeat: EventRepeatType.NONE,
+    repeatInterval: 0,
+    repeatUntil: null,
+    notify: false,
+    notifyTime: 0
+  };
+	
+	let start: string = getDayByIndex(new Date(eventItem.slot.start).getDay(), 'el', true); 
+	let end: string = getDayByIndex(new Date(eventItem.slot.end).getDay(), 'el', true);
+	let isPastDate: boolean = false;
+	// let isTest: boolean = false;
+	// let isProject: boolean = false;
 
-  let previousWeek;
-  let currentWeek;
-  let nextWeek;
-  let weeks: Date[] = [];
-
-  let swiperActiveIndex: number;
-
-  function getWeekDates(inputDate: Date): Date[] {
-    const currentDate = new Date(inputDate);
-    const currentDayOfWeek = currentDate.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
-    const diff = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1; // Calculate difference to Monday
-    const firstDayOfWeek = new Date(currentDate);
-    firstDayOfWeek.setDate(firstDayOfWeek.getDate() - diff);
-    firstDayOfWeek.setHours(0,0,0,0);
-
-    const weekDates: Date[] = [];
-    for (let i = 0; i < 7; i++) {
-        const tempDate = new Date(firstDayOfWeek);
-        tempDate.setDate(tempDate.getDate() + i);
-        tempDate.setHours(0,0,0,0);
-        weekDates.push(tempDate);
-    }
-    return weekDates;
-  }
-
-  function getNextWeekDates(inputDate: Date): Date[] {
-    const currentDate = new Date(inputDate);
-    const nextWeekDate = new Date(currentDate);
-    nextWeekDate.setDate(nextWeekDate.getDate() + 7);
-    nextWeekDate.setHours(0,0,0,0);
-    return getWeekDates(nextWeekDate);
-  }
-
-  function getPreviousWeekDates(inputDate: Date): Date[] {
-      const currentDate = new Date(inputDate);
-      const previousWeekDate = new Date(currentDate);
-      previousWeekDate.setDate(previousWeekDate.getDate() - 7);
-      previousWeekDate.setHours(0,0,0,0);
-      return getWeekDates(previousWeekDate);
-  }
-
-  onMount(() => {
-    
-    currentWeek = getWeekDates(new Date());
-    nextWeek = getNextWeekDates(new Date());
-    previousWeek = getPreviousWeekDates(new Date());
-
-    weeks = previousWeek.concat(currentWeek).concat(nextWeek);
-
-    const swiperEl = document.querySelector('swiper-container');
-    // Set the active index to today's date
-    swiperEl?.swiper.slideTo(weeks.findIndex((date) => { return date.getTime() === new Date(new Date().setHours(0,0,0,0)).getTime();}), 0, false);
-
-
-    swiperEl.addEventListener('swiperslidechange', (event) => {
-      const activeIndex = swiperEl?.swiper.activeIndex || 11;
-      swiperActiveIndex = activeIndex;
-
-      const currentWeeks = [...weeks];
-      const currentIndexDate = new Date(weeks[activeIndex]);
-      
-      // Update the weeks list with the new weeks based on the active index; if the active index is between 8 and 15, the current week is the active week.
-      // So, there is no need to update the weeks list. Otherwise, the active week is the previous or the next week.
-      if (activeIndex <= 8 || activeIndex >= 15) {
-        weeks = getPreviousWeekDates(weeks[activeIndex]).concat(getWeekDates(weeks[activeIndex])).concat(getNextWeekDates(weeks[activeIndex]));
-      
-        // If the weeks list is updated, it means that the user has changed the week. So the current selected date has a new position in the list.
-        // We need to find the new position of the current selected date and update the swiper's active slide's index.
-        if (JSON.stringify(currentWeeks) !== JSON.stringify(weeks)) {
-          swiperEl.swiper.slideTo(weeks.findIndex((date) => { return date.getTime() === currentIndexDate.getTime();}), 0, false);
-        }
-      }
-    });
-
-  });
-  
-
+	onMount(async() => {
+		isPastDate = new Date().getTime() > new Date(eventItem.slot.end).getTime();
+		// isTest = eventItem.type == eventItem.TEST;
+		// isProject = eventItem.type == eventItem.PROJECT;
+	});
 </script>
 
-<ion-content>  
-  <swiper-container slides-per-view="4.5" speed="500" mousewheel-force-to-axis="true" centered-slides="true" initial-slide="11">
-    {#each weeks as date, i}
-      <swiper-slide>
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title class="{i==swiperActiveIndex? 'active' : ''}">{getDayByIndex(date.getDay(), 'el', true, 3)}</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            {date.getDate()}
-          </ion-card-content>
-        </ion-card>      
-      </swiper-slide>
-    {/each}
-  </swiper-container>
-</ion-content>
-
-
-
 <style>
-  ion-card-title {
-    font-size: 1rem;
-    align-self: center;
-  }
-  ion-card * {
-    padding: 5px;
-    margin-inline: 4px;
-  }
-  swiper-container{
-  width: 100%;
-  }
-  swiper-slide {
-    text-align: center;
-    width: auto;
-  }
-
-  .active {
-    color: var(--ion-color-primary);
-  }
-
+	/* @import './EventCard.css'; */
+	.pastDate {
+        opacity: 0.5;
+    }
+	/* .test {
+		--background: var(--ion-color-warning);
+	}
+	.project {
+		--background: var(--ion-color-secondary);
+	} */
 </style>
+<!-- &nbsp; -->
+
+<ion-card>
+  <ion-card-header class="{eventItem.type + "_card"}">
+    <ion-card-title color="primary">{eventItem.title}</ion-card-title>
+    <ion-card-subtitle>{eventItem.description}</ion-card-subtitle>
+  </ion-card-header>
+</ion-card>
