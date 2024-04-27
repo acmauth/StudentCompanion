@@ -20,7 +20,7 @@
 		{
 			label: '',
 			icon: calendarClear,
-			tab: 'schedule'
+			tab: 'calendar'
 		},
 		{
 			label: '',
