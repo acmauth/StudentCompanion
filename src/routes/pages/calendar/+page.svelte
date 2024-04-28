@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { add, bookOutline } from 'ionicons/icons';
+    import { add, calendarClearOutline } from 'ionicons/icons';
     import { Capacitor } from '@capacitor/core';
 	import { onMount } from 'svelte';
     import DateSwiper from '$lib/components/calendar/DateSwiper.svelte';
@@ -53,67 +53,56 @@
         </ion-toolbar>
     </ion-header>
 
-    <div>
-        <DateSwiper bind:activeDate={activeDate}/>
-    </div>
 
-    <ion-grid>
-        <ion-row class="calendar">
-            <ion-content>
-                {#each eventList as eventItem}
-                    <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
-                {/each}
-            </ion-content>
-        </ion-row>
-        <ion-row class="custom-center-label">
-            {#if eventList.length === 0}
-                <ion-icon icon={bookOutline} size="large" style="padding: 15px"></ion-icon>
-                <ion-label>Δεν υπάρχουν προγραμματισμένα μαθήματα αυτή τη μέρα.</ion-label>
+    <ion-content scroll-y={false}>
+        <DateSwiper bind:activeDate={activeDate}/>
+
+        <div style="height:100%;">
+            {#if eventList.length > 0}
+                <div class="container">
+                    <ion-content>
+                    {#each eventList as eventItem}
+                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
+                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
+                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
+                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
+                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
+                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
+                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
+                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
+                    {/each}
+                    </ion-content>
+                </div>
             {:else}
-                <div style="height: 5rem;"/>
+                <div class="container no-events">
+                    <ion-icon icon={calendarClearOutline} size="large" style="padding: 15px"></ion-icon>
+                    <ion-label>Δεν υπάρχουν προγραμματισμένα συμβάντα αυτήν τη μέρα.</ion-label>
+                    <div style="height: 5rem;"/>
+                </div>
             {/if}
-        </ion-row>
-        <ion-row>
-            <ion-content force-overscroll style="overflow-y:scroll;">
+            <div class="container" style="border-top: 5px solid var(--ion-color-light); padding-top: 5px; margin-top: 5px;">
                 <EventDetails eventId={selectedEventId} />
-            </ion-content>
-        </ion-row>
-    </ion-grid>
+            </div>
+        </div>
+    </ion-content>
 </ion-tab>
 
 <style>
-    .custom-center-label {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    .container {
+        display: flex;
+        flex:1;
+        height: 45%;
+        flex-direction: column; 
+        overflow-y: auto;
+        align-items: space-around;
+    }
+    .no-events {
         display: flex;
         text-align: center;
         justify-content: center;
-        align-items: center;
+        align-items: center; padding:25px;
     }
-
     ion-button {
         text-transform: none;
-    }
-    
-    ion-grid {
-        height: 100%;
-        margin-inline: 0px;
-        padding-inline: 0;
-        padding-block: 5px;
-    }
-    
-    ion-row {
-        height: 60%;
-    }
-
-    .event-details {
-        overflow-y: scroll;
-        padding-top: 10px;
-        padding-bottom:30px;
-        /* margin-top: 10px; */
-        border-top: 5px solid var(--ion-color-light);   
-        /* background-color: var(--ion-color-light); */
     }
 </style>

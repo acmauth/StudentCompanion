@@ -21,7 +21,7 @@
 	});
 </script>
 
-<ion-card class="eventCard {isPastDate? 'pastDate' : null}" style="padding: 10px; height:fit-content; width:100%;" on:click={handleClick} aria-hidden>
+<ion-card class="eventCard {isPastDate? 'pastDate' : null}" style="height:fit-content; width:100%;" on:click={handleClick} aria-hidden>
 	<ion-card-header class="{eventItem.type}">
 		<ion-label class="header" color="primary">{eventItem.title}</ion-label>
 		<ion-label class="subheader">{eventItem.description}</ion-label>
@@ -43,6 +43,7 @@
 	.eventCard {
 		padding: 0 !important;
 		margin-inline: 0;
+		margin-block: 5px;
 		box-shadow: none;
 	}
 

@@ -22,7 +22,7 @@
 
     let selectedOption: boolean[] = [];
 
-   {
+   $: {
         noneSelected = !eventItem || eventItem == undefined;
 
         console.log(eventItem);
@@ -118,7 +118,8 @@
 
 </script>
 
-
+<ion-content force-overscroll>
+    {#if !noneSelected}
 <!-- <form on:submit={onSubmit}> -->
     <ion-input
         placeholder="Τελειότητα 101"
@@ -186,9 +187,22 @@
 
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <ion-div on:click={() => {$: count++;}} style="display: flex; align-items: left; justify-content: left; width: 100%; padding-top: 15px; padding-bottom: 10px">
+    <ion-div on:click={() => {$: count++;}} style="padding-bottom:50px;">
         <ion-icon icon={add} style="margin-right: 5px;"></ion-icon>
         <ion-div>Προσθήκη ημέρας</ion-div>
     </ion-div>
-
+    {:else}
+    <ion-label class="no-event">Δεν έχει επιλεγεί συμβάν.</ion-label>
+    {/if}
+</ion-content>
 <!-- </form> -->
+
+
+<style>
+    .no-event {
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center; padding-top:50px;
+    }   
+</style>
