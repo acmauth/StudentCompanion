@@ -10,6 +10,8 @@
 	import book_open_solid from "$customIcons/book-open-solid.svg";
 	import chart_bar_solid from "$customIcons/chart-bar-solid.svg";
 	import chart_bar from "$customIcons/chart-bar.svg";
+	import { onMount } from 'svelte';
+	import initializeNotifications from '$lib/-notifications/core';
 	// Routes
 	let bottomNav = [
 		{
@@ -40,6 +42,10 @@
 	];
 
 	const logsStuff =()=>{};
+
+	onMount(async ()=>{
+		await initializeNotifications();
+	});
 
 </script>
 
