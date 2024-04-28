@@ -55,7 +55,7 @@
 		},
 		{
 			linktitle: 'Πανεπιστημιακό Γυμναστήριο',
-			linkaddress: 'https://gym.auth.gr',
+			linkaddress: 'https://gym.auth.gr/reservations/',
 			imagelink: gymLogo
 		}
 	];

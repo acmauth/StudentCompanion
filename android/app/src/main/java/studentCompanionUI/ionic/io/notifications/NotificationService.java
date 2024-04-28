@@ -30,7 +30,9 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Date;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,9 +74,7 @@ public class NotificationService extends Worker {
     public Result doWork() {
 
         // Workidy-do
-//        var notifications = gatherNotifications((int) (System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)));
-        var notifications = gatherNotifications(1713780813);
-        //1714057444
+        var notifications = gatherNotifications((int) (System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)));
 
         Log.d("Notification Content doWork()", "Notifications gathered: " + notifications.length);
 
@@ -138,7 +138,7 @@ public class NotificationService extends Worker {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, notification.Timestamp, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this.context, notification.source)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setSmallIcon(R.drawable.aristomate)
                     .setContentTitle(notification.title)
                     .setContentText(notification.message)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -365,11 +365,11 @@ public class NotificationService extends Worker {
             JSONArray messages = actualData.getJSONObject("data").getJSONArray("messages");
             var elearningNotifications = new ArrayList<AristomateNotification>();
 
+            Log.e("in get mails","here");
+
             for (int i=0; i < messages.length(); i++) {
                 JSONObject candidateNotification = messages.getJSONObject(i);
                 ZonedDateTime dateReceived = Instant.ofEpochSecond(candidateNotification.getInt("timecreated")).atZone(ZoneOffset.UTC);
-
-
 
                 if (dateReceived.isAfter(threshHoldTime)){
                     String plainText = cleanUpFullMessage(candidateNotification.getString("fullmessage"));
@@ -423,10 +423,14 @@ public class NotificationService extends Worker {
 
             for (int i=0; i < received.length(); i++) {
                 JSONObject candidateNotification = received.getJSONObject(i);
-                ZonedDateTime dateReceived = Instant.ofEpochMilli(candidateNotification.getInt("Timestamp")).atZone(ZoneOffset.UTC);
 
+                String notificationSubject = candidateNotification.getString("subject");
+                String notificationSender = candidateNotification.getString("sender");
+                Date notificationDate = (Date) candidateNotification.get("date");
+
+                ZonedDateTime dateReceived = Instant.ofEpochMilli(notificationDate.getTime()).atZone(ZoneOffset.UTC);
                 if (dateReceived.isAfter(threshHoldTime)){
-                    webmailNotifications.add(new AristomateNotification(null,candidateNotification.getString("data"), null, (int)dateReceived.toEpochSecond(), "Webmail"));
+                    webmailNotifications.add(new AristomateNotification(notificationSender,notificationSubject,notificationSender, (int)dateReceived.toEpochSecond(), "Webmail"));
                 }
             }
 
