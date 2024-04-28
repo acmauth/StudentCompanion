@@ -75,7 +75,13 @@
 
         </div>
 
-        <ion-modal is-open={modalOpen} initial-breakpoint={0.95} breakpoints={[0, 0.95]} on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0}}>
+        <ion-modal 
+            is-open={modalOpen} 
+            initial-breakpoint={0.95} 
+            breakpoints={[0, 0.95]} 
+            on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0}}
+            on:ionModalDidDismiss={()=>{modalOpen=false;}}    
+        >
             <ion-toolbar>
                 <ion-buttons slot="end">
                     <ion-button on:click={()=>{modalOpen=false;}} aria-hidden>
