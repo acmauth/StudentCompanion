@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { add, calendarClearOutline } from 'ionicons/icons';
+    import { add, calendarClearOutline, close } from 'ionicons/icons';
     import { Capacitor } from '@capacitor/core';
 	import { onMount } from 'svelte';
     import DateSwiper from '$lib/components/calendar/DateSwiper.svelte';
@@ -12,6 +12,7 @@
     let activeDate: Date;
     let eventList: EventFlat[];
     let selectedEventId: number;
+    let modalOpen: boolean = false;
     
     
     $: eventList = $EventStore.flatMap(item =>
@@ -78,12 +79,26 @@
                     <ion-icon icon={calendarClearOutline} size="large" style="padding: 15px"></ion-icon>
                     <ion-label>Δεν υπάρχουν προγραμματισμένα συμβάντα αυτήν τη μέρα.</ion-label>
                     <div style="height: 5rem;"/>
+                    <ion-button on:click={()=>{modalOpen=true;}}>hello!</ion-button>
                 </div>
             {/if}
-            <div class="container" style="border-top: 5px solid var(--ion-color-light); padding-top: 5px; margin-top: 5px;">
-                <EventDetails eventId={selectedEventId} />
-            </div>
+
         </div>
+
+        <ion-modal title="Modal" is-open={modalOpen} initial-breakpoint={1}>
+            <ion-toolbar>
+                <ion-buttons slot="primary">
+                    <ion-button on:click={()=>{modalOpen=false;}} aria-hidden>
+                        <ion-icon slot="icon-only" icon={close}/>
+                    </ion-button>
+                </ion-buttons>
+                <ion-title>Συμβάν</ion-title>
+            </ion-toolbar>
+            <ion-content>
+                <ion-label>hello!</ion-label>
+              <ion-button on:click={()=>{modalOpen=false;}}>close</ion-button>
+            </ion-content>
+        </ion-modal>
     </ion-content>
 </ion-tab>
 
@@ -91,7 +106,7 @@
     .container {
         display: flex;
         flex:1;
-        height: 45%;
+        height: 100%;
         flex-direction: column; 
         overflow-y: auto;
         align-items: space-around;
