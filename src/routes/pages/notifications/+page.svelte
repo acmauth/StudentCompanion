@@ -9,6 +9,8 @@
     import NotifSkeleton from './notifSkeleton.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import AppCard from '$components/shared/AppCard.svelte';
+    import cog from "$customIcons/cog-outline.svg";
+    import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
 
     let refresher: HTMLIonRefresherElement;
     let notificationsPromise = gatherNotifications();
@@ -37,6 +39,11 @@
         <ion-header collapse="condense" mode="ios">
             <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
                 <ion-title size="large">Ειδοποιήσεις</ion-title>
+                {#if Capacitor.isNativePlatform()}
+                    <ion-chip slot="end" style="background-color: transparent;">
+                        <ion-icon icon={cog} style="font-size: 1.5rem; margin: 0;" on:click={launchNativenotificationSettings} aria-hidden/>
+                    </ion-chip>
+                {/if}
             </ion-toolbar>
                 <Chips/>
         </ion-header>

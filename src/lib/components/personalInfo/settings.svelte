@@ -2,6 +2,9 @@
 	import type { ToastOptions } from '@ionic/core';
 	import * as allIonicIcons from 'ionicons/icons';
 	import { toastController } from 'ionic-svelte';
+	import cog_solid from "$customIcons/cog-solid.svg";
+    import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
+	import { Capacitor } from '@capacitor/core';
 
 	/**
 	 * @type {any}
@@ -75,6 +78,13 @@
 
 <ion-card>
 	<ion-card-content>
+		{#if Capacitor.isNativePlatform()}
+			<ion-item button>
+				<ion-icon size="small" icon={cog_solid} />
+				<ion-label class="ion-padding-start">Ρυθμίσεις ειδοποιήσεων</ion-label>
+				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} on:click={launchNativenotificationSettings} aria-hidden/>
+			</ion-item>
+		{/if}
 
 		<ion-item button href="/about">
 			<ion-icon size="small" icon={allIonicIcons.people} />

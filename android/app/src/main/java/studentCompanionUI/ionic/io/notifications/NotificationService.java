@@ -77,6 +77,8 @@ public class NotificationService extends Worker {
         long lastTimestamp = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getLong("lastTimestamp", System.currentTimeMillis());
         Log.d("Notification Content doWork()", "Last timestamp: " + lastTimestamp / 1000); //1714122356
         var notifications = gatherNotifications((long) lastTimestamp / 1000);
+//        var notifications = gatherNotifications((long) 0);
+
 
         Log.d("Notification Content doWork()", "Notifications gathered: " + notifications.length);
 
@@ -142,12 +144,19 @@ public class NotificationService extends Worker {
     private void displayNotifications(AristomateNotification[] notifications) {
         for (AristomateNotification notification : notifications) {
             Intent intent = new Intent(context, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) notification.Timestamp, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    context,
+                    (int) notification.Timestamp,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this.context, notification.source)
                     .setSmallIcon(R.drawable.aristomate)
                     .setContentTitle(notification.title)
                     .setContentText(notification.message)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(notification.message))
+                    .setColor(0x358af2)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true);
@@ -157,7 +166,6 @@ public class NotificationService extends Worker {
             NotificationManager notificationManager = getSystemService(this.context, NotificationManager.class);
             assert notificationManager != null;
             notificationManager.notify((int) notificationId, builder.build());
-//            notificationManager.notify(new Random().nextInt(), builder.build());
         }
     }
 
@@ -320,7 +328,11 @@ public class NotificationService extends Worker {
                 long timeReceived = dateReceived.toEpochSecond();
                 if (timeReceived > timestamp){
                     String plainText = candidateNotification.getString("body").replaceAll("\\<.*?\\>", "");
-                    universisNotifications.add(new AristomateNotification(candidateNotification.getString("subject"), plainText, "Universis" ,dateReceived.toEpochSecond(), "Universis"));
+                    var subject = candidateNotification.getString("subject");
+                    if (subject .equalsIgnoreCase("null")) {
+                        subject = "Universis";
+                    }
+                    universisNotifications.add(new AristomateNotification(subject, plainText, "Universis" ,dateReceived.toEpochSecond(), "Universis"));
                 }
             }
 
