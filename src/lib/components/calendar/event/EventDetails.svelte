@@ -122,12 +122,12 @@
     {#if !noneSelected}
 <!-- <form on:submit={onSubmit}> -->
     <ion-input
-        placeholder="Τελειότητα 101"
+        placeholder="Φασαιισμός 101"
         label="Τίτλος"
         label-placement="stacked"
         id="title"
         type="text"
-        value={eventItem?.title}
+        value={eventItem?.title || null}
         contenteditable="true"
         spellcheck={true}
     />
@@ -138,21 +138,33 @@
         label-placement="stacked"
         id="classroom"
         type="text"
-        value={eventItem?.classroom}
+        value={eventItem?.location || null}
         contenteditable="true"
         spellcheck={true}
     />
 
     <ion-input
-        placeholder="Κύριος Ξερώλας"
+        placeholder="Κύριος Ξερόλας"
         label="Διδάσκων"
         label-placement="stacked"
         id="professor"
         type="text"
-        value={eventItem?.professor}
+        value={eventItem?.professor || null}
         contenteditable="true"
         spellcheck={false}
     />
+
+    <ion-input
+        label="Περιγραφή"
+        label-placement="floating"
+        id="description"
+        type="text"
+        value={eventItem?.description || null}
+        contenteditable="true"
+        spellcheck={true}
+    />
+
+    
 
     {#each {length: count} as _, i}
         <ion-div style="display: flex; align-items: center; justify-content: center; width: 100%; padding-bottom: 0">
