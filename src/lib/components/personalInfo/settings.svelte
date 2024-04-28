@@ -79,10 +79,10 @@
 <ion-card>
 	<ion-card-content>
 		{#if Capacitor.isNativePlatform()}
-			<ion-item button>
+			<ion-item button on:click={launchNativenotificationSettings} aria-hidden>
 				<ion-icon size="small" icon={cog_solid} />
 				<ion-label class="ion-padding-start">Ρυθμίσεις ειδοποιήσεων</ion-label>
-				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} on:click={launchNativenotificationSettings} aria-hidden/>
+				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} aria-hidden/>
 			</ion-item>
 		{/if}
 
