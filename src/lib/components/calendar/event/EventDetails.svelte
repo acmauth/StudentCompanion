@@ -1,16 +1,22 @@
 <script lang="ts">
     import { EventStore } from '$components/calendar/event/EventStore';
-    import { EventRepeatType, EventType, type Event, type EventFlat, type EventTimeSlot } from '$components/calendar/event/Event';
-	import { toastController } from '@ionic/core';
+	import type {Event, EventTimeSlot} from '$components/calendar/event/Event';
+    import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
+    import { toastController } from '@ionic/core';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { classStore } from '$components/schedule/class/classStore';
 	import { weekdays } from '$components/schedule/day/days';
 	import { add } from 'ionicons/icons';
 
-    export let eventId: number;
+    export let eventId: number | null;
     let eventItem: Event | undefined; 
     $: eventItem = $EventStore.find(x => x.id == eventId);
+
+    let selectedType: string = Object.keys(EventType)[0];
+    let willRepeat: boolean = false;
+    let willRepeatUntil: boolean = false;
+    let willNotify: boolean = false;
 
     let noneSelected: boolean = false;
     let startDate: Date;
@@ -29,39 +35,7 @@
 
         noneSelected = !eventItem || typeof(eventItem) == undefined || eventItem == undefined;
         
-
-        count = (eventItem?.slots?.length || 1);
-        console.log(count);
-
-        for(let i = 0; i < count; i++) {
-            selectedOption[i] = true;
-        }
-
-        for (let i = 0; i < count; i++) {
-            if (!selectedOption[i]) continue;
-            startDate = new Date(eventItem?.slots[i]?.start || new Date());
-            endDate = new Date(eventItem?.slots[i]?.end || new Date());
-            starts.push(startDate.getFullYear() + "-" +
-                    (String(startDate.getMonth() + 1)).padStart(2, '0') + "-" +
-                    String(startDate.getDate()).padStart(2, '0') + "T" +
-                    String(startDate.getHours()).padStart(2, '0') + ":" +
-                    String(startDate.getMinutes()).padStart(2, '0'))
-
-            ends.push(endDate.getFullYear() + "-" +
-                (String(endDate.getMonth() + 1)).padStart(2, '0') + "-" +
-                String(endDate.getDate()).padStart(2, '0') + "T" +
-                String(endDate.getHours()).padStart(2, '0') + ":" +
-                String(endDate.getMinutes()).padStart(2, '0'))
-        }
     };
-
-    function clearSelection(i: number) {
-        const selection = (document.getElementById("day-" + i.toString()) as HTMLIonSelectElement);
-        selection.value = null;
-        selectedOption[i] = false;
-        if (count > 1) count--;
-    }
-
    
     // async function onSubmit(event: Event) {
     //     event.preventDefault();
@@ -119,102 +93,127 @@
 </script>
 
 <ion-content force-overscroll>
-    {#if !noneSelected}
-<!-- <form on:submit={onSubmit}> -->
-    <ion-input
-        placeholder="Φασαιισμός 101"
-        label="Τίτλος"
-        label-placement="stacked"
-        id="title"
-        type="text"
-        value={eventItem?.title || null}
-        contenteditable="true"
-        spellcheck={true}
-    />
+    <ion-list>
+        
+        <ion-item>
+            <ion-input
+            label="Τίτλος"
+            label-placement="floating"
+            id="title"
+            type="text"
+            value={eventItem?.title || null}
+            contenteditable="true"
+            spellcheck={true}
+        />
+        </ion-item>
 
-    <ion-input
-        placeholder="Hogwarts campus"
-        label="Αίθουσα"
-        label-placement="stacked"
-        id="classroom"
-        type="text"
-        value={eventItem?.location || null}
-        contenteditable="true"
-        spellcheck={true}
-    />
-
-    <ion-input
-        placeholder="Κύριος Ξερόλας"
-        label="Διδάσκων"
-        label-placement="stacked"
-        id="professor"
-        type="text"
-        value={eventItem?.professor || null}
-        contenteditable="true"
-        spellcheck={false}
-    />
-
-    <ion-input
-        label="Περιγραφή"
-        label-placement="floating"
-        id="description"
-        type="text"
-        value={eventItem?.description || null}
-        contenteditable="true"
-        spellcheck={true}
-    />
-
-    
-
-    {#each {length: count} as _, i}
-        <ion-div style="display: flex; align-items: center; justify-content: center; width: 100%; padding-bottom: 0">
-            <ion-select
-                id="day-{i}"
-                label-placement="stacked"
-                interface="action-sheet"
-                cancel-text="Άκυρο"
-                value={eventItem && eventItem.slots[i] ? eventItem.slots[i].day : null}
-                style="padding:0; margin-right: 20px;"
-                placeholder="Ημέρα"
-                on:ionChange={() => {selectedOption[i] = true;}}
-                on:ionCancel={() => {selectedOption[i] = false; clearSelection(i);}}>
-                {#each weekdays as day, j}
-                    {#each Object.keys(day) as key }
-                        <ion-select-option id={key} contextmenu="" value={j}>{day[key].el}</ion-select-option>
-                    {/each}
+        <ion-item>
+            <ion-select label="Τύπος συμβάντος" interface="popover" value={selectedType} on:ionChange={(event)=>selectedType=event.detail.value} label-placement="floating">
+                {#each Object.values(EventType) as type}
+                    <ion-select-option value={type}>{getEventTypeValue(type,'el')}</ion-select-option>
                 {/each}
             </ion-select>
+        </ion-item>
 
-            <ion-datetime-button datetime="start-{i}" disabled={!selectedOption[i]}></ion-datetime-button>
-            <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="start-{i}" presentation="time" minute-values="0,15,30,45" hour-cycle="h23" value={starts[i]}></ion-datetime>
-            </ion-modal>
+        {#if selectedType == "CLASS"}
+            <ion-item>
+                <ion-input
+                    label="Αίθουσα"
+                    label-placement="floating"
+                    id="classroom"
+                    type="text"
+                    value={eventItem?.location || null}
+                    contenteditable="true"
+                    spellcheck={true}
+                />
+            </ion-item>
+            <ion-item>
+                <ion-input
+                    label="Διδάσκων"
+                    label-placement="floating"
+                    id="professor"
+                    type="text"
+                    value={eventItem?.professor || null}
+                    contenteditable="true"
+                    spellcheck={false}
+                />
+            </ion-item>
+        {/if}
 
-            <ion-datetime-button datetime="end-{i}" disabled={!selectedOption[i]}></ion-datetime-button>
-            <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="end-{i}"  presentation="time" minute-values="0,15,30,45" hour-cycle="h23" value={ends[i]}></ion-datetime>
-            </ion-modal>
-        </ion-div>
-    {/each}
+        <ion-item>
+            <ion-input
+                label="Περιγραφή"
+                label-placement="floating"
+                id="description"
+                type="text"
+                value={eventItem?.description || null}
+                contenteditable="true"
+                spellcheck={true}
+            />
+        </ion-item>
+        
+        <ion-item>
+            <ion-select style="width:50%;" label="Να επαναλαμβάνεται" interface="popover" value={"NEVER"} on:ionChange={(event)=>{willRepeat=event.detail.value != "NEVER";}} label-placement="floating">
+                {#each Object.values(EventRepeatType) as type}
+                    <ion-select-option value={type}>{getEventRepeatTypeValue(type,'el')}</ion-select-option>
+                {/each}
+            </ion-select>
+        </ion-item>
 
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <ion-div on:click={() => {$: count++;}} style="padding-bottom:50px;">
-        <ion-icon icon={add} style="margin-right: 5px;"></ion-icon>
-        <ion-div>Προσθήκη ημέρας</ion-div>
-    </ion-div>
-    {:else}
-    <ion-label class="no-event">Δεν έχει επιλεγεί συμβάν.</ion-label>
-    {/if}
+        {#if willRepeat}
+            <ion-item>
+                <ion-select style="width:80%;" label="Λήξη" interface="popover" value={"REPEAT"} on:ionChange={(event)=>{willRepeatUntil=event.detail.value == "UNTIL";}} label-placement="floating">
+                    <ion-select-option value="REPEAT">Επαναλήψεις</ion-select-option>
+                    <ion-select-option value="UNTIL">Ημερομηνία</ion-select-option>
+                </ion-select>
+
+                <div style="padding-inline:10px;"/>
+
+                {#if willRepeatUntil}
+                    <ion-datetime-button style="width: fit-content;" datetime="start"></ion-datetime-button>
+                    <ion-modal keep-contents-mounted={true}>
+                        <ion-datetime id="start" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23"></ion-datetime>
+                    </ion-modal>
+                {:else}
+                    <ion-input
+                        label="Φορές"
+                        label-placement="floating"
+                        id="repeatInterval"
+                        type="number"
+                        value={eventItem?.repeatInterval || null}
+                        contenteditable="true"
+                        spellcheck={false}
+                        style="width: 30%;"    
+                    />
+                {/if}
+            </ion-item>
+        {/if}
+
+        <ion-item>
+            <ion-select style="width:50%;" label="Ειδοποίηση" interface="popover" value={false} on:ionChange={(event)=>{willNotify=event.detail.value;}} label-placement="floating">
+                <ion-select-option value={true}>Ναι</ion-select-option>
+                <ion-select-option value={false}>Όχι</ion-select-option>
+            </ion-select>
+            {#if willNotify}
+                <div style="padding-inline:10px;"/>
+                <ion-input
+                    label="Πριν από (λεπτά)"
+                    label-placement="floating"
+                    id="notifyTime"
+                    type="number"
+                    value={eventItem?.notifyTime || null}
+                    contenteditable="true"
+                    spellcheck={false}   
+                    style="width: 50%;"
+                />
+            {/if}    
+        </ion-item>
+
+        
+    </ion-list>
 </ion-content>
-<!-- </form> -->
 
 
 <style>
-    .no-event {
-        display: flex;
-        text-align: center;
-        justify-content: center;
-        align-items: center; padding-top:50px;
-    }   
+
 </style>

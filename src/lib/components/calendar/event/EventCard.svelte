@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	
 	export let eventItem: EventFlat;
-	export let selectedEventId: number;
+	export let selectedEventId: number | null;
 	
 	let isPastDate: boolean = false;
 	let isTest: boolean = false;

@@ -1,17 +1,16 @@
 <script lang="ts">
-    import { add, calendarClearOutline, close } from 'ionicons/icons';
+    import { add, calendarClearOutline, close, checkmark } from 'ionicons/icons';
     import { Capacitor } from '@capacitor/core';
 	import { onMount } from 'svelte';
     import DateSwiper from '$lib/components/calendar/DateSwiper.svelte';
     import { EventStore } from '$lib/components/calendar/event/EventStore';
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
-    import { EventRepeatType, EventType, type Event, type EventFlat } from '$lib/components/calendar/event/Event';
     import EventDetails from '$lib/components/calendar/event/EventDetails.svelte';
-	import { TaskType, type TaskItem } from '$components/schedule/task/TaskItem';
-    
+    import type { EventFlat } from '$lib/components/calendar/event/Event';
+
     let activeDate: Date;
     let eventList: EventFlat[];
-    let selectedEventId: number;
+    let selectedEventId: number | null = null;
     let modalOpen: boolean = false;
     
     
@@ -47,7 +46,7 @@
         <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
         <ion-title class="ion-padding-vertical" size="large" style="padding-top:0; padding-bottom:0;">Πρόγραμμα μαθημάτων</ion-title>
         <ion-buttons slot="secondary">
-            <ion-button href="/pages/classes/addClass">
+            <ion-button on:click={() => {modalOpen=true; selectedEventId=null;}} aria-hidden>
             <ion-icon slot="icon-only" icon={add}></ion-icon>  
             </ion-button>
         </ion-buttons>
@@ -64,13 +63,6 @@
                     <ion-content>
                     {#each eventList as eventItem}
                         <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
-                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
-                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
-                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
-                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
-                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
-                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
-                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
                     {/each}
                     </ion-content>
                 </div>
@@ -78,25 +70,27 @@
                 <div class="container no-events">
                     <ion-icon icon={calendarClearOutline} size="large" style="padding: 15px"></ion-icon>
                     <ion-label>Δεν υπάρχουν προγραμματισμένα συμβάντα αυτήν τη μέρα.</ion-label>
-                    <div style="height: 5rem;"/>
-                    <ion-button on:click={()=>{modalOpen=true;}}>hello!</ion-button>
                 </div>
             {/if}
 
         </div>
 
-        <ion-modal title="Modal" is-open={modalOpen} initial-breakpoint={1}>
+        <ion-modal is-open={modalOpen} initial-breakpoint={0.95} breakpoints={[0, 0.95]} on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0}}>
             <ion-toolbar>
-                <ion-buttons slot="primary">
+                <ion-buttons slot="end">
+                    <ion-button on:click={()=>{modalOpen=false;}} aria-hidden>
+                        <ion-icon slot="icon-only" icon={checkmark}/>
+                    </ion-button>
+                </ion-buttons>
+                <ion-title class="ion-text-center">Συμβάν</ion-title>
+                <ion-buttons slot="start">
                     <ion-button on:click={()=>{modalOpen=false;}} aria-hidden>
                         <ion-icon slot="icon-only" icon={close}/>
                     </ion-button>
                 </ion-buttons>
-                <ion-title>Συμβάν</ion-title>
             </ion-toolbar>
             <ion-content>
-                <ion-label>hello!</ion-label>
-              <ion-button on:click={()=>{modalOpen=false;}}>close</ion-button>
+                <EventDetails eventId={selectedEventId} />
             </ion-content>
         </ion-modal>
     </ion-content>
@@ -115,7 +109,9 @@
         display: flex;
         text-align: center;
         justify-content: center;
-        align-items: center; padding:25px;
+        align-items: center; 
+        padding-bottom: 150px;
+        padding-inline: 30px;
     }
     ion-button {
         text-transform: none;
