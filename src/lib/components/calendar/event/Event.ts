@@ -4,11 +4,11 @@ export interface EventTimeSlot {
 }
 
 export enum EventType {
-    TASK = 'task',
-    TEST = 'test',
-    ASSIGNMENT = 'assignment',
-    CLASS = 'class',
-    OTHER = 'other'
+    TASK = "TASK",
+    TEST = "TEST",
+    ASSIGNMENT = "ASSIGNMENT",
+    CLASS = "CLASS",
+    OTHER = "OTHER"
 }
 
 export interface Event {
@@ -42,9 +42,41 @@ export interface EventFlat {
 }
 
 export enum EventRepeatType {
-    NONE = "none",
-    DAILY = "daily",
-    WEEKLY = "weekly",
-    MONTHLY = "monthly",
-    YEARLY = "yearly"
+    NEVER = "NEVER",
+    DAILY = "DAILY",
+    WEEKLY = "WEEKLY",
+    MONTHLY = "MONTHLY",
+    YEARLY = "YEARLY"
+}
+
+export function getEventTypeValue(type: string, lang?: string): string {
+    const eventType = EventType[type as keyof typeof EventType];
+    switch (eventType) {
+        case EventType.TASK:
+            return lang == 'el' ? 'Δραστηριότητα' : 'Task';
+        case EventType.TEST:
+            return lang == 'el' ? 'Εξέταση' : 'Test';
+        case EventType.ASSIGNMENT:
+            return lang == 'el' ? 'Εργασία' : 'Assignment';
+        case EventType.CLASS:
+            return lang == 'el' ? 'Μάθημα' : 'Class';
+        case EventType.OTHER:
+            return lang == 'el' ? 'Άλλο' : 'Other';
+    }
+}
+
+export function getEventRepeatTypeValue(type: string, lang?: string): string {
+    const eventRepeatType = EventRepeatType[type as keyof typeof EventRepeatType];
+    switch (eventRepeatType) {
+        case EventRepeatType.NEVER:
+            return lang == 'el' ? 'Ποτέ' : 'Never';
+        case EventRepeatType.DAILY:
+            return lang == 'el' ? 'Καθημερινά' : 'Daily';
+        case EventRepeatType.WEEKLY:
+            return lang == 'el' ? 'Εβδομαδιαία' : 'Weekly';
+        case EventRepeatType.MONTHLY:
+            return lang == 'el' ? 'Μηνιαία' : 'Monthly';
+        case EventRepeatType.YEARLY:
+            return lang == 'el' ? 'Ετήσια' : 'Yearly';
+    }
 }
