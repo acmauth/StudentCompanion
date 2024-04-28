@@ -50,8 +50,8 @@ class AristomateNotification {
     public String message;
     public String sender;
     public String source;
-    public int Timestamp;
-    AristomateNotification(String title, String message, String sender, int Timestamp, String source) {
+    public long Timestamp;
+    AristomateNotification(String title, String message, String sender, long Timestamp, String source) {
         this.title = title;
         this.message = message;
         this.Timestamp = Timestamp;
@@ -74,11 +74,18 @@ public class NotificationService extends Worker {
     public Result doWork() {
 
         // Workidy-do
-        var notifications = gatherNotifications((int) (System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)));
+        long lastTimestamp = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getLong("lastTimestamp", System.currentTimeMillis());
+        Log.d("Notification Content doWork()", "Last timestamp: " + lastTimestamp / 1000); //1714122356
+        var notifications = gatherNotifications((long) lastTimestamp / 1000);
 
         Log.d("Notification Content doWork()", "Notifications gathered: " + notifications.length);
 
         displayNotifications(notifications);
+
+        // Updating the last timestamp
+        SharedPreferences.Editor editor = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).edit();
+        editor.putLong("lastTimestamp", System.currentTimeMillis());
+        editor.apply();
 
         return Result.success();
     }
@@ -135,7 +142,7 @@ public class NotificationService extends Worker {
     private void displayNotifications(AristomateNotification[] notifications) {
         for (AristomateNotification notification : notifications) {
             Intent intent = new Intent(context, MainActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, notification.Timestamp, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, (int) notification.Timestamp, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this.context, notification.source)
                     .setSmallIcon(R.drawable.aristomate)
@@ -145,16 +152,17 @@ public class NotificationService extends Worker {
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true);
 
-            int notificationId = notification.Timestamp;
+            long notificationId = notification.Timestamp;
 
             NotificationManager notificationManager = getSystemService(this.context, NotificationManager.class);
             assert notificationManager != null;
-            notificationManager.notify(notificationId, builder.build());
+            notificationManager.notify((int) notificationId, builder.build());
+//            notificationManager.notify(new Random().nextInt(), builder.build());
         }
     }
 
 
-    private AristomateNotification[] gatherNotifications(int timestamp){
+    private AristomateNotification[] gatherNotifications(long timestamp){
         var notifications = new ArrayList<AristomateNotification>();
 
         try {
@@ -281,13 +289,8 @@ public class NotificationService extends Worker {
     }
 
 
-    private AristomateNotification[] getUniversisNotifications(int timestamp){
+    private AristomateNotification[] getUniversisNotifications(long timestamp){
         try {
-            long timestampInMillis = timestamp * 1000L;
-            Log.d("getUniversisNotifications()", "timestamp: " + timestampInMillis);
-            Instant instant = Instant.ofEpochMilli(timestampInMillis);
-            ZonedDateTime threshHoldTime = instant.atZone(ZoneOffset.UTC);
-            Log.d("getUniversisNotifications()", "threshold " + threshHoldTime);
 
             JSONObject tokens = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("userTokens",""));
             String token = tokens.getJSONObject("universis").getString("token");
@@ -314,9 +317,10 @@ public class NotificationService extends Worker {
             for (int i=0; i < result.length(); i++) {
                 JSONObject candidateNotification = result.getJSONObject(i);
                 ZonedDateTime dateReceived = ZonedDateTime.parse(candidateNotification.getString("dateReceived"), formatter);
-                if (dateReceived.isAfter(threshHoldTime)){
+                long timeReceived = dateReceived.toEpochSecond();
+                if (timeReceived > timestamp){
                     String plainText = candidateNotification.getString("body").replaceAll("\\<.*?\\>", "");
-                    universisNotifications.add(new AristomateNotification(candidateNotification.getString("subject"), plainText, "Universis" ,(int)dateReceived.toEpochSecond(), "Universis"));
+                    universisNotifications.add(new AristomateNotification(candidateNotification.getString("subject"), plainText, "Universis" ,dateReceived.toEpochSecond(), "Universis"));
                 }
             }
 
@@ -328,10 +332,8 @@ public class NotificationService extends Worker {
         }
     }
 
-    private AristomateNotification[] getElearningNotifications(int timestamp){
+    private AristomateNotification[] getElearningNotifications(long timestamp){
         try {
-            Instant instant = Instant.ofEpochMilli(timestamp);
-            ZonedDateTime threshHoldTime = instant.atZone(ZoneOffset.UTC);
 
             // Getting the elearning credentials
             JSONObject tokens = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("userTokens",""));
@@ -370,10 +372,10 @@ public class NotificationService extends Worker {
             for (int i=0; i < messages.length(); i++) {
                 JSONObject candidateNotification = messages.getJSONObject(i);
                 ZonedDateTime dateReceived = Instant.ofEpochSecond(candidateNotification.getInt("timecreated")).atZone(ZoneOffset.UTC);
-
-                if (dateReceived.isAfter(threshHoldTime)){
+                long timeReceived = dateReceived.toEpochSecond();
+                if (timeReceived > timestamp){
                     String plainText = cleanUpFullMessage(candidateNotification.getString("fullmessage"));
-                    elearningNotifications.add(new AristomateNotification(candidateNotification.getString("subject"), plainText, candidateNotification.getString("userfromfullname"), (int)dateReceived.toEpochSecond(), "Elearning"));
+                    elearningNotifications.add(new AristomateNotification(candidateNotification.getString("subject"), plainText, candidateNotification.getString("userfromfullname"), dateReceived.toEpochSecond(), "Elearning"));
                 }
             }
 
@@ -403,10 +405,8 @@ public class NotificationService extends Worker {
     }
 
 
-    private AristomateNotification[] getWebmailNotifications(int timestamp){
+    private AristomateNotification[] getWebmailNotifications(long timestamp){
         try {
-            Instant instant = Instant.ofEpochMilli(timestamp);
-            ZonedDateTime threshHoldTime = instant.atZone(ZoneOffset.UTC);
 
             JSONObject credentials = getCredentials();
             String username = credentials.getString("username");
@@ -429,8 +429,9 @@ public class NotificationService extends Worker {
                 Date notificationDate = (Date) candidateNotification.get("date");
 
                 ZonedDateTime dateReceived = Instant.ofEpochMilli(notificationDate.getTime()).atZone(ZoneOffset.UTC);
-                if (dateReceived.isAfter(threshHoldTime)){
-                    webmailNotifications.add(new AristomateNotification(notificationSender,notificationSubject,notificationSender, (int)dateReceived.toEpochSecond(), "Webmail"));
+                long timeReceived = dateReceived.toEpochSecond();
+                if (timeReceived > timestamp){
+                    webmailNotifications.add(new AristomateNotification(notificationSender,notificationSubject,notificationSender, dateReceived.toEpochSecond(), "Webmail"));
                 }
             }
 
