@@ -6,29 +6,37 @@
     import { EventStore } from '$lib/components/calendar/event/EventStore';
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
     import EventDetails from '$lib/components/calendar/event/EventDetails.svelte';
-    import type { EventFlat } from '$lib/components/calendar/event/Event';
+    import type { Event } from '$lib/components/calendar/event/Event';
+    import { EventType, EventRepeatType } from '$lib/components/calendar/event/Event';
+	import { toastController } from 'ionic-svelte';
+	import type { ToastOptions } from '@ionic/core';
 
     let activeDate: Date;
-    let eventList: EventFlat[];
-    let selectedEventId: number | null = null;
+    let eventList: Event[];
+    let selectedEvent: Event | null = null;
+    let tmpEvent: Event;
     let modalOpen: boolean = false;
     
+    $EventStore = [{ id: 1,
+    title: "Study Group Meeting",
+    slot: 
+        {
+            start: new Date("2024-04-29T10:00:00"),
+            end: new Date("2024-04-29T12:00:00")
+        }
+    ,
+    location: "Library",
+    description: "Discussing upcoming exam topics",
+    professor: "Dr. Smith",
+    type: EventType.CLASS,
+    repeat: EventRepeatType.WEEKLY,
+    repeatInterval: 1,
+    repeatUntil: new Date("2024-06-01"),
+    notify: true,
+    notifyTime: 30}]
     
-    $: eventList = $EventStore.flatMap(item =>
-        item.slots.map(slot => ({
-            id: item.id,
-            title: item.title,
-            professor: item.professor,
-            classroom: item.location,
-            description: item.description,
-            type: item.type,
-            repeat: item.repeat,
-            repeatInterval: item.repeatInterval,
-            repeatUntil: item.repeatUntil,
-            notify: item.notify,
-            notifyTime: item.notifyTime,
-            slot: slot
-        }))).filter(item => isCurrentDay(item.slot.start, activeDate));//.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    
+    $: eventList = $EventStore.filter(item => isCurrentDay(item.slot.start, activeDate));//.sort((a, b) => a.startTime.localeCompare(b.startTime));
     
     function isCurrentDay(date1: Date, current: Date): boolean {
         const currentDate = new Date(current);
@@ -38,7 +46,50 @@
             date.getMonth() === currentDate.getMonth() &&
             date.getDate() === currentDate.getDate()
         );
-}
+    }
+
+    // TODO: take the tmpEvent object and check if it has the correct format then replace the selectedEvent with the tmpEvent in the store
+    // remebmer to update the filtering for the calculation of the timeslots based on the repeat type
+    function sumbit() {
+        if(selectedEvent?.id) {
+            if(!eventHasCorrectFormat(selectedEvent)) {
+                showToast({
+						color: 'warning',
+						duration: 3000,
+						message: 'Τσέκαρε τα στοιχεία του συμβάντος!',
+						mode: 'ios',
+						translucent: true,
+						layout: 'stacked',
+						positionAnchor: "bottom",
+						cssClass: 'custom-toast'
+					});
+                return;
+            }            
+            const index = $EventStore.findIndex(x => x.id == selectedEvent?.id);
+            
+            if(index != -1) {
+                $EventStore[index] = selectedEvent;
+                console.log("found");
+            } else {
+                $EventStore = [...$EventStore, selectedEvent];
+                console.log("not found");
+            }
+            modalOpen=false;
+        } else {
+            console.log("no id");
+            modalOpen=false;
+        }
+    }    
+
+	 async function showToast(toast: ToastOptions){
+		const toast_ = await toastController.create(toast);
+		toast_.present();
+	}
+
+    function eventHasCorrectFormat(event: Event): boolean {
+        return (event.title && event.slot.start && event.slot.end && event.type);
+    }
+
 </script>
 
 <ion-tab tab="calendar">
@@ -46,23 +97,23 @@
         <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
         <ion-title class="ion-padding-vertical" size="large" style="padding-top:0; padding-bottom:0;">Πρόγραμμα μαθημάτων</ion-title>
         <ion-buttons slot="secondary">
-            <ion-button on:click={() => {modalOpen=true; selectedEventId=null;}} aria-hidden>
+            <ion-button on:click={() => {modalOpen=true; selectedEvent=null;}} aria-hidden>
             <ion-icon slot="icon-only" icon={add}></ion-icon>  
             </ion-button>
         </ion-buttons>
         </ion-toolbar>
     </ion-header>
 
+    <DateSwiper bind:activeDate={activeDate}/>
 
-    <ion-content scroll-y={false}>
-        <DateSwiper bind:activeDate={activeDate}/>
+    <ion-content scroll-y={true}>
 
         <div style="height:100%;">
             {#if eventList.length > 0}
                 <div class="container">
                     <ion-content>
                     {#each eventList as eventItem}
-                        <EventCard eventItem={eventItem} bind:selectedEventId={selectedEventId} />
+                        <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} />
                     {/each}
                     </ion-content>
                 </div>
@@ -77,27 +128,25 @@
 
         <ion-modal 
             is-open={modalOpen} 
-            initial-breakpoint={0.95} 
-            breakpoints={[0, 0.95]} 
+            initial-breakpoint={selectedEvent? 0.95 : 1} 
+            breakpoints={[0, 0.95, 1]} 
             on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0}}
-            on:ionModalDidDismiss={()=>{modalOpen=false;}}    
+            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null;}}    
         >
             <ion-toolbar>
                 <ion-buttons slot="end">
-                    <ion-button on:click={()=>{modalOpen=false;}} aria-hidden>
+                    <ion-button id="sumbit" on:click={sumbit} aria-hidden>
                         <ion-icon slot="icon-only" icon={checkmark}/>
                     </ion-button>
                 </ion-buttons>
-                <ion-title class="ion-text-center">Συμβάν</ion-title>
+                <ion-title class="ion-text-center">{selectedEvent?.title? selectedEvent.title : 'Συμβάν'}</ion-title>
                 <ion-buttons slot="start">
-                    <ion-button on:click={()=>{modalOpen=false;}} aria-hidden>
+                    <ion-button id="cancel" on:click={()=>{modalOpen=false;}} aria-hidden>
                         <ion-icon slot="icon-only" icon={close}/>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
-            <ion-content>
-                <EventDetails eventId={selectedEventId} />
-            </ion-content>
+                <EventDetails selectedEvent={selectedEvent} bind:copyEvent={tmpEvent} />
         </ion-modal>
     </ion-content>
 </ion-tab>
