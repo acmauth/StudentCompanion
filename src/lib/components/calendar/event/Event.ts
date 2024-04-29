@@ -14,31 +14,16 @@ export enum EventType {
 export interface Event {
     id: number;
     title: string;
-    slots: EventTimeSlot[];
-    location?: string;
-    description?: string;
-    professor?: string,
-    type: EventType;
-    repeat: EventRepeatType;
-    repeatInterval: number;
-    repeatUntil: Date | null;
-    notify: boolean;
-    notifyTime: number;
-}
-
-export interface EventFlat {
-    id: number;
-    title: string;
     slot: EventTimeSlot;
     location?: string;
     description?: string;
     professor?: string,
     type: EventType;
     repeat: EventRepeatType;
-    repeatInterval: number;
-    repeatUntil: Date | null;
+    repeatInterval?: number;
+    repeatUntil?: Date | null;
     notify: boolean;
-    notifyTime: number;
+    notifyTime?: number;
 }
 
 export enum EventRepeatType {
@@ -80,3 +65,36 @@ export function getEventRepeatTypeValue(type: string, lang?: string): string {
             return lang == 'el' ? 'Ετήσια' : 'Yearly';
     }
 }
+
+// export function createEventTimeSlotList(event: EventFlat): EventTimeSlot[] {
+//     const slots: EventTimeSlot[] = [];
+//     let start = new Date(event.slot.start);
+//     let end = new Date(event.slot.end);
+//     while (start <= end) {
+//         slots.push({ start: new Date(start), end: new Date(end) });
+//         switch (event.repeat) {
+//             case EventRepeatType.NEVER:
+//                 break;
+//             case EventRepeatType.DAILY:
+//                 start.setTime(start.getTime() + event.repeatInterval*24*60*60*1000);
+//                 end.setTime(end.getTime() + event.repeatInterval*24*60*60*1000);
+//                 break;
+//             case EventRepeatType.WEEKLY:
+//                 start.setTime(start.getTime() + event.repeatInterval*7*24*60*60*1000);
+//                 end.setTime(end.getTime() + event.repeatInterval*7*24*60*60*1000);
+//                 break;
+//             case EventRepeatType.MONTHLY:
+//                 start.setTime(start.getTime() + event.repeatInterval*30*24*60*60*1000);
+//                 end.setTime(end.getTime() + event.repeatInterval*30*24*60*60*1000);
+//                 break;
+//             case EventRepeatType.YEARLY:
+//                 start.setFullYear(start.getFullYear() + event.repeatInterval);
+//                 end.setFullYear(end.getFullYear() + event.repeatInterval);
+//                 break;
+//         }
+//         if (event.repeatUntil && start > event.repeatUntil) {
+//             break;
+//         }
+//     }
+//     return slots;
+// }

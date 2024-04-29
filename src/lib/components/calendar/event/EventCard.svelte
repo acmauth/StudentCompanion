@@ -4,14 +4,16 @@
 	import { onMount } from 'svelte';
 	
 	export let eventItem: EventFlat;
-	export let selectedEventId: number | null;
+	export let selectedEvent: EventFlat | null;
+	export let modalOpen: boolean;
 	
 	let isPastDate: boolean = false;
 	let isTest: boolean = false;
 	let isAssignment: boolean = false;
 
 	function handleClick() {
-		selectedEventId = eventItem.id;
+		selectedEvent = eventItem;
+		modalOpen = true;
 	}
 
 	onMount(async() => {
