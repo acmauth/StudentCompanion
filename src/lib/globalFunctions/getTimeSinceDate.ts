@@ -2,7 +2,11 @@
 // Description: Returns the time since a date in a human readable format - Greek
 // Input: Date
 // Output: String
-export default function timeSinceDate(date:Date){
+export default function timeSinceDate(date:Date | String){
+    if (typeof date !== 'object') {
+        date = new Date(date);
+    }
+    
     var seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   
     var interval = seconds / 31536000;
