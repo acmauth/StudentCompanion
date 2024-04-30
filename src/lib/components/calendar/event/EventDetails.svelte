@@ -1,15 +1,12 @@
 <script lang="ts">
-    import { EventStore } from '$components/calendar/event/EventStore';
 	import type {Event} from '$components/calendar/event/Event';
     import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
-	import { onMount } from 'svelte';
 
-    export let selectedEvent: Event | null; 
     export let copyEvent: Event | null;
     let willRepeatType: string | null = null;
 
-    $:{
-        if(selectedEvent == null) {
+    $: {
+        if(!copyEvent) {
             copyEvent = {
                 id: new Date().getTime(),
                 title: "",
@@ -27,12 +24,9 @@
                 repeat: EventRepeatType.NEVER,
                 notify: false
             }
-        } else {
-            copyEvent = JSON.parse(JSON.stringify(selectedEvent));
-            willRepeatType = copyEvent.repeat == EventRepeatType.NEVER ? null : copyEvent?.repeatInterval ? "REPEAT" : "UNTIL";
         }
+        willRepeatType = copyEvent?.repeat == EventRepeatType.NEVER ? null : copyEvent?.repeatInterval ? "REPEAT" : "UNTIL";
     };
-
 </script>
 
 
@@ -56,7 +50,7 @@
             <ion-label>Έναρξη</ion-label>
             <ion-datetime-button datetime="start"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="start" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.start=event.detail.value}></ion-datetime>
+                <ion-datetime id="start" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.start=new Date(event.detail.value)}></ion-datetime>
             </ion-modal>
         </ion-item>
             
@@ -64,7 +58,7 @@
             <ion-label>Λήξη</ion-label>    
             <ion-datetime-button datetime="end"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="end" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.end=event.detail.value}></ion-datetime>
+                <ion-datetime id="end" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.end=new Date(event.detail.value)}></ion-datetime>
             </ion-modal>
         </ion-item>
         
@@ -88,7 +82,7 @@
                     value={copyEvent?.location || null}
                     contenteditable="true"
                     spellcheck={true}
-                    on:ionChange={(event)=>copyEvent.location=event.detail.value}
+                    on:ionChange={(event)=>copyEvent.location=event.detail.value??""}
                 />
             </ion-item>
             <ion-item>
@@ -100,7 +94,7 @@
                     value={copyEvent?.professor || null}
                     contenteditable="true"
                     spellcheck={false}
-                    on:ionChange={(event)=>copyEvent.professor=event.detail.value}
+                    on:ionChange={(event)=>copyEvent.professor=event.detail.value??""}
                 />
             </ion-item>
         {/if}
@@ -113,7 +107,7 @@
                 value={copyEvent?.description || null}
                 contenteditable="true"
                 spellcheck={true}
-                on:ionChange={(event)=>copyEvent.description=event.detail.value}
+                on:ionChange={(event)=>copyEvent.description=event.detail.value??""}
             />
         </ion-item>
 
@@ -137,7 +131,7 @@
                 {#if willRepeatType == "UNTIL"}
                     <ion-datetime-button style="width: fit-content;" datetime="until"></ion-datetime-button>
                     <ion-modal keep-contents-mounted={true}>
-                        <ion-datetime id="until" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event) => copyEvent.repeatUntil = event.detail.value}></ion-datetime>
+                        <ion-datetime id="until" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event) => {copyEvent.repeatUntil = new Date(event.detail.value);}}></ion-datetime>
                     </ion-modal>
                 {:else}
                     <ion-input
@@ -149,7 +143,7 @@
                         contenteditable="true"
                         spellcheck={false}
                         style="width: 30%;"
-                        on:ionChange={(event)=>copyEvent.repeatInterval=event.detail.value}    
+                        on:ionChange={(event)=>{copyEvent.repeatInterval= new Number(event.detail.value)}}    
                     />
                 {/if}
             </ion-item>
@@ -171,7 +165,7 @@
                     contenteditable="true"
                     spellcheck={false}   
                     style="width: 50%;"
-                    on:ionChange={(event)=>copyEvent.notifyTime=event.detail.value}
+                    on:ionChange={(event)=>{copyEvent.notifyTime=new Number(event.detail.value)}}
                 />
             {/if}    
         </ion-item>
@@ -181,6 +175,9 @@
 
 
 <style>
+    ion-list {
+        background-color: var(--ion-background-color) !important;
+    }
     ion-item {
         margin-block: 1px;
     }
