@@ -1,10 +1,14 @@
 <script lang="ts">
 	import type {Event} from '$components/calendar/event/Event';
     import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
+	import { get } from 'imapflow/lib/imap-commands';
+	import { copy } from 'ionicons/icons';
+	import { onMount } from 'svelte';
 
     export let copyEvent: Event | null;
     let willRepeatType: string | null = null;
-
+    let templateStartTime: string, templateEndTime: string;
+    
     $: {
         if(!copyEvent) {
             copyEvent = {
@@ -25,7 +29,23 @@
                 notify: false
             }
         }
-        willRepeatType = copyEvent?.repeat == EventRepeatType.NEVER ? null : copyEvent?.repeatInterval ? "REPEAT" : "UNTIL";
+        try{
+            templateStartTime = copyEvent?.slot.start.getFullYear() + "-" +
+                                (String(copyEvent?.slot.start.getMonth() + 1)).padStart(2, '0') + "-" +
+                                String(copyEvent?.slot.start.getDate()).padStart(2, '0') + "T" +
+                                String(copyEvent?.slot.start.getHours()).padStart(2, '0') + ":" +
+                                String(copyEvent?.slot.start.getMinutes()).padStart(2, '0');
+
+            templateEndTime = copyEvent?.slot.end.getFullYear() + "-" +
+                                (String(copyEvent?.slot.end.getMonth() + 1)).padStart(2, '0') + "-" +
+                                String(copyEvent?.slot.end.getDate()).padStart(2, '0') + "T" +
+                                String(copyEvent?.slot.end.getHours()).padStart(2, '0') + ":" +
+                                String(copyEvent?.slot.end.getMinutes()).padStart(2, '0');
+        } catch { 
+            templateStartTime = new Date().toISOString();
+            templateEndTime = new Date(new Date().getTime() + 3600000).toISOString();
+        }
+        willRepeatType = copyEvent.repeat == EventRepeatType.NEVER ? null : copyEvent.repeatInterval ? "REPEAT" : "UNTIL";
     };
 </script>
 
@@ -50,7 +70,7 @@
             <ion-label>Έναρξη</ion-label>
             <ion-datetime-button datetime="start"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="start" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.start=new Date(event.detail.value)}></ion-datetime>
+                <ion-datetime id="start" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.start=new Date(event.detail.value)} value="{templateStartTime}"></ion-datetime>
             </ion-modal>
         </ion-item>
             
@@ -58,7 +78,7 @@
             <ion-label>Λήξη</ion-label>    
             <ion-datetime-button datetime="end"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="end" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.end=new Date(event.detail.value)}></ion-datetime>
+                <ion-datetime id="end" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.end=new Date(event.detail.value)} value="{templateEndTime}"></ion-datetime>
             </ion-modal>
         </ion-item>
         

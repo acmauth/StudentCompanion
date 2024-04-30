@@ -22,8 +22,8 @@
     title: "Study Group Meeting",
     slot: 
         {
-            start: new Date("2024-04-29T10:00:00"),
-            end: new Date("2024-04-29T12:00:00")
+            start: new Date("2024-04-30T10:00:00"),
+            end: new Date("2024-04-30T12:00:00")
         }
     ,
     location: "Library",
@@ -114,6 +114,10 @@
             }
         } else {
             tmpEvent = JSON.parse(JSON.stringify(selectedEvent));
+            if (tmpEvent) {
+                tmpEvent.slot.start = new Date(selectedEvent?.slot.start);
+                tmpEvent.slot.end = new Date(selectedEvent?.slot.end);
+            }
         }
     }
 
