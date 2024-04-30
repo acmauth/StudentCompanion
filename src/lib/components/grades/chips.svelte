@@ -57,7 +57,7 @@
         white-space: nowrap;
         padding-left: 1rem;
         padding-right: 1rem;
-        background-color: #FBFBF9;
+        /* background-color: #FBFBF9; */
         &::-webkit-scrollbar {
             display: none;
         };  
