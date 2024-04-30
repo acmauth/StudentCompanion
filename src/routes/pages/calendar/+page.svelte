@@ -52,7 +52,7 @@
     // TODO: take the tmpEvent object and check if it has the correct format then replace the selectedEvent with the tmpEvent in the store
     // remebmer to update the filtering for the calculation of the timeslots based on the repeat type
     function sumbit() {
-        if(tmpEvent?.id) {
+        if(tmpEvent?.id == selectedEvent?.id) {
             if(!eventHasCorrectFormat(tmpEvent)) {
                 showToast({
 						color: 'warning',
@@ -68,16 +68,15 @@
             }            
             const index = $EventStore.findIndex(x => x.id == tmpEvent?.id);
             
-            if(index != -1) {
+            if(index != -1 && tmpEvent!=null) {
                 $EventStore[index] = tmpEvent;
-                console.log("found");
-            } else {
+            } else if (tmpEvent!=null) {
                 $EventStore = [...$EventStore, tmpEvent];
-                console.log("not found");
             }
-            modalOpen=false;
+            selectedEvent = null;
+            tmpEvent = null;
+            modalOpen = false;
         } else {
-            console.log("no id");
             modalOpen=false;
         }
     }    
@@ -87,8 +86,8 @@
 		toast_.present();
 	}
 
-    function eventHasCorrectFormat(event: Event): boolean {
-        return (event.title && event.slot.start && event.slot.end && event.type);
+    function eventHasCorrectFormat(event: Event | null): boolean {
+        return (event!=null && event.title != undefined && event.title.length > 0 && new Date(event.slot.start).getTime() <= new Date(event.slot.end).getTime());
     }
 
     function setupModal() {
