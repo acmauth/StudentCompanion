@@ -14,8 +14,9 @@
     let activeDate: Date;
     let eventList: Event[];
     let selectedEvent: Event | null = null;
-    let tmpEvent: Event;
+    let tmpEvent: Event | null = null;
     let modalOpen: boolean = false;
+    let willRepeatType: string | null = null;
     
     $EventStore = [{ id: 1,
     title: "Study Group Meeting",
@@ -51,8 +52,8 @@
     // TODO: take the tmpEvent object and check if it has the correct format then replace the selectedEvent with the tmpEvent in the store
     // remebmer to update the filtering for the calculation of the timeslots based on the repeat type
     function sumbit() {
-        if(selectedEvent?.id) {
-            if(!eventHasCorrectFormat(selectedEvent)) {
+        if(tmpEvent?.id) {
+            if(!eventHasCorrectFormat(tmpEvent)) {
                 showToast({
 						color: 'warning',
 						duration: 3000,
@@ -65,13 +66,13 @@
 					});
                 return;
             }            
-            const index = $EventStore.findIndex(x => x.id == selectedEvent?.id);
+            const index = $EventStore.findIndex(x => x.id == tmpEvent?.id);
             
             if(index != -1) {
-                $EventStore[index] = selectedEvent;
+                $EventStore[index] = tmpEvent;
                 console.log("found");
             } else {
-                $EventStore = [...$EventStore, selectedEvent];
+                $EventStore = [...$EventStore, tmpEvent];
                 console.log("not found");
             }
             modalOpen=false;
@@ -81,13 +82,39 @@
         }
     }    
 
-	 async function showToast(toast: ToastOptions){
+	async function showToast(toast: ToastOptions){
 		const toast_ = await toastController.create(toast);
 		toast_.present();
 	}
 
     function eventHasCorrectFormat(event: Event): boolean {
         return (event.title && event.slot.start && event.slot.end && event.type);
+    }
+
+    function setupModal() {
+        if(selectedEvent == null) {
+            if(!tmpEvent) {
+                tmpEvent = {
+                    id: new Date().getTime(),
+                    title: "",
+                    slot: {
+                        start: new Date(),
+                        end: new Date(new Date().getTime() + 3600000)
+                    },
+                    type: EventType.TASK,
+                    location: "",
+                    description: "",
+                    professor: "",
+                    repeatInterval: 1,
+                    repeatUntil: null,
+                    notifyTime: 30,
+                    repeat: EventRepeatType.NEVER,
+                    notify: false
+                }
+            }
+        } else {
+            tmpEvent = JSON.parse(JSON.stringify(selectedEvent));
+        }
     }
 
 </script>
@@ -130,8 +157,9 @@
             is-open={modalOpen} 
             initial-breakpoint={selectedEvent? 0.95 : 1} 
             breakpoints={[0, 0.95, 1]} 
-            on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0}}
-            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null;}}    
+            on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0; if(!modalOpen) selectedEvent=null;}}
+            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; tmpEvent=null; willRepeatType=null;}}
+            on:ionModalWillPresent={()=>{setupModal(); modalOpen=true;}}    
         >
             <ion-toolbar>
                 <ion-buttons slot="end">
@@ -146,7 +174,7 @@
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
-                <EventDetails selectedEvent={selectedEvent} bind:copyEvent={tmpEvent} />
+                <EventDetails bind:copyEvent={tmpEvent} />
         </ion-modal>
     </ion-content>
 </ion-tab>
