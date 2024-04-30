@@ -55,7 +55,7 @@
         if(tmpEvent?.id == selectedEvent?.id) {
             if(!eventHasCorrectFormat(tmpEvent)) {
                 showToast({
-						color: 'warning',
+						color: 'danger',
 						duration: 3000,
 						message: 'Τσέκαρε τα στοιχεία του συμβάντος!',
 						mode: 'ios',
@@ -118,6 +118,7 @@
                 tmpEvent.slot.end = new Date(selectedEvent?.slot.end);
             }
         }
+        modalOpen=true;
     }
 
 </script>
@@ -161,8 +162,8 @@
             initial-breakpoint={selectedEvent? 0.95 : 1} 
             breakpoints={[0, 0.95, 1]} 
             on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0; if(!modalOpen) selectedEvent=null;}}
-            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; tmpEvent=null; willRepeatType=null;}}
-            on:ionModalWillPresent={()=>{setupModal(); modalOpen=true;}}    
+            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; tmpEvent=null;}}
+            on:ionModalWillPresent={setupModal}    
         >
             <ion-toolbar>
                 <ion-buttons slot="end">
@@ -172,7 +173,7 @@
                 </ion-buttons>
                 <ion-title class="ion-text-center">{selectedEvent?.title? selectedEvent.title : 'Συμβάν'}</ion-title>
                 <ion-buttons slot="start">
-                    <ion-button id="cancel" on:click={()=>{modalOpen=false;}} aria-hidden>
+                    <ion-button id="cancel" on:click={()=>{modalOpen=false; selectedEvent=null; tmpEvent=null;}} aria-hidden>
                         <ion-icon slot="icon-only" icon={close}/>
                     </ion-button>
                 </ion-buttons>
