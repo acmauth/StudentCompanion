@@ -16,7 +16,6 @@
     let selectedEvent: Event | null = null;
     let tmpEvent: Event | null = null;
     let modalOpen: boolean = false;
-    let willRepeatType: string | null = null;
     
     $EventStore = [{ id: 1,
     title: "Study Group Meeting",
@@ -37,22 +36,53 @@
     notifyTime: 30}]
     
     
-    $: eventList = $EventStore.filter(item => isCurrentDay(item.slot.start, activeDate));//.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate));//.sort((a, b) => a.startTime.localeCompare(b.startTime));
     
-    function isCurrentDay(date1: Date, current: Date): boolean {
-        const currentDate = new Date(current);
-        const date = new Date(date1);
-        return (
-            date.getFullYear() === currentDate.getFullYear() &&
-            date.getMonth() === currentDate.getMonth() &&
-            date.getDate() === currentDate.getDate()
-        );
+    function isCurrentDay(event: Event, active: Date): boolean {
+        const activeDate = new Date(active);
+        const start = new Date(event.slot.start);
+        const end = new Date(event.slot.end? event.slot.end : event.slot.start);
+        const repeatUntil = event.repeatUntil? new Date(event.repeatUntil) : null;
+        const repeatInterval = event.repeatInterval? event.repeatInterval : 0;
+        
+        let distance: number = 0;
+
+        if(event.repeat == EventRepeatType.DAILY) {
+            distance = dayDistance(activeDate,start);
+            return (repeatUntil && repeatUntil != null && start.getTime() <= repeatUntil.getTime()) 
+                    || (repeatInterval != undefined && repeatInterval > 0 &&  distance >= 0 && distance <= repeatInterval);
+        }
+
+        if(event.repeat == EventRepeatType.WEEKLY) {
+            return start.getDay() === activeDate.getDay();
+        }
+
+        if(event.repeat == EventRepeatType.MONTHLY) {
+            return start.getDate() === activeDate.getDate();
+        }
+
+        if(event.repeat == EventRepeatType.YEARLY) {
+            return start.getMonth() === activeDate.getMonth() && start.getDate() === activeDate.getDate();
+        }
+
+        if(event.repeat == EventRepeatType.NEVER) {
+            return (
+                start.getFullYear() === activeDate.getFullYear() &&
+                start.getMonth() === activeDate.getMonth() &&
+                start.getDate() === activeDate.getDate()
+            );
+        }
+
+        return false;
     }
 
-    // TODO: take the tmpEvent object and check if it has the correct format then replace the selectedEvent with the tmpEvent in the store
-    // remebmer to update the filtering for the calculation of the timeslots based on the repeat type
+    function dayDistance(date1: Date, date2: Date): number {
+        return (new Date(date1.setHours(0,0,0,0)).getTime() - new Date(date2.setHours(0,0,0,0)).getTime()) / (1000 * 60 * 60 * 24);
+    }
+
     function sumbit() {
         if(tmpEvent?.id == selectedEvent?.id) {
+            console.log(tmpEvent?.repeatUntil);
             if(!eventHasCorrectFormat(tmpEvent)) {
                 showToast({
 						color: 'danger',
@@ -104,7 +134,6 @@
                     location: "",
                     description: "",
                     professor: "",
-                    repeatInterval: 1,
                     repeatUntil: null,
                     notifyTime: 30,
                     repeat: EventRepeatType.NEVER,
@@ -143,9 +172,11 @@
             {#if eventList.length > 0}
                 <div class="container">
                     <ion-content>
-                    {#each eventList as eventItem}
-                        <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} />
-                    {/each}
+                        <div style="padding-top:1rem;">
+                            {#each eventList as eventItem}
+                                <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} />
+                            {/each}
+                        </div>
                     </ion-content>
                 </div>
             {:else}
@@ -192,6 +223,7 @@
         overflow-y: auto;
         align-items: space-around;
     }
+
     .no-events {
         display: flex;
         text-align: center;

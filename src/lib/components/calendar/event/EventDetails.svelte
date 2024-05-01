@@ -1,13 +1,12 @@
 <script lang="ts">
 	import type {Event} from '$components/calendar/event/Event';
     import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
-	import { get } from 'imapflow/lib/imap-commands';
-	import { copy } from 'ionicons/icons';
-	import { onMount } from 'svelte';
+
 
     export let copyEvent: Event | null;
     let willRepeatType: string | null = null;
     let templateStartTime: string, templateEndTime: string;
+    let templateRepeatUntil: string;
     
     $: {
         if(!copyEvent) {
@@ -41,12 +40,29 @@
                                 String(copyEvent?.slot.end.getDate()).padStart(2, '0') + "T" +
                                 String(copyEvent?.slot.end.getHours()).padStart(2, '0') + ":" +
                                 String(copyEvent?.slot.end.getMinutes()).padStart(2, '0');
+            if(copyEvent?.repeatUntil) {
+                console.log(copyEvent?.repeatUntil);
+            templateRepeatUntil = copyEvent?.repeatUntil?.getFullYear() + "-" +
+                                (String(copyEvent?.repeatUntil?.getMonth() + 1)).padStart(2, '0') + "-" +
+                                String(copyEvent?.repeatUntil?.getDate()).padStart(2, '0') + "T" +
+                                String(copyEvent?.repeatUntil?.getHours()).padStart(2, '0') + ":" +
+                                String(copyEvent?.repeatUntil?.getMinutes()).padStart(2, '0');
+            }
         } catch { 
             templateStartTime = new Date().toISOString();
             templateEndTime = new Date(new Date().getTime() + 3600000).toISOString();
         }
         willRepeatType = copyEvent.repeat == EventRepeatType.NEVER ? null : copyEvent.repeatInterval ? "REPEAT" : "UNTIL";
+        console.log(templateRepeatUntil, copyEvent);
     };
+
+    function updateRepeatCondition(event: CustomEvent) {
+        if(event.detail.value == "UNTIL") {
+            copyEvent.repeatInterval = undefined;
+        } else {
+            copyEvent.repeatUntil = undefined;
+        }
+    }
 </script>
 
 
@@ -141,7 +157,7 @@
 
         {#if copyEvent.repeat != EventRepeatType.NEVER}
             <ion-item>
-                <ion-select style="width:80%;" label="Λήξη" interface="popover" value={"REPEAT"} on:ionChange={(event)=>{willRepeatType=event.detail.value;}} label-placement="floating">
+                <ion-select style="width:80%;" label="Λήξη" interface="popover" value={willRepeatType} on:ionChange={(event)=>{updateRepeatCondition(event)}} label-placement="floating">
                     <ion-select-option value="REPEAT">Επαναλήψεις</ion-select-option>
                     <ion-select-option value="UNTIL">Ημερομηνία</ion-select-option>
                 </ion-select>
@@ -151,7 +167,7 @@
                 {#if willRepeatType == "UNTIL"}
                     <ion-datetime-button style="width: fit-content;" datetime="until"></ion-datetime-button>
                     <ion-modal keep-contents-mounted={true}>
-                        <ion-datetime id="until" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event) => {copyEvent.repeatUntil = new Date(event.detail.value);}}></ion-datetime>
+                        <ion-datetime id="until" presentation="date-time" minute-values="0,15,30,45" value="{templateRepeatUntil}" hour-cycle="h23" on:ionChange={(event) => {copyEvent.repeatUntil = new Date(event.detail.value);}}></ion-datetime>
                     </ion-modal>
                 {:else}
                     <ion-input

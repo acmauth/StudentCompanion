@@ -124,6 +124,7 @@
   ion-card {
     padding: 5px;
     margin-inline: 4px;
+    margin-block: 5px;
     box-shadow: none;
     background-color: var(--ion-color-light);
   }
@@ -135,7 +136,7 @@
   }
 
   swiper-container{
-  width: 100%;
+    width: 100%;
   }
   swiper-slide {
     text-align: center;
