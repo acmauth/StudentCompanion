@@ -5,6 +5,7 @@
 	import cog_solid from "$customIcons/cog-solid.svg";
     import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
 	import { Capacitor } from '@capacitor/core';
+	import Dexie from 'dexie';
 
 	/**
 	 * @type {any}
@@ -16,22 +17,48 @@
 		toast_.present();
 	}
 	
-	function sentAnalytics() {
+	async function dixieGet(key: string){
+		var db = new Dexie("cachedData");
+		db.version(1).stores({
+			cachedData: 'key,value'
+		});
+
+		const cachedData = (await db.cachedData.get(key)).value;
+
+		return cachedData;
+
+	}
+
+	async function dixieGetKeys(){
+		var db = new Dexie("cachedData");
+		db.version(1).stores({
+			cachedData: 'key,value'
+		});
+
+		const keys = (await db.cachedData.toArray()).map((item) => item.key);
+
+		return keys;
+
+	}
+
+	async function sentAnalytics() {
 		// Send subjects json to the server for debugging
 	
 		const url = 'https://analytics.neron.dev/v1/analytics';
 		
-		let examkeys = Object.keys(localStorage).filter(key => key.includes('universis_students/me/exams'));
+		let examkeys = (await dixieGetKeys()).filter(key => key.includes('universis_students/me/exams'));
 		let keys = ['universis_students/me/courses?$top=-1','universis_students/me/grades?$filter=courseExam/year eq 2023 and courseExam/examPeriod eq 1&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false',...examkeys];
 		
-		let file = {'medata': [	JSON.parse(localStorage.getItem('universis_Students/me/')).value.semester, 
-								JSON.parse(localStorage.getItem('universis_Students/me/department')).value.abbreviation ]
+		let file: any = {'medata': [	JSON.parse(await dixieGet('universis_Students/me/')).value.semester, 
+								JSON.parse(await dixieGet('universis_Students/me/department')).value.abbreviation ]
 					};
 	
-		keys.forEach(key => {
-			file[key] = localStorage.getItem(key);
-		});
-	
+
+
+		for (let i=0; i<keys.length; i++){
+			file[keys[i]] = JSON.parse(await dixieGet(keys[i]));
+		}
+		
 		console.log(file);
 		let options = {
 			method: 'POST',
@@ -39,7 +66,7 @@
 				'Content-Type': 'application/json'},
 			body: JSON.stringify(file),
 		};
-		fetch(url, options)
+		await fetch(url, options)
 			.then((response) => {
 				if (!response.ok) {
 					showToast({
