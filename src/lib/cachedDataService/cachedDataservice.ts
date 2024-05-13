@@ -1,5 +1,6 @@
 import { universisGet, elearningGet, webmailInboxRequest } from "$lib/dataService"
 import { Network } from '@capacitor/network';
+import Dexie from "dexie";
 
 type cachedItem = {
     key: string;
@@ -18,7 +19,7 @@ type options = {
 export async function cachedWebmailInbox (options?: options): Promise<any> {
     if (!options) options = {};
     const key = `webmail_inbox`;
-    const cached = getFromCache(key);
+    const cached = await getFromCache(key);
     if (cached.exists && (!cached.expired && !options.forceFresh || !(await Network.getStatus()).connected)){
         return cached.value;
     } else {
@@ -31,7 +32,7 @@ export async function cachedWebmailInbox (options?: options): Promise<any> {
 export async function cachedUniversisGet (endpoint: string, options?: options): Promise<any> {
     if (!options) options = {};
     const key = `universis_${endpoint}`;
-    const cached = getFromCache(key);
+    const cached = await getFromCache(key);
     if (cached.exists && (!cached.expired && !options.forceFresh || !(await Network.getStatus()).connected)){
         return cached.value;
     } else {
@@ -44,7 +45,7 @@ export async function cachedUniversisGet (endpoint: string, options?: options): 
 export async function cachedElearningGet(data: any, options?: options): Promise<any> {
     if (!options) options = {};
     const key = `elearning_${JSON.stringify(data)}`;
-    const cached = getFromCache(key);
+    const cached = await getFromCache(key);
     if (cached.exists && (!cached.expired && !options.forceFresh || !(await Network.getStatus()).connected)){
         return cached.value;
     } else {
@@ -55,6 +56,7 @@ export async function cachedElearningGet(data: any, options?: options): Promise<
     
 }
 
+
 function cacheItem(key: string, value: any, lifetime: number = 180) {
     const now = new Date();
     const cachedData = {
@@ -62,13 +64,33 @@ function cacheItem(key: string, value: any, lifetime: number = 180) {
         cachedAt: now,
         life: lifetime
     };
-    localStorage.setItem(key, JSON.stringify(cachedData));
+    try {
+        var db = new Dexie("cachedData");
+        db.version(1).stores({
+            cachedData: 'key,value'
+        });
+
+        db.cachedData.put({key: key, value: JSON.stringify(cachedData)});
+
+        // db.close();
+    }
+    catch (error) {
+        console.error(error);
+    }
+
 }
 
-function getFromCache(key: string): cachedItem {
-    const cachedData = localStorage.getItem(key);
+async function getFromCache(key: string): Promise<cachedItem> {
+    var db = new Dexie("cachedData");
+    db.version(1).stores({
+        cachedData: 'key,value'
+    });
+
+    const cachedData = await db.cachedData.get(key);
+
     if (cachedData) {
-        const parsedData = JSON.parse(cachedData);
+        const parsedData = JSON.parse(cachedData.value);
+        console.log(parsedData);
         const now = new Date();
         const cachedAt = new Date(parsedData.cachedAt);
         const life = parsedData.life;

@@ -59,6 +59,7 @@
 		"chart.js": "^4.4.0",
 		"cheerio": "^1.0.0-rc.12",
 		"cross-fetch": "^4.0.0",
+		"dexie": "^4.0.4",
 		"dompurify": "^3.1.0",
 		"fetch-cookie": "^2.1.0",
 		"flowbite-svelte": "^0.44.19",
