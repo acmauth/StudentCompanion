@@ -13,6 +13,7 @@ package-lock.json
 .temp
 ios
 ios/*
+src/debug/*
 
 android/.gradle/
 android/build
