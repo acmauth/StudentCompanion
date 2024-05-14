@@ -19,6 +19,7 @@
 		F8F427AD2BF3DD9A00EF8507 /* ElearningPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F427AC2BF3DD9A00EF8507 /* ElearningPlugin.swift */; };
 		F8F427B02BF3E09100EF8507 /* UniversisPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F8F427AF2BF3E09100EF8507 /* UniversisPlugin.m */; };
 		F8F427B22BF3E30900EF8507 /* ElearningPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F8F427B12BF3E30900EF8507 /* ElearningPlugin.m */; };
+		F8F427B72BF3F01800EF8507 /* UniversisScraperLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F427B62BF3F01800EF8507 /* UniversisScraperLogic.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		F8F427AE2BF3E09100EF8507 /* App-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "App-Bridging-Header.h"; sourceTree = "<group>"; };
 		F8F427AF2BF3E09100EF8507 /* UniversisPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniversisPlugin.m; sourceTree = "<group>"; };
 		F8F427B12BF3E30900EF8507 /* ElearningPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ElearningPlugin.m; sourceTree = "<group>"; };
+		F8F427B62BF3F01800EF8507 /* UniversisScraperLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UniversisScraperLogic.swift; sourceTree = "<group>"; };
 		FC68EB0AF532CFC21C3344DD /* Pods-App.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.debug.xcconfig"; path = "Pods/Target Support Files/Pods-App/Pods-App.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +97,7 @@
 				F8F427AF2BF3E09100EF8507 /* UniversisPlugin.m */,
 				F8F427AE2BF3E09100EF8507 /* App-Bridging-Header.h */,
 				F8F427B12BF3E30900EF8507 /* ElearningPlugin.m */,
+				F8F427B62BF3F01800EF8507 /* UniversisScraperLogic.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -225,6 +228,7 @@
 				F8F427B22BF3E30900EF8507 /* ElearningPlugin.m in Sources */,
 				F8F427A72BF3D8B300EF8507 /* UniversisPlugin.swift in Sources */,
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
+				F8F427B72BF3F01800EF8507 /* UniversisScraperLogic.swift in Sources */,
 				F8F427B02BF3E09100EF8507 /* UniversisPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

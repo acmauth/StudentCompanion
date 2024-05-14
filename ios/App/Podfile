@@ -9,19 +9,21 @@ use_frameworks!
 install! 'cocoapods', :disable_input_output_paths => true
 
 def capacitor_pods
-  pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
-  pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
-  pod 'CapacitorCommunitySqlite', :path => '../../node_modules/@capacitor-community/sqlite'
-  pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
-  pod 'CapacitorClipboard', :path => '../../node_modules/@capacitor/clipboard'
-  pod 'CapacitorNetwork', :path => '../../node_modules/@capacitor/network'
-  pod 'CapacitorPreferences', :path => '../../node_modules/@capacitor/preferences'
-  pod 'CapacitorPushNotifications', :path => '../../node_modules/@capacitor/push-notifications'
-  pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
-  pod 'CapacitorToast', :path => '../../node_modules/@capacitor/toast'
-  pod 'CapgoCapacitorNavigationBar', :path => '../../node_modules/@capgo/capacitor-navigation-bar'
-  pod 'CapacitorNativeSettings', :path => '../../node_modules/capacitor-native-settings'
-  pod 'CapacitorNodejs', :path => '../../node_modules/capacitor-nodejs'
+    pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
+    pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
+    pod 'CapacitorCommunitySqlite', :path => '../../node_modules/@capacitor-community/sqlite'
+    pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
+    pod 'CapacitorClipboard', :path => '../../node_modules/@capacitor/clipboard'
+    pod 'CapacitorNetwork', :path => '../../node_modules/@capacitor/network'
+    pod 'CapacitorPreferences', :path => '../../node_modules/@capacitor/preferences'
+    pod 'CapacitorPushNotifications', :path => '../../node_modules/@capacitor/push-notifications'
+    pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
+    pod 'CapacitorToast', :path => '../../node_modules/@capacitor/toast'
+    pod 'CapgoCapacitorNavigationBar', :path => '../../node_modules/@capgo/capacitor-navigation-bar'
+    pod 'CapacitorNativeSettings', :path => '../../node_modules/capacitor-native-settings'
+    pod 'CapacitorNodejs', :path => '../../node_modules/capacitor-nodejs'
+    pod 'Alamofire'
+    pod 'SwiftSoup'
 end
 
 target 'App' do

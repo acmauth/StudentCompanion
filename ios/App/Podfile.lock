@@ -1,4 +1,5 @@
 PODS:
+  - Alamofire (5.9.1)
   - Capacitor (5.7.5):
     - CapacitorCordova
   - CapacitorApp (5.0.7):
@@ -31,9 +32,11 @@ PODS:
   - SQLCipher/common (4.5.7)
   - SQLCipher/standard (4.5.7):
     - SQLCipher/common
+  - SwiftSoup (2.7.2)
   - ZIPFoundation (0.9.19)
 
 DEPENDENCIES:
+  - Alamofire
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorClipboard (from `../../node_modules/@capacitor/clipboard`)"
@@ -47,10 +50,13 @@ DEPENDENCIES:
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - "CapacitorToast (from `../../node_modules/@capacitor/toast`)"
   - "CapgoCapacitorNavigationBar (from `../../node_modules/@capgo/capacitor-navigation-bar`)"
+  - SwiftSoup
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - SQLCipher
+    - SwiftSoup
     - ZIPFoundation
 
 EXTERNAL SOURCES:
@@ -82,6 +88,7 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capgo/capacitor-navigation-bar"
 
 SPEC CHECKSUMS:
+  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   Capacitor: 7d42085cb786b2d3ea9ac8a17ebd7e3305be7b72
   CapacitorApp: 17fecd0e6cb23feafac7eb0939417389038b0979
   CapacitorClipboard: 45e5e25f2271f98712985d422776cdc5a779cca1
@@ -96,8 +103,9 @@ SPEC CHECKSUMS:
   CapacitorToast: c8bb89eeb59a23c1fc298f138cc06c8ff4d90ac1
   CapgoCapacitorNavigationBar: c5675bf5f155844d450ce66b491595c6ae64238f
   SQLCipher: 5e6bfb47323635c8b657b1b27d25c5f1baf63bf5
+  SwiftSoup: 4164c6bd8af69acd119c23fb36906975a60d71bb
   ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
 
-PODFILE CHECKSUM: ebf9e4165fdacbf450b62ea093bfe52b073d471e
+PODFILE CHECKSUM: a0a346b3cae64afb07848a481d5a51a8ae2414df
 
 COCOAPODS: 1.15.2
