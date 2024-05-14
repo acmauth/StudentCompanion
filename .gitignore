@@ -11,8 +11,8 @@ vite.config.ts.timestamp-*
 package-lock.json
 /.env
 .temp
-ios
-ios/*
+# ios
+# ios/*
 src/debug/*
 
 android/.gradle/
