@@ -92,9 +92,9 @@ async function getFromCache(key: string): Promise<cachedItem> {
 
     // This is a debug feature that allows to inject data into the cache
     // It's only available in development mode
-    if (!isProduction){
-        const injected = await injectDebugData(key);
-        if (injected) {return injected;};}
+    // if (!isProduction){
+    //     const injected = await injectDebugData(key);
+    //     if (injected) {return injected;};}
 
     if (cachedData) {
         const parsedData = JSON.parse(cachedData.value);
@@ -124,37 +124,37 @@ async function getFromCache(key: string): Promise<cachedItem> {
 }
 
 
-async function injectDebugData(key: string){
-    try {
-        return import("$debug/debug.json")
-            .then((debugData: any) => {
-            const defaultData = debugData.default;
-            // console.log(defaultData);
-            const metadata = defaultData.medata;
-            if (defaultData[key] == null) return null;
-            const now = new Date();
-            const cachedAt = new Date();
-            const life = 666;
-            const expired = now.getTime() - cachedAt.getTime() > life * 1000;
-            return {
-                key,
-                exists: true,
-                cachedAt,
-                life,
-                value: defaultData[key].value,
-                expired
-            };
+// async function injectDebugData(key: string){
+//     try {
+//         return import("$debug/debug.json")
+//             .then((debugData: any) => {
+//             const defaultData = debugData.default;
+//             // console.log(defaultData);
+//             const metadata = defaultData.medata;
+//             if (defaultData[key] == null) return null;
+//             const now = new Date();
+//             const cachedAt = new Date();
+//             const life = 666;
+//             const expired = now.getTime() - cachedAt.getTime() > life * 1000;
+//             return {
+//                 key,
+//                 exists: true,
+//                 cachedAt,
+//                 life,
+//                 value: defaultData[key].value,
+//                 expired
+//             };
             
-            return defaultData[key];
-            })
-            .catch((error) => {
-            // console.error(error);
-            return null;
-            });
-    }
-    catch (error) {
-        // console.log("Catch");
-        // console.error(error);
-    }
-    return;
-}
+//             return defaultData[key];
+//             })
+//             .catch((error) => {
+//             // console.error(error);
+//             return null;
+//             });
+//     }
+//     catch (error) {
+//         // console.log("Catch");
+//         // console.error(error);
+//     }
+//     return;
+// }
