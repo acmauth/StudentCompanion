@@ -35,11 +35,11 @@
 </div>
 
 	{#each filteredSubjects as course,index}
-	<AppCard id={index} href={course.childCourses && course.childCourses.length > 0 ? undefined : `/courses/${course.course}`} padding>
+	<AppCard id={index} href={course.childCourses && course.childCourses.length > 0 ? undefined : `/courses/${encodeURIComponent(course.course)}`} padding>
 		<!-- Card content for course -->
 		<!-- Checking if course has children courses or not, so we can render the href links accordingly. Rest of the content stays the same -->
 		{#if course.childCourses && course.childCourses.length > 0}
-		<ion-item href={ `/courses/${course.course}`} lines="none" class="ion-no-padding">
+		<ion-item href={ `/courses/${encodeURIComponent(course.course)}`} lines="none" class="ion-no-padding">
 			<div class="containerFlex">
 
 				<div class="titlesFlex">

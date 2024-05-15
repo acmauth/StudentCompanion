@@ -17,14 +17,13 @@
 
     
 		/**
- * @param {any} courseInfo
+ * @param {any} courseID;
  */
-		export async function courseInformation(courseInfo) {
+		export async function courseInformation(courseID) {
 
-            try {
+            let courseInfo = decodeURIComponent(courseID);
 
-
-			courses = [];
+            courses = [];
 			registrations = [];
 			courseTitle = "";
 			semester = "";
@@ -35,6 +34,10 @@
             period = "";
             season = "";
 
+           try {
+
+     
+
         // Getting an array with courses
         courses = (await neoUniversisGet("students/me/courses?$top=-1",{lifetime: 600})).value;
 
@@ -43,6 +46,7 @@
 
 
         // Finding the course and storing informations about it in variables
+        
         for (const course of courses) {
             if (course.course === courseInfo){
                 courseTitle = course.courseTitle;
@@ -63,6 +67,7 @@
 
         // Getting the instructors' names for the course from the registrations
 
+        try {
         let flag = false;
         for (const semester of registrations){
             for (const classes of semester.classes){
@@ -78,6 +83,10 @@
             if (flag)
                 break;
         }
+
+    } catch (error) {
+        console.log(error)
+    }
 
 
 		const courseInformation = {
