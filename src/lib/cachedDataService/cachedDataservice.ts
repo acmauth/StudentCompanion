@@ -141,7 +141,7 @@ async function injectDebugData(key: string){
                 exists: true,
                 cachedAt,
                 life,
-                value: JSON.parse(defaultData[key]).value,
+                value: defaultData[key].value,
                 expired
             };
             
