@@ -48,7 +48,12 @@
 		
 		let examkeys = (await dixieGetKeys()).filter(key => key.includes('universis_students/me/exams'));
 		let keys = ['universis_students/me/courses?$top=-1','universis_students/me/grades?$filter=courseExam/year eq 2023 and courseExam/examPeriod eq 1&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false',...examkeys];
-		
+		if ((await dixieGetKeys()).includes('universis_students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false')){
+			keys.push('universis_students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false');
+		}
+
+
+
 		let file: any = {'medata': [	JSON.parse(await dixieGet('universis_Students/me/')).value.semester, 
 								JSON.parse(await dixieGet('universis_Students/me/department')).value.abbreviation ]
 					};

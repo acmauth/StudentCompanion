@@ -4,7 +4,9 @@
     import Vector from "$lib/components/loginService/Vector.svg"
     import Vector1 from "$lib/components/loginService/Vector(1).svg"
     import Logo from "$lib/assets/Logo_head.png";
-    import { eyeOff, eye } from 'ionicons/icons';
+    import { eyeOff, eye, informationCircleOutline } from 'ionicons/icons';
+    import { alertController } from 'ionic-svelte';
+    const isProduction = process.env.NODE_ENV === 'production';
 
     let username = '';
     let password = '';
@@ -12,6 +14,18 @@
     let invalidData = false;
     let isVisible = false;
     let showPassword = false;
+
+    const showAlert = async () => {
+        const options = {
+            header: 'Είναι ασφαλή τα στοιχεία μου;',
+            subHeader: "Πάντα!",
+            message: 'Τα στοιχεία σύνδεσής σου μένουν μόνο μεταξύ της συσκευής σου και του ΑΠΘ. Η ομάδα του Aristomate δεν θα έχει ποτέ πρόσβαση σε αυτά.',
+            buttons: ['ΟΚ']
+        };
+        const alert = await alertController.create(options);
+        alert.present();
+    };
+
 
     async function submit(){
         
@@ -54,7 +68,15 @@
 
     <div style="display: flex; flex-direction: column; align-items: center; margin-top: -40px; justify-content: top; padding-right:20px; padding-left:20px;">
         <img src={Logo} alt="Aristomate logo" style="width: 30%; margin-bottom: 25px;">
-        <input id='usernameInput' class="custom-input" placeholder="Όνομα χρήστη" style="margin-bottom: 10px;">
+
+        <div class="academiclogin" style="display:flex; flex-direction:row; align-items: center; justify-content: center; gap: 4px;">
+            <ion-text>Σύνδεση ΑΠΘ</ion-text>
+            {#if isProduction}
+                <ion-icon src={informationCircleOutline} on:click={showAlert} aria-hidden/>
+            {/if}
+        </div>
+
+        <input id='usernameInput' class="custom-input" placeholder="Όνομα χρήστη ΑΠΘ" style="margin-bottom: 10px;">
         
         <div class="input-button-container">
             <input id="passwordInput" class="custom-input" type={showPassword ? 'text' : 'password'} placeholder="Κωδικός πρόσβασης" style="margin-bottom: 10px; width:100%">
@@ -79,7 +101,7 @@
             <ion-label class="custom" style="font-size:small;">Διατήρηση σύνδεσης</ion-label>
         </ion-checkbox> -->
 
-        <div class="footer">
+        <div class="footer" style="display:flex; flex-direction:column">
             <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
         </div>
     </div>
@@ -93,6 +115,12 @@
         align-items: center;
         text-align: center;
         padding-top: 35px;
+    }
+
+    .academiclogin {
+        color: #98BDD6;
+        margin-bottom: 10px;
+        /* font-weight: bold; */
     }
 
     ion-input.custom {

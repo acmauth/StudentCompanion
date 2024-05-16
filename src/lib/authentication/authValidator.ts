@@ -9,7 +9,7 @@ import Dexie from "dexie";
 export function invalidateAuth(){
     localStorage.clear();
     Preferences.clear();
-    Dexie.delete('cache');
+    Dexie.delete('cachedData');
 }
 
 export async function judgeAuth() {
