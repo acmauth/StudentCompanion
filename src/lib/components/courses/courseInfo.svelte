@@ -132,7 +132,7 @@
 
 		<!-- Checking if there is a grade and displays the corresponding color depending if you passed or not -->
 		<ion-card-content class="ion-text-center">
-			{#if !stats.grade}
+			{#if !stats.grade && stats.grade!=0}
 				<ion-text><b>-</b></ion-text>
 				<br>
 				<ion-text class="danger">Δεν έχεις βαθμολογήθει ακόμα στο μάθημα</ion-text>
