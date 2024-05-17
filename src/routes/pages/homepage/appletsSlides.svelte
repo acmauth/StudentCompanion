@@ -3,11 +3,7 @@
 	import { fastFood, map, link, calendarClear } from 'ionicons/icons';
 </script>
 
-<ion-content
-	scroll-x={false}
-	scroll-y={false}
-	class="ion-padding scrollingApplets"
->
+
 	<div class="applets">
 		<AppCard
 			colour="orange"
@@ -62,7 +58,6 @@
 			</div>
 		</AppCard>
 	</div>
-</ion-content>
 
 <style>
 	.overflowingtext {
@@ -80,6 +75,7 @@
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     flex-wrap: wrap; /* Add this line */
+	justify-content: center;
 }
 
 .appletcontent {

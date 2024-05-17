@@ -95,22 +95,45 @@
 			align-items: center;
 			height: 15%;
 			padding: 80px;"> 
-				<ion-icon style="--ionicon-stroke-width: 3rem; font-size: 8rem" color="primary" icon={cogOutline}/>
+				<ion-icon style="--ionicon-stroke-width: 3rem; font-size: 8rem" color="primary" class="cog" icon={cogOutline}/>
 			</div>
-
-			<AppCard margin={true} shadow={true} padding>
-				<div style="padding: 10px; text-align:center;" >
-				Η εφαρμογή είναι προσωρινά μη διαθέσιμη, καθώς υλοποιείται η ενσωμάτωσή της στα συστήματα του ΚΗΔ ΑΠΘ.
-				<br />
-				Θα ενημερωθεί τις επόμενες ημέρες με ακόμη περισσότερες δυνατότητες!
-			</AppCard>	
-
-			<AppletsSlides />
+			<div style="display:flex; flex-direction:column; gap:1rem; align-items:center; justify-content:center;">
+				<AppCard margin={true} shadow={true} padding>
+					<div style="padding: 10px; text-align:center;" >
+						Η εφαρμογή είναι προσωρινά μη διαθέσιμη, καθώς υλοποιείται η ενσωμάτωσή της στα συστήματα του ΚΗΔ ΑΠΘ.
+						<br />
+						Θα ενημερωθεί τις επόμενες ημέρες με ακόμη περισσότερες δυνατότητες!
+						<br/>
+						Ευχαριστούμε για την υπομονή σας και ανυπομονούμε για το μέλλον της εφαρμογής!
+					</AppCard>	
+					
+					<AppletsSlides />
+				</div>
 
 	</ion-content>
 </ion-tab>
 
 <style>
+
+	.cog {
+		-webkit-animation: cog 8s infinite;			
+		-moz-animation: cog 8s infinite;
+		-ms-animation: cog 8s infinite; 			
+		animation: cog 8s infinite;
+		-webkit-animation-timing-function: linear;
+		-moz-animation-timing-function: linear;		
+		-ms-animation-timing-function: linear;
+		animation-timing-function: linear	
+	}
+
+	@keyframes cog {
+	100%{ 
+		-moz-transform: rotate(360deg);
+		-ms-transform: rotate(360deg);
+		transform: rotate(360deg)
+		}
+	}
+
 	.avatar {
 		width: 5rem;
 	}
