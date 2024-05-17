@@ -27,22 +27,6 @@
             endTime: new Date(slot.endTime).toTimeString().substring(0, 5)
         }))).filter(slot => slot.day === (weekdays.findIndex((day) => Object.keys(day)[0] === activeDay))).sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-    // onMount(async () => {
-    //     let classes = (await universisGet('students/me/teachingEvents?$expand=location,performer&$filter=startDate ne null&$top=-1&$orderby=startDate')).value;
-    //     if (classes.length > 0) {
-    //         $classStore = classes.map((item: any) => ({
-    //             id: item.id,
-    //             title: item.title,
-    //             professor: item.performer ? item.performer.name : 'Άγνωστος',
-    //             classroom: item.location ? item.location.name : 'Άγνωστος',
-    //             slots: item.slots.map((slot: any) => ({
-    //                 day: weekdays[getDayIndex(new Date(slot.startTime).getDay())][Object.keys(weekdays[getDayIndex(new Date(slot.startTime).getDay())])[0]],
-    //                 startTime: slot.startTime,
-    //                 endTime: slot.endTime
-    //             }))
-    //         }));
-    //     }
-    // });
 
     function handler(event) {
         let direction = event.detail.direction;
@@ -73,9 +57,6 @@
     <ion-fab-list side="top">
        <ion-fab-button color="primary" href="/pages/tasks" data-desc="Συμβάντα">
           <ion-icon icon={createOutline} />
-       </ion-fab-button>
-       <ion-fab-button color="secondary" href="/pages/exams" data-desc="Εξετάσεις">
-          <ion-icon icon={schoolOutline} />
        </ion-fab-button>
     </ion-fab-list>
  </ion-fab>

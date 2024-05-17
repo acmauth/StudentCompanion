@@ -1,12 +1,11 @@
 <script lang="ts">
 	import AppCard from '$shared/AppCard.svelte';
-	import { fastFood, map, link } from 'ionicons/icons';
+	import { fastFood, map, link, calendarClear } from 'ionicons/icons';
 </script>
 
 <ion-content
-	scroll-x={true}
+	scroll-x={false}
 	scroll-y={false}
-	style="max-height: 6.5rem"
 	class="ion-padding scrollingApplets"
 >
 	<div class="applets">
@@ -49,6 +48,19 @@
 				<ion-label><span class="overflowingtext">Σύνδεσμοι</span></ion-label>
 			</div>
 		</AppCard>
+		<AppCard
+			colour="primary"
+			margin={false}
+			shadow={false}
+			class="applet"
+			maxWidth="9rem"
+			href="/pages/schedule"
+		>
+			<div class="appletcontent">
+				<ion-icon icon={calendarClear} />
+				<ion-label><span class="overflowingtext">Πρόγραμμα</span></ion-label>
+			</div>
+		</AppCard>
 	</div>
 </ion-content>
 
@@ -60,38 +72,32 @@
 	}
 
 	.applets {
-		/* display: inline-flex;
-        flex-direction: row;
-        align-items: flex-start; */
-		/* overflow-x: scroll !important; */
-		/* gap: 1rem;
-        white-space: nowrap; */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    flex-wrap: wrap; /* Add this line */
+}
 
-		display: flex;
-		flex-direction: row;
-		align-items: flex-start;
-		gap: 1rem;
-		width: max-content;
-		padding-left: 0.5rem;
-		padding-right: 0.5rem;
-	}
-
-	.appletcontent {
-		display: flex;
-		flex-direction: column;
-		align-items: left;
-		justify-content: center;
-		gap: 0.5rem;
-		padding-left: 1rem;
-		padding-right: 1rem;
-		padding-top: 0.5rem;
-		padding-bottom: 0.5rem;
-		width: 9rem;
-	}
-	.appletcontent ion-icon {
-		font-size: 2rem;
-	}
-	.appletcontent ion-label {
-		font-size: 1rem;
-	}
+.appletcontent {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    width: 9rem;
+}
+.appletcontent ion-icon {
+    font-size: 2rem;
+}
+.appletcontent ion-label {
+    font-size: 1rem;
+}
 </style>

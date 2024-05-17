@@ -45,9 +45,6 @@
        <ion-fab-button color="primary" href="/pages/schedule" data-desc="Μαθήματα">
           <ion-icon icon={bookOutline} />
        </ion-fab-button>
-       <ion-fab-button color="secondary" href="/pages/exams" data-desc="Εξετάσεις">
-          <ion-icon icon={schoolOutline} />
-       </ion-fab-button>
     </ion-fab-list>
  </ion-fab>
 

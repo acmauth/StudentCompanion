@@ -1,31 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { judgeAuth } from '$lib/authentication/authValidator';
 	import { onMount } from 'svelte';
 	import Logo from '$lib/assets/Logo_full.png';
-	import { neoUniversisGet } from '$lib/dataService';
-	import { loadPersistedStores } from './persistedStoreDeclarations';
 	
 	function delay(ms: number) {
  	   return new Promise( resolve => setTimeout(resolve, ms) );
 	}
-
-	async function preFlightCache(){
-		await neoUniversisGet('Students/me/');
-		await neoUniversisGet('students/me/courses?$top=-1');
-	}
-
-	// Handling the redirect to the homepage
 	onMount(async () => {
-		await loadPersistedStores();
-		await delay(1000);
-		if (await judgeAuth()) {
-			await preFlightCache();
-			goto('pages/homepage');
-		} else {
-			goto('login');}
-		}
-	);
+		await delay(500);
+		goto('pages/homepage');
+	});
 </script>
    
 <ion-grid class="ion-text-center center-grid">

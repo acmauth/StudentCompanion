@@ -71,16 +71,6 @@
 			imagelink: erasmusLogo
 		}
 	];
-
-	onMount(async () => {
-		department = await universisGet('Students/me/department');
-		departmentName = department.name;
-		departmentURL = department.url;
-		links = [
-			{ linktitle: departmentName, linkaddress: departmentURL, imagelink: departmentLogo },
-			...links
-		];
-	});
 </script>
 
 <SubPageHeader title="Χρήσιμοι σύνδεσμοι" />

@@ -4,65 +4,16 @@
 
 	import AppCard from '$shared/AppCard.svelte';
 	import AppletsSlides from './appletsSlides.svelte';
-	import { averages } from '$lib/functions/gradeAverages/averages';
-	import { neoUniversisGet } from '$lib/dataService';
-	import man from '$lib/assets/man.png';
-	import { wallet } from 'ionicons/icons';
-	import woman from '$lib/assets/woman.png';
-	import RecentItems from '$components/recentResults/recents.svelte';
-	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
-	import AnnouncementBanner from '$shared/announcementBanner.svelte';
+	import { wallet, cogOutline } from 'ionicons/icons';
+	import logo  from '$lib/assets/Logo_head.png';
 
 	import { goto } from '$app/navigation';
 
-	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
 	import QRGenerator from '$lib/components/wallet/QRGenerator.svelte';
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
-	import { onMount } from 'svelte';
-	import Banner from '$components/shared/banner.svelte';
-
-	let givenName = '';
-	let gender = '';
-	let numPassedSubjects = 0;
-	let numSubjects = 0;
-	let average = 0;
 	
 	let modalOpen = false;
-
-	async function getInfo() {
-		let personalData = await neoUniversisGet('Students/me/');
-		givenName = personalData.person.givenName;
-		gender = personalData.person.gender;
-		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
-
-		let passedSubjects = subjects.filter(
-			(/** @type {{ grade: number; }} */ course: { grade: number }) => course.grade * 10 >= 5
-		);
-
-		numSubjects = subjects.length;
-
-		numPassedSubjects = passedSubjects.length;
-
-		averages().then((result) => {
-			average = (result as { weighted_avg: number }).weighted_avg;
-
-			let progressBarCourses = document.querySelector('.progress-courses');
-			let progressCourses = 0;
-			while (progressCourses < numPassedSubjects / numSubjects) {
-				if (progressBarCourses) {
-					(progressBarCourses as HTMLIonProgressBarElement).value = progressCourses += 0.01;
-				}
-			}
-			let progressBarAvg = document.querySelector('.progress-avg');
-			let progressAvg = 0;
-			while (progressAvg < average / 10) {
-				if (progressBarAvg) {
-					(progressBarAvg as HTMLIonProgressBarElement).value = progressAvg += 0.01;
-				}
-			}
-		});
-	}
 
 	function addQR() {
 		let qrCode = document.querySelector('ion-input');
@@ -93,37 +44,18 @@
 
 <ion-tab tab="homepage">
 	<ion-content class="" fullscreen>
-		{#await getInfo()}
-			<HomepageSkeleton />
-		{:then}
-			<!-- <AnnouncementBanner>
-				<ion-text
-					color="light"
-					on:click={() => {
-						window.open('https://forms.google.com', '_blank');
-					}}
-					aria-label="feedback form"
-				>
-					<ion-label>Early Access Beta - Η γνώμη σου μετράει!</ion-label>
-					<ion-icon icon={open} />
-				</ion-text>
-			</AnnouncementBanner> -->
+
 			<div class="info-container">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div class="Person-tag" on:click={() => goto('/pages/personalInfo')}>
-					{#if gender === 'Α'}
-						<img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
-					{:else}
-						<img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
-					{/if}
+					<img class="avatar ion-padding-vertical" alt="logo" src={logo} width="200rem" />
 					<div>
-						<h5 class="h5">Γεια σου</h5>
-						<h5 class="h5"><b>{getVocativeCase(givenName)}!</b></h5>
+						<h5 class="h5">Γεια χαρά!</h5>
 					</div>
 				</div>
 
-				<div class="student-id" on:click={() => {modalOpen = true;}}>
+				<div class="student-id" on:click={() => {modalOpen = true;}} aria-hidden>
 					<AppCard margin={false} shadow={true} >
 						<div style="background-color: #f3faff">
 							<ion-icon class="id-icon" icon={wallet} />
@@ -145,16 +77,6 @@
 									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary"
 												on:ionFocus={addQR}>Προσθήκη</ion-button>
 								</ion-col>
-							
-							<!-- Uncomment if adding gym pass/id is implemented -->
-						
-							<!-- {:else if $qrStore.length == 1}
-								<ion-col>
-									<QRGenerator qr1={$qrStore[0]}/>
-								</ion-col>
-								<ion-col style="display: flex; justify-content: center;">
-									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary">QR</ion-button>
-								</ion-col> -->
 							{:else}
 								{#each $qrStore as item}	
 									<ion-col>
@@ -167,36 +89,24 @@
 				</ion-modal>
 
 			</div>
-			<div class="card-container">
-				<AppCard colour="primary" margin={false} href="/pages/grades">
-					<div class="courses-passed">
-						<ion-card-title><b> {numPassedSubjects}/{numSubjects} </b></ion-card-title>
-						<ion-card-subtitle>Περασμένα</ion-card-subtitle>
-
-						<ion-progress-bar class="progress-courses" />
-					</div>
-				</AppCard>
-
-				<AppCard colour="primary" margin={false} href="/pages/grades">
-					<div class="avg-grade-grid">
-						<div class="avg-grade">
-							<ion-card-title> <b>{average} </b></ion-card-title>
-							<ion-card-subtitle>M.O.</ion-card-subtitle>
-						</div>
-						<div>
-							<ion-progress-bar class="progress-avg" />
-						</div>
-					</div>
-				</AppCard>
+			
+			<div style="display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 15%;
+			padding: 80px;"> 
+				<ion-icon style="--ionicon-stroke-width: 3rem; font-size: 8rem" color="primary" icon={cogOutline}/>
 			</div>
-			<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
+
+			<AppCard margin={true} shadow={true} padding>
+				<div style="padding: 10px; text-align:center;" >
+				Η εφαρμογή είναι προσωρινά μη διαθέσιμη, καθώς υλοποιείται η ενσωμάτωσή της στα συστήματα του ΚΗΔ ΑΠΘ.
+				<br />
+				Θα ενημερωθεί τις επόμενες ημέρες με ακόμη περισσότερες δυνατότητες!
+			</AppCard>	
+
 			<AppletsSlides />
-			<Banner altText="Πες μας τη γνώμη σου" />
-			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατα</b></p>
-			<RecentItems />
-		{:catch error}
-			<p>{error.message}</p>
-		{/await}
+
 	</ion-content>
 </ion-tab>
 
@@ -238,74 +148,6 @@
 		margin: 1.5rem;
 		justify-content: space-between;
 		align-items: center;
-	}
-
-	.card-container {
-		display: grid;
-		grid-template-columns: 1.5fr 1fr;
-		align-items: center;
-		column-gap: 1rem;
-		margin-top: 0.5rem;
-		margin-left: 1.5rem;
-		margin-right: 1.5rem;
-		margin-bottom: 0.5rem;
-	}
-	.courses-passed {
-		align-items: left;
-		/* justify-content: center; */
-		gap: 0.5rem;
-		height: 6rem;
-		padding-left: 1rem;
-		padding-right: 1rem;
-		padding-top: 0.5rem;
-		padding-bottom: 0.5rem;
-	}
-
-	ion-card-title {
-		font-size: 1.5rem;
-		color: var(--app-color-primary-dark);
-	}
-	ion-card-subtitle {
-		font-size: 1rem;
-		color: var(--app-color-primary-dark);
-	}
-
-	.progress-courses {
-		--progress-background: white;
-		background: var(--app-color-primary-dark);
-		height: 1rem;
-		margin-top: 0.5rem;
-		border-radius: 15px;
-	}
-
-	.avg-grade-grid {
-		display: grid;
-		justify-content: space-between;
-		grid-template-columns: 1fr 1fr;
-
-		align-items: center;
-		height: 6rem;
-	}
-
-	.avg-grade {
-		padding-left: 1rem;
-		/* padding-right: -1rem; */
-	}
-
-	.progress-avg {
-		--progress-background: white;
-		background: var(--app-color-primary-dark);
-		height: 5vw;
-		width: 4rem;
-		border-radius: 15px;
-		transform: rotate(-90deg);
-	}
-
-	.info-text {
-		margin-left: 1.5rem;
-		margin-top: 2rem;
-		margin-bottom: 0;
-		font-size: 0.8rem;
 	}
 
 	ion-grid {
