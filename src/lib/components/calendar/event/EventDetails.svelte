@@ -22,7 +22,6 @@
                 description: "",
                 professor: "",
                 repeatInterval: 1,
-                repeatUntil: null,
                 notifyTime: 30,
                 repeat: EventRepeatType.NEVER,
                 notify: false
@@ -41,7 +40,7 @@
                                 String(copyEvent?.slot.end.getHours()).padStart(2, '0') + ":" +
                                 String(copyEvent?.slot.end.getMinutes()).padStart(2, '0');
             if(copyEvent?.repeatUntil) {
-                console.log(copyEvent?.repeatUntil);
+                // console.log(copyEvent?.repeatUntil);
             templateRepeatUntil = copyEvent?.repeatUntil?.getFullYear() + "-" +
                                 (String(copyEvent?.repeatUntil?.getMonth() + 1)).padStart(2, '0') + "-" +
                                 String(copyEvent?.repeatUntil?.getDate()).padStart(2, '0') + "T" +
@@ -53,7 +52,7 @@
             templateEndTime = new Date(new Date().getTime() + 3600000).toISOString();
         }
         willRepeatType = copyEvent.repeat == EventRepeatType.NEVER ? null : copyEvent.repeatInterval ? "REPEAT" : "UNTIL";
-        console.log(templateRepeatUntil, copyEvent);
+        // console.log(templateRepeatUntil, copyEvent);
     };
 
     function updateRepeatCondition(event: CustomEvent) {

@@ -21,7 +21,7 @@
     title: "Study Group Meeting",
     slot: 
         {
-            start: new Date("2024-04-30T10:00:00"),
+            start: new Date("2024-01-01T10:00:00"),
             end: new Date("2024-04-30T12:00:00")
         }
     ,
@@ -29,41 +29,18 @@
     description: "Discussing upcoming exam topics",
     professor: "Dr. Smith",
     type: EventType.CLASS,
-    repeat: EventRepeatType.WEEKLY,
-    repeatInterval: 1,
-    repeatUntil: new Date("2024-06-01"),
+    repeat: EventRepeatType.DAILY,
+    repeatInterval: 2,
+    repeatUntil: new Date("2027-01-01T23:59:59"),
     notify: true,
     notifyTime: 30}]
     
-    
-    $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate));//.sort((a, b) => a.startTime.localeCompare(b.startTime));
+    $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => a.slot.start.getTime() < b.slot.start.getTime() ? -1 : 1);
     
     function isCurrentDay(event: Event, active: Date): boolean {
         const activeDate = new Date(active);
         const start = new Date(event.slot.start);
         const end = new Date(event.slot.end? event.slot.end : event.slot.start);
-        const repeatUntil = event.repeatUntil? new Date(event.repeatUntil) : null;
-        const repeatInterval = event.repeatInterval? event.repeatInterval : 0;
-        
-        let distance: number = 0;
-
-        if(event.repeat == EventRepeatType.DAILY) {
-            distance = dayDistance(activeDate,start);
-            return (repeatUntil && repeatUntil != null && start.getTime() <= repeatUntil.getTime()) 
-                    || (repeatInterval != undefined && repeatInterval > 0 &&  distance >= 0 && distance <= repeatInterval);
-        }
-
-        if(event.repeat == EventRepeatType.WEEKLY) {
-            return start.getDay() === activeDate.getDay();
-        }
-
-        if(event.repeat == EventRepeatType.MONTHLY) {
-            return start.getDate() === activeDate.getDate();
-        }
-
-        if(event.repeat == EventRepeatType.YEARLY) {
-            return start.getMonth() === activeDate.getMonth() && start.getDate() === activeDate.getDate();
-        }
 
         if(event.repeat == EventRepeatType.NEVER) {
             return (
@@ -72,12 +49,92 @@
                 start.getDate() === activeDate.getDate()
             );
         }
+        
+        if (!event.repeatUntil || !event.repeatInterval) return false;
+
+        const repeatUntil = new Date(event.repeatUntil);
+        const repeatInterval = event.repeatInterval;
+        
+        let distance: number = 0;
+
+        if(event.repeat == EventRepeatType.DAILY) {
+            const intervalMilliseconds = repeatInterval * 24 * 60 * 60 * 1000;
+            const totalDuration = repeatUntil.getTime() - start.getTime();
+            const fullIntervals = Math.floor(totalDuration / intervalMilliseconds);
+            const lastOccurrence = new Date(start.getTime() + fullIntervals * intervalMilliseconds);
+
+            const dayDistance = (date1: Date, date2: Date) => {
+                const diffTime = Math.abs(date2.getTime() - date1.getTime());
+                return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            };
+
+            const distance = dayDistance(start, activeDate);
+            return (
+                distance >= 0 &&
+                distance % repeatInterval === 0 &&
+                activeDate.getTime() <= lastOccurrence.getTime()
+            );
+        }
+
+        if (event.repeat == EventRepeatType.WEEKLY) {
+            const dayDistance = (date1: Date, date2: Date): number => {
+                return (new Date(date1.setHours(0,0,0,0)).getTime() - new Date(date2.setHours(0,0,0,0)).getTime()) / (1000 * 60 * 60 * 24);
+            }
+
+            const intervalMilliseconds = repeatInterval * 7 * 24 * 60 * 60 * 1000;
+            const totalDuration = repeatUntil.getTime() - start.getTime();
+            const fullIntervals = Math.floor(totalDuration / intervalMilliseconds);
+            const lastOccurrence = new Date(start.getTime() + fullIntervals * intervalMilliseconds);
+            
+            distance = dayDistance(activeDate, start);
+            return (distance >= 0 && distance % (repeatInterval * 7) === 0 && activeDate.getTime() <= lastOccurrence.getTime() && start.getDay() === activeDate.getDay());
+        }
+
+        if (event.repeat == EventRepeatType.MONTHLY) {
+            const getMonthsDifference = (startDate: Date, endDate: Date) => {
+                return (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
+            };
+
+            const totalMonths = getMonthsDifference(start, repeatUntil);
+            const fullIntervals = Math.floor(totalMonths / repeatInterval);
+            const lastOccurrence = new Date(start);
+            lastOccurrence.setMonth(start.getMonth() + fullIntervals * repeatInterval);
+
+            const isSameDayOfMonth = (date1: Date, date2: Date) => date1.getDate() === date2.getDate();
+
+            const monthDistance = getMonthsDifference(start, activeDate);
+            return (
+                monthDistance >= 0 &&
+                monthDistance % repeatInterval === 0 &&
+                activeDate.getTime() <= lastOccurrence.getTime() &&
+                isSameDayOfMonth(start, activeDate)
+            );
+        }
+
+        if(event.repeat == EventRepeatType.YEARLY) {
+            const getYearsDifference = (startDate: Date, endDate: Date) => {
+                return endDate.getFullYear() - startDate.getFullYear();
+            };
+
+            const totalYears = getYearsDifference(start, repeatUntil);
+            const fullIntervals = Math.floor(totalYears / repeatInterval);
+            const lastOccurrence = new Date(start);
+            lastOccurrence.setFullYear(start.getFullYear() + fullIntervals * repeatInterval);
+
+            const isSameDayOfYear = (date1: Date, date2: Date) => {
+                return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth();
+            };
+
+            const yearDistance = getYearsDifference(start, activeDate);
+            return (
+                yearDistance >= 0 &&
+                yearDistance % repeatInterval === 0 &&
+                activeDate.getTime() <= lastOccurrence.getTime() &&
+                isSameDayOfYear(start, activeDate)
+            );
+        }
 
         return false;
-    }
-
-    function dayDistance(date1: Date, date2: Date): number {
-        return (new Date(date1.setHours(0,0,0,0)).getTime() - new Date(date2.setHours(0,0,0,0)).getTime()) / (1000 * 60 * 60 * 24);
     }
 
     function sumbit() {
@@ -134,7 +191,6 @@
                     location: "",
                     description: "",
                     professor: "",
-                    repeatUntil: null,
                     notifyTime: 30,
                     repeat: EventRepeatType.NEVER,
                     notify: false
@@ -232,6 +288,7 @@
         padding-bottom: 150px;
         padding-inline: 30px;
     }
+    
     ion-button {
         text-transform: none;
     }

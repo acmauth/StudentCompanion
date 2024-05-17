@@ -20,10 +20,10 @@ export interface Event {
     professor?: string | null | undefined,
     type: EventType;
     repeat: EventRepeatType;
-    repeatInterval?: number | null | undefined;
-    repeatUntil?: Date | null | undefined;
+    repeatInterval?: number;
+    repeatUntil?: Date;
     notify: boolean;
-    notifyTime?: number | null | undefined;
+    notifyTime?: number;
 }
 
 export enum EventRepeatType {
