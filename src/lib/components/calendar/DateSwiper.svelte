@@ -48,7 +48,8 @@
 
 
     onMount(() => {
-        const today = new Date(new Date().setHours(0,0,0,0));
+        activeDate = new Date();
+        const today = new Date(activeDate.setHours(0,0,0,0));
         currentWeek = getWeekDates(today);
         nextWeek = getNextWeekDates(today);
         previousWeek = getPreviousWeekDates(today);

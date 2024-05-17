@@ -3,7 +3,7 @@
     import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
 
 
-    export let copyEvent: Event | null;
+    export let copyEvent: Event | undefined;
     let willRepeatType: string | null = null;
     let templateStartTime: string, templateEndTime: string;
     let templateRepeatUntil: string;

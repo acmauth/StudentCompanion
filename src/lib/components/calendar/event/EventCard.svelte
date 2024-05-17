@@ -24,16 +24,17 @@
 		isTask = eventItem.type == EventType.TASK;
 		isClass = eventItem.type == EventType.CLASS;
 	};
+
 </script>
 
 <div style="display:flex; flex-direction:row;">
 	<div style="display:flex; flex-direction:column; justify-content:baseline; padding-top:0.25rem; margin-inline-start: 0.5rem;">
-		<ion-label class="timeslot {isPastDate? 'pastDate' : null}">{eventItem.slot.start.getHours() + ':' + String(eventItem.slot.start.getMinutes()).padStart(2, '0')}</ion-label>
-		{#if eventItem.slot.end && eventItem.slot.end.getTime() != eventItem.slot.start.getTime()}
-			{#if eventItem.slot.end.getDay() - eventItem.slot.start.getDay() != 0}
+		<ion-label class="timeslot {isPastDate? 'pastDate' : null}">{new Date(eventItem.slot.start).getHours() + ':' + String(new Date(eventItem.slot.start).getMinutes()).padStart(2, '0')}</ion-label>
+		{#if eventItem.slot.end && new Date(eventItem.slot.end).getTime() != new Date(eventItem.slot.start).getTime()}
+			{#if new Date(eventItem.slot.end).getDay() - new Date(eventItem.slot.start).getDay() != 0}
 				<ion-label class="timeslot {isPastDate? 'pastDate' : null}">*</ion-label>
 			{:else}
-				<ion-label class="timeslot {isPastDate? 'pastDate' : null}">{eventItem.slot.end.getHours() + ':' + String(eventItem.slot.end.getMinutes()).padStart(2, '0')}</ion-label>
+				<ion-label class="timeslot {isPastDate? 'pastDate' : null}">{new Date(eventItem.slot.end).getHours() + ':' + String(new Date(eventItem.slot.end).getMinutes()).padStart(2, '0')}</ion-label>
 			{/if}
 		{/if}
 	</div>

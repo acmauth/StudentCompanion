@@ -66,6 +66,10 @@ export function getEventRepeatTypeValue(type: string, lang?: string): string {
     }
 }
 
+export function eventHasCorrectFormat(event: Event | undefined): boolean {
+    return (event!==undefined && event.title != undefined && event.title.length > 0 && new Date(event.slot.start).getTime() <= new Date(event.slot.end).getTime());
+}
+
 // export function createEventTimeSlotList(event: EventFlat): EventTimeSlot[] {
 //     const slots: EventTimeSlot[] = [];
 //     let start = new Date(event.slot.start);
