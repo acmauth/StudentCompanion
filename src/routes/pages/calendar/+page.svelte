@@ -21,8 +21,8 @@
     title: "Study Group Meeting",
     slot: 
         {
-            start: new Date("2024-01-01T10:00:00"),
-            end: new Date("2024-04-30T12:00:00")
+            start: new Date("2024-05-17T10:00:00"),
+            end: new Date("2024-05-17T12:00:00")
         }
     ,
     location: "Library",
@@ -64,7 +64,7 @@
             const lastOccurrence = new Date(start.getTime() + fullIntervals * intervalMilliseconds);
 
             const dayDistance = (date1: Date, date2: Date) => {
-                const diffTime = Math.abs(date2.getTime() - date1.getTime());
+                const diffTime = date2.getTime() - date1.getTime();
                 return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             };
 
@@ -288,7 +288,7 @@
         padding-bottom: 150px;
         padding-inline: 30px;
     }
-    
+
     ion-button {
         text-transform: none;
     }
