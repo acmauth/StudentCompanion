@@ -13,7 +13,12 @@
 			"CapacitorCookies": {
 				"enabled": true,
 				"androidCustomSchemeAllowInsecureAccess": true
-			}
+			},
+			"LocalNotifications": {
+				"smallIcon": "static/logo.svg",
+				"iconColor": "#0081ff",
+				"allowWhil"
+			  }
 		  },
 		  "server": {
 			"hostname": "localhost",
