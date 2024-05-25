@@ -27,11 +27,11 @@ export interface Event {
 }
 
 export enum EventRepeatType {
-    NEVER = "NEVER",
-    DAILY = "DAILY",
-    WEEKLY = "WEEKLY",
-    MONTHLY = "MONTHLY",
-    YEARLY = "YEARLY"
+    NEVER = "never",
+    DAILY = "day",
+    WEEKLY = "week",
+    MONTHLY = "month",
+    YEARLY = "year"
 }
 
 export function getEventTypeValue(type: string, lang?: string): string {
