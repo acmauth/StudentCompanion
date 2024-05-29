@@ -11,9 +11,9 @@
     import { isCurrentDay } from '$lib/components/calendar/CalendarFunctions';
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
-	import { slot } from 'ionic-svelte/components/IonTabs.svelte';
-
-
+	import { universisGet } from '$src/lib/dataService';
+	
+    
     let activeDate: Date;
     let eventList: Event[];
     let selectedEvent: Event | null = null;
@@ -36,31 +36,7 @@
     let modalOpen: boolean = false;
     let deleteModalOpen: boolean = false;
 
-    {
-    // $EventStore = [{ id: 1,
-    // title: "Study Group Meeting",
-    // slot: 
-    //     {
-    //         start: new Date("2024-05-17T10:00:00"),
-    //         end: new Date("2024-05-17T12:00:00")
-    //     }
-    // ,
-    // location: "Library",
-    // description: "Discussing upcoming exam topics",
-    // professor: "Dr. Smith",
-    // type: EventType.CLASS,
-    // repeat: EventRepeatType.DAILY,
-    // repeatInterval: 2,
-    // repeatUntil: new Date("2027-01-01T23:59:59"),
-    // notify: true,
-    // notifyTime: 30}];
-
-    // To clear the EventStore, uncomment the line below
-    // $EventStore = [];
-    }
-
     $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1);
-    $: console.log(eventList);
 
     function sumbit() {
         if(!eventHasCorrectFormat(tmpEvent)) {
@@ -118,9 +94,35 @@
         deleteModalOpen = false;
     }
 
-    // TODO: remove this on production
-    onMount(() => {
-        // window.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    // remove this on production
+    // window.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    
+    // To clear the EventStore, uncomment the line below
+    // $EventStore = [];
+    onMount(async() => {
+        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
+        $EventStore = $EventStore.concat(
+            fetchedExams.map((exam) => {
+                const existingIndex = $EventStore.findIndex(x => x.id == exam.id);
+                if (existingIndex == -1) {
+                    return {
+                        id: exam.id,
+                        title: exam.description,
+                        description: exam.courseExam.course + ' - ' + exam.location.description,
+                        type: EventType.TEST,
+                        repeat: EventRepeatType.NEVER,
+                        location: exam.location.description,
+                        slot: {
+                            start: new Date(exam.startDate),
+                            end: new Date(exam.endDate)
+                        }
+                    };
+                } else {
+                    return null; // Return null if the exam already exists in $EventStore
+                }
+            }).filter(event => event !== null) // Filter out null values
+        );
+        console.log($EventStore);
     });
 
 </script>
