@@ -133,7 +133,7 @@
         <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
         <ion-title class="ion-padding-vertical" size="large" style="padding-top:0; padding-bottom:0;">Πρόγραμμα μαθημάτων</ion-title>
         <ion-buttons slot="secondary">
-            <ion-button on:click={() => {modalOpen=true; selectedEvent=null;}} aria-hidden>
+            <ion-button on:click={() => {modalOpen=true; selectedEvent=null; tmpEvent=prototype;}} aria-hidden>
             <ion-icon slot="icon-only" icon={add}></ion-icon>  
             </ion-button>
         </ion-buttons>
