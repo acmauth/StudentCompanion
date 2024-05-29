@@ -111,6 +111,7 @@
                         description: exam.courseExam.course + ' - ' + exam.location.description,
                         type: EventType.TEST,
                         repeat: EventRepeatType.NEVER,
+                        notify: false,
                         location: exam.location.description,
                         slot: {
                             start: new Date(exam.startDate),
