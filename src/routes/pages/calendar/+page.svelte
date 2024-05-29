@@ -7,16 +7,19 @@
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
     import EventDetails from '$lib/components/calendar/event/EventDetails.svelte';
     import type { Event } from '$lib/components/calendar/event/Event';
-    import { EventType, EventRepeatType, eventHasCorrectFormat } from '$lib/components/calendar/event/Event';
+    import { eventHasCorrectFormat } from '$lib/components/calendar/event/Event';
     import { isCurrentDay } from '$lib/components/calendar/CalendarFunctions';
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
+
 
     let activeDate: Date;
     let eventList: Event[];
     let selectedEvent: Event | null = null;
     let tmpEvent: Event;
     let modalOpen: boolean = false;
+    let deleteModalOpen: boolean = false;
+    let dialog: HTMLDialogElement;
 
     {
     // $EventStore = [{ id: 1,
@@ -40,7 +43,7 @@
     // To clear the EventStore, uncomment the line below
     // $EventStore = [];
     }
-    
+
     $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => a.slot.start.getTime() < b.slot.start.getTime() ? -1 : 1);
     $: console.log(eventList);
     
@@ -87,6 +90,30 @@
         modalOpen = true;
     }
 
+    function removeEvent(event: Event | null) {
+        console.log(event);
+        if(event === null) return;
+        const index = $EventStore.findIndex(x => x.id == event.id);
+        if(index != -1) {
+            $EventStore = $EventStore.filter(x => x.id != event.id);
+        }
+        deleteModalOpen = false;
+        dialog.close();
+    }
+
+    function addInactiveDateToEvent(event: Event | null) {
+        if(event === null) return;
+        const index = $EventStore.findIndex(x => x.id == event.id);
+        $EventStore[index].inactiveDates = $EventStore[index].inactiveDates?.concat(activeDate.getTime()) ?? [activeDate.getTime()];
+        deleteModalOpen = false;
+        dialog.close();
+    }
+
+    // TODO: remove this on production
+    onMount(() => {
+        // window.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    });
+
 </script>
 
 <ion-tab tab="calendar">
@@ -111,7 +138,7 @@
                     <ion-content>
                         <div style="padding-top:1rem;">
                             {#each eventList as eventItem}
-                                <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} />
+                                <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} bind:deleteModalOpen={deleteModalOpen} />
                             {/each}
                         </div>
                     </ion-content>
@@ -148,10 +175,46 @@
             </ion-toolbar>
             <EventDetails bind:copyEvent={tmpEvent} />
         </ion-modal>
+
+        <ion-alert
+            is-open={deleteModalOpen}
+            header="Διαγραφή συμβάντος"
+            buttons={[
+                {
+                  text: 'Το τρέχον μόνο',
+                  role: 'destructive',
+                  handler: () => {
+                    addInactiveDateToEvent(selectedEvent);
+                  }
+                },
+                {
+                  text: 'Το τρέχον και τα επόμενα',
+                  role: 'destructive',
+                  handler: () => {
+                    removeEvent(selectedEvent);
+                  }
+                },
+                {
+                  text: 'Άκυρο',
+                  role: 'cancel',                
+                  handler: () => {
+                    deleteModalOpen = false;
+                    selectedEvent = null;
+                  }
+                }
+              ]}
+            mode="ios">
+        </ion-alert>
+
     </ion-content>
 </ion-tab>
 
 <style>
+
+    alert-button-role-cancel {
+        color: var(--ion-color-primary) !important;
+    }
+
     .container {
         display: flex;
         flex:1;
@@ -173,4 +236,5 @@
     ion-button {
         text-transform: none;
     }
+    
 </style>

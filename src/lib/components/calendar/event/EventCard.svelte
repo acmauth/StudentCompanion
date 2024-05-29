@@ -1,11 +1,12 @@
 <script lang="ts">
 	import { EventType} from './Event';
 	import type { Event } from './Event';
-	import { onMount } from 'svelte';
+	import { longpress } from './EventCard';
 	
 	export let eventItem: Event;
 	export let selectedEvent: Event | null;
 	export let modalOpen: boolean;
+	export let deleteModalOpen: boolean;
 	
 	let isPastDate: boolean = false;
 	let isTest: boolean = false;
@@ -17,6 +18,12 @@
 		selectedEvent = eventItem;
 		modalOpen = true;
 	}
+
+	function handleHold(e: CustomEvent) {
+		selectedEvent = eventItem;
+		deleteModalOpen = true;
+	}
+
 	$: {
 		isPastDate = !eventItem.slot.end && new Date().getTime() > new Date(eventItem.slot.start).getTime() || eventItem.slot.end && new Date().getTime() > new Date(eventItem.slot.end).getTime();
 		isTest = eventItem.type == EventType.TEST;
@@ -27,7 +34,8 @@
 
 </script>
 
-<div style="display:flex; flex-direction:row;">
+
+<div style="display:flex; flex-direction:row;" use:longpress on:longpress={handleHold}>
 	<div style="display:flex; flex-direction:column; justify-content:baseline; padding-top:0.25rem; margin-inline-start: 0.5rem;">
 		<ion-label class="timeslot {isPastDate? 'pastDate' : null}">{new Date(eventItem.slot.start).getHours() + ':' + String(new Date(eventItem.slot.start).getMinutes()).padStart(2, '0')}</ion-label>
 		{#if eventItem.slot.end && new Date(eventItem.slot.end).getTime() != new Date(eventItem.slot.start).getTime()}

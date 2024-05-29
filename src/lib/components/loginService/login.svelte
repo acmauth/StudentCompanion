@@ -80,7 +80,7 @@
         </ion-checkbox> -->
 
         <div class="footer">
-            <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
+            <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong> and <br /> the <strong>School of Informatics</strong>.</ion-title>
         </div>
     </div>
 

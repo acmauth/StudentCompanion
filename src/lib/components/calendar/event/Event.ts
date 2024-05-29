@@ -24,6 +24,7 @@ export interface Event {
     repeatUntil?: Date;
     notify: boolean;
     notifyTime?: number;
+    inactiveDates?: number[];
 }
 
 export enum EventRepeatType {
