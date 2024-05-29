@@ -7,19 +7,34 @@
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
     import EventDetails from '$lib/components/calendar/event/EventDetails.svelte';
     import type { Event } from '$lib/components/calendar/event/Event';
-    import { eventHasCorrectFormat } from '$lib/components/calendar/event/Event';
+    import { EventRepeatType, EventType, eventHasCorrectFormat } from '$lib/components/calendar/event/Event';
     import { isCurrentDay } from '$lib/components/calendar/CalendarFunctions';
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
+	import { slot } from 'ionic-svelte/components/IonTabs.svelte';
 
 
     let activeDate: Date;
     let eventList: Event[];
     let selectedEvent: Event | null = null;
-    let tmpEvent: Event;
+    let prototype: Event = {
+        id: new Date().getTime(),
+        title: "",
+        slot: {
+            start: new Date(),
+            end: new Date(new Date().getTime() + 3600000)
+        },
+        type: EventType.TASK,
+        description: "",
+        repeat: EventRepeatType.NEVER,
+        repeatUntil: new Date(new Date().getTime() + 3600000),
+        repeatInterval: 1,
+        notify: false,
+        notifyTime: 1
+    };
+    let tmpEvent: Event = prototype;
     let modalOpen: boolean = false;
     let deleteModalOpen: boolean = false;
-    let dialog: HTMLDialogElement;
 
     {
     // $EventStore = [{ id: 1,
@@ -44,9 +59,9 @@
     // $EventStore = [];
     }
 
-    $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => a.slot.start.getTime() < b.slot.start.getTime() ? -1 : 1);
+    $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1);
     $: console.log(eventList);
-    
+
     function sumbit() {
         if(!eventHasCorrectFormat(tmpEvent)) {
             showToast({
@@ -70,7 +85,7 @@
             $EventStore = $EventStore.concat(tmpEvent);
         }
         selectedEvent = null;
-        tmpEvent = {} as Event;
+        tmpEvent = prototype;
         modalOpen = false;
     }    
 
@@ -82,10 +97,6 @@
     function setupModal() {
         if(selectedEvent !== null) {
             tmpEvent = JSON.parse(JSON.stringify(selectedEvent));
-            if (tmpEvent) {
-                tmpEvent.slot.start = new Date(selectedEvent?.slot.start);
-                tmpEvent.slot.end = new Date(selectedEvent?.slot.end);
-            }
         }
         modalOpen = true;
     }
@@ -98,7 +109,6 @@
             $EventStore = $EventStore.filter(x => x.id != event.id);
         }
         deleteModalOpen = false;
-        dialog.close();
     }
 
     function addInactiveDateToEvent(event: Event | null) {
@@ -106,7 +116,6 @@
         const index = $EventStore.findIndex(x => x.id == event.id);
         $EventStore[index].inactiveDates = $EventStore[index].inactiveDates?.concat(activeDate.getTime()) ?? [activeDate.getTime()];
         deleteModalOpen = false;
-        dialog.close();
     }
 
     // TODO: remove this on production
@@ -157,7 +166,7 @@
             initial-breakpoint={selectedEvent? 0.95 : 1} 
             breakpoints={[0, 0.95, 1]} 
             on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0; if(!modalOpen) selectedEvent=null;}}
-            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; tmpEvent=null;}}
+            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; tmpEvent=prototype;}}
             on:ionModalWillPresent={setupModal}    
         >
             <ion-toolbar>
@@ -168,7 +177,7 @@
                 </ion-buttons>
                 <ion-title class="ion-text-center">{selectedEvent?.title? selectedEvent.title : 'Συμβάν'}</ion-title>
                 <ion-buttons slot="start">
-                    <ion-button id="cancel" on:click={()=>{modalOpen=false; selectedEvent=null; tmpEvent=null;}} aria-hidden>
+                    <ion-button id="cancel" on:click={()=>{modalOpen=false; selectedEvent=null; tmpEvent=prototype;}} aria-hidden>
                         <ion-icon slot="icon-only" icon={close}/>
                     </ion-button>
                 </ion-buttons>

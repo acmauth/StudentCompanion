@@ -1,58 +1,50 @@
 <script lang="ts">
 	import type {Event} from '$components/calendar/event/Event';
     import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
+	import { onMount } from 'svelte';
 
 
     export let copyEvent: Event;
     let templateStartTime: string, templateEndTime: string;
     let templateRepeatUntil: string;
     
-    $: {
-        if(!copyEvent) {
-            copyEvent = {
-                id: new Date().getTime(),
-                title: "",
-                slot: {
-                    start: new Date(),
-                    end: new Date(new Date().getTime() + 3600000)
-                },
-                type: EventType.TASK,
-                description: "",
-                repeat: EventRepeatType.NEVER,
-                notify: false
-            }
-        
-            try{
-                templateStartTime = copyEvent.slot.start.getFullYear() + "-" +
-                                    (String(copyEvent.slot.start.getMonth() + 1)).padStart(2, '0') + "-" +
-                                    String(copyEvent.slot.start.getDate()).padStart(2, '0') + "T" +
-                                    String(copyEvent.slot.start.getHours()).padStart(2, '0') + ":" +
-                                    String(copyEvent.slot.start.getMinutes()).padStart(2, '0');
 
-                templateEndTime = copyEvent.slot.end.getFullYear() + "-" +
-                                    (String(copyEvent.slot.end.getMonth() + 1)).padStart(2, '0') + "-" +
-                                    String(copyEvent.slot.end.getDate()).padStart(2, '0') + "T" +
-                                    String(copyEvent.slot.end.getHours()).padStart(2, '0') + ":" +
-                                    String(copyEvent.slot.end.getMinutes()).padStart(2, '0');
-                if(copyEvent.repeatUntil) {
-                    templateRepeatUntil = copyEvent.repeatUntil.getFullYear() + "-" +
-                                        (String(copyEvent.repeatUntil.getMonth() + 1)).padStart(2, '0') + "-" +
-                                        String(copyEvent.repeatUntil.getDate()).padStart(2, '0') + "T" +
-                                        String(copyEvent.repeatUntil.getHours()).padStart(2, '0') + ":" +
-                                        String(copyEvent.repeatUntil.getMinutes()).padStart(2, '0');
-                } else {
-                    templateRepeatUntil = templateEndTime;
-                }
-            } catch { 
-                templateStartTime = new Date().toISOString();
-                templateEndTime = new Date(new Date().getTime() + 3600000).toISOString();
+    $: {
+        let start: Date = new Date(copyEvent.slot.start);
+        let end: Date = new Date(copyEvent.slot.end);
+        let repeatUntil: Date = new Date(copyEvent.repeatUntil);
+        
+        try{
+            templateStartTime = start.getFullYear() + "-" +
+                                (String(start.getMonth() + 1)).padStart(2, '0') + "-" +
+                                String(start.getDate()).padStart(2, '0') + "T" +
+                                String(start.getHours()).padStart(2, '0') + ":" +
+                                String(start.getMinutes()).padStart(2, '0');
+
+            templateEndTime = end.getFullYear() + "-" +
+                                (String(end.getMonth() + 1)).padStart(2, '0') + "-" +
+                                String(end.getDate()).padStart(2, '0') + "T" +
+                                String(end.getHours()).padStart(2, '0') + ":" +
+                                String(end.getMinutes()).padStart(2, '0');
+            if(copyEvent.repeat != "NEVER") {
+                templateRepeatUntil = repeatUntil.getFullYear() + "-" +
+                                    (String(repeatUntil.getMonth() + 1)).padStart(2, '0') + "-" +
+                                    String(repeatUntil.getDate()).padStart(2, '0') + "T" +
+                                    String(repeatUntil.getHours()).padStart(2, '0') + ":" +
+                                    String(repeatUntil.getMinutes()).padStart(2, '0');
+            } else {
                 templateRepeatUntil = templateEndTime;
-                copyEvent.repeatInterval = 1;
             }
-            if (copyEvent.repeat !== EventRepeatType.NEVER && (!copyEvent.repeatInterval || !copyEvent.repeatUntil)) { 
-                copyEvent.repeatInterval = parseInt(String(copyEvent.repeatInterval ?? 1));
-                copyEvent.repeatUntil = new Date(String(templateRepeatUntil));
-            }
+        } catch(e) {
+            console.log(e); 
+            templateStartTime = new Date().toISOString();
+            templateEndTime = new Date(new Date().getTime() + 3600000).toISOString();
+            templateRepeatUntil = templateEndTime;
+            copyEvent.repeatInterval = 1;
+        }
+        if (copyEvent.repeat != "NEVER") { 
+            copyEvent.repeatInterval = parseInt(String(copyEvent.repeatInterval ?? 1));
+            copyEvent.repeatUntil = new Date(String(templateRepeatUntil));
         }
     };
 </script>
@@ -150,7 +142,7 @@
         {#if copyEvent.repeat != EventRepeatType.NEVER}
             <ion-item>
                 <ion-input
-                    label="Επαναλήψεις"
+                    label="Κύκλος"
                     label-placement="stacked"
                     id="repeatInterval"
                     type="number"
@@ -166,7 +158,7 @@
 
                 <ion-datetime-button style="width: fit-content;" datetime="until"></ion-datetime-button>
                 <ion-modal keep-contents-mounted={true}>
-                    <ion-datetime id="until" presentation="date-time" minute-values="0,15,30,45" value="{templateRepeatUntil}" hour-cycle="h23" on:ionChange={(event) => {copyEvent.repeatUntil = new Date(String(event.detail.value));}}></ion-datetime>
+                    <ion-datetime id="until" presentation="date-time" minute-values="0,15,30,45" value={templateRepeatUntil} hour-cycle="h23" on:ionChange={(event) => {copyEvent.repeatUntil = new Date(String(event.detail.value));}}></ion-datetime>
                 </ion-modal>
 
             </ion-item>
