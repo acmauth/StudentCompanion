@@ -84,6 +84,10 @@
   <img src="https://cdn.discordapp.com/attachments/1139193885084627024/1229763594103554138/schedule.png?ex=6630dd98&is=661e6898&hm=32aaeced0ca09435a5f6f3f28382ca3d825448e8ceb1a7e01d2c8362d6342571&" alt="Image 2" style="height:200px; margin-right: 10px;">
 </p>
 
+# Authentication and Data Flow explanation
+
+https://www.figma.com/board/i76ryDp8wAZVaX7OdCjq1q/Data-diagrams?node-id=0-1&t=x56mKbirsAnNkQtv-1
+
 
 ## Setting up the project for local development
 - Clone the project
