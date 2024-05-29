@@ -37,7 +37,7 @@
     let deleteModalOpen: boolean = false;
 
     $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1);
-
+    
     function sumbit() {
         if(!eventHasCorrectFormat(tmpEvent)) {
             showToast({
@@ -61,9 +61,29 @@
             $EventStore = $EventStore.concat(tmpEvent);
         }
         selectedEvent = null;
-        tmpEvent = prototype;
+
+        recreatePrototype();
         modalOpen = false;
     }    
+
+    function recreatePrototype() {
+        prototype = {
+            id: new Date().getTime(),
+            title: "",
+            slot: {
+                start: new Date(),
+                end: new Date(new Date().getTime() + 3600000)
+            },
+            type: EventType.TASK,
+            description: "",
+            repeat: EventRepeatType.NEVER,
+            repeatUntil: new Date(new Date().getTime() + 3600000),
+            repeatInterval: 1,
+            notify: false,
+            notifyTime: 1
+        };
+        tmpEvent = prototype;
+    }
 
 	async function showToast(toast: ToastOptions){
 		const toast_ = await toastController.create(toast);
@@ -133,7 +153,7 @@
         <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
         <ion-title class="ion-padding-vertical" size="large" style="padding-top:0; padding-bottom:0;">Πρόγραμμα μαθημάτων</ion-title>
         <ion-buttons slot="secondary">
-            <ion-button on:click={() => {modalOpen=true; selectedEvent=null; tmpEvent=prototype;}} aria-hidden>
+            <ion-button on:click={() => {modalOpen=true; selectedEvent=null; recreatePrototype();}} aria-hidden>
             <ion-icon slot="icon-only" icon={add}></ion-icon>  
             </ion-button>
         </ion-buttons>
@@ -169,7 +189,7 @@
             initial-breakpoint={selectedEvent? 0.95 : 1} 
             breakpoints={[0, 0.95, 1]} 
             on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0; if(!modalOpen) selectedEvent=null;}}
-            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; tmpEvent=prototype;}}
+            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; recreatePrototype();}}
             on:ionModalWillPresent={setupModal}    
         >
             <ion-toolbar>
@@ -180,7 +200,7 @@
                 </ion-buttons>
                 <ion-title class="ion-text-center">{selectedEvent?.title? selectedEvent.title : 'Συμβάν'}</ion-title>
                 <ion-buttons slot="start">
-                    <ion-button id="cancel" on:click={()=>{modalOpen=false; selectedEvent=null; tmpEvent=prototype;}} aria-hidden>
+                    <ion-button id="cancel" on:click={()=>{modalOpen=false; selectedEvent=null; recreatePrototype();}} aria-hidden>
                         <ion-icon slot="icon-only" icon={close}/>
                     </ion-button>
                 </ion-buttons>
