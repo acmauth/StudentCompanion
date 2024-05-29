@@ -59,7 +59,8 @@
     <RecentsDisplay recentItems={recentItems}/>
 {:then recentItemsList}
     <RecentsDisplay recentItems={recentItemsList}/>
-{:catch error}
-    <p class="ion-padding">Σφάλμα: {error.message}</p>
 {/await}
+<!-- {:catch error}
+    <p class="ion-padding">Σφάλμα: {error.message}</p>
+{/await} -->
 

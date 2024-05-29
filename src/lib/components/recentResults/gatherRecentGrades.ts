@@ -1,7 +1,7 @@
 import { neoUniversisGet } from "$lib/dataService";
 
 export async function gatherRecentGrades(refresh: boolean = false){
-    const options = {forceFresh: refresh, lifetime: 60 * 60 * 24}
+    const options = {forceFresh: refresh, lifetime: 60 * 60 * 1}
     // getting the current period and year 
     let examPeriod = (await neoUniversisGet("students/me/department?$expand=departmentConfiguration($expand=examYear,examPeriod)&$top=1&$skip=0&$count=false", options));
 

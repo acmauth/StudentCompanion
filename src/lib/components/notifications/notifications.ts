@@ -116,7 +116,7 @@ async function getUniversisNotifications(refresh: boolean = false) {
 }
 
 async function getWebmailNotifications(refresh: boolean = false) {
-    const options = {forceFresh: refresh, lifetime: 60 * 60 * 24}
+    const options = {forceFresh: refresh, lifetime: 60 * 15}
 
     try {
 
