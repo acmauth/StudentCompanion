@@ -13,11 +13,11 @@ export enum EventType {
 
 export interface Event {
     id: number;
-    title: string | null | undefined;
+    title: string;
     slot: EventTimeSlot;
-    location?: string | null | undefined;
-    description?: string | null | undefined;
-    professor?: string | null | undefined,
+    location?: string ;
+    description: string;
+    professor?: string,
     type: EventType;
     repeat: EventRepeatType;
     repeatInterval?: number;

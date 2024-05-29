@@ -15,7 +15,7 @@
     let activeDate: Date;
     let eventList: Event[];
     let selectedEvent: Event | null = null;
-    let tmpEvent: Event | undefined;
+    let tmpEvent: Event;
     let modalOpen: boolean = false;
 
     {
@@ -40,7 +40,7 @@
     // To clear the EventStore, uncomment the line below
     // $EventStore = [];
     }
-
+    
     $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => a.slot.start.getTime() < b.slot.start.getTime() ? -1 : 1);
     $: console.log(eventList);
     
@@ -58,15 +58,16 @@
                 });
             return;
         }            
-        const index = $EventStore.findIndex(x => x.id == tmpEvent?.id);
-        console.log(tmpEvent, index);
-        if(index != -1 && tmpEvent != undefined) {
+
+        const index = $EventStore.findIndex(x => x.id == tmpEvent.id);
+
+        if(index != -1 && tmpEvent !== undefined) {
             $EventStore[index] = tmpEvent;
-        } else if (tmpEvent != undefined) {
-            $EventStore = [...$EventStore, tmpEvent];
+        } else if (tmpEvent !== undefined) {
+            $EventStore = $EventStore.concat(tmpEvent);
         }
         selectedEvent = null;
-        tmpEvent = undefined;
+        tmpEvent = {} as Event;
         modalOpen = false;
     }    
 
