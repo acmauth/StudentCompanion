@@ -47,4 +47,13 @@ ion-icon {
 	box-shadow: var(--shadow-sm);
 
 }
+
+@media (prefers-color-scheme: dark) {
+
+	.chip {
+		background-color: var(--progress-background-variation);
+		color: var(--progress-color);
+	}
+	
+}
 </style>

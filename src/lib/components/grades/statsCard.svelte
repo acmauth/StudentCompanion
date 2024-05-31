@@ -30,9 +30,20 @@
 	 * @type {Chart<"line", number[], string>}
 	 */
 
-	 const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph').trim();
+	 let primaryColor;
+	 let gradeFill;
 
-	 const gradeFill = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph-fill').trim();
+	 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+	  primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--progress-color').trim();
+	  gradeFill = getComputedStyle(document.documentElement).getPropertyValue('--progress-background-variation').trim();
+	 }
+	 else {
+	 	primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph').trim();
+	  	gradeFill = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph-fill').trim();
+		console.log(primaryColor, gradeFill)
+	 }
+
+	
 
 	 /**
 	 * @type {Chart<"line", never[], never>}
@@ -113,7 +124,7 @@
 						},
 						tension: 0.4,
 						borderColor: primaryColor, // Set the color here
-            			backgroundColor: "primaryColor" // Optionally set the fill color
+            			backgroundColor: primaryColor // Optionally set the fill color
 						
 					},
 				],
@@ -139,7 +150,8 @@
 						font: {
 							size: 15
 						},
-						color: primaryColor
+						
+				
 					},
 					
 				},
@@ -211,25 +223,23 @@
 	}
 
 
-
 	circle-progress::part(base) {
-		width: 120px; 
-		height: auto;
-		}
-	
-	circle-progress::part(value) {
-		stroke-width: 10;
-		stroke: var(--app-circle-progress-value);
-	}
-	circle-progress::part(circle) {
-		stroke-width: 10;
-		stroke: var(--app-color-primary-light);
-	}
-	circle-progress::part(text) {
-		font-weight: bold;
-		fill: var(--app-color-primary-dark);
-	}
-
+        width: 120px; 
+        height: auto;
+        }
+    
+    circle-progress::part(value) {
+        stroke-width: 10;
+        stroke: var(--app-color-primary-dark);
+    }
+    circle-progress::part(circle) {
+        stroke-width: 10;
+        stroke: var(--app-color-primary-light);
+    }
+    circle-progress::part(text) {
+        font-weight: bold;
+        fill: var(--app-color-primary-dark);
+    }
 
 	.subtitle {
 		color: var(--app-color-primary-dark);
@@ -237,6 +247,19 @@
 		margin: 0.5rem;
 	}
 
+
+	@media (prefers-color-scheme: dark) {
+
+		circle-progress::part(value) {
+			stroke: var(--progress-color);
+		}
+		circle-progress::part(circle) {
+			stroke: var(--progress-background-variation);
+		}
+		circle-progress::part(text) {
+			fill: var(--app-color-primary-dark);
+		}
+	}
 
 	
 

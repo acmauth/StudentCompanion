@@ -173,7 +173,7 @@
 
      :root {
 
-      box-shadow: 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
+
 
       /* cards */
       --app-color-primary: radial-gradient(48.49% 60.5% at 50% 71.5%, #1B242B 0.01%, #18181B 100%);
@@ -197,7 +197,7 @@
 
       --app-color-green-dark: rgba(45, 184, 59, 1);
       --app-color-orange-dark: rgba(255, 130, 60, 1);
-      --shadow-md: rgba(0, 0, 0, 0.993) 0px 8px 24px;
+      --shadow-md: rgba(0, 0, 0, 0.305) 0px 8px 24px;
       --progress-color: rgba(0, 112, 221, 1);
       --progress-background-variation: rgba(28, 39, 49, 1);
 
@@ -207,8 +207,8 @@
       --app-student-id-border: rgba(39, 39, 42, 1);
 
       --app-circle-progress-value: rgba(0, 76, 150, 1);
-      --app-color-grade-graph: rgba(0, 112, 221, 1);
-      --app-color-grade-graph-fill: rgba(81, 81, 81, 1);
+      --app-color-grade-graph: rgba(142, 210, 255, 1);
+      --app-color-grade-graph-fill: rgba(0, 112, 221, 1);
 
       --app-personal-icons: rgba(85, 187, 255, 1);
 
@@ -217,7 +217,7 @@
      ion-card {
       border: 1px solid rgba(39, 39, 42, 1);
       --background: rgba(24, 24, 27, 1);
-      box-shadow: var(--shadow-md);
+
     }
 
     ion-list {
