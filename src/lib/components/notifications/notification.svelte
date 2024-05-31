@@ -35,10 +35,13 @@
         const body = iframe.contentDocument.querySelector("html");
         
         if (body) {
+
+            const root = document.documentElement;
+            const bodyColor = getComputedStyle(root).getPropertyValue('--app-color-notification');
             // Style reset for the iframe
             body.style.fontFamily = "Roboto, sans-serif";
             body.style.overflowY = "hidden";
-            body.style.color = "#374E5C";
+            body.style.color = bodyColor.trim();
 
             // Adding a base tag to the iframe to open links in a new tab instead of inside the iframe
             const baseTag = document.createElement('base');

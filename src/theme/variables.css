@@ -77,6 +77,7 @@
 
   --app-color-primary: #55bbff;
   --app-color-primary-dark: #004c96;
+  --app-color-primary-dark-variation: #004c96;
   --app-color-primary-light: #8ed2ff;
   --app-color-primary-lighter: #b4e1ff;
 
@@ -90,6 +91,19 @@
   --app-color-purple: #d5b4ff;
   --app-color-purple-dark: #390096;
 
+  --progress-color: white;
+  --progress-background-variation: #004c96;
+
+  --app-color-notification: #374E5C;
+  --app-student-id-icon: #004c96;
+  --app-student-id-border:#8ed2ff;
+
+  --app-circle-progress-value: rgba(0, 76, 150, 1);
+
+  --app-color-grade-graph:  #004c96;
+  --app-color-grade-graph-fill: rgb(230, 239, 255);
+
+  --app-personal-icons: #004c96;
 
   --shadow-xl: 0px -2px 40.6px -1px rgba(0, 0, 0, 0.10), 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
   --shadow-sm: 0px 4px 18px -1px rgba(0, 0, 0, 0.06);
@@ -150,14 +164,78 @@
 }
 
 /*  #FIXME and (max-width: 0) is used as a boolean to disable this css rule */
-@media (prefers-color-scheme: dark) and (max-width: 0) {
+@media (prefers-color-scheme: dark) {
   /*
      * Dark Colors
      * -------------------------------------------
      */
 
+
+     :root {
+
+      box-shadow: 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
+
+      /* cards */
+      --app-color-primary: radial-gradient(48.49% 60.5% at 50% 71.5%, #1B242B 0.01%, #18181B 100%);
+      
+      --app-color-primary-dark: rgba(203, 203, 203, 1);
+      --app-color-primary-light: rgba(142, 210, 255, 1);
+      /* Περασμενα/ΜΟ */
+      --app-color-primary-dark-variation: rgb(140, 140, 140);
+
+      /* applet colors */
+      --app-color-orange-dark: rgba(255, 130, 60, 1);
+      --app-color-orange: radial-gradient(57.43% 66.29% at 29.17% 42.57%, #28221A 0%, #18181B 100%);
+
+      --app-color-green-dark: rgba(149, 255, 159, 1);
+      --app-color-green: radial-gradient(60.14% 63.88% at 29.92% 39.86%, #1A261A 0%, #18181B 100%);
+      
+
+      --app-color-purple-dark: rgba(200, 166, 255, 1);
+      --app-color-purple: radial-gradient(62.84% 78.34% at 25.38% 37.16%, #261A29 0%, #18181B 100%);
+   
+
+      --app-color-green-dark: rgba(45, 184, 59, 1);
+      --app-color-orange-dark: rgba(255, 130, 60, 1);
+      --shadow-md: rgba(0, 0, 0, 0.993) 0px 8px 24px;
+      --progress-color: rgba(0, 112, 221, 1);
+      --progress-background-variation: rgba(28, 39, 49, 1);
+
+      --app-color-notification: var(--app-color-primary-dark);
+      --app-color-student-id: rgba(24, 24, 27, 1);
+      --app-student-id-icon: rgba(0, 112, 221, 1);
+      --app-student-id-border: rgba(39, 39, 42, 1);
+
+      --app-circle-progress-value: rgba(0, 76, 150, 1);
+      --app-color-grade-graph: rgba(0, 112, 221, 1);
+      --app-color-grade-graph-fill: rgba(81, 81, 81, 1);
+
+      --app-personal-icons: rgba(85, 187, 255, 1);
+
+
+
+     ion-card {
+      border: 1px solid rgba(39, 39, 42, 1);
+      --background: rgba(24, 24, 27, 1);
+      box-shadow: var(--shadow-md);
+    }
+
+    ion-list {
+      background-color: rgba(24, 24, 27, 1) !important;
+    }
+
+
+    .info-container h5 {
+      color: rgba(212, 212, 216, 1);
+    }
+
+    .info-text {
+      color: rgba(144, 144, 144, 1);
+    }
+  }
+
   body {
-    --ion-color-primary: #428cff;
+    --ion-color-primary: rgba(85, 187, 255, 1);
     --ion-color-primary-rgb: 66, 140, 255;
     --ion-color-primary-contrast: #ffffff;
     --ion-color-primary-contrast-rgb: 255, 255, 255;
@@ -383,6 +461,8 @@ body.dark {
   --ion-color-light-contrast-rgb: 255, 255, 255;
   --ion-color-light-shade: #1e2023;
   --ion-color-light-tint: #383a3e;
+
+
 }
 
 body.dark.ios {
@@ -460,3 +540,4 @@ body.dark.md {
 
   --ion-card-background: #1e1e1e;
 }
+

@@ -164,7 +164,7 @@
 	<style>
 
 	ion-icon {
-		color: var(--app-color-primary-dark);
+		color: var(--app-personal-icons);
 	}
 
 	</style>
