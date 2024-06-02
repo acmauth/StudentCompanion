@@ -22,10 +22,25 @@
         if(browser) {
             const leaflet = await import('leaflet');
 
-            map = leaflet.map(mapElement).setView([40.63182425082954, 22.959049527401312], 15);
-            leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                map = leaflet.map(mapElement).setView([40.63182425082954, 22.959049527401312], 15);
+            leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                
             }).addTo(map);
+
+            }
+            else {
+                map = leaflet.map(mapElement).setView([40.63182425082954, 22.959049527401312], 15);
+                leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    
+                }).addTo(map);
+            }
+
+            
+
 
             renderMarkers();
         }
@@ -158,6 +173,24 @@
         position: relative;
         height: calc(100vh); 
     }
+
+    @media (prefers-color-scheme: dark) {
+        .search-container {
+            background-color: #1e1e1e;
+        }
+
+        .search-input {
+            color: var(--app-color-primary-dark);
+            background-color: #1e1e1e;
+        }
+
+        /* ::placeholder {
+        } */
+    }
+
+
+
+
 </style>
 
 
