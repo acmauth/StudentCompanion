@@ -41,5 +41,16 @@
         font-size: 0.6em;
         color: #727272;
         text-align: left;
-    }    
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .course-name {
+            color: var(--app-color-primary-dark);
+        }
+
+        .course-semester {
+            color: var(--app-color-primary-dark-variation);
+        }
+
+    }
 </style>

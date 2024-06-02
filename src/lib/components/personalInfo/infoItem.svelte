@@ -144,13 +144,19 @@
 	}
 
 	ion-icon {
-		color: var(--app-personal-icons);
+		color: var(--app-color-primary-dark);
 	}
 
 
 	ion-card-subtitle {
 		font-size: 1.2rem;
 		padding-left: 5px;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		ion-icon {
+			color: rgba(85, 187, 255, 1);
+		}
 	}
 
 </style>

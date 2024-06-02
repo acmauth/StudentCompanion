@@ -140,5 +140,23 @@
     {
         color: rgba(207, 207, 207, 0.747);
     }
+
+    @media (prefers-color-scheme: dark) {
+
+
+        ion-card-subtitle {
+            color: var(--app-color-primary-dark-variation);
+        }
+
+        .inputCustom {
+            border: 0.15em solid var(--app-color-primary-dark);
+            background-color: #0000;
+        }
+
+        ::placeholder
+        {
+            color: var(--app-color-primary-dark);
+        }
+    }
     
 </style>

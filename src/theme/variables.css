@@ -91,19 +91,15 @@
   --app-color-purple: #d5b4ff;
   --app-color-purple-dark: #390096;
 
-  --progress-color: white;
-  --progress-background-variation: #004c96;
 
-  --app-color-notification: #374E5C;
-  --app-student-id-icon: #004c96;
-  --app-student-id-border:#8ed2ff;
+
+  --app-color-notification: #5c3753;
 
   --app-circle-progress-value: rgba(0, 76, 150, 1);
 
   --app-color-grade-graph:  #004c96;
   --app-color-grade-graph-fill: rgb(230, 239, 255);
 
-  --app-personal-icons: #004c96;
 
   --shadow-xl: 0px -2px 40.6px -1px rgba(0, 0, 0, 0.10), 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
   --shadow-sm: 0px 4px 18px -1px rgba(0, 0, 0, 0.06);
@@ -181,7 +177,7 @@
       --app-color-primary-dark: rgba(203, 203, 203, 1);
       --app-color-primary-light: rgba(142, 210, 255, 1);
       /* Περασμενα/ΜΟ */
-      --app-color-primary-dark-variation: rgb(140, 140, 140);
+      --app-color-primary-dark-variation: rgb(150, 150, 150);
 
       /* applet colors */
       --app-color-orange-dark: rgba(255, 130, 60, 1);
@@ -198,19 +194,20 @@
       --app-color-green-dark: rgba(45, 184, 59, 1);
       --app-color-orange-dark: rgba(255, 130, 60, 1);
       --shadow-md: rgba(0, 0, 0, 0.305) 0px 8px 24px;
+
+
+      
       --progress-color: rgba(0, 112, 221, 1);
       --progress-background-variation: rgba(28, 39, 49, 1);
 
       --app-color-notification: var(--app-color-primary-dark);
-      --app-color-student-id: rgba(24, 24, 27, 1);
-      --app-student-id-icon: rgba(0, 112, 221, 1);
-      --app-student-id-border: rgba(39, 39, 42, 1);
+
 
       --app-circle-progress-value: rgba(0, 76, 150, 1);
       --app-color-grade-graph: rgba(142, 210, 255, 1);
       --app-color-grade-graph-fill: rgba(0, 112, 221, 1);
 
-      --app-personal-icons: rgba(85, 187, 255, 1);
+
 
 
 

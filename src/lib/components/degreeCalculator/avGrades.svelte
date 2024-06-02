@@ -67,4 +67,18 @@
         font-size: 10px;
     }
 
+    @media (prefers-color-scheme: dark) {
+        #new-average {
+            color: var(--app-color-primary-dark);
+        }
+
+        .grade-text{
+            color: rgba(85, 187, 255, 1);
+        }
+
+        .grade-subtext{
+            color: var(--app-color-primary-dark-variation);
+        }
+    }
+
 </style>

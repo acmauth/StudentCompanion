@@ -223,13 +223,13 @@
 		border-style: solid;
 		border-radius: 1rem;
 		border-width: 1px;
-		border-color: var(--app-student-id-border);
+		border-color: var(--app-color-primary-light);
 	}
 
 	.id-icon {
 		margin: 0.7rem;
 		font-size: 2rem;
-		color: var(--app-student-id-icon);
+		color: var(--app-color-primary-dark);
 	}
 
 	.info-container {
@@ -271,8 +271,8 @@
 	}
 
 	.progress-courses {
-		--progress-background: var(--progress-color);
-		background: var(--progress-background-variation);
+		--progress-background: white;
+		background: var(--app-color-primary-dark);
 		height: 1rem;
 		margin-top: 0.5rem;
 		border-radius: 15px;
@@ -293,8 +293,8 @@
 	}
 
 	.progress-avg {
-		--progress-background: var(--progress-color);
-		background: var(--progress-background-variation);
+		--progress-background: white;
+		background: var(--app-color-primary-dark);
 		height: 5vw;
 		width: 4rem;
 		border-radius: 15px;
@@ -314,7 +314,31 @@
 		align-items: center; 
 	}
 
-	.wallet-icon {
-		background-color: var(--app-color-student-id);
+
+
+	@media (prefers-color-scheme: dark) {
+
+
+		.progress-courses {
+			--progress-background: rgba(0, 112, 221, 1);
+			background: rgba(28, 39, 49, 1);
+		}
+
+		.progress-avg {
+			--progress-background: rgba(0, 112, 221, 1);
+			background: rgba(28, 39, 49, 1);
+		}
+
+		.id-icon {
+			color: rgba(0, 112, 221, 1);
+		}
+
+		.student-id {
+			border-color: rgba(39, 39, 42, 1);
+		}
+
+		.wallet-icon {
+		background-color: rgba(24, 24, 27, 1);
+	}
 	}
 </style>
