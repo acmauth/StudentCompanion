@@ -6,6 +6,7 @@
     import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
 	import { Capacitor } from '@capacitor/core';
 	import Dexie from 'dexie';
+	
 
 	/**
 	 * @type {any}
@@ -106,6 +107,15 @@
 				console.error('There was a problem with the fetch operation:', error);
 			});
 		};
+
+
+	const toggleDarkMode = () => {
+	  document.body.classList.toggle('dark');
+	};
+
+
+
+	
 </script>
 
 <ion-card>
@@ -116,7 +126,13 @@
 				<ion-label class="ion-padding-start">Ρυθμίσεις ειδοποιήσεων</ion-label>
 				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} aria-hidden/>
 			</ion-item>
-		{/if}
+			{/if}
+
+
+		<ion-item>
+			<ion-icon size="small" icon={allIonicIcons.brush} />
+			<ion-toggle class="ion-padding-start" checked={localStorage.getItem('theme') === 'dark'} on:ionChange={toggleDarkMode}>Dark Mode</ion-toggle>
+		</ion-item>
 
 		<ion-item button href="/about">
 			<ion-icon size="small" icon={allIonicIcons.people} />
@@ -125,11 +141,6 @@
 			
 		</ion-item>
 
-		<ion-item button>
-			<ion-icon size="small" icon={allIonicIcons.brush} />
-			<ion-label class="ion-padding-start">Αλλαγή Theme</ion-label>
-			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-		</ion-item>
 
 		<ion-item button href="/faq">
 			<ion-icon size="small" icon={allIonicIcons.helpCircle} />

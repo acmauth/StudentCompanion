@@ -6,6 +6,7 @@
 	import { addNetworkListener } from '$lib/globalFunctions/offlineHandling';
 	/* Import all components - or do partial loading - see below */
 	import 'ionic-svelte/components/all';
+	
 
 	/* Call Ionic's setup routine, force mode to material for consistency */
 	setupIonicBase({mode: 'md'});
