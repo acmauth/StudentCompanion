@@ -55,6 +55,11 @@ export const config = {
       loader: async () => (await import('./en/map.json')).default,
     },
     {
+      locale: 'en',
+      key: 'links',
+      loader: async () => (await import('./en/links.json')).default,
+    },
+    {
       locale: 'el',
       key: 'home',
       loader: async () => (await import('./el/home.json')).default,
@@ -93,6 +98,11 @@ export const config = {
       locale: 'el',
       key: 'map',
       loader: async () => (await import('./el/map.json')).default,
+    },
+    {
+      locale: 'el',
+      key: 'links',
+      loader: async () => (await import('./el/links.json')).default,
     },
     
   ],
