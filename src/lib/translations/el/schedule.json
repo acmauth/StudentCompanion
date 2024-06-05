@@ -1,0 +1,21 @@
+{
+    "title": "Πρόγραμμα μαθημάτων",
+    "no_class": "Δεν υπάρχουν προγραμματισμένα μαθήματα αυτή τη μέρα.",
+    "events": "Συμβάντα",
+    "exams": "Εξετάσεις",
+
+    "add_lesson_title" : "Νέο μάθημα",
+    
+    "add" : "ΠΡΟΣΘΗΚΗ",
+    "cancel_u" : "ΑΚΥΡΟ",
+    "cancel_l" : "Άκυρο",
+    "add_day" : "ΠΡΟΣΘΗΚΗ ΜΕΡΑΣ",
+    "day" : "Ημέρα",
+
+    "lesson_title" :"Τελειότητα 101",
+    "lesson_title_placeholder" : "Τίτλος",
+    "lesson_label" : "Αίθουσα",
+    "lesson_label_placeholder" : "Hogwarts campus",
+    "lesson_teacher" : "Διδάσκων",
+    "lesson_teacher_placeholder" : "Κύριος Ξερόλας"
+  }

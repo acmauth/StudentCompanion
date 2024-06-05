@@ -1,0 +1,22 @@
+{
+    "title": "Class timetable",
+    "no_class": "There are no classes scheduled this day.",
+    "events": "Events",
+    "exams": "Exams",
+
+    "add_lesson_title" : "New lesson",
+    
+    "add" : "ADD",
+    "cancel_u" : "CANCEL",
+    "cancel_l" : "Cancel",
+    "add_day" : "Add day",
+    "day" : "Day",
+
+    "lesson_title" :"Titleonomics 101",
+    "lesson_title2" :"Title Wars: Episode IV",
+    "lesson_title_placeholder" : "Title",
+    "lesson_label" : "Room",
+    "lesson_label_placeholder" : "Avengers Academy",
+    "lesson_teacher" : "Professor",
+    "lesson_teacher_placeholder" : "Severus Snape"
+  }

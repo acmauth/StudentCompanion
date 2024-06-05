@@ -32,7 +32,7 @@ export const config = {
     {
       locale: 'en',
       key: 'schedule',
-      loader: async () => (await import('./en/sched.json')).default,
+      loader: async () => (await import('./en/schedule.json')).default,
     },
     {
       locale: 'en',
@@ -77,7 +77,7 @@ export const config = {
     {
       locale: 'el',
       key: 'schedule',
-      loader: async () => (await import('./el/sched.json')).default,
+      loader: async () => (await import('./el/schedule.json')).default,
     },
     {
       locale: 'el',

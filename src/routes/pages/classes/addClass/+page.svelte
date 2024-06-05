@@ -1,12 +1,15 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
-    import { weekdays } from '$components/schedule/day/days';
+    import { weekdays, getDay } from '$components/schedule/day/days';
     import { classStore } from '$components/schedule/class/classStore';
 	import type { ClassItem, TimeSlot } from '$components/schedule/class/ClassItem';
     import { add } from 'ionicons/icons';
 	import { onMount } from 'svelte';
     import { toastController } from '@ionic/core';
     import GenericHeader from "$components/shared/subPageHeader.svelte";
+    import { t, locale} from '$lib/translations';
+
+    let l = $locale;
 
     let selectedOption: boolean[];
     let count: number;
@@ -63,38 +66,38 @@
 </script>
 
 
-<GenericHeader title="Νέο μάθημα" genericHeader />
+<GenericHeader title = {$t("schedule.add_lesson_title")} genericHeader />
 
 <ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
     <form on:submit={onSubmit}>
         <ion-input			
-            placeholder="Τελειότητα 101"
-            label="Τίτλος"
-            label-placement="stacked"
-            id="title"
-            type="text"
-            contenteditable="true"
-            spellcheck={true}
+            placeholder = {$t("schedule.lesson_title")}
+            label = {$t("schedule.lesson_title_placeholder")}
+            label-placement = "stacked"
+            id = "title"
+            type = "text"
+            contenteditable = "true"
+            spellcheck = {true}
         />                    
 
         <ion-input			
-            placeholder="Hogwarts campus"
-            label="Αίθουσα"
-            label-placement="stacked"
-            id="classroom"
-            type="text"
-            contenteditable="true"
-            spellcheck={true}
+            placeholder = {$t("schedule.lesson_label_placeholder")}
+            label = {$t("schedule.lesson_label")}
+            label-placement = "stacked"
+            id = "classroom"
+            type = "text"
+            contenteditable = "true"
+            spellcheck = {true}
         />
         
         <ion-input			
-            placeholder="Κύριος Ξερόλας"
-            label="Διδάσκων"
-            label-placement="stacked"
-            id="professor"
-            type="text"
-            contenteditable="true"
-            spellcheck={false}
+            placeholder = {$t("schedule.lesson_teacher_placeholder")}
+            label = {$t("schedule.lesson_teacher")}
+            label-placement = "stacked"
+            id = "professor"
+            type = "text"
+            contenteditable = "true"
+            spellcheck = {false}
         />   
 
         {#each {length: count} as _, i}
@@ -103,14 +106,14 @@
                     id="day-{i}"
                     label-placement="stacked" 
                     interface="action-sheet"
-                    cancel-text="Άκυρο"
+                    cancel-text= {$t("schedule.cancel_l")}
                     style="padding:0; margin-right: 20px;"
-                    placeholder="Ημέρα"
+                    placeholder= {$t("schedule.day")}
                     on:ionChange={() => {selectedOption[i] = true;}}
                     on:ionCancel={() => {selectedOption[i] = false; clearSelection(i);}}>
                     {#each weekdays as day, j}
                         {#each Object.keys(day) as key }
-                            <ion-select-option id={key} contextmenu="" value="{j}">{day[key].el}</ion-select-option>
+                            <ion-select-option id={key} contextmenu="" value="{j}">{getDay(j, l)}</ion-select-option>
                         {/each}
                     {/each}
                 </ion-select>
@@ -132,12 +135,12 @@
         <!-- svelte-ignore a11y-no-static-element-interactions -->
         <ion-div on:click={() => {$: count++;}} style="display: flex; align-items: left; justify-content: left; width: 100%; padding-top: 15px; padding-bottom: 10px">
             <ion-icon icon={add} style="margin-right: 5px;"></ion-icon>
-            <ion-div>Προσθήκη ημέρας</ion-div>
+            <ion-div>{$t("schedule.add_day")}</ion-div>
         </ion-div>  
 
         <div style="display: flex; justify-content: space-between; padding-top: 5%">
-            <ion-button type="reset" on:ionFocus={onCancel} color="light">ΑΚΥΡΟ</ion-button>
-            <ion-button type="submit">ΠΡΟΣΘΗΚΗ</ion-button>  
+            <ion-button type="reset" on:ionFocus={onCancel} color="light">{$t("schedule.cancel_u")}</ion-button>
+            <ion-button type="submit">{$t("schedule.add")}</ion-button>  
         </div>
     </form>
 </ion-content>
