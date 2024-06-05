@@ -55,16 +55,16 @@
 
 
 <ion-tab tab="personalInfo">
-    <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
-		<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-			<ion-title class="ion-padding-vertical" size="large">{$t('personal.header')}</ion-title>
+    <ion-header translucent = {Capacitor.getPlatform() === 'ios'} mode="ios">
+		<ion-toolbar mode = {Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+			<ion-title class = "ion-padding-vertical" size = "large">{$t('personal.header')}</ion-title>
 		</ion-toolbar>
 	</ion-header>
 
-	<ion-content fullscreen={true}>
-		<ion-header collapse="condense" mode="ios">
-			<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-				<ion-title size="large">{$t('personal.header')}</ion-title>
+	<ion-content fullscreen = {true}>
+		<ion-header collapse = "condense" mode="ios">
+			<ion-toolbar mode = {Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+				<ion-title size = "large">{$t('personal.header')}</ion-title>
 			</ion-toolbar>
 		</ion-header>
 	

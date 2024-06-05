@@ -65,6 +65,11 @@ export const config = {
       loader: async () => (await import('./en/tasks.json')).default,
     },
     {
+      locale: 'en',
+      key: 'about',
+      loader: async () => (await import('./en/about.json')).default,
+    },
+    {
       locale: 'el',
       key: 'home',
       loader: async () => (await import('./el/home.json')).default,
@@ -113,6 +118,11 @@ export const config = {
       locale: 'el',
       key: 'tasks',
       loader: async () => (await import('./el/tasks.json')).default,
+    },
+    {
+      locale: 'el',
+      key: 'about',
+      loader: async () => (await import('./el/about.json')).default,
     },
   ]
 };
