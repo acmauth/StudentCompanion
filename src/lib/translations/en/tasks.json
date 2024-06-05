@@ -1,6 +1,7 @@
 {
     "title": "Events",
     "events_not_found" : "No events found.",
+    "event_not_found" : "Event not found.",
 
     "new_event" : "New event",
 
@@ -9,18 +10,25 @@
     
     "time_error" : "The end time must be after the start time.",
 
-    "unknown_event" : "Uknkown event",
+    "unknown_event" : "Unknown event",
     "unknonw_description" : "No descrpition",
 
     "event_label" : "Title",
     "event_label_placeholder" : "Quidditch practice",
     "description_label" : "Description",
-    "edescription_label_placeholder" : "Learn the Wronski feint",
+    "description_label_placeholder" : "Learn the Wronski feint",
 
     "test" : "Test",
     "project" : "Project",
     "else" : "Else",
 
+    "edit" : "Update",
+    "edit_project" : "project",
+    "edit_test" : "test",
+    "edit_else" : "event",
+
     "add" : "ADD",
-    "cancel" : "CANCEL"
+    "cancel" : "CANCEL",
+    "delete" : "DELETE",
+    "update" : "UPDATE"
   }

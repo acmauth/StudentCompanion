@@ -1,6 +1,7 @@
 {
     "title": "Συμβάντα",
     "events_not_found" : "Δεν υπάρχουν συμβάντα.",
+    "event_not_found" : "Το συμβάν δεν βρέθηκε.",
 
     "new_event" : "Νέο συμβάν",
 
@@ -15,12 +16,21 @@
     "event_label" : "Τίτλος",
     "event_label_placeholder" : "Πρόοδος στην ιπτάμενη σκούπα",
     "description_label" : "Περιγραφή",
-    "edescription_label_placeholder" : "Στροφές με τη σκούπα μου",
+    "description_label_placeholder" : "Στροφές με τη σκούπα μου",
 
     "test" : "Πρόοδος",
     "project" : "Εργασία",
     "else" : "Άλλο",
 
+    "edit" : "Επεξεργασία",
+    "edit_project" : "εργασίας",
+    "edit_test" : "προόδου",
+    "edit_else" : "συμβάντος",
+
+
+
     "add" : "ΠΡΟΣΘΗΚΗ",
-    "cancel" : "ΑΚΥΡΟ"
+    "cancel" : "ΑΚΥΡΟ",
+    "delete" : "ΔΙΑΓΡΑΦΗ",
+    "update" : "ΕΝΗΜΕΡΩΣΗ"
   }

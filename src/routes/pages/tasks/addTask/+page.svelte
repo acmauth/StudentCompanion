@@ -57,7 +57,7 @@
         />                    
 
         <ion-input			
-            placeholder = {$t("tasks.edescription_label_placeholder")}
+            placeholder = {$t("tasks.description_label_placeholder")}
             label = {$t("tasks.description_label")}
             label-placement = "stacked"
             id = "description"

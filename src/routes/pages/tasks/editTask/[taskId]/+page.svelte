@@ -6,13 +6,16 @@
     import type { TaskItem } from '$components/schedule/task/TaskItem';
 	import { toastController } from '@ionic/core';
     import GenericHeader from "$components/shared/subPageHeader.svelte";
+    import { t, locale} from '$lib/translations';
+
+    let l = $locale;
 
     // Extract taskId from the URL and get the referenced task
 	const taskId = $page.params.taskId;
     let taskItem = $taskStore.find(x => x.id === Number(taskId));
     
     if (taskItem == undefined) {
-        alert("Το συμβάν δεν βρέθηκε.");
+        alert($t("tasks.event_not_found"));
         goto('/pages/tasks');
     }
 
@@ -51,15 +54,15 @@
         const endDate = new Date(endInputElement.value?.toString() || new Date().toString());
 
         if (startDate > endDate) {
-            await toastController.create({message: "Η ώρα λήξης πρέπει να είναι μετά την ώρα έναρξης.", duration: 2000, color: 'tertiary' , mode: 'ios', translucent: true, cssClass: 'toast-center'})
+            await toastController.create({message:$t("tasks.time_error"), duration: 2000, color: 'tertiary' , mode: 'ios', translucent: true, cssClass: 'toast-center'})
                         .then(toast => toast.present());
             return;
         }
 
         let formData: TaskItem = {
             id: taskItem?.id || new Date().getTime(),
-            title: (document.getElementById("title") as HTMLInputElement)?.value || "Ανώνυμο συμβάν",
-            description: (document.getElementById("description") as HTMLInputElement)?.value || "Χωρίς περιγραφή",
+            title: (document.getElementById("title") as HTMLInputElement)?.value || $t("tasks.unknown_event"),
+            description: (document.getElementById("description") as HTMLInputElement)?.value || $t("tasks.unknonw_description"),
             date: {
                 startDate: startDate,
                 endDate: endDate
@@ -88,61 +91,61 @@
 </script>
 
 
-<GenericHeader title="Επεξεργασία {taskItem?.type == TaskType.PROJECT ? 'εργασίας' : taskItem?.type == TaskType.TEST ? 'προόδου' : 'συμβάντος'}" genericHeader />
+<GenericHeader title = "{$t("tasks.edit")} {taskItem?.type == TaskType.PROJECT ? $t("tasks.edit_project") : taskItem?.type == TaskType.TEST ? $t("tasks.edit_test") : $t("tasks.edit_else")}" genericHeader />
 
-<ion-content fullscreen class="ion-padding flex flex-col justify-center space-y-4 p-8">
-    <form on:submit={onSubmit}>
+<ion-content fullscreen class = "ion-padding flex flex-col justify-center space-y-4 p-8">
+    <form on:submit = {onSubmit}>
         <ion-input			
-            placeholder="Πρόοδος στην ιπτάμενη σκούπα"
-            label="Τίτλος"
-            label-placement="stacked"
-            id="title"
-            value={taskItem?.title}
-            type="text"
-            contenteditable="true"
-            spellcheck={true}
+            placeholder = {$t("tasks.event_label_placeholder")}
+            label = {$t("tasks.event_label")}
+            label-placement = "stacked"
+            id = "title"
+            value = {taskItem?.title}
+            type = "text"
+            contenteditable = "true"
+            spellcheck = {true}
         />                    
 
         <ion-input			
-            placeholder="Στροφές με τη σκούπα μου"
-            label="Περιγραφή"
-            label-placement="stacked"
-            id="description"
-            value={taskItem?.description}
-            type="text"
-            contenteditable="true"
-            spellcheck={true}
+            placeholder = {$t("tasks.description_label_placeholder")}
+            label = {$t("tasks.description_label")}
+            label-placement = "stacked"
+            id = "description"
+            value = {taskItem?.description}
+            type = "text"
+            contenteditable = "true"
+            spellcheck = {true}
         />     
 
-        <ion-div style="display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 2%; margin-bottom: 3%;">
-            <ion-label style="flex: 1;">Από</ion-label>
-            <ion-datetime-button datetime="start"></ion-datetime-button>
-            <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="start" locale="el-GR" value={start}></ion-datetime>
+        <ion-div style = "display: flex; align-items: center; justify-content: center; width: 100%; margin-top: 2%; margin-bottom: 3%;">
+            <ion-label style = "flex: 1;">{$t("tasks.from")}</ion-label>
+            <ion-datetime-button datetime = "start"></ion-datetime-button>
+            <ion-modal keep-contents-mounted = {true}>
+                <ion-datetime id = "start" locale = { l } value = {start}></ion-datetime>
             </ion-modal>
         </ion-div>
         
-        <ion-div style="display: flex; align-items: center; justify-content: center; width: 100%;">
-            <ion-label style="flex: 1;">Έως</ion-label>
-            <ion-datetime-button datetime="end"/>
-            <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="end" locale="el-GR" value={end}></ion-datetime>
+        <ion-div style = "display: flex; align-items: center; justify-content: center; width: 100%;">
+            <ion-label style = "flex: 1;">{$t("tasks.to")}</ion-label>
+            <ion-datetime-button datetime = "end"/>
+            <ion-modal keep-contents-mounted = {true}>
+                <ion-datetime id = "end" locale = { l } value = {end}></ion-datetime>
             </ion-modal>
         </ion-div>
         
         
-        <ion-row class="expanded-row">
-            <ion-radio-group id="type" value={taskItem?.type.valueOf()} class="expanded-radio-group">
-                <ion-radio mode="ios" slot="end" value="test">Πρόοδος</ion-radio>
-                <ion-radio mode="ios" slot="end" value="project">Εργασία</ion-radio>
-                <ion-radio mode="ios" slot="end" value="other">Άλλο</ion-radio>
+        <ion-row class = "expanded-row">
+            <ion-radio-group id = "type" value={taskItem?.type.valueOf()} class="expanded-radio-group">
+                <ion-radio mode = "ios" slot = "end" value = "test">{$t("tasks.test")}</ion-radio>
+                <ion-radio mode = "ios" slot = "end" value = "project">{$t("tasks.project")}</ion-radio>
+                <ion-radio mode = "ios" slot = "end" value = "other">{$t("tasks.else")}</ion-radio>
             </ion-radio-group>
         </ion-row>
         
-        <div style="display: flex; justify-content: space-between; padding-top: 5%">
-            <ion-button type="reset" color="light" on:ionFocus={onCancel}>ΑΚΥΡΟ</ion-button>
-            <ion-button type="button" color="secondary" on:ionFocus={onDelete}>ΔΙΑΓΡΑΦΗ</ion-button>
-            <ion-button type="submit" on:ionFocus={onSubmit}>ΕΝΗΜΕΡΩΣΗ</ion-button>
+        <div style = "display: flex; justify-content: space-between; padding-top: 5%">
+            <ion-button type = "reset" color = "light" on:ionFocus = {onCancel}>{$t("tasks.cancel")}</ion-button>
+            <ion-button type = "button" color = "secondary" on:ionFocus = {onDelete}>{$t("tasks.delete")}</ion-button>
+            <ion-button type = "submit" on:ionFocus = {onSubmit}>{$t("tasks.update")}</ion-button>
         </div>
     </form>
 </ion-content>
