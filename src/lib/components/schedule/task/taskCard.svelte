@@ -4,11 +4,15 @@
 	import { getDayByIndex } from '../day/days';
 	import {timeOutline, map} from 'ionicons/icons';
 	import { onMount } from 'svelte';
+    import { locale } from '$lib/translations';
+
+	let l = $locale;
+
 	
 	export let taskItem: TaskItem;
 	
-	let startDay: string = getDayByIndex(new Date(taskItem.date.startDate).getDay(), 'el', true); 
-	let endDay: string = getDayByIndex(new Date(taskItem.date.endDate).getDay(), 'el', true);
+	let startDay: string = getDayByIndex(new Date(taskItem.date.startDate).getDay(), l, true); 
+	let endDay: string = getDayByIndex(new Date(taskItem.date.endDate).getDay(), l, true);
 	let isPastDate: boolean = false;
 	let isTest: boolean = false;
 	let isProject: boolean = false;
