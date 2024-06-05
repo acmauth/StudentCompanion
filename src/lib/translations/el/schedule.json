@@ -5,7 +5,7 @@
     "exams": "Εξετάσεις",
 
     "add_lesson_title" : "Νέο μάθημα",
-    
+
     "add" : "ΠΡΟΣΘΗΚΗ",
     "cancel_u" : "ΑΚΥΡΟ",
     "cancel_l" : "Άκυρο",
@@ -17,5 +17,11 @@
     "lesson_label" : "Αίθουσα",
     "lesson_label_placeholder" : "Hogwarts campus",
     "lesson_teacher" : "Διδάσκων",
-    "lesson_teacher_placeholder" : "Κύριος Ξερόλας"
+    "lesson_teacher_placeholder" : "Κύριος Ξερόλας",
+
+    "lesson_time_error" : "Η ώρα λήξης πρέπει να είναι μετά την ώρα έναρξης.",
+    
+    "lesson_unknown" : "Ανώνυμο μάθημα",
+    "classroom_unknown" : "Χωρίς αίθουσα",
+    "professor_unknown" : "Χωρίς διδάσκοντα"
   }

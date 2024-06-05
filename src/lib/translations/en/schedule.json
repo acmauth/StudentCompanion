@@ -18,5 +18,11 @@
     "lesson_label" : "Room",
     "lesson_label_placeholder" : "Avengers Academy",
     "lesson_teacher" : "Professor",
-    "lesson_teacher_placeholder" : "Severus Snape"
+    "lesson_teacher_placeholder" : "Severus Snape",
+
+    "lesson_time_error" : "The end time must be after the start time.",
+
+    "lesson_unknown" : "Unknown lesson",
+    "classroom_unknown" : "No classroom",
+    "professor_unknown" : "No professor"
   }
