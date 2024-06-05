@@ -3,10 +3,12 @@
     import coordinates from "$lib/components/map/coordinates.json"
     import SubPageHeader from '$shared/subPageHeader.svelte';
     const points = coordinates;
+    import { t, locale} from '$lib/translations';
+
 </script>
 
 <ion-page>
-    <SubPageHeader title="Χάρτης του Campus" />
+    <SubPageHeader title= {$t("map.title")} />
     <MapLibre
     center={[22.959049527401312, 40.63182425082954]}
     zoom={15}
