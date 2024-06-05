@@ -3,6 +3,7 @@
     "no_class": "There are no classes scheduled this day.",
     "events": "Events",
     "exams": "Exams",
+    "classes" : "Classes",
 
     "add_lesson_title" : "New lesson",
     
@@ -24,5 +25,10 @@
 
     "lesson_unknown" : "Unknown lesson",
     "classroom_unknown" : "No classroom",
-    "professor_unknown" : "No professor"
+    "professor_unknown" : "No professor",
+
+    "exam_tt_title" : "Exam timetable",
+    "exam_tt_not_found" : "There are no exams scheduled."
+
+    
   }

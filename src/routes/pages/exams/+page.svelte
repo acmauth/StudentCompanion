@@ -6,6 +6,7 @@
     import { Capacitor } from '@capacitor/core';
 	import { onMount } from 'svelte';
 	import { universisGet } from '$lib/dataService';
+    import { t, locale} from '$lib/translations';
 
     let exams : Array<ExamItem> = [];
     onMount(async() => {
@@ -29,7 +30,7 @@
 
 <ion-header collapse="condense" mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-      <ion-title class="ion-padding-vertical" size="large">Πρόγραμμα εξετάσεων</ion-title>
+      <ion-title class="ion-padding-vertical" size="large">{$t('schedule.exam_tt_title')}</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -39,10 +40,10 @@
        <ion-icon icon={ellipsisHorizontalOutline} />
     </ion-fab-button>
     <ion-fab-list side="top">
-       <ion-fab-button color="primary" href="/pages/tasks" data-desc="Συμβάντα">
+       <ion-fab-button color="primary" href="/pages/tasks" data-desc={$t('schedule.events')}>
           <ion-icon icon={createOutline} />
        </ion-fab-button>
-       <ion-fab-button color="secondary" href="/pages/schedule" data-desc="Μαθήματα">
+       <ion-fab-button color="secondary" href="/pages/schedule" data-desc={$t('schedule.classes')}>
           <ion-icon icon={bookOutline} />
        </ion-fab-button>
     </ion-fab-list>
@@ -60,7 +61,7 @@
     <div class="custom-center-label">
         <div class="middle">
             <ion-icon icon={schoolOutline} size="large" style="padding: 15px"></ion-icon>
-            <ion-label>Δεν υπάρχουν προγραμματισμένες εξετάσεις.</ion-label>
+            <ion-label>{$t('schedule.exam_tt_not_found')}</ion-label>
         </div>
     </div>
     {/if}
