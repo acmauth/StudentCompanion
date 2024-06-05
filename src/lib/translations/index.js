@@ -45,6 +45,11 @@ export const config = {
       loader: async () => (await import('./en/faq.json')).default,
     },
     {
+      locale: 'en',
+      key: 'menu',
+      loader: async () => (await import('./en/menu.json')).default,
+    },
+    {
       locale: 'el',
       key: 'home',
       loader: async () => (await import('./el/home.json')).default,
@@ -73,6 +78,11 @@ export const config = {
       locale: 'el',
       key: 'faq',
       loader: async () => (await import('./el/faq.json')).default,
+    },
+    {
+      locale: 'el',
+      key: 'menu',
+      loader: async () => (await import('./el/menu.json')).default,
     },
     
   ],

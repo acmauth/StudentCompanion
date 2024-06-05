@@ -1,0 +1,11 @@
+{
+    "title" : "Club menu",
+    "today" : "Today's menu",
+    "week" : "The week's menu",
+    "morning_open": "Club open for Breakfast - Closes at 10:00",
+    "morning_closed": "Club Closed - Opens at 12:00",
+    "midday_open": "Club open for Lunch - Closes at 16:00",
+    "midday_closed": "Club Closed - Opens at 6pm",
+    "evening_open": "Club open for Dinner - Closes at 21:00",
+    "evening_closed": "Club Closed - Opens at 08:30"
+  }

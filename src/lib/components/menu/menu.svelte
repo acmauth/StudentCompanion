@@ -6,6 +6,12 @@
 	import { getMenu } from '$lib/menuScrapper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
+    import { getDay } from "$lib/components/schedule/day/days";
+
+	import { t, locale } from '$lib/translations';
+
+    let l = $locale;
+
 	/**
 	 * @type {any[]}
 	 */
@@ -24,19 +30,19 @@
 	let message = '';
 	let color = 'success';
 	if (hours >= 8 && mins >= 30 && hours < 10) {
-		message = 'Λέσχη ανοιχτή για Πρωινό - Κλείνει στις 10:00';
+		message = $t('menu.morning_open');
 	} else if (hours >= 10 && hours < 12) {
-		message = 'Λέσχη κλειστή - Ανοίγει στις 12:00';
+		message = $t('menu.morning_closed');
 		color = 'danger';
 	} else if (hours >= 12 && hours < 16) {
-		message = 'Λέσχη ανοιχτή για Μεσημεριανό - Κλείνει στις 16:00';
+		message = $t('menu.midday_open');
 	} else if (hours >= 16 && hours < 18) {
-		message = 'Λέσχη κλειστή - Ανοίγει στις 18:00';
+		message = $t('menu.midday_closed');
 		color = 'danger';
 	} else if (hours >= 18 && hours < 21) {
-		message = 'Λέσχη ανοιχτή για Βραδινό - Κλείνει στις 21:00';
+		message = $t('menu.evening_open');
 	} else {
-		message = 'Λέσχη κλειστή - Ανοίγει στις 08:30';
+		message = $t('menu.evening_closed');
 		color = 'danger';
 	}
 
@@ -57,7 +63,7 @@
 </script>
 
 <IonPage>
-	<SubPageHeader title="Μενού Λέσχης" />
+	<SubPageHeader title = {$t("menu.title")} />
 	<ion-content class="ion-padding">
 		{#await getMenuData()}
 			<MenuSkeleton />
@@ -66,7 +72,7 @@
 				<ion-chip {color}><ion-icon icon={allIonicIcons.timeOutline} /> &nbsp; {message}</ion-chip>
 			</div>
 
-			<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> Σημερινό Μενού</h1>
+			<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> {$t("menu.today")} </h1>
 			<ion-card color="light">
 				<ion-card-content>
 					<div>{@html cafeteriaData[today]}</div>
@@ -75,47 +81,47 @@
 
 			&nbsp;
 
-			<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> Το Μενού της Εβδομάδας</h1>
+			<h1><ion-icon icon={allIonicIcons.restaurantOutline} /> {$t("menu.week")} </h1>
 			<ion-accordion-group expand="inset">
 				<ion-accordion value="first">
 					<ion-item slot="header" color="light">
-						<ion-label>Δευτέρα</ion-label>
+						<ion-label>{getDay(1, l)}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[0]}</div>
 				</ion-accordion>
 				<ion-accordion value="second">
 					<ion-item slot="header" color="light">
-						<ion-label>Τρίτη</ion-label>
+						<ion-label>{getDay(2, l)}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[1]}</div>
 				</ion-accordion>
 				<ion-accordion value="third">
 					<ion-item slot="header" color="light">
-						<ion-label>Τετάρτη</ion-label>
+						<ion-label>{getDay(3, l)}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[2]}</div>
 				</ion-accordion>
 				<ion-accordion value="fourth">
 					<ion-item slot="header" color="light">
-						<ion-label>Πέμπτη</ion-label>
+						<ion-label>{getDay(4, l)}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[3]}</div>
 				</ion-accordion>
 				<ion-accordion value="fifth">
 					<ion-item slot="header" color="light">
-						<ion-label>Παρασκευή</ion-label>
+						<ion-label>{getDay(5, l)}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[4]}</div>
 				</ion-accordion>
 				<ion-accordion value="sixth">
 					<ion-item slot="header" color="light">
-						<ion-label>Σάββατο</ion-label>
+						<ion-label>{getDay(6, l)}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[5]}</div>
 				</ion-accordion>
 				<ion-accordion value="seventh">
 					<ion-item slot="header" color="light">
-						<ion-label>Κυριακή</ion-label>
+						<ion-label>{getDay(0, l)}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[6]}</div>
 				</ion-accordion>

@@ -16,6 +16,12 @@ export const weekdays: Weekday[] = [
   { fri: { en: 'Friday', el: 'Παρασκευή' } },
   { sat: { en: 'Saturday', el: 'Σάββατο' } },
 ];
+
+export function getDay(index: number, lang: string = "en"): string {
+  const day = weekdays[index];
+  const abbreviatedDay = (Object.values(day)[0] as any)[lang]
+  return abbreviatedDay;
+} 
   
 export function getDayIndex(day: string): number {
     const dayCode = day.slice(0, 3).toLowerCase();
