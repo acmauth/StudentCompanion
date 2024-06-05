@@ -5,6 +5,9 @@
 	import TaskCard from '$components/schedule/task/taskCard.svelte';
     import { Capacitor } from '@capacitor/core';    
 	import { onMount } from 'svelte';
+    import { t, locale } from '$lib/translations';
+
+    let l = $locale;
 
     let groupedTasks : { [key: string]: TaskItem[] }= {};
     
@@ -14,7 +17,7 @@
         // Group tasks by date
         tasks.forEach(task => {
             const startDate = new Date(task.date.startDate);
-            const weekday = startDate.toLocaleDateString('el-GR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
+            const weekday = startDate.toLocaleDateString(l, {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'});
             if (!groupedTasks[weekday]) {
                 groupedTasks[weekday] = [];
             }
@@ -27,7 +30,7 @@
 
 <ion-header collapse="condense" mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-      <ion-title class="ion-padding-vertical" size="large">Συμβάντα</ion-title>
+      <ion-title class="ion-padding-vertical" size="large">{$t("tasks.title")}</ion-title>
       <ion-buttons slot="end">
         <ion-button href="/pages/tasks/addTask">
           <ion-icon slot="icon-only" icon={add}></ion-icon>
@@ -43,10 +46,10 @@
        <ion-icon icon={ellipsisHorizontalOutline} />
     </ion-fab-button>
     <ion-fab-list side="top">
-       <ion-fab-button color="primary" href="/pages/schedule" data-desc="Μαθήματα">
+       <ion-fab-button color="primary" href="/pages/schedule" data-desc={$t("schedule.classes")}>
           <ion-icon icon={bookOutline} />
        </ion-fab-button>
-       <ion-fab-button color="secondary" href="/pages/exams" data-desc="Εξετάσεις">
+       <ion-fab-button color="secondary" href="/pages/exams" data-desc={$t("schedule.exams")}>
           <ion-icon icon={schoolOutline} />
        </ion-fab-button>
     </ion-fab-list>
@@ -69,7 +72,7 @@
     <ion-row class="custom-center-label">
         {#if tasks.length === 0}
             <ion-icon icon={createOutline} size="large" style="padding: 15px"></ion-icon>
-            <ion-label>Δεν υπάρχουν συμβάντα.</ion-label>
+            <ion-label>{$t("tasks.events_not_found")}</ion-label>
         {/if}
     </ion-row>
 </ion-content>

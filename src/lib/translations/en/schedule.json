@@ -28,7 +28,5 @@
     "professor_unknown" : "No professor",
 
     "exam_tt_title" : "Exam timetable",
-    "exam_tt_not_found" : "There are no exams scheduled."
-
-    
+    "exam_tt_not_found" : "There are no exams scheduled."    
   }
