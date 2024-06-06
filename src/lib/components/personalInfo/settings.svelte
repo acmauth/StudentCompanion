@@ -6,12 +6,37 @@
     import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
 	import { Capacitor } from '@capacitor/core';
 	import Dexie from 'dexie';
+	import { onMount } from 'svelte';
+
 	
 
 	/**
 	 * @type {any}
 	 */
 	 export let logOut;
+
+	 let isDark: boolean | undefined;
+
+	 const checkAppMode = () => {
+	    const darkMode = localStorage.getItem('darkMode');
+	    // Check if darkMode is explicitly "true" (string) to set isDark to true
+	    isDark = darkMode === "true";
+		document.body.classList.toggle('dark', isDark);
+	
+		
+	}
+
+	const toggleDarkTheme = () => {
+	    isDark = !isDark;
+	    document.body.classList.toggle('dark', isDark);
+	    localStorage.setItem('darkMode', isDark.toString());
+	}
+
+
+	onMount(() => {
+		checkAppMode();
+	    
+	});
 
 	async function showToast(toast: ToastOptions){
 		const toast_ = await toastController.create(toast);
@@ -109,9 +134,7 @@
 		};
 
 
-	const toggleDarkMode = () => {
-	  document.body.classList.toggle('dark');
-	};
+	
 
 
 
@@ -129,10 +152,12 @@
 			{/if}
 
 
-		<ion-item>
-			<ion-icon size="small" icon={allIonicIcons.brush} />
-			<ion-toggle class="ion-padding-start" checked={localStorage.getItem('theme') === 'dark'} on:ionChange={toggleDarkMode}>Dark Mode</ion-toggle>
-		</ion-item>
+			<ion-item>
+				<ion-icon size="small" icon={allIonicIcons.brush}></ion-icon>
+				<ion-toggle id="themeToggle" class="ion-padding-start"  checked={isDark} on:ionChange={toggleDarkTheme}>
+				  Dark Mode
+				</ion-toggle>
+			  </ion-item>
 
 		<ion-item button href="/about">
 			<ion-icon size="small" icon={allIonicIcons.people} />
