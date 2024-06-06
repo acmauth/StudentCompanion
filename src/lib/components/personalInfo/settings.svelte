@@ -28,7 +28,7 @@
 
 	const toggleDarkTheme = () => {
 	    isDark = !isDark;
-	    document.body.classList.toggle('dark', isDark);
+	    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
 	    localStorage.setItem('darkMode', isDark.toString());
 	}
 
