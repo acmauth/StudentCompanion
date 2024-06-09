@@ -203,10 +203,8 @@
 		color: var(--app-color-primary-dark);
 	}
 
-	@media (prefers-color-scheme: dark) {
-		ion-icon {
-			color: rgba(85, 187, 255, 1);
-		}
+	[data-theme="dark"] ion-icon {
+		color: rgba(85, 187, 255, 1);
 	}
 
 	</style>

@@ -316,29 +316,28 @@
 
 
 
-	@media (prefers-color-scheme: dark) {
 
 
-		.progress-courses {
+		.progress-courses[data-theme="dark"] {
 			--progress-background: rgba(0, 112, 221, 1);
 			background: rgba(28, 39, 49, 1);
 		}
 
-		.progress-avg {
+		.progress-avg[data-theme="dark"] {
 			--progress-background: rgba(0, 112, 221, 1);
 			background: rgba(28, 39, 49, 1);
 		}
 
-		.id-icon {
+		.id-icon[data-theme="dark"] {
 			color: rgba(0, 112, 221, 1);
 		}
 
-		.student-id {
+		.student-id[data-theme="dark"] {
 			border-color: rgba(39, 39, 42, 1);
 		}
 
-		.wallet-icon {
+		.wallet-icon[data-theme="dark"] {
 		background-color: rgba(24, 24, 27, 1);
 	}
-	}
+	
 </style>

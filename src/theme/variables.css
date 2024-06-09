@@ -163,9 +163,46 @@
 
 
 
-[data-theme="dark"] {
+:root[data-theme="dark"] {
+/* cards */
+--app-color-primary: radial-gradient(48.49% 60.5% at 50% 71.5%, #1B242B 0.01%, #18181B 100%);
+  
+--app-color-primary-dark: rgba(203, 203, 203, 1);
+--app-color-primary-light: rgba(142, 210, 255, 1);
+/* Περασμενα/ΜΟ */
+--app-color-primary-dark-variation: rgb(150, 150, 150);
 
- body {
+/* applet colors */
+--app-color-orange-dark: rgba(255, 130, 60, 1);
+--app-color-orange: radial-gradient(57.43% 66.29% at 29.17% 42.57%, #28221A 0%, #18181B 100%);
+
+--app-color-green-dark: rgba(149, 255, 159, 1);
+--app-color-green: radial-gradient(60.14% 63.88% at 29.92% 39.86%, #1A261A 0%, #18181B 100%);
+
+
+--app-color-purple-dark: rgba(200, 166, 255, 1);
+--app-color-purple: radial-gradient(62.84% 78.34% at 25.38% 37.16%, #261A29 0%, #18181B 100%);
+
+
+--app-color-green-dark: rgba(45, 184, 59, 1);
+--app-color-orange-dark: rgba(255, 130, 60, 1);
+--shadow-md: rgba(0, 0, 0, 0.305) 0px 8px 24px;
+
+
+
+--progress-color: rgba(0, 112, 221, 1);
+--progress-background-variation: rgba(28, 39, 49, 1);
+
+--app-color-notification: var(--app-color-primary-dark);
+
+
+--app-circle-progress-value: rgba(0, 76, 150, 1);
+--app-color-grade-graph: rgba(142, 210, 255, 1);
+--app-color-grade-graph-fill: rgba(0, 112, 221, 1);
+
+}
+
+body {
   --ion-color-primary: rgba(85, 187, 255, 1);
   --ion-color-primary-rgb: 66, 140, 255;
   --ion-color-primary-contrast: #ffffff;
@@ -229,62 +266,28 @@
   --ion-color-light-shade: #1e2023;
   --ion-color-light-tint: #383a3e;
 
-  /* cards */
-  --app-color-primary: radial-gradient(48.49% 60.5% at 50% 71.5%, #1B242B 0.01%, #18181B 100%);
-  
-  --app-color-primary-dark: rgba(203, 203, 203, 1);
-  --app-color-primary-light: rgba(142, 210, 255, 1);
-  /* Περασμενα/ΜΟ */
-  --app-color-primary-dark-variation: rgb(150, 150, 150);
-
-  /* applet colors */
-  --app-color-orange-dark: rgba(255, 130, 60, 1);
-  --app-color-orange: radial-gradient(57.43% 66.29% at 29.17% 42.57%, #28221A 0%, #18181B 100%);
-
-  --app-color-green-dark: rgba(149, 255, 159, 1);
-  --app-color-green: radial-gradient(60.14% 63.88% at 29.92% 39.86%, #1A261A 0%, #18181B 100%);
-  
-
-  --app-color-purple-dark: rgba(200, 166, 255, 1);
-  --app-color-purple: radial-gradient(62.84% 78.34% at 25.38% 37.16%, #261A29 0%, #18181B 100%);
-
-
-  --app-color-green-dark: rgba(45, 184, 59, 1);
-  --app-color-orange-dark: rgba(255, 130, 60, 1);
-  --shadow-md: rgba(0, 0, 0, 0.305) 0px 8px 24px;
-
-
-  
-  --progress-color: rgba(0, 112, 221, 1);
-  --progress-background-variation: rgba(28, 39, 49, 1);
-
-  --app-color-notification: var(--app-color-primary-dark);
-
-
-  --app-circle-progress-value: rgba(0, 76, 150, 1);
-  --app-color-grade-graph: rgba(142, 210, 255, 1);
-  --app-color-grade-graph-fill: rgba(0, 112, 221, 1);
   
  }
 
- ion-card {
+ ion-card[data-theme="dark"] {
     border: 1px solid rgba(39, 39, 42, 1);
     --background: rgba(24, 24, 27, 1);
 
   }
 
-  ion-list {
+  ion-list[data-theme="dark"] {
     background-color: rgba(24, 24, 27, 1) !important;
   }
 
 
-  .info-container h5 {
+  .info-container[data-theme="dark"] h5 {
     color: rgba(212, 212, 216, 1);
   }
 
-  .info-text {
+  .info-text[data-theme="dark"] {
     color: rgba(144, 144, 144, 1);
   }
+
 
 
 
@@ -338,7 +341,7 @@
    * -------------------------------------------
    */
 
- body .md {
+ body .md[data-theme="dark"] {
   --ion-background-color: #121212;
   --ion-background-color-rgb: 18, 18, 18;
 
@@ -376,7 +379,6 @@
   --ion-card-background: #1e1e1e;
 }
 
-}
 
 
 /*  #FIXME and (max-width: 0) is used as a boolean to disable this css rule */
