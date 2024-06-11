@@ -144,7 +144,7 @@
 	}
 
 	ion-icon {
-		color: var(--app-color-primary-dark);
+		color: var(--app-color-icons);
 	}
 
 
@@ -153,8 +153,5 @@
 		padding-left: 5px;
 	}
 
-	[data-theme="dark"] ion-icon {
-		color: rgba(85, 187, 255, 1);
-	}
 
 </style>

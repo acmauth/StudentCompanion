@@ -33,11 +33,21 @@
     function fixIframeContent(){    
         // Getting the body of the iframe
         const body = iframe.contentDocument.querySelector("html");
-        
+        let bodyDarkMode = document.body;
+        let bodyColor = '';
         if (body) {
 
             const root = document.documentElement;
-            const bodyColor = getComputedStyle(root).getPropertyValue('--app-color-notification');
+            // Check if body has the class 'dark'
+            if (bodyDarkMode.classList.contains('dark')) {
+                
+            // Get the CSS variable value from body.dark
+            bodyColor = getComputedStyle(bodyDarkMode).getPropertyValue('--app-color-notification');
+        } else {
+            
+            // Get the CSS variable value from root
+            bodyColor = getComputedStyle(root).getPropertyValue('--app-color-notification');
+        }
             // Style reset for the iframe
             body.style.fontFamily = "Roboto, sans-serif";
             body.style.overflowY = "hidden";

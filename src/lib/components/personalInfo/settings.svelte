@@ -27,9 +27,9 @@
 	}
 
 	const toggleDarkTheme = () => {
-	    isDark = !isDark;
-	    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-	    localStorage.setItem('darkMode', isDark.toString());
+		isDark = !isDark;
+		document.body.classList.toggle('dark', isDark);
+		localStorage.setItem('darkMode', isDark.toString());
 	}
 
 
@@ -200,12 +200,9 @@
 	<style>
 
 	ion-icon {
-		color: var(--app-color-primary-dark);
+		color: var(--app-color-icons);
 	}
 
-	[data-theme="dark"] ion-icon {
-		color: rgba(85, 187, 255, 1);
-	}
 
 	</style>
  
