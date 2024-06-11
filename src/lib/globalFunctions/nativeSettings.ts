@@ -14,9 +14,19 @@ export function nativeSettings() {
 
 
     // Set the status bar to match the app's color scheme
-    StatusBar.setStyle({style: Style.Light});
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        StatusBar.setStyle({style: Style.Dark});
+    }
+    else {
+        StatusBar.setStyle({style: Style.Light});
+    }
 
     if (Capacitor.getPlatform() === 'android') {
-        StatusBar.setBackgroundColor({color: '#FCFCFC'});
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            StatusBar.setBackgroundColor({color: '#0e0e11'});
+        }
+        else {
+            StatusBar.setBackgroundColor({color: '#FCFCFC'});
+        }
     }
 }

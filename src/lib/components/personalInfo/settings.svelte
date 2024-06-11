@@ -125,11 +125,11 @@
 			
 		</ion-item>
 
-		<ion-item button>
+		<!-- <ion-item button>
 			<ion-icon size="small" icon={allIonicIcons.brush} />
 			<ion-label class="ion-padding-start">Αλλαγή Theme</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-		</ion-item>
+		</ion-item> -->
 
 		<ion-item button href="/faq">
 			<ion-icon size="small" icon={allIonicIcons.helpCircle} />

@@ -151,11 +151,12 @@
         .inputCustom {
             border: 0.15em solid var(--app-color-primary-dark);
             background-color: #0000;
+            color: var(--app-color-primary-dark);
         }
 
         ::placeholder
         {
-            color: var(--app-color-primary-dark);
+            color: var(--app-color-primary-dark-variation);
         }
     }
     
