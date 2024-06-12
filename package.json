@@ -39,7 +39,7 @@
 		"@capacitor/network": "^5.0.7",
 		"@capacitor/status-bar": "^5.0.6",
 		"@capacitor/toast": "^5.0.7",
-		"@capgo/capacitor-navigation-bar": "^6.0.12",
+		"@capgo/capacitor-navigation-bar": "^5.0.0",
 		"@ionic/core": "^7.2.1",
 		"@ionic/pwa-elements": "^3.2.2",
 		"@sveltejs/adapter-auto": "^2.1.0",
