@@ -66,11 +66,11 @@
 
     }
 
-	@media (prefers-color-scheme: dark) {
-		ion-chip {
-		color: var(--app-color-primary);
+
+	ion-chip {
+		color: var(--app-color-primary-dark);
 	}
 
-	}
+	
 
 </style>

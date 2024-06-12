@@ -33,15 +33,15 @@
 	 let primaryColor;
 	 let gradeFill;
 
-	 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-	  primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--progress-color').trim();
-	  gradeFill = getComputedStyle(document.documentElement).getPropertyValue('--progress-background-variation').trim();
-	 }
-	 else {
-	 	primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph').trim();
-	  	gradeFill = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph-fill').trim();
-		console.log(primaryColor, gradeFill)
-	 }
+	 if (document.body.classList.contains('dark')) {
+        primaryColor = getComputedStyle(document.body).getPropertyValue('--app-color-grade-graph').trim();
+        gradeFill = getComputedStyle(document.body).getPropertyValue('--app-color-grade-graph-fill').trim();
+      } else {
+        primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph').trim();
+        gradeFill = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph-fill').trim();
+      }
+
+
 
 	
 
@@ -124,7 +124,7 @@
 						},
 						tension: 0.4,
 						borderColor: primaryColor, // Set the color here
-            			backgroundColor: primaryColor // Optionally set the fill color
+            			backgroundColor: "primaryColor" // Optionally set the fill color
 						
 					},
 				],
@@ -150,6 +150,7 @@
 						font: {
 							size: 15
 						},
+						
 						
 				
 					},
@@ -230,11 +231,11 @@
     
     circle-progress::part(value) {
         stroke-width: 10;
-        stroke: var(--app-color-primary-dark);
+        stroke: var(--app-color-progress-value);
     }
     circle-progress::part(circle) {
         stroke-width: 10;
-        stroke: var(--app-color-primary-light);
+        stroke: var(--app-color-progress-circle);
     }
     circle-progress::part(text) {
         font-weight: bold;
@@ -248,18 +249,7 @@
 	}
 
 
-	@media (prefers-color-scheme: dark) {
 
-		circle-progress::part(value) {
-			stroke: var(--progress-color);
-		}
-		circle-progress::part(circle) {
-			stroke: var(--progress-background-variation);
-		}
-		circle-progress::part(text) {
-			fill: var(--app-color-primary-dark);
-		}
-	}
 
 	
 

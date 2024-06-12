@@ -143,6 +143,13 @@
 
 <ion-card>
 	<ion-card-content>
+		<ion-item>
+			<ion-icon size="small" icon={allIonicIcons.brush}></ion-icon>
+			<ion-toggle id="themeToggle" class="ion-padding-start"  checked={isDark} on:ionChange={toggleDarkTheme}>
+			  Dark Mode
+			</ion-toggle>
+		  </ion-item>
+
 		{#if Capacitor.isNativePlatform()}
 			<ion-item button on:click={launchNativenotificationSettings} aria-hidden>
 				<ion-icon size="small" icon={cog_solid} />
@@ -151,13 +158,6 @@
 			</ion-item>
 			{/if}
 
-
-			<ion-item>
-				<ion-icon size="small" icon={allIonicIcons.brush}></ion-icon>
-				<ion-toggle id="themeToggle" class="ion-padding-start"  checked={isDark} on:ionChange={toggleDarkTheme}>
-				  Dark Mode
-				</ion-toggle>
-			  </ion-item>
 
 		<ion-item button href="/about">
 			<ion-icon size="small" icon={allIonicIcons.people} />

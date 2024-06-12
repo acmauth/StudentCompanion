@@ -96,20 +96,42 @@
   /* Login input */
   --app-login-background: #F9FAFB;
 
+    /* Notifications Text Dark */
   --app-color-notification: #5c3753;
 
+  /* Progress Bar Home */
   --app-circle-progress-value: rgba(0, 76, 150, 1);
 
-  --app-color-grade-graph:  var(--app-color-primary-dark);
-  --app-color-grade-graph-fill: rgb(255, 241, 230);
+  /* Progress Bar (Grades) */
+  --app-color-progress-value: var(--app-color-primary-dark);
+  --app-color-progress-circle: var(--app-color-primary-light);
 
+   /* Graphs (Grades) */
+  --app-color-grade-graph:  var(--app-color-primary-dark);
+  --app-color-grade-graph-fill: rgb(230, 239, 255);
+
+  /* Icons (Personal Info) */
   --app-color-icons: var(--app-color-primary-dark);
 
+  /* Circle Progress (Home) */
   --progress-color: white;
   --progress-background-variation: var(--app-color-primary-dark);
 
+   /* Student ID (Home) */
   --app-student-id-icon: var(--app-color-primary-dark);
   --app-student-id-border:var(--app-color-primary-light);
+
+  /* Degree Calculator (Grades) Dark */
+  --app-color-degree-text: rgba(81, 81, 81, 1);
+  --app-color-degree-grade: var(--app-color-primary-dark);
+  --app-color-degree-subtext: grey;
+  --app-color-degree-description: #515151;
+  --app-color-degree-custom-input: #ccc;
+  --app-color-degree-placeholder: rgba(207, 207, 207, 0.747);
+  --app-color-degree-course: #000000;
+  --app-color-degree-semester: #727272;
+  --app-color-degree-chip: rgba(236, 242, 252, 1);
+  --app-color-degree-chip-text: var(--app-color-primary-dark);
 
 
   --shadow-xl: 0px -2px 40.6px -1px rgba(0, 0, 0, 0.10), 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
@@ -240,9 +262,11 @@ body.dark {
 
     /* cards */
   --app-color-primary: radial-gradient(48.49% 60.5% at 50% 71.5%, #1B242B 0.01%, #18181B 100%);
-    
+  
+ 
   --app-color-primary-dark: rgba(203, 203, 203, 1);
   --app-color-primary-light: rgba(142, 210, 255, 1);
+
   /* Περασμενα/ΜΟ */
   --app-color-primary-dark-variation: rgb(150, 150, 150);
 
@@ -264,27 +288,51 @@ body.dark {
 
 
 
+  /* Tab Color Dark */
+  --ion-tab-bar-color-selected: white;
 
-  /* Login input */
+  /* Login input Dark*/
   --app-login-background: rgb(19, 19, 19);
 
-  /* Progress Bar Home */
+  /* Progress Bar Home Dark*/
   --progress-color: rgba(0, 112, 221, 1);
   --progress-background-variation: rgba(28, 39, 49, 1);
 
+  /* Notifications Text Dark*/
   --app-color-notification: var(--app-color-primary-dark);
 
 
+  /* Circle Progress (Home & Grades) Dark*/
   --app-circle-progress-value: rgba(0, 76, 150, 1);
-  --app-color-grade-graph: rgba(142, 210, 255, 1);
-  --app-color-grade-graph-fill: rgba(0, 112, 221, 1);
 
+  /* Progress Bar (Grades) */
+  --app-color-progress-value: rgba(0, 112, 221, 1);
+  --app-color-progress-circle: var(--progress-background-variation);
 
-    --app-color-student-id: rgba(24, 24, 27, 1);
-    --app-student-id-icon: rgba(0, 112, 221, 1);
-    --app-student-id-border: rgba(39, 39, 42, 1);
+  /* Graphs (Grades) */
+  --app-color-grade-graph: rgba(0, 112, 221, 1);
+  --app-color-grade-graph-fill: var(--progress-background-variation);
 
+  /* Student ID (Home) Dark*/
+  --app-color-student-id: rgba(24, 24, 27, 1);
+  --app-student-id-icon: rgba(0, 112, 221, 1);
+  --app-student-id-border: rgba(39, 39, 42, 1);
+
+  /* Icons (Personal Info) Dark*/
   --app-color-icons: rgba(85, 187, 255, 1);
+
+  /* Degree Calculator (Grades) Dark */
+  --app-color-degree-text: var(--app-color-primary-dark);
+  --app-color-degree-grade: rgba(85, 187, 255, 1);
+  --app-color-degree-subtext: var(--app-color-primary-dark-variation);
+  --app-color-degree-description: var(--app-color-primary-dark-variation);
+  --app-color-degree-custom-input: var(--app-color-primary-dark);
+  --app-color-degree-placeholder: var(--app-color-primary-dark);
+  --app-color-degree-course: var(--app-color-primary-dark);
+  --app-color-degree-semester: var(--app-color-primary-dark-variation);
+  --app-color-degree-chip: var(--progress-background-variation);
+  --app-color-degree-chip-text: var(--progress-color);
+
 
   
  }

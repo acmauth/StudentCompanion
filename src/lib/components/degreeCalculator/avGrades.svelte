@@ -33,6 +33,7 @@
         margin-top: 2.5rem;
         margin-bottom: -0.5rem;
         font-weight: 550;
+        color: var(--app-color-degree-text);
     }
 
     #grades-box {
@@ -57,28 +58,15 @@
     .grade-text{
         font-weight: 525;
         font-size: 40px;
-        color: #004C96;
+        color: var(--app-color-degree-grade);
     }
 
     .grade-subtext{
         text-align: center;
         margin-top: -1em;
-        
+        color: var(--app-color-degree-subtext);
         font-size: 10px;
     }
 
-    @media (prefers-color-scheme: dark) {
-        #new-average {
-            color: var(--app-color-primary-dark);
-        }
-
-        .grade-text{
-            color: rgba(85, 187, 255, 1);
-        }
-
-        .grade-subtext{
-            color: var(--app-color-primary-dark-variation);
-        }
-    }
 
 </style>
