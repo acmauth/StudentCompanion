@@ -96,7 +96,11 @@
   /* Login input */
   --app-login-background: #F9FAFB;
 
-    /* Notifications Text Dark */
+  /* Maps */
+  --app-color-map-input: white;
+  --app-color-map-input-text: rgba(81, 81, 81, 1);
+
+  /* Notifications Text Dark */
   --app-color-notification: #5c3753;
 
   /* Progress Bar Home */
@@ -293,6 +297,10 @@ body.dark {
 
   /* Login input Dark*/
   --app-login-background: rgb(19, 19, 19);
+
+  /* Maps */
+  --app-color-map-input: #1e1e1e;
+  --app-color-map-input-text: var(--app-color-primary-dark);
 
   /* Progress Bar Home Dark*/
   --progress-color: rgba(0, 112, 221, 1);
