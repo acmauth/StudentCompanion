@@ -1,10 +1,9 @@
-
-
-# Aristomate
+# 
 
 <p align="center">
-  <img src="https://github.com/acmauth/StudentCompanion/assets/18248043/94a07a47-b268-4e73-9527-b2c11248166d" alt="Aristomate Logotype" width="150" />
+  <img src="https://github.com/acmauth/StudentCompanion/assets/18248043/5bfac992-57e5-4e6f-94b8-28d9a7d05215" alt="Aristomate Logotype" height="200" />
 </p>
+
 
 ![Svelte](https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00)
 ![Ionic](https://img.shields.io/badge/Ionic-3880FF?style=for-the-badge&logo=ionic&logoColor=white)
