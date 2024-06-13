@@ -44,7 +44,7 @@ ion-icon {
 	background-color: rgba(236, 242, 252, 1);	
 	color: var(--app-color-primary-dark);
 	font-weight: 700;
-	box-shadow: var(--shadow-short-md);
+	box-shadow: var(--shadow-sm);
 
 }
 </style>

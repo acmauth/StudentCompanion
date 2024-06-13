@@ -4,21 +4,34 @@
     import Vector from "$lib/components/loginService/Vector.svg"
     import Vector1 from "$lib/components/loginService/Vector(1).svg"
     import Logo from "$lib/assets/Logo_head.png";
-    import { onMount } from 'svelte';
-
+    import { eyeOff, eye, informationCircleOutline } from 'ionicons/icons';
+    import { alertController } from 'ionic-svelte';
+    const isProduction = process.env.NODE_ENV === 'production';
 
     let username = '';
     let password = '';
     let outputMessage = ''
     let invalidData = false;
     let isVisible = false;
+    let showPassword = false;
+
+    const showAlert = async () => {
+        const options = {
+            header: 'Είναι ασφαλή τα στοιχεία μου;',
+            subHeader: "Πάντα!",
+            message: 'Τα στοιχεία σύνδεσής σου μένουν μόνο μεταξύ της συσκευής σου και του ΑΠΘ. Η ομάδα του Aristomate δεν θα έχει ποτέ πρόσβαση σε αυτά.',
+            buttons: ['ΟΚ']
+        };
+        const alert = await alertController.create(options);
+        alert.present();
+    };
 
 
     async function submit(){
         
         isVisible = true;
 
-        username = (document.getElementById('usernameInput') as HTMLInputElement).value;
+        username = (document.getElementById('usernameInput') as HTMLInputElement).value.trim();
         password = (document.getElementById('passwordInput') as HTMLInputElement)?.value;
         
         let universisOutput = await getUniversisToken(username, password);
@@ -38,6 +51,11 @@
 
     }
 
+    function togglePasswordVisibility() {
+        showPassword = !showPassword;
+    }
+
+
 </script>
 
 
@@ -50,8 +68,23 @@
 
     <div style="display: flex; flex-direction: column; align-items: center; margin-top: -40px; justify-content: top; padding-right:20px; padding-left:20px;">
         <img src={Logo} alt="Aristomate logo" style="width: 30%; margin-bottom: 25px;">
-        <ion-input id='usernameInput' class="custom" placeholder="Όνομα χρήστη" fill="outline" style="margin-bottom: 10px;"></ion-input> 
-        <ion-input id='passwordInput' class="custom" type="password" placeholder="Κωδικός πρόσβασης" fill="outline" style="margin-bottom: 10px;" ></ion-input>
+
+        <div class="academiclogin" style="display:flex; flex-direction:row; align-items: center; justify-content: center; gap: 4px;">
+            <ion-text>Σύνδεση ΑΠΘ</ion-text>
+            {#if isProduction}
+                <ion-icon src={informationCircleOutline} on:click={showAlert} aria-hidden/>
+            {/if}
+        </div>
+
+        <input id='usernameInput' class="custom-input" placeholder="Όνομα χρήστη ΑΠΘ" style="margin-bottom: 10px;">
+        
+        <div class="input-button-container">
+            <input id="passwordInput" class="custom-input" type={showPassword ? 'text' : 'password'} placeholder="Κωδικός πρόσβασης" style="margin-bottom: 10px; width:100%">
+            <button id="eyeIcon" style="background: none; border: none;" on:click={togglePasswordVisibility}>
+                <ion-icon src={showPassword ? eyeOff : eye} alt="eye icon" style="width: 24px; height: 24px;"/>
+            </button>
+        </div>
+
         {#if invalidData}
             <ion-label class="error">Λανθασμένα στοιχεία σύνδεσης</ion-label>
         {/if}
@@ -61,19 +94,19 @@
                 <p class="loginP">Περιμένετε...</p>
             </div>
         {/if}
-    
-        <ion-button class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">ΕΙΣΟΔΟΣ</ion-button>
-        <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked="true"> 
+      
+        <ion-button aria-hidden class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">ΕΙΣΟΔΟΣ</ion-button>
+        <!-- <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked={true}> 
+
             <ion-label class="custom" style="font-size:small;">Διατήρηση σύνδεσης</ion-label>
-        </ion-checkbox>
-    </div>
-    
-    <div class="footer">
-        <ion-title size="small" color="primary" style="padding-bottom: 10px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
+        </ion-checkbox> -->
+
+        <div class="footer" style="display:flex; flex-direction:column">
+            <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
+        </div>
     </div>
 
 </ion-content>   
-
   
 <style>
     .footer {
@@ -81,9 +114,13 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        position: absolute;
-        top: 95%;
-        width: 100%;
+        padding-top: 35px;
+    }
+
+    .academiclogin {
+        color: #98BDD6;
+        margin-bottom: 10px;
+        /* font-weight: bold; */
     }
 
     ion-input.custom {
@@ -95,7 +132,6 @@
       --border-radius: 1rem; 
       --border-width: 1.8px;
       width: 80%;
-
     }
 
     ion-button.custom {
@@ -114,6 +150,21 @@
         --checkmark-color: #fff;
         --checkbox-background-checked: #5fbcfa;
         --size: 15px;
+    }
+
+    .custom-input {
+        background-color: #F9FAFB; 
+        color: var(--ion-color-primary);
+        border: 1.8px solid #98BDD6; 
+        border-radius: 1rem; 
+        width: 80%; 
+        padding: 0.5rem; 
+        height: 3.5rem; 
+    }
+
+    .custom-input::placeholder {
+        color: #98BDD6;
+        opacity: 0.8; 
     }
 
     ion-label.custom {
@@ -149,4 +200,32 @@
         margin: 0; 
     }
 
+    .input-button-container { 
+        position: relative; 
+        display: inline-block; 
+        width: 80%;
+    } 
+ 
+    .input-button-container input { 
+        width: 100%; 
+    } 
+ 
+    .input-button-container button { 
+        position: absolute; 
+        top: 45%;
+        right: 0;
+        padding-right: 15px;
+        transform: translateY(-50%);
+        border: none; 
+        background-color: transparent; 
+        cursor: pointer; 
+        color: var(--ion-color-primary);
+    } 
+    
+    .custom-input:focus {
+        outline: none; /* Remove the default focus outline */
+        border-color: var(--ion-color-primary); /* Apply your desired border color */
+        box-shadow: 0 0 0 1.5px var(--ion-color-primary); /* Optional: Apply a custom box shadow for focus */
+    }
+  
 </style>

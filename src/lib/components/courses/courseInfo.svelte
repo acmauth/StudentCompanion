@@ -118,6 +118,7 @@
 		}
 	});
 
+
 	
 </script>
 
@@ -131,11 +132,11 @@
 
 		<!-- Checking if there is a grade and displays the corresponding color depending if you passed or not -->
 		<ion-card-content class="ion-text-center">
-			{#if !stats.grade}
+			{#if !stats.grade && stats.grade!=0}
 				<ion-text><b>-</b></ion-text>
 				<br>
 				<ion-text class="danger">Δεν έχεις βαθμολογήθει ακόμα στο μάθημα</ion-text>
-			{:else if stats.grade * 10 >= 5}
+			{:else if stats.grade >= 5}
 				<ion-text class="success" id="number">{stats.grade}</ion-text>
 			{:else}
 				<ion-text class="danger" id="number">{stats.grade}</ion-text>
@@ -185,13 +186,14 @@
 		<ion-card-header>
 			<ion-card-title class="title">Στατιστικά</ion-card-title>
 			{#if course.period}
-				<ion-card-subtitle>Εξεταστική {course.period}</ion-card-subtitle>
+			<ion-card-subtitle>Εξεταστική {course.period}</ion-card-subtitle>
 			{:else}
-				<ion-card-subtitle>-</ion-card-subtitle>
+			<ion-card-subtitle>-</ion-card-subtitle>
 			{/if}
 		</ion-card-header>
 		<ion-card-content>
-		{#if stats.grade}
+			{#if stats.grade}
+			<canvas id="gradeChart" />
 			<ion-list>
 				<ion-item lines ="full">
 					<ion-label>Βαθμολογημένοι</ion-label>
@@ -236,7 +238,6 @@
 			</ion-list>
 		{/if}
 	
-		<canvas id="gradeChart" />
 	</ion-card-content>
 	</ion-card>
 

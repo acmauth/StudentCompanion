@@ -15,7 +15,19 @@
 	import Fuse from 'fuse.js';
 	import Card from '$components/degreeCalculator/card.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
+	import { onMount } from 'svelte';
+	import Banner from '$components/shared/banner.svelte';
 
+	
+	// Fix for flipper covering content
+	onMount(async () => {
+		// Making sure the flipper is not flipped when the page is loaded
+		// This is because the flipper maintains it's state when loaded, even when the flipper component is in an invalid state
+		// Due to the following components not having loaded fully yet. So with the onMount we can reset the state.
+		// Note for future reference: If we want it to retain it's flipped state, we can do a dual assignment to trigger the store update.
+		// So setting it to ~flipped and then flipped again, will trigger the store update.
+		$flipped = false;
+	});
 
 	let courseBySemester = writable([]);
 	let filteredSubjects = writable([]);
@@ -60,7 +72,7 @@
 		
 		coursesBySemester = await coursesPerSemester(subjectsJSON);
 		// @ts-ignore
-		passedSubjects = subjects.filter((/** @type {{ grade: number; }} */ course) => course.grade*10 >=5);
+		passedSubjects = subjects.filter((/** @type {{ grade: number; }} */ course) => course.grade*10 >=5).filter((/** @type {{parentCourse: string;}} */ course => course.parentCourse === null));
 		
 		// @ts-ignore
 		subjects = subjects.length;
@@ -95,6 +107,7 @@
 	async function gatherData() {
 		subjects = (await neoUniversisGet('students/me/courses?$top=-1',{lifetime: 600})).value;
 
+
 		subjectsJSON = subjects;
 
 		await getSubjects(subjectsJSON);
@@ -128,7 +141,6 @@
 }
 
 
-//Stats
 
 
 
@@ -142,7 +154,7 @@
 
       <ion-searchbar class="searchbar" debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
       
-      {#if Object.entries(coursesBySemester).length > 1}
+      {#if Object.entries(coursesBySemester).length > 0}
       	<Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />
 	  {/if}
     </ion-toolbar>
@@ -157,14 +169,14 @@
 	<!-- Show content after loading is completed -->
 
 	{#if !searchQuery.length}
-	<Flipper reactToHeight bind:flipped={$flipped}>
-        <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
-        <Card flip={flip} slot="back"/>
-    </Flipper>
+		<Flipper reactToHeight bind:flipped={$flipped}>
+			<Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
+			<Card flip={flip} slot="back"/>
+		</Flipper>
 	{/if}
 		
 		
-	  
+		
 		<Grades semesterId = {semesterId} searchQuery = {searchQuery} filteredSubjects = {filteredSubjects} />
 
 		{:catch error}
@@ -176,6 +188,11 @@
 
 <style>
 
+	ion-header {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+	}
 
 	ion-content {
 	--padding-end: 0.6rem;

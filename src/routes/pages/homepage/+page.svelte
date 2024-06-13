@@ -9,7 +9,7 @@
 	import man from '$lib/assets/man.png';
 	import { wallet } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
-	import RecentGrades from '$components/recentGrades/recentGrades.svelte';
+	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import AnnouncementBanner from '$shared/announcementBanner.svelte';
 
@@ -20,6 +20,7 @@
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import { onMount } from 'svelte';
+	import Banner from '$components/shared/banner.svelte';
 
 	let givenName = '';
 	let gender = '';
@@ -71,6 +72,23 @@
 		$qrStore = $qrStore.concat(newQR);
 	}
 
+	// Define a reactive variable to control focus behavior of QR Code input element
+	let shouldFocus = false;
+
+	$: {
+		if (shouldFocus) {
+			// Get the input field reference using the ref attribute
+			const inputField = document.getElementById('qrcode-input') as HTMLIonInputElement | null;
+
+			// Check if the input field reference exists and then focus on it
+			if (inputField) {
+				inputField.setFocus();
+			}
+
+			// Reset the shouldFocus variable to false to avoid multiple focus attempts
+			shouldFocus = false;
+		}
+	}
 </script>
 
 <ion-tab tab="homepage">
@@ -78,9 +96,7 @@
 		{#await getInfo()}
 			<HomepageSkeleton />
 		{:then}
-			<AnnouncementBanner>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<!-- <AnnouncementBanner>
 				<ion-text
 					color="light"
 					on:click={() => {
@@ -91,7 +107,7 @@
 					<ion-label>Early Access Beta - Η γνώμη σου μετράει!</ion-label>
 					<ion-icon icon={open} />
 				</ion-text>
-			</AnnouncementBanner>
+			</AnnouncementBanner> -->
 			<div class="info-container">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -117,14 +133,15 @@
 
 				<ion-modal
 					is-open={modalOpen}
-					initial-breakpoint={$qrStore.length > 0? 0.3 : 0.2}
+					initial-breakpoint={$qrStore.length > 0? 0.5 : 0.2}
 					on:ionModalDidDismiss={() => {modalOpen = false;}}
+					on:ionModalDidPresent={() => {shouldFocus = true;}}
 					breakpoints={[0, 0.1, 0.2, 0.3, 0.5]}>
 					<ion-content>
 						<ion-grid>
 							{#if $qrStore.length == 0}
 								<ion-col style="display: flex; justify-content: center; margin: 30px;">
-									<ion-input placeholder="Κωδικός QR πάσου" type="number"/>
+									<ion-input id="qrcode-input" placeholder="Κωδικός QR πάσου" type="number"/>
 									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary"
 												on:ionFocus={addQR}>Προσθήκη</ion-button>
 								</ion-col>
@@ -174,8 +191,9 @@
 			</div>
 			<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
 			<AppletsSlides />
-			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
-			<RecentGrades />
+			<Banner altText="Πες μας τη γνώμη σου" />
+			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατα</b></p>
+			<RecentItems />
 		{:catch error}
 			<p>{error.message}</p>
 		{/await}

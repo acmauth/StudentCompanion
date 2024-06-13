@@ -12,11 +12,11 @@
     export let flip;
 
 
-    let unpassed_courses: { title: string; id: string; semester_id: number, semester_name: string, grade: number; input_grade: string; ects: number;}[] = [];
+    let unpassed_courses: { title: string; id: string; semester_id: number, semester_name: string, grade: number; input_grade: string; coefficient: number;}[] = [];
     
-    let degree_grade = { ects: {value:0, stringed:''}, simple: {value: 0, stringed: ''} };
+    let degree_grade = { based: {value:0, stringed:''}, simple: {value: 0, stringed: ''} };
 
-    let sums = { ects: {grade_sum:0, ect: 0}, simple: {grade_sum: 0, passed: 0} };
+    let sums = { based: {grade_sum:0, coefficient: 0}, simple: {grade_sum: 0, passed: 0} };
 
     let not_passed_all_courses = false;
 
@@ -36,14 +36,14 @@
         inputUpdate(unpassed_courses, sums, degree_grade);
         degree_grade = degree_grade;
     }
-    
+
 </script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 <ion-card style="overflow-y: auto;" class="ion-padding-vertical">
     <ion-card-title>Πρόβλεψη Μέσου Όρου</ion-card-title>
-    <ion-card-subtitle>Βάλε τους βαθμούς που περιμένεις να λάβεις για να δεις πώς επηρεάζεται ο Μ.Ο. σου</ion-card-subtitle>
+    <ion-card-subtitle>Βάλε τους βαθμούς, μεγαλύτερους ή ίσους του 5, που περιμένεις να λάβεις για να δεις πώς επηρεάζεται ο Μ.Ο. σου</ion-card-subtitle>
 
     {#await universis()}
         <CoursesSkeleton />
@@ -59,8 +59,8 @@
                 <div class="input-box"> 
                     <input type="text" inputmode="decimal" 
                     id="{course.id}" class="inputCustom"
-                    on:click={clickInput} placeholder="0.00"
-                    on:input={gradeInput} />      
+                    on:click={clickInput} placeholder="5.00"
+                    on:input={gradeInput}/>      
                 </div>
 
             </div>      
@@ -120,19 +120,25 @@
     }
 
     .courses-box {
-        margin-bottom: 0.3em; 
+        margin-bottom: 0.3m; 
         display: flex;
     }
 
     .inputCustom {
     text-align: center;
-    border: 0.1em solid #ccc;
+    border: 0.15em solid #ccc;
     border-radius: 0.8em;
     font-size: 0.7em;
-    width: 4em;
+    font-weight: bold;
+    width: 5em;
     height: 2.5em;
     box-sizing: border-box;
     outline: none;
+    }
+
+    ::placeholder
+    {
+        color: rgba(207, 207, 207, 0.747);
     }
     
 </style>

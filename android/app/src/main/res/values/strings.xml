@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">studentCompanionUI</string>
-    <string name="title_activity_main">studentCompanionUI</string>
+    <string name="app_name">Aristomate</string>
+    <string name="title_activity_main">Aristomate</string>
     <string name="package_name">studentCompanionUI.ionic.io</string>
     <string name="custom_url_scheme">studentCompanionUI.ionic.io</string>
 </resources>

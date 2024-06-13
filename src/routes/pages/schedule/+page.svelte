@@ -1,11 +1,13 @@
 <script lang="ts">
     import type { ClassItemFlat } from '$lib/components/schedule/class/ClassItem';
-    import {add, bookOutline, calendar, calendarClearOutline, createOutline, ellipsisHorizontalOutline, reload, reloadCircle, reloadOutline, schoolOutline} from 'ionicons/icons';
+    import {add, bookOutline, createOutline, ellipsisHorizontalOutline, schoolOutline} from 'ionicons/icons';
     import { Capacitor } from '@capacitor/core';
     import ClassCard from '$components/schedule/class/classCard.svelte';
-    import { universisGet } from '$lib/dataService';
-    import { getDayByIndex, getDayIndex, weekdays } from "$lib/components/schedule/day/days";
+    import { getDayByIndex, getDayIndex, weekdays, weekdaysMonFirst } from "$lib/components/schedule/day/days";
     import { classStore } from '$components/schedule/class/classStore';
+    import { swipe } from 'svelte-gestures';
+	import { universisGet } from '$lib/dataService';
+	import { onMount } from 'svelte';
 
     // Clear class store
     // $classStore = [];
@@ -25,10 +27,34 @@
             endTime: new Date(slot.endTime).toTimeString().substring(0, 5)
         }))).filter(slot => slot.day === (weekdays.findIndex((day) => Object.keys(day)[0] === activeDay))).sort((a, b) => a.startTime.localeCompare(b.startTime));
 
-    // classes = (await universisGet('students/me/teachingEvents?$expand=location,performer&$filter=startDate ne null&$top=-1&$orderby=startDate')).value;
+    // onMount(async () => {
+    //     let classes = (await universisGet('students/me/teachingEvents?$expand=location,performer&$filter=startDate ne null&$top=-1&$orderby=startDate')).value;
+    //     if (classes.length > 0) {
+    //         $classStore = classes.map((item: any) => ({
+    //             id: item.id,
+    //             title: item.title,
+    //             professor: item.performer ? item.performer.name : 'Άγνωστος',
+    //             classroom: item.location ? item.location.name : 'Άγνωστος',
+    //             slots: item.slots.map((slot: any) => ({
+    //                 day: weekdays[getDayIndex(new Date(slot.startTime).getDay())][Object.keys(weekdays[getDayIndex(new Date(slot.startTime).getDay())])[0]],
+    //                 startTime: slot.startTime,
+    //                 endTime: slot.endTime
+    //             }))
+    //         }));
+    //     }
+    // });
+
+    function handler(event) {
+        let direction = event.detail.direction;
+        if (direction == "right")
+            activeDay = getDayByIndex(getDayIndex(activeDay) - 1).toLowerCase();
+        else if (direction == "left")
+            activeDay = getDayByIndex(getDayIndex(activeDay) + 1).toLowerCase();
+    }
 
 </script>
 
+<ion-tab tab="schedule">
 <ion-header collapse="condense" mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
       <ion-title class="ion-padding-vertical" size="large">Πρόγραμμα μαθημάτων</ion-title>
@@ -55,34 +81,38 @@
  </ion-fab>
 
 
-<ion-tab tab="schedule"></ion-tab>
 
 <ion-content fullscreen={true}>
     <div>
         <ion-segment id="day-list" value={activeDay} scrollable on:ionChange={() => {activeDay = (document.getElementById("day-list")).value}} mode='md'>
-            {#each weekdays as day}
+            {#each weekdaysMonFirst as day}
                 {#each Object.keys(day) as key }
                     <ion-segment-button value={key}>
                         <ion-label>{getDayByIndex(getDayIndex(key.charAt(0).toUpperCase() + key.slice(1)), 'el', true)}</ion-label>
                     </ion-segment-button>
                 {/each}
             {/each}
+        </ion-segment>
     </div>
 
-    <ion-grid style="padding: 0%">
-        {#each currentClasses as courseClass}
-            <ClassCard classItem={courseClass} />
-        {/each}
-    </ion-grid>
+    <div use:swipe={{ timeframe: 300, minSwipeDistance: 100, touchAction: 'pan-y' }} on:swipe={handler} style="width:auto;height:80%;border:1px;">
+        <ion-grid style="padding: 0%">
+            {#each currentClasses as courseClass}
+                <ClassCard classItem={courseClass} />
+            {/each}
+        </ion-grid>
 
-    <ion-row class="custom-center-label">
-        {#if currentClasses.length === 0}
-            <ion-icon icon={bookOutline} size="large" style="padding: 15px"></ion-icon>
-            <ion-label>Δεν υπάρχουν προγραμματισμένα μαθήματα αυτή τη μέρα.</ion-label>
-        {/if}
-    </ion-row>
+        <ion-row class="custom-center-label">
+            {#if currentClasses.length === 0}
+                <ion-icon icon={bookOutline} size="large" style="padding: 15px"></ion-icon>
+                <ion-label>Δεν υπάρχουν προγραμματισμένα μαθήματα αυτή τη μέρα.</ion-label>
+            {:else}
+                <div style="height: 5rem;"/>
+            {/if}
+        </ion-row>
+    </div>
 </ion-content>
-
+</ion-tab>
 
 <style>
     ion-segment-button {
@@ -95,7 +125,7 @@
 
     ion-segment {
         margin-top: 5px;
-        --background: #fff;
+        /* --background: #fff; */
     }
 
     .custom-center-label {

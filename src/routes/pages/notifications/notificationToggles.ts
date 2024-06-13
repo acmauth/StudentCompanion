@@ -1,33 +1,48 @@
-import { writable } from 'svelte/store';
-import { persisted } from 'svelte-persisted-store';
+import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
 
-function createToggles() {
-    const { subscribe, set, update } = persisted("NotificationToggles", {
-        all: true,
-        universis: true,
-        elearning: true,
-        elSystem: true
-    });
+export const toggles = new CapacitorPersistedStore({
+    all: true,
+    universis: true,
+    elearning: true,
+    elSystem: true,
+    webmail: true
+}, "NotificationToggles");
 
-    const toggleUniversis = () => update((n) => {
+export function toggleUniversis() {
+    toggles.update((n) => {
         n.universis = !n.universis;
-        n.all = n.universis && n.elearning && n.elSystem;
+        n.all = n.universis && n.elearning && n.elSystem && n.webmail;
         return n;
     });
+}
 
-    const toggleElearning = () => update((n) => {
+export function toggleElearning() {
+    toggles.update((n) => {
         n.elearning = !n.elearning;
-        n.all = n.universis && n.elearning && n.elSystem;
+        n.all = n.universis && n.elearning && n.elSystem && n.webmail;
         return n;
     });
 
-    const toggleelSystem = () => update((n) => {
+}
+
+export function toggleWebmail() {
+  toggles.update((n) => {
+        n.webmail = !n.webmail;
+        n.all = n.universis && n.elearning && n.elSystem && n.webmail;
+        return n;
+    });
+}
+
+export function toggleelSystem() {
+    toggles.update((n) => {
         n.elSystem = !n.elSystem;
-        n.all = n.universis && n.elearning && n.elSystem;
+        n.all = n.universis && n.elearning && n.elSystem && n.webmail;
         return n;
     });
+}
 
-    const toggleAll = () => update((n) => {
+export function toggleAll() {
+    toggles.update((n) => {
         if (n.all) {
             return n;
         }
@@ -35,17 +50,9 @@ function createToggles() {
         n.universis = n.all;
         n.elearning = n.all;
         n.elSystem = n.all;
+        n.webmail = n.all;
         return n;
     });
-
-    return {
-        subscribe,
-        toggleUniversis,
-        toggleElearning,
-        toggleelSystem,
-        toggleAll,
-    };
 }
 
-export const toggles = createToggles();
 

@@ -11,7 +11,7 @@
 
   onMount(() => {
     const qrCodeElement = document.getElementById(qr1.data);
-    QRCode.toCanvas(qrCodeElement, qr1.data, { width: 200, height: 200 });
+    QRCode.toCanvas(qrCodeElement, qr1.data, { width: 300, height: 300 });
   });
 
   const showAlert = async (options) => {

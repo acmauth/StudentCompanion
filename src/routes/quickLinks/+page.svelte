@@ -12,6 +12,8 @@
 	import eudoxusLogo from '$lib/assets/eudoxusLogo.png';
 	import restaurantLogo from '$lib/assets/restaurantLogo.png';
 	import gymLogo from '$lib/assets/gymLogo.png';
+	import campingLogo from '$lib/assets/campingLogo.png'; 
+	import erasmusLogo from '$lib/assets/erasmusLogo.png'; 
 
 	let department: any;
 	let departmentName = '';
@@ -55,8 +57,18 @@
 		},
 		{
 			linktitle: 'Πανεπιστημιακό Γυμναστήριο',
-			linkaddress: 'https://gym.auth.gr',
+			linkaddress: 'https://gym.auth.gr/reservations/',
 			imagelink: gymLogo
+		},
+		{
+			linktitle: 'Πανεπιστημιακή Κατασκήνωση', 
+			linkaddress: 'https://camping.auth.gr/en/', 
+			imagelink: campingLogo
+		},
+		{
+			linktitle: 'Γραφείο Erasmus', 
+			linkaddress: 'https://eurep.auth.gr/', 
+			imagelink: erasmusLogo
 		}
 	];
 

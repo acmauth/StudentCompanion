@@ -150,7 +150,7 @@
 
 </script>
 
-<ion-card class="ion-text-center ion-padding-vertical stats">
+<ion-card class="ion-text-center stats">
 	<ion-card-header>
 		<ion-card-subtitle>
 			<h2 class="subtitle">Περασμένα μαθήματα</h2>
@@ -231,6 +231,7 @@
 	.subtitle {
 		color: var(--app-color-primary-dark);
 		font-weight: medium;
+		margin: 0.5rem;
 	}
 
 

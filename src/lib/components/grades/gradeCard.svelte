@@ -1,11 +1,17 @@
-<script lang="ts">  
+<script lang="ts">
 	export let filteredSubjects: any = {};
 	export let semesterId: any = {};
 	export let semesterAverage: any = {};
 	export let semesterName: string;
 	import AppCard from '$shared/AppCard.svelte';
+	import * as allIonicIcons from 'ionicons/icons';
 
-	
+
+	let childrenOpen: boolean[] = [];
+
+    function toggleChildren(index: number) {
+        childrenOpen[index] = !childrenOpen[index];
+    }
 
 </script>
 <span class="scroll" id={semesterId}></span>
@@ -28,55 +34,149 @@
 
 </div>
 
+	{#each filteredSubjects as course,index}
+	<AppCard id={index} href={course.childCourses && course.childCourses.length > 0 ? undefined : `/courses/${encodeURIComponent(course.course)}`} padding>
+		<!-- Card content for course -->
+		<!-- Checking if course has children courses or not, so we can render the href links accordingly. Rest of the content stays the same -->
+		{#if course.childCourses && course.childCourses.length > 0}
+		<ion-item href={ `/courses/${encodeURIComponent(course.course)}`} lines="none" class="ion-no-padding">
+			<div class="containerFlex">
+
+				<div class="titlesFlex">
+				<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
+
+		{#if course.examPeriod !== null}
+			<ion-label class="examPeriod">
+				{#if course.examPeriod && course.gradeYear}
+					{course.examPeriod.name} {course.gradeYear.name}
+				{:else}
+					ΔΗΛΩΜΕΝΟ
+				{/if}
+			</ion-label>
+
+		{:else}
+			<ion-label class="examPeriod">-</ion-label>
+		{/if}
+
+		</div>
+		{#if course.grade !== null && !(isNaN(course.grade))}
+			{#if course.grade * 10 >= 5}
+				<ion-text class="success gradeNumber">
+					<h2>{course.formattedGrade}</h2>
+				</ion-text>
+			{:else}
+				<ion-text class="danger gradeNumber">
+					<h2>{course.formattedGrade}</h2>
+				</ion-text>
+			{/if}
+		{/if}
+		</div>
+		
+		</ion-item>
+		
+		{:else}
+		<ion-item lines="none" class="ion-no-padding">
+			<div class="containerFlex">
+
+				<div class="titlesFlex">
+				<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
+
+		{#if course.examPeriod !== null}
+			<ion-label class="examPeriod">
+				{#if course.examPeriod && course.gradeYear}
+					{course.examPeriod.name} {course.gradeYear.name}
+				{:else}
+					ΔΗΛΩΜΕΝΟ
+				{/if}
+			</ion-label>
+
+		{:else}
+			<ion-label class="examPeriod">-</ion-label>
+		{/if}
+
+		</div>
+		{#if course.grade !== null && !(isNaN(course.grade))}
+			{#if course.grade * 10 >= 5}
+				<ion-text class="success gradeNumber">
+					<h2>{course.formattedGrade}</h2>
+				</ion-text>
+			{:else}
+				<ion-text class="danger gradeNumber">
+					<h2>{course.formattedGrade}</h2>
+				</ion-text>
+			{/if}
+		{/if}
+		</div>
+		
+		</ion-item>
+		{/if}
+		
 	
 
-		{#each filteredSubjects as course}
-		
-		<AppCard href={`/courses/${course.course}`} padding>
-				<ion-item lines="none" class="ion-no-padding">
-						<div class="containerFlex">
-
-							<div class="titlesFlex">
-							<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
-
-					{#if course.examPeriod !== null}
-						<ion-label class="examPeriod">
-							{#if course.examPeriod && course.gradeYear}
-								{course.examPeriod.name} {course.gradeYear.name}
+	<!-- If the current course has children courses, add them below -->
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	{#if course.childCourses && course.childCourses.length > 0}
+		<div class="children" class:open={childrenOpen[index]}>
+			{#each course.childCourses as childCourse}
+				<!-- Card content for child course -->
+				<ion-item href={`/courses/${course.course}`} lines="none" class="ion-no-padding">
+					<div class="containerFlex">
+						<div class="titlesFlex">
+							<ion-label class="ion-text-wrap courseTitle">{childCourse.courseTitle}</ion-label>
+							{#if childCourse.examPeriod !== null}
+								<ion-label class="examPeriod">
+									{#if childCourse.examPeriod && childCourse.gradeYear}
+										{childCourse.examPeriod.name} {childCourse.gradeYear.name}
+									{:else}
+										ΔΗΛΩΜΕΝΟ
+									{/if}
+								</ion-label>
 							{:else}
-								ΔΗΛΩΜΕΝΟ
+								<ion-label class="examPeriod">-</ion-label>
 							{/if}
-						</ion-label>
-		
-					{:else}
-						<ion-label class="examPeriod">-</ion-label>
-					{/if}
-
-					</div>
-					{#if course.grade !== null && !(isNaN(course.grade))}
-						{#if course.grade * 10 >= 5}
-							<ion-text class="success gradeNumber">
-								<h2>{course.formattedGrade}</h2>
-							</ion-text>
-						{:else}
-							<ion-text class="danger gradeNumber">
-								<h2>{course.formattedGrade}</h2>
-							</ion-text>
+						</div>
+						{#if childCourse.grade !== null && !(isNaN(childCourse.grade))}
+							{#if childCourse.grade * 10 >= 5}
+								<ion-text class="success gradeNumber">
+									<h2>{childCourse.formattedGrade}</h2>
+								</ion-text>
+							{:else}
+								<ion-text class="danger gradeNumber">
+									<h2>{childCourse.formattedGrade}</h2>
+								</ion-text>
+							{/if}
 						{/if}
-					{/if}
 					</div>
 				</ion-item>
-	</AppCard>
-	{/each}
+				
+			{/each}
 
+		</div>
+
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<ion-icon class="icon arrow" on:click={() => toggleChildren(index)} size="large" icon={allIonicIcons.caretDown} class:arrowOpen={childrenOpen[index]} />
+			
+	{/if}
+
+</AppCard>
+
+{/each}
 {/if}
+
 </div>
 
 <style>
 
+.icon {
+	min-width: 100%;
+}
+
 
 .gradeNumber h2{
 	margin: 0 !important;
+	margin-right: -0.5rem !important;
+	margin-left: 0.5rem !important;
+	
 }
 
 
@@ -88,6 +188,7 @@ h2 {
 
 .courseTitle {
 	font-size: 1rem;
+	margin-right: 0.5rem;
 }
 
 .title {
@@ -151,43 +252,31 @@ h2 {
 	gap: 1rem;
 }
 
-.success {
-	color: var(--app-color-green-dark);
-}
-
-.danger {
-	color: var(--app-color-orange-dark);
-}
-
-.examPeriod{
-	font-size: 0.8rem;
-}
-
-.success {
-	color: var(--app-color-green-dark);
-}
-
-.danger {
-	color: var(--app-color-orange-dark);
-}
-
-.examPeriod{
-	font-size: 0.8rem;
-}
-
-.success {
-	color: var(--app-color-green-dark);
-}
-
-.danger {
-	color: var(--app-color-orange-dark);
-}
 
 .examPeriod{
 	font-size: 0.8rem;
 }
 
 
+.children {
+    visibility: hidden;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+	max-height: 0rem;
+}
 
+.open {
+	max-height: 10rem;
+	visibility: initial;
+}
 
+.arrow {
+	margin-bottom: -1rem;
+	transform: rotate(0deg);
+	transition: transform 0.5s ease-in-out;
+}
+
+.arrowOpen {
+	transform: rotate(180deg);
+}
 </style>

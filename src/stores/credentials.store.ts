@@ -1,4 +1,4 @@
-import { persisted } from 'svelte-persisted-store'
+import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
 
 export interface UserCreds {
     username: string;
@@ -6,10 +6,10 @@ export interface UserCreds {
 }
 
 // Store for the user's credentials
-export const userCreds = persisted<UserCreds>('usercredentials', {
+export const userCreds = new CapacitorPersistedStore({
     username: "",
     password: ""
-})
+}, 'usercredentials')
 
 // Store for the user's tokens
 interface elearningCreds {
@@ -27,7 +27,7 @@ export interface userTokens {
     universis: universisCreds;
 }
 
-export const userTokens = persisted<userTokens>('userTokens', {
+export const userTokens = new CapacitorPersistedStore({
     elearning: {
         sesskey: "",
         moodleSession: "",
@@ -36,4 +36,4 @@ export const userTokens = persisted<userTokens>('userTokens', {
     universis: {
         token: ""
     }
-})
+}, 'userTokens')

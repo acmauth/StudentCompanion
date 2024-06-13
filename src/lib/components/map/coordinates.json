@@ -3,132 +3,182 @@
         "name": "Faculty of Sciences",
         "name_el": "Σχολή Θετικών Επιστημών",
         "coordinates": { "lng": 22.956504569317843, "lat": 40.63405427059443 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/cgZySfnEp3fZdSLA8"
     },
     {
         "name": "Department of Architectural Engineering",
         "name_el": "Τμήμα Αρχιτεκτόνων Μηχανικών",
         "coordinates": { "lng": 22.95949074444663, "lat": 40.62833414523201 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/JqpLPXmSuvwFt13T8"
+        
     },
     {
         "name": "Department of Civil Engineering",
         "name_el": "Τμήμα Πολιτικών Μηχανικών",
         "coordinates": { "lng": 22.959769231195068, "lat": 40.628040832340574 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/TVUtb2AFaFtdsfgg9"
     },
     {
         "name": "Department of Electrical and Computer Engineering",
         "name_el": "Τμήμα Ηλεκτρολόγων Μηχανικών και Μηχανικών Υπολογιστών",
         "coordinates": { "lng": 22.9599038231896, "lat": 40.62736347881813 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/RDo4MYmzrKPwAvFs6"
     },
     {
         "name": "Department of Chemical Engineering", 
         "name_el": "Τμήμα Χημικών Μηχανικών", 
         "coordinates": { "lng": 22.960192655603613, "lat": 40.62702851410389 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/PAFdsS9tVvtQNXDY7"
     },
     {
         "name": "Department of Agriculture",
         "name_el": "Τμήμα Γεωπονίας",
         "coordinates": { "lng": 22.958085140492127, "lat": 40.633393059062776 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/C2DAhAWQLs1HJFRa7"
     },
     {
         "name": "Faculty of Philosophy",
         "name_el": "Φιλοσοφική Σχολή",
         "coordinates": { "lng": 22.955360016391538, "lat": 40.63159364694488 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/hFpPoY3r69h9v9h47"
     },
     {
         "name": "Law School",
         "name_el": "Νομική Σχολή",
         "coordinates": { "lng": 22.956679663129158, "lat": 40.631210960263545 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/vyrE8UM6aX8BtALN6"
     },
     {
         "name": "Department Of Economics",
         "name_el": "Τμήμα Οικονομικών Επιστημών",
         "coordinates": { "lng": 22.95705517239328, "lat": 40.63093412173016 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/v9kwwgtM4scBjACq6"
     },
     {
         "name": "Ceremony Hall",
         "name_el": "Αίθουσα Τελετών",
         "coordinates": { "lng": 22.956353846940697, "lat": 40.63005543155283 },
-        "pointer": "red"
+        "pointer": "ceremony",
+        "url": "https://maps.app.goo.gl/YVd2MiYekAvzibxQ7"
     },
     {
         "name": "Central Library",
         "name_el": "Κεντρική Βιβλιοθήκη",
         "coordinates": { "lng": 22.95797390106965, "lat": 40.62972973340975 },
-        "pointer": "red"
+        "pointer": "library",
+        "url": "https://maps.app.goo.gl/EBgjPFPkHSU8gWgX9"
     },
     {
         "name": "School of Chemistry",
         "name_el": "Tμήμα Χημείας",
         "coordinates": { "lng": 22.956246558467114, "lat": 40.63256325401762 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/TBqfBQfA9fAbofoR8"
     },
     {
         "name": "Biology Department",
         "name_el": "Tμήμα Βιολογίας",
         "coordinates": { "lng": 22.9572926199534, "lat": 40.63318205286701 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/BzvxFBhCo9tRS5tc7"
     },
     {
         "name": "Faculty of Theology",
         "name_el": "Θεολογική Σχολή",
         "coordinates": { "lng": 22.955109301937426, "lat": 40.63079231772927 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/utESn1aA749HnJE59"
     },
     {
         "name": "Veterinary Medicine School",
         "name_el": "Τμήμα Κτηνιατρικής",
         "coordinates": { "lng": 22.95913797967473, "lat": 40.63220907051348 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/vDqBszXpwVpiuKef8"
     },
     {
         "name": "Medical School",
         "name_el": "Ιατρική Σχολή",
         "coordinates": { "lng": 22.960935059635318, "lat": 40.631028445269706 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/7ZVLe823zHVM14dF9"
     },
     {
         "name": "Faculty of Education",
         "name_el": "Παιδαγωγική Σχολή",
         "coordinates": { "lng": 22.961517993250336, "lat": 40.62762959660288 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/Tuf4jLZXr2cztKmV6"
     },
     {
         "name": "School of Dentistry",
         "name_el": "Τμήμα Οδοντιατρικής",
         "coordinates": { "lng": 22.9615877306832, "lat": 40.62995023417895 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/Uwy9UAZTUGYuG7658"
     },
     {
         "name": "Observatory",
         "name_el": "Αστεροσκοπείο",
         "coordinates": { "lng":  22.958845895176307, "lat": 40.630735260674165 },
-        "pointer": "red"
+        "pointer": "observatory",
+        "url": "https://maps.app.goo.gl/GBx5w1eQWwqrKDNj7"
     },
     {
         "name": "School of History and Archaeology",
         "name_el": "Τμήμα Ιστορίας και Αρχαιολογίας",
         "coordinates": { "lng":  22.955569535156393, "lat": 40.63186623741631 },
-        "pointer": "blue"
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/b882sMG93oqzuQNz6"
     },
     {
         "name": "Gym",
         "name_el": "Πανεπιστημιακό Γυμναστήριο",
         "coordinates": { "lng":  22.963580223050336, "lat": 40.62640355601469 },
-        "pointer": "red"
+        "pointer": "gym",
+        "url" : "https://maps.app.goo.gl/yjaZkT9NP2hmHygC7"
+
     },
     {
         "name": "University Student Restaurant Club",
         "name_el": "Πανεπιστημιακή Φοιτητική Λέσχη",
         "coordinates": { "lng":  22.960629793286632, "lat": 40.625825409102205 },
-        "pointer": "red"
+        "pointer": "lesxi",
+        "url": "https://maps.app.goo.gl/y2ZQzoj3BQQHbh5v6"
+    },
+    {
+        "name": "Department of Physical Education and Sports Science",
+        "name_el": "ΤΕΦΑΑ ΑΠΘ",
+        "coordinates": { "lng": 23.002527944898002, "lat": 40.56999897339933 },
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/rGwWqdHgvXxLARsY7"
+    },
+    {
+        "name": "Department of School Of Informatics",
+        "name_el": "Παράρτημα Τμήματος Πληροφορικής",
+        "coordinates": { "lng": 22.961074068376494, "lat": 40.58804146058148 },
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/dobmAKFfcLrwqsfN6"
+    },
+    {
+        "name": "Research Dissemination Center (KEDEA)",
+        "name_el": "Κέντρο Διάδοσης Ερευνητικών Αποτελεσμάτων ΚΕ.Δ.Ε.Α",
+        "coordinates": { "lng": 22.96253536320498, "lat": 40.62688283636431 },
+        "pointer": "department",
+        "url": "https://maps.app.goo.gl/3STwTsAvoALq8jzk9"
     }
 ]
+
+
+
+
+ 

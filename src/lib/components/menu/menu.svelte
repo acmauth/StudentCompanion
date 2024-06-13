@@ -5,8 +5,11 @@
 	import { getMenu } from '$lib/menuScraper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
+	import Banner from '$components/shared/banner.svelte';
 
 	let cafeteriaData: string | any[] = [];
+	let todaydata: string;
+	let title: string = "Σημερινό μενού";
 
 	const date = new Date();
 	let today = date.getDay();
@@ -19,22 +22,49 @@
 	const hours = date.getHours();
 	const mins = date.getMinutes();
 	let message = '';
+	let now = '';
+	let next = '';
 	let color = 'success';
-	if (hours >= 8 && mins >= 30 && hours < 10) {
+
+	if ((hours == 8 && mins >= 30) || (hours > 8 && hours < 10)) {
 		message = 'Λέσχη ανοιχτή για Πρωινό - Κλείνει στις 10:00';
+		now = "Πρωινό";
+		next = "Μεσημεριανό";
 	} else if (hours >= 10 && hours < 12) {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 12:00';
 		color = 'danger';
+		now = "Μεσημεριανό";
+		next = "Βραδινό";
 	} else if (hours >= 12 && hours < 16) {
 		message = 'Λέσχη ανοιχτή για Μεσημεριανό - Κλείνει στις 16:00';
+		now = "Μεσημεριανό";
+		next = "Βραδινό";
 	} else if (hours >= 16 && hours < 18) {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 18:00';
 		color = 'danger';
+		now = "Βραδινό";
+		next = "";
 	} else if (hours >= 18 && hours < 21) {
 		message = 'Λέσχη ανοιχτή για Βραδινό - Κλείνει στις 21:00';
+		now = "Βραδινό";
+		next = "";
 	} else {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 08:30';
 		color = 'danger';
+		now = "Πρωινό";
+		next = "Μεσημεριανό";
+
+		if (hours >= 21 && hours <= 23 && mins <= 59) 
+			title = "Αυριανό μενού";
+		else
+			title = "Σημερινό μενού";
+
+		today = (today + 1) % 7;
+		if (today) {
+			today -= 1;
+		} else {
+			today = 6;
+		}
 	}
 
 	async function getMenuData() {
@@ -49,6 +79,21 @@
 		} else {
 			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
 		}
+		
+		const startString = "<h2 class=\"wp-block-heading\"><strong>" + now + "&nbsp;";
+		let regex;
+		
+		if (next === "") { 
+			regex = new RegExp(`(${startString})([^]*?)$`, "si");
+		} else {
+			const endString = "<h2 class=\"wp-block-heading\"><strong>" + next + "&nbsp;";
+			regex = new RegExp(`(${startString})(.*?)(?=${endString})`, "si");
+		}
+		
+		const match = cafeteriaData[today].match(regex);
+
+		if (match && match[0])
+			todaydata = match[0].trim();
 	}
 </script>
 
@@ -64,12 +109,13 @@
 				>
 			</div>
 
+
 			<h1 class="ion-padding">
-				<ion-icon icon={allIonicIcons.restaurantOutline} /> Σημερινό Μενού
+				<ion-icon icon={allIonicIcons.restaurantOutline} /> {title}
 			</h1>
 			<ion-card color="light">
 				<ion-card-content>
-					<div>{@html cafeteriaData[today]}</div>
+					<div>{@html todaydata}</div>
 				</ion-card-content>
 			</ion-card>
 
