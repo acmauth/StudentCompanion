@@ -1,4 +1,3 @@
-# 
 
 <p align="center">
   <img src="https://github.com/acmauth/StudentCompanion/assets/18248043/5bfac992-57e5-4e6f-94b8-28d9a7d05215" alt="Aristomate Logotype" height="200" />
