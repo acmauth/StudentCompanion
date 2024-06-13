@@ -113,6 +113,7 @@
    /* Graphs (Grades) */
   --app-color-grade-graph:  var(--app-color-primary-dark);
   --app-color-grade-graph-fill: rgb(230, 239, 255);
+  --app-color-stat-graph: var(--app-color-primary-dark);
 
   /* Icons (Personal Info) */
   --app-color-icons: var(--app-color-primary-dark);
@@ -316,6 +317,7 @@ body.dark {
   /* Progress Bar (Grades) */
   --app-color-progress-value: rgba(0, 112, 221, 1);
   --app-color-progress-circle: var(--progress-background-variation);
+  --app-color-stat-graph: var(--app-color-primary-light);
 
   /* Graphs (Grades) */
   --app-color-grade-graph: rgba(0, 112, 221, 1);

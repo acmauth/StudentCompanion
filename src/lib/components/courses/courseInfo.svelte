@@ -24,7 +24,7 @@
 	let maximum = 0;
 	let chart;
 
-	const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph').trim();
+	const primaryColor = getComputedStyle(document.body).getPropertyValue('--app-color-stat-graph').trim();
 
 	// Slot machine animation function
 	function animate() {
