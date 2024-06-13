@@ -117,6 +117,7 @@
         align-items: center;
         justify-content: center;
         flex: 0.75; /* Takes 1/8 of the available space */
+        color: var(--app-color-degree-custom-input);
     }
 
     .courses-box {
@@ -126,7 +127,7 @@
 
     .inputCustom {
     text-align: center;
-    border: 0.15em solid var(--app-color-degree-custom-input);
+    border: 0.15em solid var(--app-color-degree-placeholder);
     border-radius: 0.8em;
     font-size: 0.7em;
     font-weight: bold;
@@ -139,7 +140,7 @@
 
     ::placeholder
     {
-        color: var(--app-color-placeholder);
+        color: var(--app-color-degree-placeholder);
     }
 
     

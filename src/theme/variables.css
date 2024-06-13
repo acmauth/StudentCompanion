@@ -131,8 +131,8 @@
   --app-color-degree-grade: var(--app-color-primary-dark);
   --app-color-degree-subtext: grey;
   --app-color-degree-description: #515151;
-  --app-color-degree-custom-input: #ccc;
-  --app-color-degree-placeholder: rgba(207, 207, 207, 0.747);
+  --app-color-degree-custom-input: #727272;
+  --app-color-degree-placeholder: rgba(170, 170, 170, 0.809);
   --app-color-degree-course: #000000;
   --app-color-degree-semester: #727272;
   --app-color-degree-chip: rgba(236, 242, 252, 1);
@@ -337,7 +337,7 @@ body.dark {
   --app-color-degree-subtext: var(--app-color-primary-dark-variation);
   --app-color-degree-description: var(--app-color-primary-dark-variation);
   --app-color-degree-custom-input: var(--app-color-primary-dark);
-  --app-color-degree-placeholder: var(--app-color-primary-dark);
+  --app-color-degree-placeholder: var(--app-color-primary-dark-variation);
   --app-color-degree-course: var(--app-color-primary-dark);
   --app-color-degree-semester: var(--app-color-primary-dark-variation);
   --app-color-degree-chip: var(--progress-background-variation);
