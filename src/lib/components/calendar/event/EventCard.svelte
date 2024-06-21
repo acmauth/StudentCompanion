@@ -54,7 +54,7 @@
 			
 			<div style="display:flex; flex-direction:row; justify-content:end; align-items:start; padding-block:5px; margin-inline-end:10px;">
 				<ion-label class="timeslot {isPastDate? 'pastDate' : null}">
-				<div style="display: flex; flex-direction:row;">
+				<div style="display: flex; flex-direction:row; text-wrap:nowrap">
 					<div>
 						{new Date(eventItem.slot.start).getHours() + ':' + String(new Date(eventItem.slot.start).getMinutes()).padStart(2, '0')}
 					</div>
