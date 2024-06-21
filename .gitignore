@@ -31,6 +31,9 @@ android/.cxx/
 android/*.apk
 android/output.json
 
+.vscode
+.vscode/*
+
 # IntelliJ
 android/*.iml
 android/.idea/
