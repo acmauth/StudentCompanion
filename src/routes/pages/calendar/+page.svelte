@@ -7,7 +7,7 @@
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
     import EventDetails from '$lib/components/calendar/event/EventDetails.svelte';
     import type { Event } from '$lib/components/calendar/event/Event';
-    import { EventRepeatType, EventType, eventHasCorrectFormat } from '$lib/components/calendar/event/Event';
+    import { EventRepeatType, EventType, EventCheckFormat } from '$lib/components/calendar/event/Event';
     import { isCurrentDay } from '$lib/components/calendar/CalendarFunctions';
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
@@ -39,11 +39,12 @@
     $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1);
     
     function sumbit() {
-        if(!eventHasCorrectFormat(tmpEvent)) {
+        const formatCheck = EventCheckFormat(tmpEvent);
+        if(formatCheck.error) {
             showToast({
                     color: 'danger',
                     duration: 3000,
-                    message: 'Τσέκαρε τα στοιχεία του συμβάντος!',
+                    message: formatCheck.description,
                     mode: 'ios',
                     translucent: true,
                     layout: 'stacked',

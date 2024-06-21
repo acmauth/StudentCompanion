@@ -1,7 +1,8 @@
 <script lang="ts">
 	import type {Event} from '$components/calendar/event/Event';
     import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
-	import { onMount } from 'svelte';
+		import type { DatetimeChangeEventDetail } from '@ionic/core';
+import { onMount } from 'svelte';
 
 
     export let copyEvent: Event;
@@ -47,6 +48,25 @@
             copyEvent.repeatUntil = new Date(String(templateRepeatUntil));
         }
     };
+
+    function UpdateStartTime(event) {
+        copyEvent.slot.start=new Date(String(event.detail.value))
+        if (new Date(copyEvent.slot.end).getTime() < copyEvent.slot.start.getTime()) {
+            copyEvent.slot.end = new Date(new Date(copyEvent.slot.start).getTime() + 3600000); 
+            templateEndTime = copyEvent.slot.end.toISOString();
+        }
+    }
+
+    function UpdateEndTime(event: CustomEvent<DatetimeChangeEventDetail> & { target: HTMLIonDatetimeElement; }) {
+        let end = new Date(String(event.detail.value));
+        if (end.getTime() < new Date(copyEvent.slot.start).getTime()) {
+            copyEvent.slot.end = new Date(new Date(copyEvent.slot.start).getTime() + 3600000); 
+            templateEndTime = copyEvent.slot.end.toISOString();
+        } else {
+            copyEvent.slot.end = end;
+        }
+    }
+
 </script>
 
 
@@ -70,7 +90,7 @@
             <ion-label>Έναρξη</ion-label>
             <ion-datetime-button datetime="start"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="start" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.start=new Date(String(event.detail.value))} value="{templateStartTime}"></ion-datetime>
+                <ion-datetime id="start" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateStartTime(event)} value="{templateStartTime}"></ion-datetime>
             </ion-modal>
         </ion-item>
             
@@ -78,7 +98,7 @@
             <ion-label>Λήξη</ion-label>    
             <ion-datetime-button datetime="end"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="end" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>copyEvent.slot.end=new Date(String(event.detail.value))} value="{templateEndTime}"></ion-datetime>
+                <ion-datetime id="end" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateEndTime(event)} value="{templateEndTime}"></ion-datetime>
             </ion-modal>
         </ion-item>
         
