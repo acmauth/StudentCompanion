@@ -76,7 +76,7 @@
 	}
 
 	.timeslot {
-		font-size:small; 
+		font-size:x-small; 
 		padding-inline-end:0.5rem; 
 	}
 
