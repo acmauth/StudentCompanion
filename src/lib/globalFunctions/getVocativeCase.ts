@@ -1,4 +1,17 @@
-export function getVocativeCase (string: string): string {
+export function getVocativeCase (name: string): string {
+    if (name.includes(" ") {
+        const names: string[] = name.split(" ");
+        let vocatives: string[];
+        for (name of names) {
+            vocatives.push(getVocativeCaseSingle(name));
+        }
+        return vocatives.join(" ");
+    } else {
+        return getVocativeCaseSingle(name);
+    }
+}
+
+export function getVocativeCaseSingle (string: string): string {
     if (/(ας|άς)|(ης|ής)|(ΑΣ)|(ΗΣ)$/.test(string)) {
         return string.slice(0, -1);
     } else if (/(ος|ός)|(ΟΣ)$/.test(string)) {
