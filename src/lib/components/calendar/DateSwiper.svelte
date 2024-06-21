@@ -93,7 +93,7 @@
     });
 </script>
 
-<swiper-container slides-per-view="auto" space-between="5" speed="500" mousewheel-force-to-axis="true" centered-slides="true" initial-slide="11">
+<swiper-container slides-per-view="auto" space-between="5" speed="500" mousewheel-force-to-axis="true" centered-slides="true" initial-slide="11" style="overflow:visible;">
     {#each weeks as date, i}
         <swiper-slide class="{i==swiperActiveIndex? 'active' : ''}">
             <ion-card class="{i==swiperActiveIndex? 'active' : ''}">
