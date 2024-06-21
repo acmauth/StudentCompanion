@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 
     import SwipeCard from "./swipeCard.svelte";
     import RecentGrade from "./recentGrades.svelte";
@@ -9,40 +9,26 @@
     import { flip } from "svelte/animate";
     import { quintOut } from 'svelte/easing';
 
-    /**
-	 * @type {any[]}
-	 */
-     export let recentItems = [];
-
-    /**
-     * @type any[]
-     */
-    let recentlyDismissedItems = [];
-    /**
-     * @type any[]
-     */
-    let allRecentItems = [];
+    export let recentItems: any[] = [];
+    
+    let recentlyDismissedItems: any[] = [];
+    let allRecentItems: any[] = [];
+    filterRecentItems();
 
 
-    /**
-     * Adding the exam to the dismissed items
-	 * @param {any} id
-	 */
-    function addToDismissedItems(id){
+    //Adding the exam to the dismissed items
+    function addToDismissedItems(id: number){
         dismissedItems.update(ids => [...ids, id]);
         recentlyDismissedItems = [...recentlyDismissedItems, id];
     }
 
-    /**
-     * Removing the exam from the dismissed items
-	 * @param {any} id
-	 */
-    function removeFromDismissedItems(id){
+    // Removing the exam from the dismissed items
+    function removeFromDismissedItems(id: number){
         dismissedItems.update((items) => items.filter((item) => item !== id));
     }
 
     // remove card when swipped
-    const deleteCard = (/** @type {{ detail: number; }} */ id) => {
+    const deleteCard = (id: { detail: number }) => {
         const examId = id.detail;
         recentItems = recentItems.filter((item) => item.id !== examId);
         addToDismissedItems(examId);
@@ -69,7 +55,6 @@
     }
 
     function filterRecentItems(){
-
         allRecentItems= [...recentItems];
 
         // removing from recentGrades the exams that are already deleted
@@ -97,9 +82,6 @@
         }
     }
 
-     onMount(async () => {
-        filterRecentItems();
-     });
 </script>
 
 <div class="recentGrades ion-padding">
