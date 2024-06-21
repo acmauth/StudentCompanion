@@ -2,6 +2,7 @@
 	import { EventType} from './Event';
 	import type { Event } from './Event';
 	import { longpress } from './EventCard';
+	import { ellipse } from 'ionicons/icons';
 	
 	export let eventItem: Event;
 	export let selectedEvent: Event | null;
@@ -35,49 +36,67 @@
 </script>
 
 
-<div style="display:flex; flex-direction:row;" use:longpress on:longpress={handleHold}>
-	<div style="display:flex; flex-direction:column; justify-content:space-between; margin-inline-start: 0.5rem; padding-block:0.35rem">
-		<ion-label class="timeslot {isPastDate? 'pastDate' : null}">{new Date(eventItem.slot.start).getHours() + ':' + String(new Date(eventItem.slot.start).getMinutes()).padStart(2, '0')}</ion-label>
-		{#if eventItem.slot.end && new Date(eventItem.slot.end).getTime() != new Date(eventItem.slot.start).getTime()}
-			{#if new Date(eventItem.slot.end).getDay() - new Date(eventItem.slot.start).getDay() != 0}
-				<ion-label class="timeslot {isPastDate? 'pastDate' : null}">*</ion-label>
-			{:else}
-				<ion-label class="timeslot {isPastDate? 'pastDate' : null}">{new Date(eventItem.slot.end).getHours() + ':' + String(new Date(eventItem.slot.end).getMinutes()).padStart(2, '0')}</ion-label>
-			{/if}
-		{/if}
-	</div>
-	<div style="width:84%;">
-		<ion-card href="" class="eventCard {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null}	" style="height:fit-content; width:100%;" on:click={handleClick} aria-hidden>
-			<ion-card-header class="{eventItem.type} header">
-				<ion-label class="header" color="{eventItem.type != EventType.OTHER ? 'light' : 'dark'}">{eventItem.title}</ion-label>
-				<ion-label class="subheader" color="dark">{eventItem.description}</ion-label>
-			</ion-card-header>
-		</ion-card>
-	</div>
+<div use:longpress on:longpress={handleHold}>
+	<ion-card on:click={handleClick} aria-hidden href="" style="border-radius: 0.3rem !important; margin-inline: 0; margin-block: 8px; padding-block: 5px; padding-inline-start: 20px; padding-inline-end: 10px; border:none; box-shadow:none !important;">
+		<div style="display:flex; flex-direction:row; justify-content:space-between">
+
+			<div style="width: 80%; display:flex; flex-direction:row; justify-content:start;">
+				
+				<div style="margin-inline-end: 0.5rem; padding-top: 0.15rem;">
+					<ion-icon icon={ellipse} class="dummy {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null}"></ion-icon>
+				</div>
+				
+				<div style="display:flex; flex-direction:column; justify-content: space-between; width:100%;">
+					<ion-label class="header {isPastDate? 'pastDate' : null}">{eventItem.title}</ion-label>
+					<ion-label class="subheader {isPastDate? 'pastDate' : null}">{eventItem.description}</ion-label>
+				</div>
+			</div>		
+			
+			<div style="display:flex; flex-direction:row; justify-content:end; align-items:start; padding-block:5px; margin-inline-end:10px;">
+				<ion-label class="timeslot {isPastDate? 'pastDate' : null}">
+				<div style="display: flex; flex-direction:row;">
+					<div>
+						{new Date(eventItem.slot.start).getHours() + ':' + String(new Date(eventItem.slot.start).getMinutes()).padStart(2, '0')}
+					</div>
+					<div>
+						{#if eventItem.slot.end && new Date(eventItem.slot.end).getTime() != new Date(eventItem.slot.start).getTime()}
+							{#if new Date(eventItem.slot.end).getDay() - new Date(eventItem.slot.start).getDay() != 0}
+							&nbsp-*
+							{:else}
+							&nbsp-&nbsp{new Date(eventItem.slot.end).getHours() + ':' + String(new Date(eventItem.slot.end).getMinutes()).padStart(2, '0')}
+							{/if}
+						{/if}
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</ion-card>
 </div>
 
 
 <style>
 	@import './EventCard.css';
 	.pastDate {
-        opacity: 0.7;
+        opacity: 0.4;
+
+
     }
 	.task {
-		--background: var(--ion-color-tertiary);
+		color: var(--ion-color-tertiary);
 	}
 	.test {
-		--background: var(--ion-color-danger);
+		color: var(--ion-color-danger);
 	}
 	.assignment {
-		--background: var(--ion-color-warning);
+		color: var(--ion-color-warning);
 	}
 	.class {
-		--background: var(--ion-color-secondary);
+		color: var(--ion-color-secondary);
 	}
 
 	.timeslot {
 		font-size:x-small; 
-		padding-inline-end:0.5rem; 
 	}
 
 	.eventCard {
