@@ -17,7 +17,7 @@ export function nativeSettings() {
     // Set the status bar to match the app's color scheme
     if (document.body.classList.contains('dark')) {
         StatusBar.setStyle({style: Style.Dark});
-        NavigationBar.setColor({ color: '#0e0e11', darkButtons: false });
+        NavigationBar.setColor({ color: '#111111', darkButtons: false });
     }
     else {
         StatusBar.setStyle({style: Style.Light});
@@ -27,7 +27,7 @@ export function nativeSettings() {
 
     if (Capacitor.getPlatform() === 'android') {
         if (document.body.classList.contains('dark')) {
-            StatusBar.setBackgroundColor({color: '#0e0e11'});
+            StatusBar.setBackgroundColor({color: '#111111'});
         }
         else {
             StatusBar.setBackgroundColor({color: '#FCFCFC'});
