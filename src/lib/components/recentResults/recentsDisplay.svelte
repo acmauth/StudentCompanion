@@ -21,16 +21,8 @@
     /**
      * @type any[]
      */
-    let storedItems = [];
-    /**
-     * @type any[]
-     */
     let allRecentItems = [];
 
-    // Subscribe to changes in dismissedItems
-    const unsubscribe = dismissedItems.subscribe(value => {
-        storedItems = value;
-    });   
 
     /**
      * Adding the exam to the dismissed items
@@ -82,7 +74,7 @@
 
         // removing from recentGrades the exams that are already deleted
         for (const recentItem of recentItems){           
-            if (storedItems.includes(recentItem.id)){
+            if ($dismissedItems.includes(recentItem.id)){
                 recentItems = recentItems.filter((item) => item.id !== recentItem.id);
             }
         }
