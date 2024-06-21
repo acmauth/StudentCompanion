@@ -110,7 +110,6 @@
     {/each}
 </swiper-container>
 
-
 <style>
   ion-card-title {
     font-size: 1rem;
@@ -125,19 +124,19 @@
   ion-card {
     padding: 5px;
     margin-inline: 4px;
-    margin-block: 5px;
+    margin-block: 8px;
     box-shadow: none;
     background-color: var(--ion-color-light);
   }
 
   ion-card.active {
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-    /* background-color: var(--ion-color-secondary); */
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.12);
     background-color: var(--ion-color-white);
   }
 
   swiper-container{
     width: 100%;
+    overflow:visible;
   }
   swiper-slide {
     text-align: center;
@@ -148,4 +147,5 @@
   ion-card-title.active {
     color: var(--ion-color-primary);
   }
+
 </style>

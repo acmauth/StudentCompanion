@@ -162,14 +162,14 @@
     </ion-header>
 
     <DateSwiper bind:activeDate={activeDate}/>
-
+    
     <ion-content scroll-y={true}>
 
         <div style="height:100%;">
             {#if eventList.length > 0}
                 <div class="container">
                     <ion-content>
-                        <div style="padding-top:1rem;">
+                        <div style="padding-top:0.6rem;">
                             {#each eventList as eventItem}
                                 <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} bind:deleteModalOpen={deleteModalOpen} />
                             {/each}
