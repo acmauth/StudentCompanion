@@ -5,14 +5,7 @@
     import { onMount } from "svelte";
 
 
-    let recentItems: any[] = [];
-    
-    onMount(async () => {
-
-        recentItems = getCachedRecentItems();
-        // recentItems = await gatherRecentItems();
-
-    });
+    const recentItemsFromCache: any[] = getCachedRecentItems();
 
 
     function cacheRecentItems(recentItems: any[]){
@@ -56,7 +49,7 @@
 
 {#await gatherRecentItems()}
     <!-- <ion-progress-bar type="indeterminate"/> -->
-    <RecentsDisplay recentItems={recentItems}/>
+    <RecentsDisplay recentItems={recentItemsFromCache}/>
 {:then recentItemsList}
     <RecentsDisplay recentItems={recentItemsList}/>
 {/await}
