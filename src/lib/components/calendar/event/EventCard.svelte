@@ -48,7 +48,7 @@
 	</div>
 	<div style="width:84%;">
 		<ion-card href="" class="eventCard {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null}	" style="height:fit-content; width:100%;" on:click={handleClick} aria-hidden>
-			<ion-card-header class="{eventItem.type}">
+			<ion-card-header class="{eventItem.type} header">
 				<ion-label class="header" color="{eventItem.type != EventType.OTHER ? 'light' : 'dark'}">{eventItem.title}</ion-label>
 				<ion-label class="subheader" color="dark">{eventItem.description}</ion-label>
 			</ion-card-header>

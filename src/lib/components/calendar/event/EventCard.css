@@ -30,7 +30,7 @@
     text-overflow: ellipsis;
 }
 
-ion-card-header {
+.header {
     padding: 0;
 }
 
