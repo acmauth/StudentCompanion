@@ -37,87 +37,98 @@
 
 
 <div use:longpress on:longpress={handleHold}>
-	<ion-card on:click={handleClick} aria-hidden href="" style="border-radius: 0.3rem !important; margin-inline: 0; margin-block: 8px; padding-block: 5px; padding-inline-start: 20px; padding-inline-end: 10px; border:none; box-shadow:none !important;">
-		<div style="display:flex; flex-direction:row; justify-content:space-between">
+	<ion-card class="eventCard" on:click={handleClick} aria-hidden href="">
+		<div class="eventCardContents">
 
-			<div style="width: 80%; display:flex; flex-direction:row; justify-content:start;">
-				
-				<div style="margin-inline-end: 0.5rem; padding-top: 0.15rem;">
-					<ion-icon icon={ellipse} class="dummy {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null}"></ion-icon>
+			<div class="eventMainInformation">
+				<div class="eventTypeDot" style="margin-inline-end: 0.5rem; padding-top: 0.2rem;">
+					<ion-icon icon={ellipse} class="dummy {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null}"/>
 				</div>
-				
-				<div style="display:flex; flex-direction:column; justify-content: space-between; width:100%;">
-					<ion-label class="header {isPastDate? 'pastDate' : null}">{eventItem.title}</ion-label>
-					<ion-label class="subheader {isPastDate? 'pastDate' : null}">{eventItem.description}</ion-label>
-				</div>
-			</div>		
-			
-			<div style="display:flex; flex-direction:row; justify-content:end; align-items:start; padding-block:5px; margin-inline-end:10px;">
-				<ion-label class="timeslot {isPastDate? 'pastDate' : null}">
-				<div style="display: flex; flex-direction:row; text-wrap:nowrap">
-					<div>
-						{new Date(eventItem.slot.start).getHours() + ':' + String(new Date(eventItem.slot.start).getMinutes()).padStart(2, '0')}
-					</div>
-					<div>
-						{#if eventItem.slot.end && new Date(eventItem.slot.end).getTime() != new Date(eventItem.slot.start).getTime()}
-							{#if new Date(eventItem.slot.end).getDay() - new Date(eventItem.slot.start).getDay() != 0}
-							&nbsp-*
-							{:else}
-							&nbsp-&nbsp{new Date(eventItem.slot.end).getHours() + ':' + String(new Date(eventItem.slot.end).getMinutes()).padStart(2, '0')}
-							{/if}
-						{/if}
-					</div>
+				<div class="eventContent">
+					<ion-label class="eventHeader {isPastDate? 'pastDate' : null}">{eventItem.title}</ion-label>
+					<ion-label class="eventSubheader {isPastDate? 'pastDate' : null}">{eventItem.description}</ion-label>
 				</div>
 			</div>
-
+			
+			<ion-label class="timeslot {isPastDate? 'pastDate' : null}">
+				<div>
+					 {new Date(eventItem.slot.start).toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit', hour12: false })}
+				</div>
+				<div>
+					{#if eventItem.slot.end && new Date(eventItem.slot.end).getTime() != new Date(eventItem.slot.start).getTime()}
+						{#if new Date(eventItem.slot.end).getDay() - new Date(eventItem.slot.start).getDay() != 0}
+							&nbsp-*
+						{:else}
+							<!-- &nbsp-&nbsp{new Date(eventItem.slot.end).getHours() + ':' + String(new Date(eventItem.slot.end).getMinutes()).padStart(2, '0')} -->
+							&nbsp-&nbsp{new Date(eventItem.slot.end).toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit', hour12: false })}
+						{/if}
+					{/if}
+				</div>
+			</ion-label>
 		</div>
 	</ion-card>
 </div>
 
 
 <style>
-	@import './EventCard.css';
 	.pastDate {
         opacity: 0.4;
-
-
     }
-	.task {
-		color: var(--ion-color-tertiary);
+	
+	.task {color: var(--ion-color-tertiary);}
+	.test {color: var(--ion-color-danger);}
+	.assignment {color: var(--ion-color-warning);}
+	.class {color: var(--ion-color-secondary);}
+
+	/* Card contents */
+	.eventCard{
+		border-radius: 0.3rem !important;
+		margin-inline: 0;
+		margin-block: 8px;
+		padding-block: 5px;
+		padding-inline-start: 20px;
+		padding-inline-end: 10px;
+		border:none;
+		box-shadow:none !important;
 	}
-	.test {
-		color: var(--ion-color-danger);
+
+	.eventCardContents {
+		display:flex;
+		flex-direction:row;
+		justify-content:space-between;
 	}
-	.assignment {
-		color: var(--ion-color-warning);
+
+	.eventMainInformation {
+		width: 80%;
+		display:flex;
+		flex-direction:row;
+		justify-content:start;
 	}
-	.class {
-		color: var(--ion-color-secondary);
+
+	.eventContent {
+		display:flex;
+		flex-direction:column;
+		justify-content: space-between;
+		width:100%;
 	}
 
 	.timeslot {
 		font-size:x-small; 
+		padding-block:5px;
+		margin-inline-end:10px;
+		display: flex;
+		flex-direction:row;
+		text-wrap:nowrap;
 	}
 
-	.eventCard {
-		padding: 0 !important;
-		margin-inline: 0;
-		margin-block: 5px;
-		box-shadow: none;
-	}
-
-	.eventCard * {
-		margin-inline: 5px;
-		margin-top: 0;
-	}
-
-	.eventCard * .header {
-		padding-top: 5px;
+	.eventHeader {
 		font-size: medium;
+		max-width: fit-content;
 	}
 
-	.eventCard * .subheader {
-		padding-bottom: 5px;
-		font-size: small;
+	.eventSubheader {
+		font-size: x-small;
+		color: #8f8c8c;
 	}
+
 </style>

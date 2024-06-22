@@ -93,16 +93,16 @@
     });
 </script>
 
-<swiper-container slides-per-view="auto" space-between="5" speed="500" mousewheel-force-to-axis="true" centered-slides="true" initial-slide="11" style="overflow:visible;">
+<swiper-container slides-per-view="auto" space-between="5" speed="500" mousewheel-force-to-axis="true" centered-slides="true" initial-slide="11">
     {#each weeks as date, i}
         <swiper-slide class="{i==swiperActiveIndex? 'active' : ''}">
             <ion-card class="{i==swiperActiveIndex? 'active' : ''}">
                 <ion-card-header>
-                    <ion-card-title class="{i==swiperActiveIndex? 'active' : ''}" style="padding-bottom: 0">
+                    <ion-card-title class="{i==swiperActiveIndex? 'active' : ''}">
                         {getDayByIndex(date.getDay(), 'el', true, 3)}
                     </ion-card-title>
                 </ion-card-header>
-                <ion-card-content style="padding-top: 0;">
+                <ion-card-content>
                     {date.getDate() + '/' + (date.getMonth()+1)}
                 </ion-card-content>
             </ion-card>      
@@ -111,9 +111,14 @@
 </swiper-container>
 
 <style>
+  ion-card-content {
+    padding-top: 0;
+  }
+
   ion-card-title {
     font-size: 1rem;
     align-self: center;
+    padding-bottom: 0;
   }
   ion-card * {
     padding: 1px;
@@ -145,7 +150,7 @@
   }
 
   ion-card-title.active {
-    color: var(--ion-color-primary);
+    color: var(--app-color-primary-dark);
   }
 
 </style>

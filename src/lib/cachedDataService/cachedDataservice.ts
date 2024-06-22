@@ -98,7 +98,7 @@ async function getFromCache(key: string): Promise<cachedItem> {
 
     if (cachedData) {
         const parsedData = JSON.parse(cachedData.value);
-        console.log(parsedData);
+        // console.log(parsedData);
         const now = new Date();
         const cachedAt = new Date(parsedData.cachedAt);
         const life = parsedData.life;
