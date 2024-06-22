@@ -101,8 +101,8 @@
             <ion-label class="custom" style="font-size:small;">Διατήρηση σύνδεσης</ion-label>
         </ion-checkbox> -->
 
-        <div class="footer" style="display:flex; flex-direction:column">
-            <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong></ion-title>
+        <div class="footer">
+            <ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;">Powered by <strong>ACM AUTH</strong> and <br /> the <strong>School of Informatics</strong>.</ion-title>
         </div>
     </div>
 
