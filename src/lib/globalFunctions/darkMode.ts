@@ -1,7 +1,7 @@
 import { nativeSettings } from "./nativeSettings";
 
 // Check if dark mode is enabled and set it if it is
-export function checkAppMode() {
+export async function checkAppMode() {
     const darkMode = localStorage.getItem('darkMode');
     const isDark = darkMode === "true";
     document.body.classList.toggle('dark', isDark);

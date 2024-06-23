@@ -138,6 +138,8 @@
   --app-color-degree-chip: rgba(236, 242, 252, 1);
   --app-color-degree-chip-text: var(--app-color-primary-dark);
 
+  
+
 
   --shadow-xl: 0px -2px 40.6px -1px rgba(0, 0, 0, 0.10), 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
   --shadow-sm: 0px 4px 18px -1px rgba(0, 0, 0, 0.06);
@@ -195,13 +197,20 @@
     --progress-background: var(--app-color-primary-dark);
   }
 
+  .searchbar-input.sc-ion-searchbar-md {
+    border: 1px solid transparent;
+  }
+
+  ion-app {
+    background-color: var(--ion-background-color);
+}
+
 }
 
 
 
-
-
 body.dark {
+  
   --ion-color-primary: rgba(85, 187, 255, 1);
   --ion-color-primary-rgb: 66, 140, 255;
   --ion-color-primary-contrast: #ffffff;

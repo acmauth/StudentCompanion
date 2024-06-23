@@ -17,7 +17,7 @@ export function nativeSettings() {
     // Set the status bar to match the app's color scheme
     if (document.body.classList.contains('dark')) {
         StatusBar.setStyle({style: Style.Dark});
-        NavigationBar.setColor({ color: '#111111', darkButtons: false });
+        NavigationBar.setColor({ color: '#1F1F1F', darkButtons: false });
     }
     else {
         StatusBar.setStyle({style: Style.Light});
