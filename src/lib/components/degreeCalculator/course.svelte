@@ -31,7 +31,7 @@
     }
 
     .course-name {
-        color: #000000;
+        color: var(--app-color-degree-course);
         font-size: 1em;
         text-align: left;
     }
@@ -39,7 +39,8 @@
     .course-semester {
         margin:0;
         font-size: 0.6em;
-        color: #727272;
+        color: var(--app-color-degree-semester);
         text-align: left;
-    }    
+    }
+    
 </style>

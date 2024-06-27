@@ -33,12 +33,24 @@
     function fixIframeContent(){    
         // Getting the body of the iframe
         const body = iframe.contentDocument.querySelector("html");
-        
+        let bodyColor = '';
         if (body) {
+
+            const root = document.documentElement;
+            // Check if body has the class 'dark'
+            if (document.body.classList.contains('dark')) {
+                
+            // Get the CSS variable value from body.dark
+            bodyColor = getComputedStyle(document.body).getPropertyValue('--app-color-notification');
+        } else {
+            
+            // Get the CSS variable value from root
+            bodyColor = getComputedStyle(root).getPropertyValue('--app-color-notification');
+        }
             // Style reset for the iframe
             body.style.fontFamily = "Roboto, sans-serif";
             body.style.overflowY = "hidden";
-            body.style.color = "#374E5C";
+            body.style.color = bodyColor.trim();
 
             // Adding a base tag to the iframe to open links in a new tab instead of inside the iframe
             const baseTag = document.createElement('base');

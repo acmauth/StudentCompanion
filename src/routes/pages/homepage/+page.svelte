@@ -125,7 +125,7 @@
 
 				<div class="student-id" on:click={() => {modalOpen = true;}}>
 					<AppCard margin={false} shadow={true} >
-						<div style="background-color: #f3faff">
+						<div class="wallet-icon">
 							<ion-icon class="id-icon" icon={wallet} />
 						</div>
 					</AppCard>
@@ -223,13 +223,13 @@
 		border-style: solid;
 		border-radius: 1rem;
 		border-width: 1px;
-		border-color: var(--app-color-primary-light);
+		border-color: var(--app-student-id-border);
 	}
 
 	.id-icon {
 		margin: 0.7rem;
 		font-size: 2rem;
-		color: var(--app-color-primary-dark);
+		color: var(--app-student-id-icon);
 	}
 
 	.info-container {
@@ -267,12 +267,12 @@
 	}
 	ion-card-subtitle {
 		font-size: 1rem;
-		color: var(--app-color-primary-dark);
+		color: var(--app-color-primary-dark-variation);
 	}
 
 	.progress-courses {
-		--progress-background: white;
-		background: var(--app-color-primary-dark);
+		--progress-background: var(--progress-color);
+		background: var(--progress-background-variation);
 		height: 1rem;
 		margin-top: 0.5rem;
 		border-radius: 15px;
@@ -293,8 +293,8 @@
 	}
 
 	.progress-avg {
-		--progress-background: white;
-		background: var(--app-color-primary-dark);
+		--progress-background: var(--progress-color);
+		background: var(--progress-background-variation);
 		height: 5vw;
 		width: 4rem;
 		border-radius: 15px;
@@ -313,4 +313,6 @@
 		justify-content: center;
 		align-items: center; 
 	}
+
+	
 </style>

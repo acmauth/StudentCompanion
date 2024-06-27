@@ -5,6 +5,7 @@
 	import Logo from '$lib/assets/Logo_full.png';
 	import { neoUniversisGet } from '$lib/dataService';
 	import { loadPersistedStores } from './persistedStoreDeclarations';
+
 	
 	function delay(ms: number) {
  	   return new Promise( resolve => setTimeout(resolve, ms) );

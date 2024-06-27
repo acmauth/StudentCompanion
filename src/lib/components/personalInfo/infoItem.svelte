@@ -144,7 +144,7 @@
 	}
 
 	ion-icon {
-		color: var(--app-color-primary-dark);
+		color: var(--app-color-icons);
 	}
 
 
@@ -152,5 +152,6 @@
 		font-size: 1.2rem;
 		padding-left: 5px;
 	}
+
 
 </style>

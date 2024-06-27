@@ -153,7 +153,7 @@
     }
 
     .custom-input {
-        background-color: #F9FAFB; 
+        background-color: var(--app-login-background); 
         color: var(--ion-color-primary);
         border: 1.8px solid #98BDD6; 
         border-radius: 1rem; 

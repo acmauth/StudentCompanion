@@ -242,7 +242,7 @@ h2 {
 
 .examPeriod{
 	font-size: 0.8rem;
-	color: grey
+	color: grey;
 }
 
 .semester {

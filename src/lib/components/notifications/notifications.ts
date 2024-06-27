@@ -90,7 +90,7 @@ async function getElearningNotifications(refresh: boolean = false) {
             subject: message.subject,
             body: cleanUpFullMessage(message.fullmessage),
             url: message.contexturl,
-            sender: message.useridfrom != -10 ? message.userfromfullname : "eLearning System",
+            sender: message.useridfrom > 500 ? message.userfromfullname : "eLearning System",
             dateReceived: new Date(message.timecreated * 1000),
             id: message.id
         };});

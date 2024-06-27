@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "app.aristomate.gr",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 15,
+      "versionName": "1.1.3 No Rules",
+      "outputFile": "app-release.apk"
+    }
+  ],
+  "elementType": "File"
+}

@@ -24,7 +24,7 @@
 		<ion-row class="ion-justify-content-start">
 			<ion-col class="ion-no-padding">
 				<ion-card-header class="examCardHeader">
-					<ion-card-title class="title" color="primary">{examItem.subject}</ion-card-title>
+					<ion-card-title class="title">{examItem.subject}</ion-card-title>
 
 					<div class="icons">
 						<ion-icon icon={timeOutline} />
