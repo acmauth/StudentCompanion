@@ -45,7 +45,7 @@
 		"@capacitor/push-notifications": "^5.1.0",
 		"@capacitor/status-bar": "^5.0.6",
 		"@capacitor/toast": "^5.0.7",
-		"@capgo/capacitor-navigation-bar": "^6.0.12",
+		"@capgo/capacitor-navigation-bar": "^5.0.0",
 		"@hugotomazi/capacitor-navigation-bar": "^3.0.0",
 		"@ionic/core": "7.8.5",
 		"@ionic/pwa-elements": "^3.2.2",
