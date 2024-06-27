@@ -26,7 +26,7 @@
 	}
 
 	$: {
-		isPastDate = !eventItem.slot.end && new Date().getTime() > new Date(eventItem.slot.start).getTime() || eventItem.slot.end && new Date().getTime() > new Date(eventItem.slot.end).getTime();
+		isPastDate = new Date().getTime() > new Date(new Date(eventItem.slot.end)).getTime();
 		isTest = eventItem.type == EventType.TEST;
 		isAssignment = eventItem.type == EventType.ASSIGNMENT;
 		isTask = eventItem.type == EventType.TASK;
