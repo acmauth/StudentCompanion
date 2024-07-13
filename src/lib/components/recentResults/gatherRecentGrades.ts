@@ -11,7 +11,6 @@ export async function gatherRecentGrades(refresh: boolean = false){
     
     // getting recent grades based on the current period, if empty that exam period didn't arrive
     let recentGrades = (await neoUniversisGet('students/me/grades?$filter=courseExam/year eq ' + currentYear + ' and courseExam/examPeriod eq ' + currentPeriod + '&$expand=course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false', options)).value;
-    console.log(recentGrades);
     
     return recentGrades;
 }
