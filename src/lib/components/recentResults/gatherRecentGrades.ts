@@ -7,7 +7,7 @@ export async function gatherRecentGrades(refresh: boolean = false){
 
     // exam periods: 1-2 winter, 3-4 sprint, 5-6 september
     let currentPeriod = examPeriod.currentPeriod;
-    if (currentPeriod === 2) currentPeriod = 1;
+    if (currentPeriod === 2) currentPeriod = 3;
     if (currentPeriod === 4) currentPeriod = 3;
     if (currentPeriod === 6) currentPeriod = 5;
 
