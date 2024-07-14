@@ -8,7 +8,7 @@
     import { flip } from "svelte/animate";
     import { quintOut } from 'svelte/easing';
 
-    
+
     export let recentItems: any[] = [];
     let recentlyDismissedItem: any;
     let allRecentItems: any[] = [];
@@ -35,7 +35,7 @@
         showUndoButton = true;
     }
 
-    // restore the most recently deleted card when restore button is pressed
+    // restore the most recently deleted card when undo button is pressed
     function restoreDeletedCard(){
         removeFromDismissedItems(recentlyDismissedItem);
         for (const recentItem of allRecentItems){
