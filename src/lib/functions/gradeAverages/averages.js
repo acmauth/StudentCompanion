@@ -69,8 +69,8 @@ export async function averages(subjectsJSON = null) {
 		for (const course of passed_courses)
 			w_sum += course.grade * course.coefficient;
 
-		w_avg = Math.floor(w_sum * 1000 / coefficients) / 100;
-		w_avg.toFixed(2);
+		let temp = w_sum * 10 / coefficients;
+		w_avg = Number((Math.round(temp * 100) / 100).toFixed(2));
 
 	}
 
