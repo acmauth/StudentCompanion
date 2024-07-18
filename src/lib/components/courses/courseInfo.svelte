@@ -24,7 +24,7 @@
 	let maximum = 0;
 	let chart;
 
-	const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-primary-dark').trim();
+	const primaryColor = getComputedStyle(document.body).getPropertyValue('--app-color-stat-graph').trim();
 
 	// Slot machine animation function
 	function animate() {
@@ -132,7 +132,7 @@
 
 		<!-- Checking if there is a grade and displays the corresponding color depending if you passed or not -->
 		<ion-card-content class="ion-text-center">
-			{#if !stats.grade}
+			{#if !stats.grade && stats.grade!=0}
 				<ion-text><b>-</b></ion-text>
 				<br>
 				<ion-text class="danger">Δεν έχεις βαθμολογήθει ακόμα στο μάθημα</ion-text>
@@ -253,6 +253,7 @@
 
 	.teachers {
 		padding-top: 0.8rem;
+		padding-bottom: 0.8rem;
 		color: var(--app-color-primary-dark)
 	}
 

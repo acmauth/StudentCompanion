@@ -98,11 +98,11 @@
         <swiper-slide class="{i==swiperActiveIndex? 'active' : ''}">
             <ion-card class="{i==swiperActiveIndex? 'active' : ''}">
                 <ion-card-header>
-                    <ion-card-title class="{i==swiperActiveIndex? 'active' : ''}" style="padding-bottom: 0">
+                    <ion-card-title class="{i==swiperActiveIndex? 'active' : ''}">
                         {getDayByIndex(date.getDay(), 'el', true, 3)}
                     </ion-card-title>
                 </ion-card-header>
-                <ion-card-content style="padding-top: 0;">
+                <ion-card-content>
                     {date.getDate() + '/' + (date.getMonth()+1)}
                 </ion-card-content>
             </ion-card>      
@@ -110,11 +110,15 @@
     {/each}
 </swiper-container>
 
-
 <style>
+  ion-card-content {
+    padding-top: 0;
+  }
+
   ion-card-title {
     font-size: 1rem;
     align-self: center;
+    padding-bottom: 0;
   }
   ion-card * {
     padding: 1px;
@@ -125,19 +129,19 @@
   ion-card {
     padding: 5px;
     margin-inline: 4px;
-    margin-block: 5px;
+    margin-block: 8px;
     box-shadow: none;
     background-color: var(--ion-color-light);
   }
 
   ion-card.active {
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-    /* background-color: var(--ion-color-secondary); */
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.12);
     background-color: var(--ion-color-white);
   }
 
   swiper-container{
     width: 100%;
+    overflow:visible;
   }
   swiper-slide {
     text-align: center;
@@ -146,6 +150,7 @@
   }
 
   ion-card-title.active {
-    color: var(--ion-color-primary);
+    color: var(--app-color-primary-dark);
   }
+
 </style>

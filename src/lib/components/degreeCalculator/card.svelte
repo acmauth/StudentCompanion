@@ -98,7 +98,7 @@
     ion-card-subtitle {
         text-align: center;
         text-transform: none;
-        color: #515151;
+        color: var(--app-color-degree-description);
         font-weight: 500;
         margin-top: 0.3rem;
         margin-bottom: 2.5rem;
@@ -117,6 +117,7 @@
         align-items: center;
         justify-content: center;
         flex: 0.75; /* Takes 1/8 of the available space */
+        color: var(--app-color-degree-custom-input);
     }
 
     .courses-box {
@@ -126,7 +127,7 @@
 
     .inputCustom {
     text-align: center;
-    border: 0.15em solid #ccc;
+    border: 0.15em solid var(--app-color-degree-placeholder);
     border-radius: 0.8em;
     font-size: 0.7em;
     font-weight: bold;
@@ -134,11 +135,13 @@
     height: 2.5em;
     box-sizing: border-box;
     outline: none;
+    background-color: #0000;
     }
 
     ::placeholder
     {
-        color: rgba(207, 207, 207, 0.747);
+        color: var(--app-color-degree-placeholder);
     }
+
     
 </style>

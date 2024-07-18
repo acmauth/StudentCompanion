@@ -13,17 +13,18 @@ export enum EventType {
 
 export interface Event {
     id: number;
-    title: string | null | undefined;
+    title: string;
     slot: EventTimeSlot;
-    location?: string | null | undefined;
-    description?: string | null | undefined;
-    professor?: string | null | undefined,
+    location?: string ;
+    description: string;
+    professor?: string,
     type: EventType;
     repeat: EventRepeatType;
     repeatInterval?: number;
     repeatUntil?: Date;
     notify: boolean;
     notifyTime?: number;
+    inactiveDates?: number[];
 }
 
 export enum EventRepeatType {
@@ -66,8 +67,39 @@ export function getEventRepeatTypeValue(type: string, lang?: string): string {
     }
 }
 
-export function eventHasCorrectFormat(event: Event | undefined): boolean {
-    return (event!==undefined && event.title != undefined && event.title.length > 0 && new Date(event.slot.start).getTime() <= new Date(event.slot.end).getTime());
+interface EventCheckFormatResult {
+    error: boolean
+    description: string | undefined
+}
+
+export function EventCheckFormat(event: Event | undefined, lang: string = "el" ): EventCheckFormatResult {
+    let error: boolean = false;
+    let descriptions: string [] = [];
+
+    if (event==undefined || event.title.length == 0) {
+        error = true;
+        if(lang == "el")
+            descriptions.push("πρέπει να βάλεις έναν τίτλο")
+        else
+            descriptions.push("you should put a title")
+    }
+
+    if (event!==undefined && new Date(event.slot.start).getTime() > new Date(event.slot.end).getTime()) {
+        error = true;
+        if(lang == "el")
+            descriptions.push("η λήξη πρέπει να είναι μετά την έναρξη")
+        else
+            descriptions.push("end should be after the start.")
+    }
+    
+    let description: string | undefined;
+    if (error)
+        if(lang == "el")
+            description = "Θυμίσου ότι " + descriptions.join(" και ") + "!";
+        else
+            description = "Rember that " + descriptions.join(" and ") + "!";
+
+    return {error, description};
 }
 
 // export function createEventTimeSlotList(event: EventFlat): EventTimeSlot[] {

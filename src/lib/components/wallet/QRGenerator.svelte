@@ -4,8 +4,7 @@
 	import type { qrItem } from './qrItem';
   import { alertController } from 'ionic-svelte';
   import { qrStore } from './qrStore';
-	import { goto } from '$app/navigation';
-	import { reload } from 'ionicons/icons';
+
 
   export let qr1: qrItem;
 

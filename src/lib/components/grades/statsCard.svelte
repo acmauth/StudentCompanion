@@ -30,7 +30,20 @@
 	 * @type {Chart<"line", number[], string>}
 	 */
 
-	 const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-primary-dark').trim();
+	 let primaryColor;
+	 let gradeFill;
+
+	 if (document.body.classList.contains('dark')) {
+        primaryColor = getComputedStyle(document.body).getPropertyValue('--app-color-grade-graph').trim();
+        gradeFill = getComputedStyle(document.body).getPropertyValue('--app-color-grade-graph-fill').trim();
+      } else {
+        primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph').trim();
+        gradeFill = getComputedStyle(document.documentElement).getPropertyValue('--app-color-grade-graph-fill').trim();
+      }
+
+
+
+	
 
 	 /**
 	 * @type {Chart<"line", never[], never>}
@@ -107,11 +120,11 @@
 						data: gradesObject.averagesPerSemester,
 						fill: {
 							target: 'origin',
-							above: "rgb(230, 239, 255)",
+							above: gradeFill,
 						},
 						tension: 0.4,
 						borderColor: primaryColor, // Set the color here
-            			backgroundColor: primaryColor // Optionally set the fill color
+            			backgroundColor: "primaryColor" // Optionally set the fill color
 						
 					},
 				],
@@ -137,7 +150,9 @@
 						font: {
 							size: 15
 						},
-						color: primaryColor
+						
+						
+				
 					},
 					
 				},
@@ -166,13 +181,13 @@
 
 			<ion-item>
 				<ion-label>M.O με συντελεστές</ion-label>
-				<ion-text color="tertiary">
+				<ion-text>
 					<h2>{gradesObject.weightedAverage}</h2>
 				</ion-text>
 			</ion-item>
 			<ion-item>
 				<ion-label>M.O απλός</ion-label>
-				<ion-text color="tertiary">
+				<ion-text>
 					<h2>{gradesObject.average}</h2>
 				</ion-text>
 			</ion-item>
@@ -205,34 +220,35 @@
 <style>
 
 	ion-text {
-		color: var(--app-color-primary-dark);
+		color: var(--app-color-primary-dark-variation);
 	}
 
 
 	circle-progress::part(base) {
-		width: 120px; 
-		height: auto;
-		}
-	
-	circle-progress::part(value) {
-		stroke-width: 10;
-		stroke: var(--app-color-primary-dark);
-	}
-	circle-progress::part(circle) {
-		stroke-width: 10;
-		stroke: var(--app-color-primary-light);
-	}
-	circle-progress::part(text) {
-		font-weight: bold;
-		fill: var(--app-color-primary-dark);
-	}
-
+        width: 120px; 
+        height: auto;
+        }
+    
+    circle-progress::part(value) {
+        stroke-width: 10;
+        stroke: var(--app-color-progress-value);
+    }
+    circle-progress::part(circle) {
+        stroke-width: 10;
+        stroke: var(--app-color-progress-circle);
+    }
+    circle-progress::part(text) {
+        font-weight: bold;
+        fill: var(--app-color-primary-dark);
+    }
 
 	.subtitle {
 		color: var(--app-color-primary-dark);
 		font-weight: medium;
 		margin: 0.5rem;
 	}
+
+
 
 
 	

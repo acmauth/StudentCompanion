@@ -7,49 +7,44 @@
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
     import EventDetails from '$lib/components/calendar/event/EventDetails.svelte';
     import type { Event } from '$lib/components/calendar/event/Event';
-    import { EventType, EventRepeatType, eventHasCorrectFormat } from '$lib/components/calendar/event/Event';
+    import { EventRepeatType, EventType, EventCheckFormat } from '$lib/components/calendar/event/Event';
     import { isCurrentDay } from '$lib/components/calendar/CalendarFunctions';
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
-
+	import { universisGet } from '$src/lib/dataService';
+	
+    
     let activeDate: Date;
     let eventList: Event[];
     let selectedEvent: Event | null = null;
-    let tmpEvent: Event | undefined;
+    let prototype: Event = {
+        id: new Date().getTime(),
+        title: "",
+        slot: {
+            start: new Date(),
+            end: new Date(new Date().getTime() + 3600000)
+        },
+        type: EventType.TASK,
+        description: "",
+        repeat: EventRepeatType.NEVER,
+        repeatUntil: new Date(new Date().getTime() + 3600000),
+        repeatInterval: 1,
+        notify: false,
+        notifyTime: 1
+    };
+    let tmpEvent: Event = prototype;
     let modalOpen: boolean = false;
+    let deleteModalOpen: boolean = false;
 
-    {
-    // $EventStore = [{ id: 1,
-    // title: "Study Group Meeting",
-    // slot: 
-    //     {
-    //         start: new Date("2024-05-17T10:00:00"),
-    //         end: new Date("2024-05-17T12:00:00")
-    //     }
-    // ,
-    // location: "Library",
-    // description: "Discussing upcoming exam topics",
-    // professor: "Dr. Smith",
-    // type: EventType.CLASS,
-    // repeat: EventRepeatType.DAILY,
-    // repeatInterval: 2,
-    // repeatUntil: new Date("2027-01-01T23:59:59"),
-    // notify: true,
-    // notifyTime: 30}];
-
-    // To clear the EventStore, uncomment the line below
-    // $EventStore = [];
-    }
-
-    $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => a.slot.start.getTime() < b.slot.start.getTime() ? -1 : 1);
-    $: console.log(eventList);
+    $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1);
     
     function sumbit() {
-        if(!eventHasCorrectFormat(tmpEvent)) {
+        const formatCheck = EventCheckFormat(tmpEvent);
+        if(formatCheck.error) {
             showToast({
                     color: 'danger',
                     duration: 3000,
-                    message: 'Τσέκαρε τα στοιχεία του συμβάντος!',
+                    message: formatCheck.description,
                     mode: 'ios',
                     translucent: true,
                     layout: 'stacked',
@@ -58,17 +53,38 @@
                 });
             return;
         }            
-        const index = $EventStore.findIndex(x => x.id == tmpEvent?.id);
-        console.log(tmpEvent, index);
-        if(index != -1 && tmpEvent != undefined) {
+
+        const index = $EventStore.findIndex(x => x.id == tmpEvent.id);
+
+        if(index != -1 && tmpEvent !== undefined) {
             $EventStore[index] = tmpEvent;
-        } else if (tmpEvent != undefined) {
-            $EventStore = [...$EventStore, tmpEvent];
+        } else if (tmpEvent !== undefined) {
+            $EventStore = $EventStore.concat(tmpEvent);
         }
         selectedEvent = null;
-        tmpEvent = undefined;
+
+        recreatePrototype();
         modalOpen = false;
     }    
+
+    function recreatePrototype() {
+        prototype = {
+            id: new Date().getTime(),
+            title: "",
+            slot: {
+                start: new Date(),
+                end: new Date(new Date().getTime() + 3600000)
+            },
+            type: EventType.TASK,
+            description: "",
+            repeat: EventRepeatType.NEVER,
+            repeatUntil: new Date(new Date().getTime() + 3600000),
+            repeatInterval: 1,
+            notify: false,
+            notifyTime: 1
+        };
+        tmpEvent = prototype;
+    }
 
 	async function showToast(toast: ToastOptions){
 		const toast_ = await toastController.create(toast);
@@ -78,13 +94,58 @@
     function setupModal() {
         if(selectedEvent !== null) {
             tmpEvent = JSON.parse(JSON.stringify(selectedEvent));
-            if (tmpEvent) {
-                tmpEvent.slot.start = new Date(selectedEvent?.slot.start);
-                tmpEvent.slot.end = new Date(selectedEvent?.slot.end);
-            }
         }
         modalOpen = true;
     }
+
+    function removeEvent(event: Event | null) {
+        console.log(event);
+        if(event === null) return;
+        const index = $EventStore.findIndex(x => x.id == event.id);
+        if(index != -1) {
+            $EventStore = $EventStore.filter(x => x.id != event.id);
+        }
+        deleteModalOpen = false;
+    }
+
+    function addInactiveDateToEvent(event: Event | null) {
+        if(event === null) return;
+        const index = $EventStore.findIndex(x => x.id == event.id);
+        $EventStore[index].inactiveDates = $EventStore[index].inactiveDates?.concat(activeDate.getTime()) ?? [activeDate.getTime()];
+        deleteModalOpen = false;
+    }
+
+    // remove this on production
+    // window.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+    
+    // To clear the EventStore, uncomment the line below
+    // $EventStore = [];
+    onMount(async() => {
+        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
+        $EventStore = $EventStore.concat(
+            fetchedExams.map((exam) => {
+                const existingIndex = $EventStore.findIndex(x => x.id == exam.id);
+                if (existingIndex == -1) {
+                    return {
+                        id: exam.id,
+                        title: exam.description,
+                        description: exam.courseExam.course + ' - ' + exam.location.description,
+                        type: EventType.TEST,
+                        repeat: EventRepeatType.NEVER,
+                        notify: false,
+                        location: exam.location.description,
+                        slot: {
+                            start: new Date(exam.startDate),
+                            end: new Date(exam.endDate)
+                        }
+                    };
+                } else {
+                    return null; // Return null if the exam already exists in $EventStore
+                }
+            }).filter(event => event !== null) // Filter out null values
+        );
+        console.log($EventStore);
+    });
 
 </script>
 
@@ -93,7 +154,7 @@
         <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
         <ion-title class="ion-padding-vertical" size="large" style="padding-top:0; padding-bottom:0;">Πρόγραμμα μαθημάτων</ion-title>
         <ion-buttons slot="secondary">
-            <ion-button on:click={() => {modalOpen=true; selectedEvent=null;}} aria-hidden>
+            <ion-button on:click={() => {modalOpen=true; selectedEvent=null; recreatePrototype();}} aria-hidden>
             <ion-icon slot="icon-only" icon={add}></ion-icon>  
             </ion-button>
         </ion-buttons>
@@ -101,16 +162,16 @@
     </ion-header>
 
     <DateSwiper bind:activeDate={activeDate}/>
-
+    
     <ion-content scroll-y={true}>
 
         <div style="height:100%;">
             {#if eventList.length > 0}
                 <div class="container">
                     <ion-content>
-                        <div style="padding-top:1rem;">
+                        <div style="padding-top:0.6rem;">
                             {#each eventList as eventItem}
-                                <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} />
+                                <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} bind:deleteModalOpen={deleteModalOpen} />
                             {/each}
                         </div>
                     </ion-content>
@@ -129,7 +190,7 @@
             initial-breakpoint={selectedEvent? 0.95 : 1} 
             breakpoints={[0, 0.95, 1]} 
             on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0; if(!modalOpen) selectedEvent=null;}}
-            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; tmpEvent=null;}}
+            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; recreatePrototype();}}
             on:ionModalWillPresent={setupModal}    
         >
             <ion-toolbar>
@@ -140,17 +201,53 @@
                 </ion-buttons>
                 <ion-title class="ion-text-center">{selectedEvent?.title? selectedEvent.title : 'Συμβάν'}</ion-title>
                 <ion-buttons slot="start">
-                    <ion-button id="cancel" on:click={()=>{modalOpen=false; selectedEvent=null; tmpEvent=null;}} aria-hidden>
+                    <ion-button id="cancel" on:click={()=>{modalOpen=false; selectedEvent=null; recreatePrototype();}} aria-hidden>
                         <ion-icon slot="icon-only" icon={close}/>
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
             <EventDetails bind:copyEvent={tmpEvent} />
         </ion-modal>
+
+        <ion-alert
+            is-open={deleteModalOpen}
+            header="Διαγραφή συμβάντος"
+            buttons={[
+                {
+                  text: 'Το τρέχον μόνο',
+                  role: 'destructive',
+                  handler: () => {
+                    addInactiveDateToEvent(selectedEvent);
+                  }
+                },
+                {
+                  text: 'Το τρέχον και τα επόμενα',
+                  role: 'destructive',
+                  handler: () => {
+                    removeEvent(selectedEvent);
+                  }
+                },
+                {
+                  text: 'Άκυρο',
+                  role: 'cancel',                
+                  handler: () => {
+                    deleteModalOpen = false;
+                    selectedEvent = null;
+                  }
+                }
+              ]}
+            mode="ios">
+        </ion-alert>
+
     </ion-content>
 </ion-tab>
 
 <style>
+
+    alert-button-role-cancel {
+        color: var(--ion-color-primary) !important;
+    }
+
     .container {
         display: flex;
         flex:1;
@@ -172,4 +269,5 @@
     ion-button {
         text-transform: none;
     }
+    
 </style>

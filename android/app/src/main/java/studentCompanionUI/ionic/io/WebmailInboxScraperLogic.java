@@ -42,7 +42,7 @@ public class WebmailInboxScraperLogic {
 
             Folder inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_ONLY);
-            int lastMessageNo = inbox.getMessageCount() >= 8 ? inbox.getMessageCount() - 8 : 1;
+            int lastMessageNo = inbox.getMessageCount() >= 6 ? inbox.getMessageCount() - 6 : 1;
             Message[] messages = inbox.getMessages(lastMessageNo, inbox.getMessageCount());
 
             // Create JSON array to hold email details

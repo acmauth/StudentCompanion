@@ -4,14 +4,17 @@
 	import { nativeSettings } from '$lib/globalFunctions/nativeSettings';
 	import { Capacitor } from '@capacitor/core';
 	import { addNetworkListener } from '$lib/globalFunctions/offlineHandling';
+	import {checkAppMode} from '$lib/globalFunctions/darkMode';
 	/* Import all components - or do partial loading - see below */
 	import 'ionic-svelte/components/all';
+	
 
 	/* Call Ionic's setup routine, force mode to material for consistency */
 	setupIonicBase({mode: 'md'});
 
 	/* Check if running on mobile */
 	const isMobile = Capacitor.isNativePlatform() && Capacitor.getPlatform() !== 'web';
+	checkAppMode();
 	if (isMobile) {
 		// Apply native settings
 		nativeSettings();

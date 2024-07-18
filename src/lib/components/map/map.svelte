@@ -22,10 +22,25 @@
         if(browser) {
             const leaflet = await import('leaflet');
 
-            map = leaflet.map(mapElement).setView([40.63182425082954, 22.959049527401312], 15);
-            leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
+            if (document.body.classList.contains('dark')) {
+                map = leaflet.map(mapElement).setView([40.63182425082954, 22.959049527401312], 15);
+            leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                
             }).addTo(map);
+
+            }
+            else {
+                map = leaflet.map(mapElement).setView([40.63182425082954, 22.959049527401312], 15);
+                leaflet.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    
+                }).addTo(map);
+            }
+
+            
+
 
             renderMarkers();
         }
@@ -137,7 +152,7 @@
         left: 50%;
         transform: translateX(-50%);
         z-index: 1000;
-        background-color: white;
+        background-color: var(--app-color-map-input);
         border-radius: 100px;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
         padding: 5px;
@@ -152,12 +167,20 @@
         padding: 10px;
         font-size: 16px;
         border-radius: 100px;
+        background-color: var(--app-color-map-input);
+        color: var(--app-color-map-input-text);
     }
 
     .map-container {
         position: relative;
         height: calc(100vh); 
     }
+
+ 
+
+
+
+
 </style>
 
 

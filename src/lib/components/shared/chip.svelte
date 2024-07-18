@@ -41,10 +41,11 @@ ion-icon {
 
 .chip {
 	margin-top: 1.5rem;
-	background-color: rgba(236, 242, 252, 1);	
-	color: var(--app-color-primary-dark);
+	background-color: var(--app-color-degree-chip);	
+	color: var(--app-color-degree-chip-text);
 	font-weight: 700;
 	box-shadow: var(--shadow-sm);
 
 }
+
 </style>

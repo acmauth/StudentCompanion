@@ -5,6 +5,7 @@
 	import Logo from '$lib/assets/Logo_full.png';
 	import { neoUniversisGet } from '$lib/dataService';
 	import { loadPersistedStores } from './persistedStoreDeclarations';
+
 	
 	function delay(ms: number) {
  	   return new Promise( resolve => setTimeout(resolve, ms) );
@@ -18,7 +19,6 @@
 	// Handling the redirect to the homepage
 	onMount(async () => {
 		await loadPersistedStores();
-		await delay(1000);
 		if (await judgeAuth()) {
 			await preFlightCache();
 			goto('pages/homepage');

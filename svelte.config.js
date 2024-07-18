@@ -22,7 +22,9 @@ const config = {
 				$shared: "src/lib/components/shared",
 				$images: "src/lib/static/images",
 				$types: "src/lib/types",
-				$customIcons: "src/lib/static/customIcons"
+				$customIcons: "src/lib/static/customIcons",
+				$src: "src",
+				$debug: "src/debug",
 			},
 csrf: {
       checkOrigin: false,

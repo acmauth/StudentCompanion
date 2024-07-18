@@ -3,6 +3,7 @@
 	export let semesterId: any = {};
 
 
+
 	/**
 	 * @param {string} semId
 	 */
@@ -33,7 +34,7 @@
 	    <!-- svelte-ignore a11y-click-events-have-key-events -->
 	    <!-- svelte-ignore a11y-no-static-element-interactions -->
 		{#if courses[0].semester.id <= 24}
-	    <ion-chip on:click={handleClick(id)} color="primary">
+	    <ion-chip color="primary" on:click={handleClick(id)}>
 	        <ion-label>{id}ο εξάμηνο</ion-label>
 	    </ion-chip>
 		{:else}
@@ -51,6 +52,7 @@
 
 <style>
 
+	
 
     .chipsrow {
         overflow-x: scroll;
@@ -63,5 +65,12 @@
         };  
 
     }
+
+
+	ion-chip {
+		color: var(--app-color-primary-dark);
+	}
+
+	
 
 </style>

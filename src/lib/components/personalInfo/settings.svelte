@@ -2,44 +2,92 @@
 	import type { ToastOptions } from '@ionic/core';
 	import * as allIonicIcons from 'ionicons/icons';
 	import { toastController } from 'ionic-svelte';
-	import cog_solid from "$customIcons/cog-solid.svg";
-    import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
+	import cog_solid from '$customIcons/cog-solid.svg';
+	import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
 	import { Capacitor } from '@capacitor/core';
+	import Dexie from 'dexie';
+	import { onMount } from 'svelte';
+	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
 
 	/**
 	 * @type {any}
 	 */
-	 export let logOut;
+	export let logOut;
 
-	async function showToast(toast: ToastOptions){
+	onMount(() => {
+		checkAppMode();
+	});
+
+	async function showToast(toast: ToastOptions) {
 		const toast_ = await toastController.create(toast);
 		toast_.present();
 	}
-	
-	function sentAnalytics() {
-		// Send subjects json to the server for debugging
-	
-		const url = 'https://analytics.neron.dev/v1/analytics';
-		
-		let examkeys = Object.keys(localStorage).filter(key => key.includes('universis_students/me/exams'));
-		let keys = ['universis_students/me/courses?$top=-1','universis_students/me/grades?$filter=courseExam/year eq 2023 and courseExam/examPeriod eq 1&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false',...examkeys];
-		
-		let file = {'medata': [	JSON.parse(localStorage.getItem('universis_Students/me/')).value.semester, 
-								JSON.parse(localStorage.getItem('universis_Students/me/department')).value.abbreviation ]
-					};
-	
-		keys.forEach(key => {
-			file[key] = localStorage.getItem(key);
+
+	async function dixieGet(key: string) {
+		var db = new Dexie('cachedData');
+		db.version(1).stores({
+			cachedData: 'key,value'
 		});
-	
+
+		const cachedData = (await db.cachedData.get(key)).value;
+
+		return cachedData;
+	}
+
+	async function dixieGetKeys() {
+		var db = new Dexie('cachedData');
+		db.version(1).stores({
+			cachedData: 'key,value'
+		});
+
+		const keys = (await db.cachedData.toArray()).map((item) => item.key);
+
+		return keys;
+	}
+
+	async function sentAnalytics() {
+		// Send subjects json to the server for debugging
+
+		const url = 'https://analytics.neron.dev/v1/analytics';
+
+		let examkeys = (await dixieGetKeys()).filter((key) =>
+			key.includes('universis_students/me/exams')
+		);
+		let keys = [
+			'universis_students/me/courses?$top=-1',
+			'universis_students/me/grades?$filter=courseExam/year eq 2023 and courseExam/examPeriod eq 1&$expand=status,course($expand=gradeScale,locale),courseClass($expand=instructors($expand=instructor($select=InstructorSummary))),courseExam($expand=examPeriod,year)&$top=-1&$count=false',
+			...examkeys
+		];
+		if (
+			(await dixieGetKeys()).includes(
+				'universis_students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false'
+			)
+		) {
+			keys.push(
+				'universis_students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false'
+			);
+		}
+
+		let file: any = {
+			medata: [
+				JSON.parse(await dixieGet('universis_Students/me/')).value.semester,
+				JSON.parse(await dixieGet('universis_Students/me/department')).value.abbreviation
+			]
+		};
+
+		for (let i = 0; i < keys.length; i++) {
+			file[keys[i]] = JSON.parse(await dixieGet(keys[i]));
+		}
+
 		console.log(file);
 		let options = {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json'},
-			body: JSON.stringify(file),
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(file)
 		};
-		fetch(url, options)
+		await fetch(url, options)
 			.then((response) => {
 				if (!response.ok) {
 					showToast({
@@ -49,7 +97,7 @@
 						mode: 'ios',
 						translucent: true,
 						position: 'bottom',
-						positionAnchor: "tab-button-homepage",
+						positionAnchor: 'tab-button-homepage',
 						layout: 'stacked'
 					});
 					throw new Error('Network response was not ok');
@@ -61,7 +109,7 @@
 						mode: 'ios',
 						translucent: true,
 						position: 'bottom',
-						positionAnchor: "tab-button-homepage",
+						positionAnchor: 'tab-button-homepage',
 						layout: 'stacked'
 					});
 				}
@@ -73,16 +121,28 @@
 			.catch((error) => {
 				console.error('There was a problem with the fetch operation:', error);
 			});
-		};
+	}
 </script>
 
 <ion-card>
 	<ion-card-content>
+		<ion-item>
+			<ion-icon size="small" icon={allIonicIcons.brush} />
+			<ion-toggle
+				id="themeToggle"
+				class="ion-padding-start"
+				checked={localStorage.getItem('darkMode') === "true"}
+				on:ionChange={toggleDarkTheme}
+			>
+				Dark Mode
+			</ion-toggle>
+		</ion-item>
+
 		{#if Capacitor.isNativePlatform()}
 			<ion-item button on:click={launchNativenotificationSettings} aria-hidden>
 				<ion-icon size="small" icon={cog_solid} />
 				<ion-label class="ion-padding-start">Ρυθμίσεις ειδοποιήσεων</ion-label>
-				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} aria-hidden/>
+				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} aria-hidden />
 			</ion-item>
 		{/if}
 
@@ -90,14 +150,7 @@
 			<ion-icon size="small" icon={allIonicIcons.people} />
 			<ion-label class="ion-padding-start">Σχετικά με εμάς</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-			
 		</ion-item>
-
-		<!-- <ion-item button>
-			<ion-icon size="small" icon={allIonicIcons.brush} />
-			<ion-label class="ion-padding-start">Change Theme</ion-label>
-			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-		</ion-item> -->
 
 		<ion-item button href="/faq">
 			<ion-icon size="small" icon={allIonicIcons.helpCircle} />
@@ -117,23 +170,15 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<ion-item button lines="none" on:click={logOut}>
 			<ion-icon color="danger" size="small" icon={allIonicIcons.exit} />
-			
+
 			<ion-label color="danger" class="ion-padding-start">Αποσύνδεση</ion-label>
 			<ion-icon color="danger" size="small" icon={allIonicIcons.chevronForwardCircle} />
-			
 		</ion-item>
+	</ion-card-content>
+</ion-card>
 
-		</ion-card-content>
-
-	</ion-card>
-
-
-
-	<style>
-
+<style>
 	ion-icon {
-		color: var(--app-color-primary-dark);
+		color: var(--app-color-icons);
 	}
-
-	</style>
- 
+</style>

@@ -4,6 +4,8 @@ export function isCurrentDay(event: Event, active: Date): boolean {
     const activeDate = new Date(active);
     const start = new Date(event.slot.start);
 
+    if(event.inactiveDates?.includes(activeDate.getTime())) return false;
+
     if(event.repeat == EventRepeatType.NEVER) {
         return (
             start.getFullYear() === activeDate.getFullYear() &&
