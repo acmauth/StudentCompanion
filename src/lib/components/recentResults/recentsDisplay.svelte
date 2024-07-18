@@ -4,27 +4,27 @@
     import RecentGrade from "./recentGrades.svelte";
     import Notification from "$components/notifications/notification.svelte";
     import { dismissedItems } from "$components/recentResults/dismissedItems";
-    import { onMount } from "svelte";
     import { refresh } from "ionicons/icons";
     import { flip } from "svelte/animate";
     import { quintOut } from 'svelte/easing';
 
-    export let recentItems: any[] = [];
-    
-    let recentlyDismissedItems: any[] = [];
-    let allRecentItems: any[] = [];
-    filterRecentItems();
 
+    export let recentItems: any[] = [];
+    let recentlyDismissedItem: any;
+    let allRecentItems: any[] = [];
+    let showUndoButton = false;
+    let timer: any;
+    filterRecentItems();
 
     //Adding the exam to the dismissed items
     function addToDismissedItems(id: number){
         dismissedItems.update(ids => [...ids, id]);
-        recentlyDismissedItems = [...recentlyDismissedItems, id];
+        recentlyDismissedItem = id;
     }
 
     // Removing the exam from the dismissed items
     function removeFromDismissedItems(id: number){
-        dismissedItems.update((items) => items.filter((item) => item !== id));
+        dismissedItems.update((items) => items.filter((item) => false));
     }
 
     // remove card when swipped
@@ -32,15 +32,14 @@
         const examId = id.detail;
         recentItems = recentItems.filter((item) => item.id !== examId);
         addToDismissedItems(examId);
+        showUndoButton = true;
     }
 
-    // restore the most recently deleted card when restore button is pressed
+    // restore the most recently deleted card when undo button is pressed
     function restoreDeletedCard(){
-        let id = recentlyDismissedItems[recentlyDismissedItems.length - 1];
-        recentlyDismissedItems = recentlyDismissedItems.slice(0, -1);
-        removeFromDismissedItems(id);
+        removeFromDismissedItems(recentlyDismissedItem);
         for (const recentItem of allRecentItems){
-            if (id === recentItem.id){
+            if (recentlyDismissedItem === recentItem.id){
                 recentItems = [...recentItems, recentItem];
                 let temp = [];     
                 for (const item of allRecentItems){
@@ -52,6 +51,42 @@
                 return;
             }
         }
+        showUndoButton = false;
+    }
+
+    function hideUndoButton() {
+        showUndoButton = false;
+        clearTimeout(timer);
+    }
+
+    function handleInteraction(event) {
+        if (event.target.closest('.undoButton')) {
+            return; // Ignore interaction if it is the undo button
+        }
+        showUndoButton = false;
+        removeEventListeners();     
+    }
+
+    // adding event listeners for every possible event
+    function addEventListeners() {
+        document.addEventListener('touchstart', handleInteraction);
+        document.addEventListener('touchmove', handleInteraction);
+        document.addEventListener('focus', handleInteraction, true); // true to capture event during capturing phase
+    }
+
+    function removeEventListeners() {
+        document.removeEventListener('touchstart', handleInteraction);
+        document.removeEventListener('touchmove', handleInteraction);
+        document.removeEventListener('focus', handleInteraction, true);
+    }
+
+    // adding event listeners if undo button appears
+    $: if (showUndoButton) {
+        addEventListeners();
+        timer = setTimeout(hideUndoButton, 8000); //Hide button after 8 seconds
+    } else {
+        removeEventListeners();
+        clearTimeout(timer);
     }
 
     function filterRecentItems(){
@@ -103,7 +138,7 @@
     {/if}
 
     <div class="button-container">
-        {#if recentlyDismissedItems.length > 0}
+        {#if showUndoButton}
           <ion-button class="undoButton ion-padding" on:click={restoreDeletedCard} aria-hidden><ion-icon icon={refresh}></ion-icon></ion-button>
         {/if}
     </div>
