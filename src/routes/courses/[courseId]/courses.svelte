@@ -33,10 +33,12 @@
 		gradesCount: {}
 	};
 
+	export let id;
 	let result;
 
 	// Extract courseCode from the URL
-	const courseCode = $page.params.courseId;
+	// const courseCode = $page.params.courseId;
+	const courseCode = id;
 
 	async function getData() {
 		try {
@@ -97,10 +99,10 @@
 
 </script>
 
+<ion-content fullscreen>
+<SubPageHeader title="Πληροφορίες" stackedNav/> <!-- subtitle={courseCode} /> -->
 
-<SubPageHeader title="Πληροφορίες"/> <!-- subtitle={courseCode} /> -->
-
-	<ion-content>
+	
 	{#await getData()}
 	
 	<ion-progress-bar type="indeterminate"/>
