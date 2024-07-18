@@ -1,9 +1,20 @@
 <script lang="ts">
     import { Capacitor } from '@capacitor/core';
     import { chevronBack, arrowBack } from 'ionicons/icons';
+    import {navController} from 'ionic-svelte'
     export let title: string;
     export let subtitle: string | undefined = undefined;
     export let genericHeader: boolean = false;
+    export let stackedNav: boolean = false; // Are we in a stacked navigation scenario, or are we using the browser's history?
+
+    // Going back; if stackedNav is true, we use the navController to pop the page, otherwise we use the browser's history
+    function goBack(){
+        if (stackedNav) {
+            navController.pop();
+        } else {
+            window.history.back();
+        }
+    }
 </script>
 
 <ion-header collapse="condense" mode="ios" class="mildShadow">
@@ -12,7 +23,7 @@
         {#if genericHeader}
             <ion-icon class="backIcon" aria-hidden/>
         {:else}
-            <ion-icon class="backIcon" slot="start" icon={chevronBack} on:click={() => {console.log('back clicked'); window.history.back()}} aria-hidden/>
+            <ion-icon class="backIcon" slot="start" icon={chevronBack} on:click={goBack} aria-hidden/>
         {/if}
         <div class="headerTitle ">
             <ion-title class="ion-no-padding">{title}</ion-title>

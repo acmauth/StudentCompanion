@@ -1,5 +1,6 @@
 <script>
     import {navController} from 'ionic-svelte'
+    import SubPageHeader from '$components/shared/subPageHeader.svelte';
     export let prop = 'prop';
 
     function goBack() {
@@ -7,17 +8,19 @@
     }
 </script>
 
-<ion-header translucent>
+<!-- <ion-header translucent>
 	<ion-toolbar>
 		<ion-buttons slot="start">
-			<!-- <ion-back-button text="Back off!" default-href="/" color="success" /> -->
+			<ion-back-button text="Back off!" default-href="/" color="success" />
             <ion-button on:click={goBack}>Back!</ion-button>
 		</ion-buttons>
 		<ion-title>{prop}</ion-title>
 	</ion-toolbar>
-</ion-header>
+</ion-header> -->
+
 
 <ion-content fullscreen>
+    <SubPageHeader title="Course" subtitle="This is a course!" stackedNav/>
     <p>Comp!</p>
     <p>Prop: {prop}</p>
 </ion-content>
