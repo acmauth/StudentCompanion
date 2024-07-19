@@ -5,7 +5,7 @@
 	export let semesterName: string;
 	import AppCard from '$shared/AppCard.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
-	import Course from '../../../routes/courses/[courseId]/courses.svelte';
+	import Course from '../courses/coursePage.svelte';
 	import {navController} from 'ionic-svelte';
 
 
@@ -16,7 +16,8 @@
     }
 
 	function navigateToCourse(course: { course: any; }) {
-		navController.push(Course, {id: course.course});
+		if (!(course.childCourses && course.childCourses.length > 0))
+			navController.push(Course, {id: course.course});
 	}
 
 </script>
