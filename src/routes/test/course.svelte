@@ -1,5 +1,5 @@
 <script>
-    import {navController} from 'ionic-svelte'
+    import {navController} from '$shared/StackedNav'
     import SubPageHeader from '$components/shared/subPageHeader.svelte';
     export let prop = 'prop';
 

@@ -20,7 +20,7 @@
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import { onMount } from 'svelte';
-	import Banner from '$components/shared/banner.svelte';
+	import Banner from '$components/shared/Banner.svelte';
 
 	let givenName = '';
 	let gender = '';

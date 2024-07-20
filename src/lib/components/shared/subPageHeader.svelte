@@ -1,7 +1,7 @@
 <script lang="ts">
     import { Capacitor } from '@capacitor/core';
     import { chevronBack, arrowBack } from 'ionicons/icons';
-    import {navController} from 'ionic-svelte'
+    import {navController} from '$components/shared/StackedNav';
     export let title: string;
     export let subtitle: string | undefined = undefined;
     export let genericHeader: boolean = false;
@@ -15,6 +15,9 @@
             window.history.back();
         }
     }
+
+    // Hijacking the back button on Android to go back
+    
 </script>
 
 <ion-header collapse="condense" mode="ios" class="mildShadow">

@@ -5,7 +5,7 @@
 	import { getMenu } from '$lib/menuScrapper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
-	import Banner from '$components/shared/banner.svelte';
+	import Banner from '$components/shared/Banner.svelte';
 
 	let cafeteriaData: string | any[] = [];
 	let todaydata: string;

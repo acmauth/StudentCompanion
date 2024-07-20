@@ -6,7 +6,7 @@
 	import AppCard from '$shared/AppCard.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
 	import Course from '../courses/coursePage.svelte';
-	import {navController} from 'ionic-svelte';
+	import {navController} from '$components/shared/StackedNav';
 
 
 	let childrenOpen: boolean[] = [];

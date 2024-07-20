@@ -3,8 +3,8 @@
 
   
 // import IonNav from 'ionic-svelte/components/IonNav.svelte'
-import AristomateNav from "./AristomateNav.svelte"
+import StackedNav from "$shared/StackedNav"
 import GradesPage from './gradesPage.svelte';
 </script>
 
-<AristomateNav root={GradesPage} animation={undefined} rootParams={undefined} swipeGesture={undefined}/>
+<StackedNav root={GradesPage} animation={undefined} rootParams={undefined} swipeGesture={undefined}/>

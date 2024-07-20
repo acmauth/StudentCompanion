@@ -146,23 +146,22 @@ import { onMount } from 'svelte';
 
 </script>
 
-
+<!-- Show skeleton while loading -->
+<ion-content fullscreen={true}>
 
 	<ion-header collapse="condense" mode="ios">
-	  <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-		<ion-title class="ion-padding-vertical" size="large">Πρόοδος</ion-title>
-	  
-  
-		<ion-searchbar debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
+		<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+		  <ion-title class="ion-padding-vertical" size="large">Πρόοδος</ion-title>
 		
-		{#if Object.entries(coursesBySemester).length > 0}
-			<Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />
-		{/if}
-	  </ion-toolbar>
-	</ion-header>
-  
-   <!-- Show skeleton while loading -->
-   <ion-content fullscreen={true}>
+	
+		  <ion-searchbar debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
+		  
+		  {#if Object.entries(coursesBySemester).length > 0}
+			  <Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />
+		  {/if}
+		</ion-toolbar>
+	  </ion-header>
+
 	  {#await gatherData()}
 		  <ion-progress-bar type="indeterminate"/>
 		  <GradesSkeleton/>

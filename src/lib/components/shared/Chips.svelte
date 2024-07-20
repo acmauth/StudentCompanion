@@ -14,7 +14,7 @@
 
 </script>
 
-<ion-chip on:click={flip} class="chip">
+<ion-chip on:click={flip} class="chip" aria-hidden>
 	<div class="chipFlex">
 		<ion-icon icon={chipIcon}></ion-icon>
 	{text}

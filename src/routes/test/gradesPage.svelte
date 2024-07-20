@@ -1,5 +1,5 @@
 <script>
-    import {navController} from 'ionic-svelte'
+    import {navController} from '$shared/StackedNav'
     import Course from './course.svelte'
 
     function navigate() {
@@ -10,5 +10,5 @@
 
 <ion-content fullscreen>
     This is some content!
-    <ion-button on:click={navigate}>Navigate</ion-button>
+    <ion-button on:click={navigate} aria-hidden>Navigate</ion-button>
 </ion-content>

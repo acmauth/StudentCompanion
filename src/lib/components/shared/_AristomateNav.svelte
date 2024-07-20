@@ -6,7 +6,7 @@
     /**
      * The root component of a Svelte app.
      */
-    export let root: SvelteComponent;
+    export let root: any;
   
     /**
      * Whether or not the component is animated.
@@ -36,13 +36,18 @@
         // Creating the content wrapper div
         const divWrapper = document.createElement("div");
         const contentID = "id" + Date.now() + Math.floor(Math.random()*10000) + "This is the div";
+        
         divWrapper.id = contentID;
         
         // Creating the contents div
         // let navContent = document.createElement("ion-content"); //div -> ion-content
         let navContent = document.createElement("div");
         navContent.id = contentID + "navcontent"
-        navContent.style.height = 858 - (113+57) + "px"; // 858px is the height of the window, 113px is the height of the Header, 57px is the height of the Footer
+        // navContent.style.height = 858 - (113+57) + "px"; // 858px is the height of the window, 113px is the height of the Header, 57px is the height of the Footer
+        navContent.style.height = "100%"; // 858px is the height of the window, 113px is the height of the Header, 57px is the height of the Footer
+        const navContentParentHeight = divWrapper.clientHeight;
+        console.log(navContentParentHeight);
+        // navContent.style.height = "100%"; // 858px is the height of the window, 113px is the height of the Header, 57px is the height of the Footer
         newElement = navContent
 
         // Adding the content to the parent div
