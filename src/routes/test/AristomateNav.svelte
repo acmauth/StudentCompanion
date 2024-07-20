@@ -1,6 +1,8 @@
 <script lang="ts">
     import { afterUpdate, onMount } from "svelte";
     import type { SvelteComponent } from "svelte";
+    import { defineCustomElement } from "@ionic/core/components/ion-nav.js";
+
     /**
      * The root component of a Svelte app.
      */
@@ -38,10 +40,11 @@
         
         // Creating the contents div
         // let navContent = document.createElement("ion-content"); //div -> ion-content
-        let navContent = document.createElement("div"); //div -> ion-content
+        let navContent = document.createElement("div");
         navContent.id = contentID + "navcontent"
-        navContent.style.height = "802.4 px"
+        navContent.style.height = 858 - (113+57) + "px"; // 858px is the height of the window, 113px is the height of the Header, 57px is the height of the Footer
         newElement = navContent
+
         // Adding the content to the parent div
         divWrapper.appendChild(navContent);
 
@@ -51,12 +54,7 @@
         const props = {
             ...componentProps,
         };
-    
-        // const svelteComponent = new component({
-        //     target: navContent,
-        //     props,
-        // });
-
+  
         // Letting svelte magically fulfill that new div with content | Might need to pay attention to this
         new component({
             target: navContent,

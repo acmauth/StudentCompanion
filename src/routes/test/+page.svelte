@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
   
 // import IonNav from 'ionic-svelte/components/IonNav.svelte'
 import AristomateNav from "./AristomateNav.svelte"
