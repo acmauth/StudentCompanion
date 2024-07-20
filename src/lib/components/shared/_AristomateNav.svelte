@@ -35,18 +35,15 @@
     const createHTMLCompFromSvelte = (component: SvelteComponent, componentProps = {}): HTMLDivElement => {
         // Creating the content wrapper div
         const divWrapper = document.createElement("div");
-        const contentID = "id" + Date.now() + Math.floor(Math.random()*10000) + "This is the div";
+        const contentID = "id" + Date.now() + Math.floor(Math.random()*10000) + "_wrapperDiv";
         
         divWrapper.id = contentID;
         
         // Creating the contents div
-        // let navContent = document.createElement("ion-content"); //div -> ion-content
         let navContent = document.createElement("div");
-        navContent.id = contentID + "navcontent"
-        // navContent.style.height = 858 - (113+57) + "px"; // 858px is the height of the window, 113px is the height of the Header, 57px is the height of the Footer
-        navContent.style.height = "100%"; // 858px is the height of the window, 113px is the height of the Header, 57px is the height of the Footer
-        const navContentParentHeight = divWrapper.clientHeight;
-        console.log(navContentParentHeight);
+        navContent.id = "id" + Date.now() + Math.floor(Math.random()*10000) + "_contentDiv";
+        navContent.style.height = "100%";
+        
         // navContent.style.height = "100%"; // 858px is the height of the window, 113px is the height of the Header, 57px is the height of the Footer
         newElement = navContent
 
