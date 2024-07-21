@@ -83,9 +83,12 @@
 	});
 </script>
 
-<SubPageHeader title="Χρήσιμοι σύνδεσμοι" stackedNav />
-<ion-content class="ion-padding">
-	{#each links as { linktitle, linkaddress, imagelink }}
+
+<ion-content >
+	<SubPageHeader title="Χρήσιμοι σύνδεσμοι" stackedNav />
+	<div class="ion-padding">
+		{#each links as { linktitle, linkaddress, imagelink }}
 		<LinkCard {linktitle} {linkaddress} {imagelink} />
-	{/each}
+		{/each}
+	</div>
 </ion-content>
