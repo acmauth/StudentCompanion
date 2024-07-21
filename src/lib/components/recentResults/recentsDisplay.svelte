@@ -48,10 +48,10 @@
                     }
                 }
                 recentItems = [...temp]; //To force svelte to rerender the component
+                hideUndoButton();
                 return;
             }
-        }
-        showUndoButton = false;
+        }       
     }
 
     function hideUndoButton() {
@@ -63,7 +63,7 @@
         if (event.target.closest('.undoButton')) {
             return; // Ignore interaction if it is the undo button
         }
-        showUndoButton = false;
+        hideUndoButton();
         removeEventListeners();     
     }
 
