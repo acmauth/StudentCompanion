@@ -98,7 +98,7 @@
 </script>
 
 <IonPage>
-	<SubPageHeader title="Μενού Λέσχης" />
+	<SubPageHeader title="Μενού Λέσχης" stackedNav />
 	<ion-content class="ion-padding">
 		{#await getMenuData()}
 			<MenuSkeleton />

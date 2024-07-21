@@ -1,6 +1,16 @@
 <script lang="ts">
 	import AppCard from '$shared/AppCard.svelte';
 	import { fastFood, map, link } from 'ionicons/icons';
+	import {navController} from '$components/shared/StackedNav';
+	import Menu from '$src/routes/menu/menu.svelte';
+	import Maps from '$src/routes/maps/maps.svelte';
+	import QuickLinks from '$src/routes/quickLinks/quickLinks.svelte';
+
+	// Function to navigate to the applet using stacked navigation
+	function navigateToApplet(applet) {
+		navController.push(applet);
+	}
+
 </script>
 
 <ion-content
@@ -16,7 +26,7 @@
 			shadow={false}
 			class="applet"
 			maxWidth="9rem"
-			href="/menu"
+			onClick={() => navigateToApplet(Menu)}
 		>
 			<div class="appletcontent">
 				<ion-icon icon={fastFood} />
@@ -29,7 +39,7 @@
 			shadow={false}
 			class="applet"
 			maxWidth="9rem"
-			href="/maps"
+			onClick={() => navigateToApplet(Maps)}
 		>
 			<div class="appletcontent">
 				<ion-icon icon={map} />
@@ -42,7 +52,7 @@
 			shadow={false}
 			class="applet"
 			maxWidth="9rem"
-			href="/quickLinks"
+			onClick={() => navigateToApplet(QuickLinks)}
 		>
 			<div class="appletcontent">
 				<ion-icon icon={link} />

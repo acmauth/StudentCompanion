@@ -5,8 +5,9 @@
 	export let semesterName: string;
 	import AppCard from '$shared/AppCard.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
-	import Course from '../courses/coursePage.svelte';
-	import {navController} from '$components/shared/StackedNav';
+	import Course from '$components/courses/coursePage.svelte';
+	import { navController } from '$components/shared/StackedNav';
+
 
 
 	let childrenOpen: boolean[] = [];
@@ -15,10 +16,11 @@
         childrenOpen[index] = !childrenOpen[index];
     }
 
-	function navigateToCourse(course: { course: any; }) {
-		if (!(course.childCourses && course.childCourses.length > 0))
-			navController.push(Course, {id: course.course});
-	}
+	export function navigateToCourse(course: { childCourses: string | any[]; id: any; }) {
+	if (!(course.childCourses && course.childCourses.length > 0)) 
+		navController.push(Course, {id: course.course});
+  }
+
 
 </script>
 <span class="scroll" id={semesterId}></span>
@@ -48,7 +50,7 @@
 		{#if course.childCourses && course.childCourses.length > 0}
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<ion-item on:click={navigateToCourse} lines="none" class="ion-no-padding">
+		<ion-item on:click={() => navigateToCourse(course)} lines="none" class="ion-no-padding">
 			<div class="containerFlex">
 
 				<div class="titlesFlex">

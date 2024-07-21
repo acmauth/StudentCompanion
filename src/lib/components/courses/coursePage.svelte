@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores';
 	import { statistics } from '$lib/functions/courseExam/courseStats/statistics.js';
 	import { courseInformation } from '$lib/functions/courseExam/courseInfo/courseInfo.js';
 	import CourseStats from '$lib/components/courses/courseInfo.svelte'
