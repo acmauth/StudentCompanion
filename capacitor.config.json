@@ -16,8 +16,7 @@
 			},
 			"LocalNotifications": {
 				"smallIcon": "static/logo.svg",
-				"iconColor": "#0081ff",
-				"allowWhil"
+				"iconColor": "#0081ff"
 			  }
 		  },
 		  "server": {
