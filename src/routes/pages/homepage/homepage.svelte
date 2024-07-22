@@ -16,7 +16,7 @@
 	import QRGenerator from '$lib/components/wallet/QRGenerator.svelte';
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
-	import Banner from '$components/shared/Banner.svelte';
+	import Banner from '$components/shared/banner.svelte';
 	
 
 	let givenName = '';
