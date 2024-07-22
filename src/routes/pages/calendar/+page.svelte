@@ -12,6 +12,7 @@
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { universisGet } from '$src/lib/dataService';
+    import {setNotif} from '$src/lib/scheduledNotifications/calendarNotifications';
 	
     
     let activeDate: Date;
@@ -63,6 +64,9 @@
         }
         selectedEvent = null;
 
+        if (tmpEvent.notify){
+            setNotif(tmpEvent);
+        }
         recreatePrototype();
         modalOpen = false;
     }    

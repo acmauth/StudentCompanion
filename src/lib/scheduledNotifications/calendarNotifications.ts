@@ -2,7 +2,8 @@ import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { LocalNotifications } from '@capacitor/local-notifications';
 
-async function setNotif(event: Event){
+export async function setNotif(event: Event){
+    
     let notifyDate: Date;
     if (event.notifyTime){
         const notifyMinsEarly = event.notifyTime * 60 * 1000;
@@ -12,8 +13,10 @@ async function setNotif(event: Event){
     } else {
         notifyDate = event.slot.start;
     }
-
+    console.log(notifyDate.toString());
+    
     if (event.repeat == EventRepeatType.NEVER){
+        console.log(1111111111);
         await LocalNotifications.schedule({notifications: [{
             title: event.title? event.title : 'Νέα ειδοποίηση',
             body: event.description? event.description : 'Υπάρχει μια νέα ενημέρωση που μπορεί να σας ενδιαφέρει.',
@@ -24,6 +27,8 @@ async function setNotif(event: Event){
             }
         }]})
     } else {
+        console.log(2222222);
+        
         await LocalNotifications.schedule({notifications: [{
             title: event.title? event.title : 'Νέα ειδοποίηση',
             body: event.description? event.description : 'Υπάρχει μια νέα ενημέρωση που μπορεί να σας ενδιαφέρει.',
