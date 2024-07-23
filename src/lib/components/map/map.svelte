@@ -9,6 +9,8 @@
     import ceremony from '$lib/assets/ceremony.png';
     import observatory from '$lib/assets/observatory.png';
     import coordinates from "$lib/components/map/coordinates.json";
+	import Fuse from 'fuse.js';
+
 
     let points = coordinates;
     let filteredPoints = points;
@@ -103,32 +105,38 @@
 
 
     function handleSearch(event) {
-        searchQuery = normalizeString(event.target.value.trim()); // Trim leading and trailing spaces
+        const searchQuery = normalizeString(event.target.value.trim().toLowerCase());
+        
         if (searchQuery === '' || searchQuery === ' ') {
             filteredPoints = points;
             map.closePopup();
         } else {
-            filteredPoints = points.filter(point => normalizeString(point.name_el.toLowerCase()).includes(searchQuery));
-            
-            // Sort filteredPoints based on the index of the first occurrence of the searchQuery in the name
-            filteredPoints.sort((a, b) => {
-                const indexA = normalizeString(a.name_el.toLowerCase()).indexOf(searchQuery);
-                const indexB = normalizeString(b.name_el.toLowerCase()).indexOf(searchQuery);
-                return indexA - indexB; // Sort based on the index of first occurrence
+            // Initialize Fuse.js with the points data
+        const fuse = new Fuse(points, {
+            keys: ['name_el'],
+            threshold: 0.3, // Adjust the threshold for fuzzy matching sensitivity
+            includeScore: true
+        });
+
+        // Perform the search
+        const results = fuse.search(searchQuery);
+        
+        // Find the best point based on the score provided by Fuse.js
+        const bestPoint = results.reduce((acc, curr) => {return (curr?.score || Infinity) < (acc?.score || Infinity) ? curr : acc});
+
+        // Open popup for the marker corresponding to the first occurrence of the search query
+        if (bestPoint) {
+            const { coordinates, name_el, url } = bestPoint.item;
+            const popupContent = `${name_el}<br><a href=${url}> ${url} </a>`;
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker && layer.getLatLng().equals(coordinates)) {
+                    layer.bindPopup(popupContent).openPopup();
+                }
             });
-            
-            // Open popup for the marker corresponding to the first occurrence of the search query
-            if (filteredPoints.length > 0) {
-                const { coordinates, name_el, url } = filteredPoints[0];
-                const popupContent = `${name_el}<br><a href=${url}> ${url} </a>`;
-                const marker = map.eachLayer(layer => {
-                    if (layer instanceof L.Marker && layer.getLatLng().equals(coordinates)) {
-                        layer.bindPopup(popupContent).openPopup();
-                    }
-                });
-            }
         }
+        
     }
+}
 
 </script>
 
