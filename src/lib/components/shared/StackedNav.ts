@@ -134,9 +134,3 @@ export const navController = {
     },
 }
 
-
-if ( Capacitor.isNativePlatform() && navController.canGoBack()) {
-    console.log('Native platform and can go back');
-}
-// Todo: Find why canGoBack is true on runtime on mobile;
-// Could fix the hanging issue on dev
