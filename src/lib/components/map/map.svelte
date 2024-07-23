@@ -121,19 +121,12 @@
         // Perform the search
         const results = fuse.search(searchQuery);
         
-        // Extract the items from the search results
-        filteredPoints = results.map(result => result.item);
-        
-        // Sort filteredPoints based on the score provided by Fuse.js
-        filteredPoints.sort((a, b) => {
-            const scoreA = results.find(result => result.item === a).score;
-            const scoreB = results.find(result => result.item === b).score;
-            return scoreA - scoreB; // Sort based on the search score
-        });
+        // Find the best point based on the score provided by Fuse.js
+        const bestPoint = results.reduce((acc, curr) => {return (curr?.score || Infinity) < (acc?.score || Infinity) ? curr : acc});
 
         // Open popup for the marker corresponding to the first occurrence of the search query
-        if (filteredPoints.length > 0) {
-            const { coordinates, name_el, url } = filteredPoints[0];
+        if (bestPoint) {
+            const { coordinates, name_el, url } = bestPoint.item;
             const popupContent = `${name_el}<br><a href=${url}> ${url} </a>`;
             map.eachLayer(layer => {
                 if (layer instanceof L.Marker && layer.getLatLng().equals(coordinates)) {
@@ -141,6 +134,7 @@
                 }
             });
         }
+        
     }
 }
 
