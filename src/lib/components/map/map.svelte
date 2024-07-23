@@ -133,7 +133,7 @@
 </script>
 
 <ion-page>
-    <SubPageHeader title="Χάρτης του Campus" />
+    <SubPageHeader title="Χάρτης του Campus" stackedNav />
     <div class="search-container">
         <input type="text" placeholder="Search..." on:input={handleSearch} class="search-input" />
     </div>

@@ -6,7 +6,7 @@
     import CoursesSkeleton from '$components/degreeCalculator/coursesSkeleton.svelte';
     import AvGrades from '$components/degreeCalculator/avGrades.svelte';
     import Course from '$components/degreeCalculator/course.svelte';
-	import Chip from '$components/shared/chip.svelte';
+	import Chip from '$components/shared/Chips.svelte';
     import * as allIonicIcons from 'ionicons/icons';
 
     export let flip;

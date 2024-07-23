@@ -4,7 +4,7 @@
 	import {averages} from '$lib/functions/gradeAverages/averages';
 	import {averagesPerSemester} from '$lib/functions/gradeAverages/averagesPerSemester';
 	import * as allIonicIcons from 'ionicons/icons';
-	import Chip from "$components/shared/chip.svelte";
+	import Chip from "$components/shared/Chips.svelte";
 
 
 	/**
