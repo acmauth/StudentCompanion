@@ -17,6 +17,7 @@
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
+	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	
 
 	let givenName = '';
@@ -193,7 +194,9 @@
 			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατα</b></p>
 			<RecentItems />
 		{:catch error}
-			<p>{error.message}</p>
+		
+			<ErrorLandingCard errorMsg={"Προέκυψε ένα πρόβλημα στο ΑΠΘ"} />
+			<AppletsSlides />
 		{/await}
 	</ion-content>
 
