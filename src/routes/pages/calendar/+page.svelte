@@ -13,6 +13,7 @@
 	import type { ToastOptions } from '@ionic/core';
 	import { universisGet } from '$src/lib/dataService';
     import {setNotif} from '$src/lib/scheduledNotifications/calendarNotifications';
+    import { permissionsService } from '$src/lib/scheduledNotifications/runtimePermissions';
 	
     
     let activeDate: Date;
@@ -65,6 +66,8 @@
         selectedEvent = null;
 
         if (tmpEvent.notify){
+            permissionsService.ensurePermission("POST_NOTIFICATIONS");
+            console.log(33333333);
             setNotif(tmpEvent);
         }
         recreatePrototype();
