@@ -5,7 +5,6 @@
 	import { getMenu } from '$lib/menuScrapper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
-	import Banner from '$components/shared/BannerCard.svelte';
 
 	let cafeteriaData: string | any[] = [];
 	let todaydata: string;
@@ -18,6 +17,8 @@
 	} else {
 		today = 6;
 	}
+	
+	
 
 	const hours = date.getHours();
 	const mins = date.getMinutes();
@@ -25,7 +26,12 @@
 	let now = '';
 	let next = '';
 	let color = 'success';
+	let flag = false;
+	let menuDate = '';
 
+	
+	
+	
 	if ((hours == 8 && mins >= 30) || (hours > 8 && hours < 10)) {
 		message = 'Λέσχη ανοιχτή για Πρωινό - Κλείνει στις 10:00';
 		now = "Πρωινό";
@@ -67,6 +73,7 @@
 		}
 	}
 
+
 	async function getMenuData() {
 		if (!isProduction) {
 			const response = await fetch('/menu', { method: 'GET' });
@@ -79,8 +86,14 @@
 		} else {
 			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
 		}
+		const todayHTML = cafeteriaData[today];
+
+		// Regex for finding today's date
+		const dateRegex = /<h3 class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/h3>/;
 		
-		const startString = "<h2 class=\"wp-block-heading\"><strong>" + now + "&nbsp;";
+		const startString = "<h2 class=\"wp-block-heading\"><strong>" 
+		+ now + "&nbsp;";
+
 		let regex;
 		
 		if (next === "") { 
@@ -91,9 +104,30 @@
 		}
 		
 		const match = cafeteriaData[today].match(regex);
+		
 
 		if (match && match[0])
 			todaydata = match[0].trim();
+
+
+		// Extract the date from today's menu
+		const matchDate = todayHTML.match(dateRegex);
+	    if (matchDate && matchDate[1])
+	        menuDate = matchDate[1];
+
+
+		// Validate menuDate format (should be DD/MM/YYYY)
+		const dateValidationRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+	    if (!dateValidationRegex.test(menuDate)) {
+	        menuDate = new Date().toLocaleDateString('en-GB'); // Set to current date if invalid
+	    }
+		// Check if the cafeteria is closed for vacation
+		else if (menuDate !== new Date().toLocaleDateString('en-GB')) {
+			flag = true;
+			message = 'Λέσχη κλειστή λόγω διακοπών'
+			color = 'danger';	
+		}
+
 	}
 </script>
 
