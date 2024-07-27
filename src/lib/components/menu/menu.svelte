@@ -26,7 +26,6 @@
 	let now = '';
 	let next = '';
 	let color = 'success';
-	let flag = false;
 	let menuDate = '';
 
 	
@@ -123,7 +122,6 @@
 	    }
 		// Check if the cafeteria is closed for vacation
 		else if (menuDate !== new Date().toLocaleDateString('en-GB')) {
-			flag = true;
 			message = 'Λέσχη κλειστή λόγω διακοπών'
 			color = 'danger';	
 		}
