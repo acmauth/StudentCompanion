@@ -85,11 +85,15 @@
 		} else {
 			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
 		}
-		const todayHTML = cafeteriaData[today];
+		const todayHTML = cafeteriaData[0];
+		console.log(todayHTML);
+		
 
 		// Regex for finding today's date
-		const dateRegex = /<h3 class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/h3>/;
-		
+		// Checks for both <h3> and <h4> headings and <p> tags
+		const dateRegex = /<(h[34]) class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})\s*<\/\1>|<p><strong><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/strong><\/p>/;
+
+
 		const startString = "<h2 class=\"wp-block-heading\"><strong>" 
 		+ now + "&nbsp;";
 
@@ -108,12 +112,17 @@
 		if (match && match[0])
 			todaydata = match[0].trim();
 
-
+		
 		// Extract the date from today's menu
 		const matchDate = todayHTML.match(dateRegex);
-	    if (matchDate && matchDate[1])
-	        menuDate = matchDate[1];
-
+	
+	    if (matchDate) {
+		    const dateRegexCapture = /(\d{2}\/\d{2}\/\d{4})/;
+		    const dateMatch = matchDate[0].match(dateRegexCapture);
+		    if (dateMatch) {
+		        menuDate = dateMatch[1];
+		    }
+		}
 
 		// Validate menuDate format (should be DD/MM/YYYY)
 		const dateValidationRegex = /^\d{2}\/\d{2}\/\d{4}$/;
