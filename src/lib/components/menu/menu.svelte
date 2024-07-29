@@ -86,7 +86,6 @@
 			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
 		}
 		const todayHTML = cafeteriaData[0];
-		console.log(todayHTML);
 		
 
 		// Regex for finding today's date
