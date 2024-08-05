@@ -1,11 +1,13 @@
 <script>
 	import SubPageHeader from '$shared/subPageHeader.svelte';
+	import { Browser } from '@capacitor/browser';
+
+	const openCapacitorSite = async () => {
+		await Browser.open({ url: 'https://gym.auth.gr/reservations/' });
+	};
 </script>
 
-<SubPageHeader title="Κρατήσεις Γυμναστηρίου" />
-<iframe
-	src="https://gym.auth.gr/reservations/"
-	height="100%"
-	width="100%"
-	title="gymReservations"
-/>
+<ion-content>
+	<SubPageHeader title="Κρατήσεις Γυμναστηρίου" />
+	{openCapacitorSite()}
+</ion-content>
