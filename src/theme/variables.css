@@ -112,8 +112,8 @@
   --app-color-progress-value: var(--app-color-primary-dark);
   --app-color-progress-circle: var(--app-color-primary-light);
 
-   /* Graphs (Grades) */
-  --app-color-grade-graph:  var(--app-color-primary-dark);
+  /* Graphs (Grades) */
+  --app-color-grade-graph: var(--app-color-primary-dark);
   --app-color-grade-graph-fill: rgb(230, 239, 255);
   --app-color-stat-graph: var(--app-color-primary-dark);
 
@@ -124,9 +124,9 @@
   --progress-color: white;
   --progress-background-variation: var(--app-color-primary-dark);
 
-   /* Student ID (Home) */
+  /* Student ID (Home) */
   --app-student-id-icon: var(--app-color-primary-dark);
-  --app-student-id-border:var(--app-color-primary-light);
+  --app-student-id-border: var(--app-color-primary-light);
 
   /* Degree Calculator (Grades) Dark */
   --app-color-degree-text: rgba(81, 81, 81, 1);
@@ -140,8 +140,10 @@
   --app-color-degree-chip: rgba(236, 242, 252, 1);
   --app-color-degree-chip-text: var(--app-color-primary-dark);
 
-  
 
+
+  --app-color-blue: #a6c4fb;
+  --app-color-blue-dark: #004696;
 
   --shadow-xl: 0px -2px 40.6px -1px rgba(0, 0, 0, 0.10), 0px -4px 18px -1px rgba(0, 0, 0, 0.06);
   --shadow-sm: 0px 4px 18px -1px rgba(0, 0, 0, 0.06);
@@ -149,11 +151,10 @@
   --shadow-short: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
   --shadow-short-md: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   --shadow-complicated:
-      0px 1.2px 1.1px -11px rgba(0, 0, 0, 0.016),
-      0px 3.4px 3.1px -11px rgba(0, 0, 0, 0.025),
-      0px 8.1px 7.5px -11px rgba(0, 0, 0, 0.035),
-      0px 27px 25px -11px rgba(0, 0, 0, 0.07)
-    ;
+    0px 1.2px 1.1px -11px rgba(0, 0, 0, 0.016),
+    0px 3.4px 3.1px -11px rgba(0, 0, 0, 0.025),
+    0px 8.1px 7.5px -11px rgba(0, 0, 0, 0.035),
+    0px 27px 25px -11px rgba(0, 0, 0, 0.07);
   --shadow-17: rgba(0, 0, 0, 0.1) 0px 10px 50px;
   --shadow-color: rgba(240, 46, 170, 0.4) 0px 5px, rgba(240, 46, 170, 0.3) 0px 10px, rgba(240, 46, 170, 0.2) 0px 15px, rgba(240, 46, 170, 0.1) 0px 20px, rgba(240, 46, 170, 0.05) 0px 25px;
 
@@ -193,7 +194,7 @@
     /* --color: inherit !important; */
   }
 
-  
+
 
   ion-progress-bar {
     --progress-background: var(--app-color-primary-dark);
@@ -205,14 +206,14 @@
 
   ion-app {
     background-color: var(--ion-background-color);
-}
+  }
 
 }
 
 
 
 body.dark {
-  
+
   --ion-color-primary: rgba(85, 187, 255, 1);
   --ion-color-primary-rgb: 66, 140, 255;
   --ion-color-primary-contrast: #ffffff;
@@ -276,10 +277,10 @@ body.dark {
   --ion-color-light-shade: #1e2023;
   --ion-color-light-tint: #383a3e;
 
-    /* cards */
+  /* cards */
   --app-color-primary: radial-gradient(48.49% 60.5% at 50% 71.5%, #1B242B 0.01%, #18181B 100%);
-  
- 
+
+
   --app-color-primary-dark: rgba(203, 203, 203, 1);
   --app-color-primary-light: rgba(142, 210, 255, 1);
 
@@ -355,38 +356,38 @@ body.dark {
   --app-color-degree-chip-text: var(--progress-color);
 
 
-  
- }
 
- body.dark ion-card {
-    border: 1px solid rgba(39, 39, 42, 1);
-    --background: rgba(24, 24, 27, 1);
+}
 
-  }
+body.dark ion-card {
+  border: 1px solid rgba(39, 39, 42, 1);
+  --background: rgba(24, 24, 27, 1);
 
- body.dark ion-list {
-    background-color: rgba(24, 24, 27, 1) !important;
-  }
+}
 
-
-  body.dark .info-container h5 {
-    color: rgba(212, 212, 216, 1);
-  }
-
-  body.dark .info-text {
-    color: rgba(144, 144, 144, 1);
-  }
+body.dark ion-list {
+  background-color: rgba(24, 24, 27, 1) !important;
+}
 
 
+body.dark .info-container h5 {
+  color: rgba(212, 212, 216, 1);
+}
+
+body.dark .info-text {
+  color: rgba(144, 144, 144, 1);
+}
 
 
 
-    /*
+
+
+/*
    * iOS Dark Theme
    * -------------------------------------------
    */
 
- body.dark .ios {
+body.dark .ios {
   --ion-background-color: #000000;
   --ion-background-color-rgb: 0, 0, 0;
 
@@ -418,7 +419,7 @@ body.dark {
   --ion-card-background: #1c1c1d;
 }
 
- .ios ion-modal {
+.ios ion-modal {
   --ion-background-color: var(--ion-color-step-100);
   --ion-toolbar-background: var(--ion-color-step-150);
   --ion-toolbar-border-color: var(--ion-color-step-250);
@@ -430,7 +431,7 @@ body.dark {
    * -------------------------------------------
    */
 
- body.dark .md {
+body.dark .md {
   --ion-background-color: #121212;
   --ion-background-color-rgb: 18, 18, 18;
 
@@ -486,11 +487,7 @@ body.dark {
 * See https://ionicframework.com/docs/theming/dark-mode
 */
 
-  /*
+/*
      * Dark Colors
      * -------------------------------------------
      */
-     
-
- 
-

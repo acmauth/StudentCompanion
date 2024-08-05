@@ -71,6 +71,19 @@
 				<ion-label><span class="overflowingtext">Γυμναστήριο</span></ion-label>
 			</div>
 		</AppCard>
+		<AppCard
+			colour="blue"
+			margin={false}
+			shadow={false}
+			class="applet"
+			maxWidth="9rem"
+			href="/gym/reservIframe"
+		>
+			<div class="appletcontent">
+				<ion-icon icon={barbell} />
+				<ion-label><span class="overflowingtext">Γυμναστήριο</span></ion-label>
+			</div>
+		</AppCard>
 	</div>
 </ion-content>
 
