@@ -15,7 +15,6 @@
 				"androidCustomSchemeAllowInsecureAccess": true
 			},
 			"LocalNotifications": {
-				"smallIcon": "static/logo.svg",
 				"iconColor": "#0081ff",
 				"sound": "beep.wav"
 			  }

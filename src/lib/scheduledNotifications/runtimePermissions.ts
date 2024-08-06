@@ -1,9 +1,11 @@
 import { AndroidPermissions, AndroidPermissionResponse } from '@ionic-native/android-permissions';
+import { logoOctocat } from 'ionicons/icons';
 
 export class PermissionsService {
   async checkPermission(permission: string): Promise<boolean> {
     try {
       const result: AndroidPermissionResponse = await AndroidPermissions.checkPermission(permission);
+      
       console.log("check: "+result.hasPermission);
       
       return result.hasPermission;
