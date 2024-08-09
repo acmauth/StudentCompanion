@@ -6,11 +6,18 @@ import { cutId, calcNotifyDate } from './functions';
 
 
 // schedules a notification at a specific date
-export async function scheduleNotification(event: Event){
+async function schedule(event: Event, date: Date | undefined){
     
     const notificationId = cutId(event.id);
     console.log(notificationId);
-    
+    let notifyDate: Date;
+    if (date){
+        notifyDate = new Date(date);
+    } else {
+        notifyDate = calcNotifyDate(event);
+    }
+    console.log(notifyDate);
+
     if (event.repeat == EventRepeatType.NEVER){   
         try{   
             console.log(1111111);      
@@ -21,7 +28,7 @@ export async function scheduleNotification(event: Event){
                 largeIcon: "res://drawable/logo.",
                 smallIcon: "res://drawable/logo",
                 schedule: {
-                    at: calcNotifyDate(event),
+                    at: notifyDate,
                     allowWhileIdle: true
                 }
             }]});
@@ -53,7 +60,7 @@ export async function scheduleNotification(event: Event){
 }
 
 //cancels a scheduled notification
-export async function cancelNotification(id: number){
+async function cancelNotification(id: number){
     const notificationId = cutId(id);
     console.log(1234);
     
@@ -67,9 +74,22 @@ export async function cancelNotification(id: number){
 }
 
 // checking if a notification is scheduled for an event
-export async function isNotificationScheduled(id: number): Promise<boolean> {
+async function isNotificationScheduled(id: number): Promise<boolean> {
     const notificationId = cutId(id);
 
     const pendingNotifications = await LocalNotifications.getPending();
     return pendingNotifications.notifications.some(notification => notification.id === notificationId);
+}
+
+export function scheduleNotification(event: Event, date: Date | undefined){
+    // permissionsService.ensurePermission("POST_NOTIFICATIONS");
+    isNotificationScheduled(event.id).then(isScheduled => {
+        if (isScheduled) {
+            console.log('Notification is scheduled');
+            cancelNotification(event.id);
+        } else {
+            console.log('Notification is not scheduled');
+        }
+    });
+    schedule(event, date);
 }

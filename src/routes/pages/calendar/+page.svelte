@@ -12,7 +12,7 @@
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { universisGet } from '$src/lib/dataService';
-    import { scheduleNotification, cancelNotification, isNotificationScheduled } from '$src/lib/scheduledNotifications/calendarNotifications';
+    import { scheduleNotification } from '$src/lib/scheduledNotifications/calendarNotifications';
     import { permissionsService } from '$src/lib/scheduledNotifications/runtimePermissions';
 	
     
@@ -66,16 +66,7 @@
         selectedEvent = null;
 
         if (tmpEvent.notify){
-            // permissionsService.ensurePermission("POST_NOTIFICATIONS");
-            isNotificationScheduled(tmpEvent.id).then(isScheduled => {
-                if (isScheduled) {
-                    console.log('Notification is scheduled');
-                    cancelNotification(tmpEvent.id);
-                } else {
-                    console.log('Notification is not scheduled');
-                }
-            });
-            scheduleNotification(tmpEvent);
+            scheduleNotification(tmpEvent, undefined);
         }
         recreatePrototype();
         modalOpen = false;
