@@ -1,12 +1,27 @@
 <script>
+	import { navController } from "$components/shared/StackedNav";
+  import Course from "$components/courses/coursePage.svelte";
+
   /**
    * @type any
    */
   export let subject;
 
+  /**
+	 * @param {{ childCourses: string | any[]; course: any; }} course
+	 */
+   export function navigateToCourse(course) {
+	    if (!(course.childCourses && course.childCourses.length > 0)) 
+		  navController.push(Course, {id: course.id});
+  }
+
+
 </script>
 
-<a href={`/courses/${subject.course.id}`} class="card-link">
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-missing-attribute -->
+<a on:click={() => navigateToCourse(subject.course)} class="card-link">
   <ion-item lines="none" class="ion-no-padding">
     <div class="containerFlex">
       <div class="titlesFlex">

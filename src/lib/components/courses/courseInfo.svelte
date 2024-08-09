@@ -64,7 +64,7 @@
 			maximum = Math.max(...gradeData);
 
 			// Create a bar chart using Chart.js
-			const ctx = document.getElementById('gradeChart').getContext('2d');
+			const ctx = document.getElementById('statChart').getContext('2d');
 			const colors = grades.map((grade) => (grade < 5 ? '#515151' : primaryColor));
 			chart = new Chart(ctx, {
 				type: 'bar',
@@ -193,7 +193,7 @@
 		</ion-card-header>
 		<ion-card-content>
 			{#if stats.grade}
-			<canvas id="gradeChart" />
+			<canvas id="statChart" />
 			<ion-list>
 				<ion-item lines ="full">
 					<ion-label>Βαθμολογημένοι</ion-label>

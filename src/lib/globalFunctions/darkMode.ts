@@ -4,8 +4,8 @@ import { nativeSettings } from "./nativeSettings";
 export async function checkAppMode() {
     let darkMode = localStorage.getItem('darkMode');
     if (darkMode === null) { // Setting default dark mode | Fixes the toggle being ticked wrongly
-        localStorage.setItem('darkMode', 'true');
-        darkMode = "true";
+        localStorage.setItem('darkMode', 'false');
+        darkMode = "false";
     }
     const isDark = darkMode === "true";
     document.body.classList.toggle('dark', isDark);

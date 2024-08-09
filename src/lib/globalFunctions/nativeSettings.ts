@@ -2,6 +2,7 @@ import { App as capacitorApp } from '@capacitor/app';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
+import { navController } from '$components/shared/StackedNav';
 
 export function nativeSettings() {
     /* Capacitor back button handling */
@@ -9,7 +10,11 @@ export function nativeSettings() {
         if(!canGoBack){
             capacitorApp.exitApp();
         } else {
-            window.history.back();
+            if (navController.canGoBack()){
+                navController.pop();
+            } else {
+                window.history.back();
+            }
         }
     });
 

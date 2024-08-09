@@ -1,24 +1,10 @@
 <script>
-  import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
-  import { onMount } from 'svelte';
-  import { home } from 'ionicons/icons';
+// @ts-nocheck
 
-  let myStore = new CapacitorPersistedStore("testValue", 'myStore');
-  let myOtherStore = new CapacitorPersistedStore("testValue", 'myOtherStore');
-
-  onMount( async () => {
-      await myStore.loadFromStorage();
-      await myOtherStore.loadFromStorage();
-  });
-
+  
+// import IonNav from 'ionic-svelte/components/IonNav.svelte'
+import StackedNav from "$shared/StackedNav"
+import GradesPage from './gradesPage.svelte';
 </script>
 
-<ion-content>
-  <ion-card>
-      <ion-card-header>
-          <ion-card-title>Δοκιμή</ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-      </ion-card-content>
-  </ion-card>
-</ion-content>
+<StackedNav root={GradesPage} animation={undefined} rootParams={undefined} swipeGesture={undefined}/>

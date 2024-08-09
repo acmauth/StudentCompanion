@@ -5,7 +5,6 @@
 	import { getMenu } from '$lib/menuScrapper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
-	import Banner from '$components/shared/banner.svelte';
 
 	let cafeteriaData: string | any[] = [];
 	let todaydata: string;
@@ -18,6 +17,8 @@
 	} else {
 		today = 6;
 	}
+	
+	
 
 	const hours = date.getHours();
 	const mins = date.getMinutes();
@@ -25,7 +26,11 @@
 	let now = '';
 	let next = '';
 	let color = 'success';
+	let menuDate = '';
 
+	
+	
+	
 	if ((hours == 8 && mins >= 30) || (hours > 8 && hours < 10)) {
 		message = 'Λέσχη ανοιχτή για Πρωινό - Κλείνει στις 10:00';
 		now = "Πρωινό";
@@ -67,6 +72,7 @@
 		}
 	}
 
+
 	async function getMenuData() {
 		if (!isProduction) {
 			const response = await fetch('/menu', { method: 'GET' });
@@ -79,8 +85,17 @@
 		} else {
 			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
 		}
+		const todayHTML = cafeteriaData[0];
 		
-		const startString = "<h2 class=\"wp-block-heading\"><strong>" + now + "&nbsp;";
+
+		// Regex for finding today's date
+		// Checks for both <h3> and <h4> headings and <p> tags
+		const dateRegex = /<(h[34]) class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})\s*<\/\1>|<p><strong><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/strong><\/p>/;
+
+
+		const startString = "<h2 class=\"wp-block-heading\"><strong>" 
+		+ now + "&nbsp;";
+
 		let regex;
 		
 		if (next === "") { 
@@ -91,14 +106,39 @@
 		}
 		
 		const match = cafeteriaData[today].match(regex);
+		
 
 		if (match && match[0])
 			todaydata = match[0].trim();
+
+		
+		// Extract the date from today's menu
+		const matchDate = todayHTML.match(dateRegex);
+	
+	    if (matchDate) {
+		    const dateRegexCapture = /(\d{2}\/\d{2}\/\d{4})/;
+		    const dateMatch = matchDate[0].match(dateRegexCapture);
+		    if (dateMatch) {
+		        menuDate = dateMatch[1];
+		    }
+		}
+
+		// Validate menuDate format (should be DD/MM/YYYY)
+		const dateValidationRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+	    if (!dateValidationRegex.test(menuDate)) {
+	        menuDate = new Date().toLocaleDateString('en-GB'); // Set to current date if invalid
+	    }
+		// Check if the cafeteria is closed for vacation
+		else if (menuDate !== new Date().toLocaleDateString('en-GB')) {
+			message = 'Λέσχη κλειστή λόγω διακοπών'
+			color = 'danger';	
+		}
+
 	}
 </script>
 
 <IonPage>
-	<SubPageHeader title="Μενού Λέσχης" />
+	<SubPageHeader title="Μενού Λέσχης" stackedNav />
 	<ion-content class="ion-padding">
 		{#await getMenuData()}
 			<MenuSkeleton />

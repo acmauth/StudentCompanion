@@ -5,6 +5,9 @@
 	export let semesterName: string;
 	import AppCard from '$shared/AppCard.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
+	import Course from '$components/courses/coursePage.svelte';
+	import { navController } from '$components/shared/StackedNav';
+
 
 
 	let childrenOpen: boolean[] = [];
@@ -12,6 +15,12 @@
     function toggleChildren(index: number) {
         childrenOpen[index] = !childrenOpen[index];
     }
+
+	export function navigateToCourse(course: { childCourses: string | any[]; id: any; }) {
+	if (!(course.childCourses && course.childCourses.length > 0)) 
+		navController.push(Course, {id: course.course});
+  }
+
 
 </script>
 <span class="scroll" id={semesterId}></span>
@@ -35,11 +44,13 @@
 </div>
 
 	{#each filteredSubjects as course,index}
-	<AppCard id={index} href={course.childCourses && course.childCourses.length > 0 ? undefined : `/courses/${encodeURIComponent(course.course)}`} padding>
+	<AppCard id={index} onClick={() => navigateToCourse(course)} padding>
 		<!-- Card content for course -->
 		<!-- Checking if course has children courses or not, so we can render the href links accordingly. Rest of the content stays the same -->
 		{#if course.childCourses && course.childCourses.length > 0}
-		<ion-item href={ `/courses/${encodeURIComponent(course.course)}`} lines="none" class="ion-no-padding">
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<ion-item on:click={() => navigateToCourse(course)} lines="none" class="ion-no-padding">
 			<div class="containerFlex">
 
 				<div class="titlesFlex">
