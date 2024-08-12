@@ -24,9 +24,8 @@
 
 <style>
 
-ion-icon {
-	font-size: 1rem;
-
+ion-chip{
+	background-color: transparent; 
 }
 
 .chipFlex {
@@ -35,16 +34,17 @@ ion-icon {
 		align-items: center;
 		font-size: 1.3rem;
 		margin: 0.2rem;
+		padding: .7rem 1.5rem .7rem 1.5rem;
+		border: 1px solid var(--ion-color-primary-shade);
+		border-radius: 30px; 
+		background-color: rgba(var(--ion-color-primary-shade), 80%);
 }
 
 
 .chip {
 	margin-top: 1.5rem;
-	background-color: var(--app-color-degree-chip);	
-	color: var(--app-color-degree-chip-text);
-	border: 2px solid var(--app-color-degree-chip);	
+	color: var(--ion-color-primary);
 	font-weight: 700;
-	box-shadow: var(--shadow-sm);
 
 }
 
