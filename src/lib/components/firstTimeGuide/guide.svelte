@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import Chip from "$components/shared/ChipGuide.svelte";
 
   // Image imports
   import intro  from '$lib/assets/guide_graphics/intro.png'; 
@@ -33,12 +34,8 @@
     console.log(currentSlide.image)
   });
 
-  function changeSlide(direction) {
-    if (direction === 'next') {
+  function changeSlide() {
       currentSlide = (currentSlide + 1) % slides.length;
-    } else if (direction === 'prev') {
-      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-    }
   }
 
   function dismiss() {
@@ -53,20 +50,7 @@
   <div class="image-placeholder">
     <img src={slides[currentSlide].image} alt="Error loading image">
   </div>
-
-  <div class="carousel">
-      {#each slides as slide, index (slide.id)}
-        <div class="slide" id={'slide' + slide.id} class:selected={index === currentSlide}>
-          <h3 class="title-of-slide">{slide.title}</h3>
-          <br>
-          {slide.content}
-        </div>
-      {/each}
-    </div>
-
-  <button on:click={() => changeSlide('next')} id="next-slide-button">
-    Δείξε μου!
-  </button>
+  
   <div class="dots">
     {#each slides as slide, index (slide.id)}
       <div
@@ -77,14 +61,38 @@
     {/each}
   </div>
 
+  <div class="carousel">
+      {#each slides as slide, index (slide.id)}
+        <div class="slide" id={'slide' + slide.id} class:selected={index === currentSlide}>
+          <h1 class="title-of-slide">{slide.title}</h1>
+          <br>
+          {slide.content}
+        </div>
+      {/each}
+    </div>
+
+   <div class="guide-navigation"> 
+    <Chip id="next-button" on:click={() => changeSlide()} text="Επόμενο" flip = {changeSlide} />
     <ion-button class="unstyled-button" on:click={dismiss}><u>Κομπλέ, τα ξέρω</u></ion-button>
+   </div> 
+
   </div>
 </ion-modal>
 
 <style>
   .modal-content {
-    padding: 16px;
     text-align: center;
+  }
+
+  .title-of-slide{
+    color: #292929;  
+    font-weight: 700; 
+    font-size: 32px;
+    margin: 0px; 
+  }
+
+  .image-placeholder{
+    margin-bottom: 2%; 
   }
 
   .unstyled-button {
@@ -144,8 +152,13 @@
     background-color: var(--ion-color-primary); /* Active dot color */
   }
 
-  h1 {
-    margin-bottom: 16px;
+  .guide-navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 10px;
   }
 </style>
 
