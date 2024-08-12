@@ -72,8 +72,12 @@
     </div>
 
    <div class="guide-navigation"> 
-    <Chip id="next-button" on:click={() => changeSlide()} text="Επόμενο" flip = {changeSlide} />
-    <ion-button class="unstyled-button" on:click={dismiss}><u>Κομπλέ, τα ξέρω</u></ion-button>
+    {#if currentSlide == 8}
+    	<Chip id="next-button" text="Φύγαμε" flip = {dismiss} />
+    {:else}
+    	<Chip id="next-button" text="Επόμενο" flip = {changeSlide} />
+        <ion-button class="unstyled-button" on:click={dismiss}><u>Κομπλέ, τα ξέρω</u></ion-button>
+    {/if}
    </div> 
 
   </div>
