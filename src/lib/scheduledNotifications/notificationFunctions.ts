@@ -32,6 +32,6 @@ export function calcNotifyDate(event: Event){
     } else {
         notifyDate = event.slot.start;
     }
-    console.log(notifyDate.toString());
+
     return notifyDate;
 }

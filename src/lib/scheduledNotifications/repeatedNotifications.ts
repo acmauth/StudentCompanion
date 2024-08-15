@@ -1,6 +1,7 @@
 import { scheduledNotifications } from "./scheduledNotifications";
 import type { Event } from '$lib/components/calendar/event/Event';
-import { cutId, calcNotifyDate } from './functions';
+import { EventRepeatType } from '$lib/components/calendar/event/Event';
+import { cutId, calcNotifyDate } from './notificationFunctions';
 import { scheduleNotification } from './calendarNotifications';
 
 const daysToSchedule = 30;
@@ -27,10 +28,29 @@ function isDateInThreshold(date: Date) {
     return date >= now && date < threshold;
 }
 
+function repeatedNotifDate(event: Event, previousNotifDate: Date){
+    let repeatInterval = 0;
+    if (event.repeatInterval) repeatInterval = event.repeatInterval;
+
+    let notifDate = new Date();
+    if(event.repeat == EventRepeatType.DAILY) {
+        notifDate.setDate(previousNotifDate.getDate() + repeatInterval);
+        return notifDate;
+    } else if (event.repeat == EventRepeatType.WEEKLY) {
+        notifDate.setDate(previousNotifDate.getDate() + (repeatInterval * 7));
+        return notifDate;
+    } else if (event.repeat == EventRepeatType.MONTHLY){
+        const isSameDayOfMonth = (date1: Date, date2: Date) => date1.getDate() === date2.getDate();
+    }
+}
+
 // scheduling as many notifications inside the "daysToSchedule" threshold
 function scheduleRepeatedNotifications(event: Event){
+    let repeatUntil = new Date();
+    if (event.repeatUntil) repeatUntil = new Date(event.repeatUntil);
+
     const notifyDate = calcNotifyDate(event);
-    while (isDateInThreshold(notifyDate)){
+    while (isDateInThreshold(notifyDate) && notifyDate < repeatUntil){
         scheduleNotification(event, notifyDate);
     }
 

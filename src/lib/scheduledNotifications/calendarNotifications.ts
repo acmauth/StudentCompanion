@@ -1,7 +1,7 @@
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { cutId, calcNotifyDate } from './functions';
+import { cutId, calcNotifyDate } from './notificationFunctions';
 
 
 
@@ -24,7 +24,7 @@ async function schedule(event: Event, date: Date | undefined){
             await LocalNotifications.schedule({notifications: [{
                 title: event.title,
                 body: event.description ? event.description : "Νέα ειδοποίηση",
-                id: notificationId,
+                id: 1,
                 largeIcon: "res://drawable/logo.",
                 smallIcon: "res://drawable/logo",
                 schedule: {
@@ -32,6 +32,7 @@ async function schedule(event: Event, date: Date | undefined){
                     allowWhileIdle: true
                 }
             }]});
+
         }catch(ex){
             console.log(JSON.stringify(ex));
             
@@ -47,7 +48,7 @@ async function schedule(event: Event, date: Date | undefined){
                 largeIcon: "res://drawable/logo.",
                 smallIcon: "res://drawable/logo",
                 schedule: {
-                    at: notifyDate,
+                    at: notifyDate2,
                     allowWhileIdle: true,
                     every: 'hour'
                 }
@@ -83,13 +84,16 @@ async function isNotificationScheduled(id: number): Promise<boolean> {
 
 export function scheduleNotification(event: Event, date: Date | undefined){
     // permissionsService.ensurePermission("POST_NOTIFICATIONS");
-    isNotificationScheduled(event.id).then(isScheduled => {
-        if (isScheduled) {
-            console.log('Notification is scheduled');
-            cancelNotification(event.id);
-        } else {
-            console.log('Notification is not scheduled');
-        }
-    });
-    schedule(event, date);
+    // if (event.repeat){
+    //     isNotificationScheduled(event.id).then(isScheduled => {
+    //         if (isScheduled) {
+    //             console.log('Notification is scheduled');
+    //             cancelNotification(event.id);
+    //         } else {
+    //             console.log('Notification is not scheduled');
+    //         }
+    //     });
+    // }
+    schedule(event, undefined);
+
 }
