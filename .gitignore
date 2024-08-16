@@ -31,6 +31,8 @@ android/.cxx/
 android/*.apk
 android/output.json
 
+pnpm-lock.yaml
+
 .vscode
 .vscode/*
 
