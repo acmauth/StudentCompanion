@@ -13,6 +13,7 @@
 	import type { ToastOptions } from '@ionic/core';
 	import { universisGet } from '$src/lib/dataService';
     import { scheduleNotification } from '$src/lib/scheduledNotifications/calendarNotifications';
+    import { scheduleRepeatedNotifications } from '$src/lib/scheduledNotifications/repeatedNotifications';
     import { permissionsService } from '$src/lib/scheduledNotifications/runtimePermissions';
 	
     
@@ -66,7 +67,7 @@
         selectedEvent = null;
 
         if (tmpEvent.notify){
-            scheduleNotification(tmpEvent, undefined);
+            scheduleRepeatedNotifications(tmpEvent);
         }
         recreatePrototype();
         modalOpen = false;
