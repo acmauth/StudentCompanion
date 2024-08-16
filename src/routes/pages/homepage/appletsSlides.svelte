@@ -1,16 +1,20 @@
 <script lang="ts">
 	import AppCard from '$shared/AppCard.svelte';
-	import { fastFood, map, link } from 'ionicons/icons';
-	import {navController} from '$components/shared/StackedNav';
+	import { fastFood, map, link, barbell } from 'ionicons/icons';
+	import { navController } from '$components/shared/StackedNav';
 	import Menu from '$src/routes/menu/menu.svelte';
 	import Maps from '$src/routes/maps/maps.svelte';
 	import QuickLinks from '$src/routes/quickLinks/quickLinks.svelte';
+	import { Browser } from '@capacitor/browser';
 
 	// Function to navigate to the applet using stacked navigation
 	function navigateToApplet(applet) {
 		navController.push(applet);
 	}
 
+	async function openCapacitorSite() {
+		await Browser.open({ url: 'https://gym.auth.gr/reservations/' });
+	};
 </script>
 
 <ion-content
@@ -57,6 +61,19 @@
 			<div class="appletcontent">
 				<ion-icon icon={link} />
 				<ion-label><span class="overflowingtext">Σύνδεσμοι</span></ion-label>
+			</div>
+		</AppCard>
+		<AppCard
+			colour="blue"
+			margin={false}
+			shadow={false}
+			class="applet"
+			maxWidth="9rem"
+			onClick={() => openCapacitorSite()}
+		>
+			<div class="appletcontent">
+				<ion-icon icon={barbell} />
+				<ion-label><span class="overflowingtext">Γυμναστήριο</span></ion-label>
 			</div>
 		</AppCard>
 	</div>
