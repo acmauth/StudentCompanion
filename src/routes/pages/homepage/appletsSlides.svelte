@@ -5,11 +5,16 @@
 	import Menu from '$src/routes/menu/menu.svelte';
 	import Maps from '$src/routes/maps/maps.svelte';
 	import QuickLinks from '$src/routes/quickLinks/quickLinks.svelte';
+	import { Browser } from '@capacitor/browser';
 
 	// Function to navigate to the applet using stacked navigation
 	function navigateToApplet(applet) {
 		navController.push(applet);
 	}
+
+	async function openCapacitorSite() {
+		await Browser.open({ url: 'https://gym.auth.gr/reservations/' });
+	};
 </script>
 
 <ion-content
@@ -64,7 +69,7 @@
 			shadow={false}
 			class="applet"
 			maxWidth="9rem"
-			href="/gym/reservIframe"
+			onClick={() => openCapacitorSite()}
 		>
 			<div class="appletcontent">
 				<ion-icon icon={barbell} />
