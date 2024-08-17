@@ -2,7 +2,7 @@
 	import IonPage from 'ionic-svelte/components/IonPage.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
 	const isProduction = process.env.NODE_ENV === 'production';
-	import { getMenu } from '$lib/menuScrapper/scraper';
+	import { getMenu } from '$lib/menuScraper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
 
