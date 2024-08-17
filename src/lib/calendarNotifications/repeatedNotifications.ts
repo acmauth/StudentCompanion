@@ -1,11 +1,10 @@
 import { scheduledNotifications } from "./notificationsStore";
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
-import { cutId, calcNotifyDate } from './notificationFunctions';
-import { scheduleNotification } from './scheduleNotifications';
-import { logoGithub, logoOctocat } from "ionicons/icons";
+import { calcNotifyDate } from './notificationFunctions';
+import { schedule } from './scheduleNotifications';
 
-const daysToSchedule = 1800;
+const daysToSchedule = 365;
 
 //Adding the exam to the dismissed items
 function addToScheduledNotifications(id: number){
@@ -80,7 +79,7 @@ export function scheduleRepeatedNotifications(event: Event){
     let date = new Date();  
     while (isDateInThreshold(notifyDate) && notifyDate < repeatUntil){
         console.log(notifyDate);  
-        
+        schedule(event, notifyDate);
         notifyDate = nextNotifDate(event, notifyDate);
     }
 }

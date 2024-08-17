@@ -2,6 +2,7 @@ import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { cutId, calcNotifyDate } from './notificationFunctions';
+import { scheduleRepeatedNotifications } from './repeatedNotifications';
 
 
 
@@ -17,7 +18,6 @@ export async function schedule(event: Event, date: Date | undefined){
         notifyDate = calcNotifyDate(event);
     }
     console.log(notifyDate);
- 
     try{   
         console.log(1111111);      
         await LocalNotifications.schedule({notifications: [{
@@ -36,8 +36,6 @@ export async function schedule(event: Event, date: Date | undefined){
         console.log(JSON.stringify(ex));
         
     }
-
-    
 }
 
 //cancels a scheduled notification
@@ -64,16 +62,17 @@ async function isNotificationScheduled(id: number): Promise<boolean> {
 
 export function scheduleNotification(event: Event, date: Date | undefined){
     // permissionsService.ensurePermission("POST_NOTIFICATIONS");
-    // if (event.repeat){
-    //     isNotificationScheduled(event.id).then(isScheduled => {
-    //         if (isScheduled) {
-    //             console.log('Notification is scheduled');
-    //             cancelNotification(event.id);
-    //         } else {
-    //             console.log('Notification is not scheduled');
-    //         }
-    //     });
-    // }
-    schedule(event, undefined);
-
+    // isNotificationScheduled(event.id).then(isScheduled => {
+    //     if (isScheduled) {
+    //         console.log('Notification is scheduled');
+    //         cancelNotification(event.id);
+    //     } else {
+    //         console.log('Notification is not scheduled');
+    //     }
+    // });
+    if (event.repeat){
+        scheduleRepeatedNotifications(event);
+    } else {
+        schedule(event, undefined);
+    }
 }
