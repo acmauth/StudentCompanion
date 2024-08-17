@@ -12,9 +12,9 @@
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { universisGet } from '$src/lib/dataService';
-    import { scheduleNotification } from '$src/lib/scheduledNotifications/calendarNotifications';
-    import { scheduleRepeatedNotifications } from '$src/lib/scheduledNotifications/repeatedNotifications';
-    import { permissionsService } from '$src/lib/scheduledNotifications/runtimePermissions';
+    import { scheduleNotification } from '$src/lib/calendarNotifications/scheduleNotifications';
+    import { scheduleRepeatedNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
+    import { permissionsService } from '$src/lib/calendarNotifications/runtimePermissions';
 	
     
     let activeDate: Date;

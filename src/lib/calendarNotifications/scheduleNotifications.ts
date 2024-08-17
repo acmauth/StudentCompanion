@@ -6,7 +6,7 @@ import { cutId, calcNotifyDate } from './notificationFunctions';
 
 
 // schedules a notification at a specific date
-async function schedule(event: Event, date: Date | undefined){
+export async function schedule(event: Event, date: Date | undefined){
     
     const notificationId = cutId(event.id);
     console.log(notificationId);
@@ -17,47 +17,27 @@ async function schedule(event: Event, date: Date | undefined){
         notifyDate = calcNotifyDate(event);
     }
     console.log(notifyDate);
+ 
+    try{   
+        console.log(1111111);      
+        await LocalNotifications.schedule({notifications: [{
+            title: event.title,
+            body: event.description ? event.description : "Νέα ειδοποίηση",
+            id: 1,
+            largeIcon: "res://drawable/logo.",
+            smallIcon: "res://drawable/logo",
+            schedule: {
+                at: notifyDate,
+                allowWhileIdle: true
+            }
+        }]});
 
-    if (event.repeat == EventRepeatType.NEVER){   
-        try{   
-            console.log(1111111);      
-            await LocalNotifications.schedule({notifications: [{
-                title: event.title,
-                body: event.description ? event.description : "Νέα ειδοποίηση",
-                id: 1,
-                largeIcon: "res://drawable/logo.",
-                smallIcon: "res://drawable/logo",
-                schedule: {
-                    at: notifyDate,
-                    allowWhileIdle: true
-                }
-            }]});
-
-        }catch(ex){
-            console.log(JSON.stringify(ex));
-            
-        }
-    } else {
-        try{     
-            console.log(222222);
-                
-            await LocalNotifications.schedule({notifications: [{
-                title: event.title,
-                body: event.description ? event.description : "Νέα ειδοποίηση",
-                id: notificationId,
-                largeIcon: "res://drawable/logo.",
-                smallIcon: "res://drawable/logo",
-                schedule: {
-                    at: notifyDate2,
-                    allowWhileIdle: true,
-                    every: 'hour'
-                }
-            }]});
-        }catch(ex){
-            console.log(JSON.stringify(ex));
-            
-        }
+    }catch(ex){
+        console.log(JSON.stringify(ex));
+        
     }
+
+    
 }
 
 //cancels a scheduled notification

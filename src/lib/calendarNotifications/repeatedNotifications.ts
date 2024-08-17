@@ -5,7 +5,7 @@ import { cutId, calcNotifyDate } from './notificationFunctions';
 import { scheduleNotification } from './scheduleNotifications';
 import { logoGithub, logoOctocat } from "ionicons/icons";
 
-const daysToSchedule = 900;
+const daysToSchedule = 1800;
 
 //Adding the exam to the dismissed items
 function addToScheduledNotifications(id: number){
@@ -35,24 +35,25 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
     
     let notifDate = new Date();   
     if(event.repeat == EventRepeatType.DAILY) {
-        notifDate.setDate(previousNotifDate.getDate() + repeatInterval);
-        console.log(notifDate.toString());
-        
+        notifDate = new Date(previousNotifDate);
+        notifDate.setDate(previousNotifDate.getDate() + repeatInterval);     
         return notifDate;
 
     } else if (event.repeat == EventRepeatType.WEEKLY) {
+        notifDate = new Date(previousNotifDate);
         notifDate.setDate(previousNotifDate.getDate() + (repeatInterval * 7));
         return notifDate;
 
     } else if (event.repeat == EventRepeatType.MONTHLY){        
         const isSameDayOfMonth = (date1: Date, date2: Date) => date1.getDate() === date2.getDate();
+
+        notifDate = new Date(previousNotifDate);
         notifDate.setMonth(previousNotifDate.getMonth() + repeatInterval);
-        console.log(notifDate.toString());
-        
+        let i = 0;
         while (!isSameDayOfMonth(previousNotifDate, notifDate)){
-            console.log(3333);
-            
-            notifDate.setMonth(notifDate.getMonth() + repeatInterval);
+            i++;
+            notifDate = new Date(previousNotifDate);
+            notifDate.setMonth(previousNotifDate.getMonth() + (repeatInterval * i));
         }
         return notifDate;
 
@@ -75,10 +76,11 @@ export function scheduleRepeatedNotifications(event: Event){
     let repeatUntil = new Date();
     if (event.repeatUntil) repeatUntil = new Date(event.repeatUntil);
 
-    let notifyDate = calcNotifyDate(event);    
+    let notifyDate = calcNotifyDate(event);  
+    let date = new Date();  
     while (isDateInThreshold(notifyDate) && notifyDate < repeatUntil){
         console.log(notifyDate);  
+        
         notifyDate = nextNotifDate(event, notifyDate);
     }
-    
 }
