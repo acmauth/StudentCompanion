@@ -8,6 +8,7 @@
 	import Dexie from 'dexie';
 	import { onMount } from 'svelte';
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
+	import Modal, {getModal} from '$components/language/Modal.svelte'
 
 	/**
 	 * @type {any}
@@ -146,6 +147,14 @@
 			</ion-item>
 		{/if}
 
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<ion-item button on:click={()=>getModal().open()}>
+			<ion-icon size="small" icon={allIonicIcons.language} />
+			<ion-label class="ion-padding-start">Language</ion-label>
+			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
+		</ion-item>
+
 		<ion-item button href="/about">
 			<ion-icon size="small" icon={allIonicIcons.people} />
 			<ion-label class="ion-padding-start">Σχετικά με εμάς</ion-label>
@@ -176,6 +185,9 @@
 		</ion-item>
 	</ion-card-content>
 </ion-card>
+
+<!-- the modal without an `id` -->
+<Modal />
 
 <style>
 	ion-icon {

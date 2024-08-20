@@ -23,6 +23,7 @@ function translate(locale: string, key:string, vars) {
 
 export function changeLocale(lang: string): void {
   locale.set(lang);
+  console.log("Locale changed to", lang);
 }
 
 export const t = derived(locale, ($locale) => (key: string, vars = {}) =>
