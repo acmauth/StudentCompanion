@@ -15,7 +15,8 @@
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import * as CredLogin from '$lib/components/credLogin/CredLogin.svelte';
+	import CredentialLogin from '$lib/components/credLogin/CredentialLogin.svelte';
+	import { userCredsFlag as autheticationFlag} from '$components/credLogin/userCredsFlagStore';
 	
 	let givenName = '';
 	let gender = '';
@@ -25,6 +26,10 @@
 	
 	let qrModalOpen = false;
 	let loginModalOpen = false;
+
+
+	$:	if ($autheticationFlag) loginModalOpen = false;
+		
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet('Students/me/');
@@ -153,9 +158,12 @@
 
 				<ion-modal
 					is-open={loginModalOpen}
+					initial-breakpoint={0.34}
+					on:ionModalDidDismiss={() => {loginModalOpen = false;}}
+					breakpoints={[0, 0.34	]}
 					>
 					<ion-content>
-						<CredLogin />
+						<CredentialLogin bind:flag={$autheticationFlag}/>
 					</ion-content>
 				</ion-modal>
 
@@ -189,10 +197,12 @@
 				<p style="margin-top:0" class="info-text">
 					<b>Πρόσφατα</b>
 				</p>
-				<ion-chip mode="ios" color="dark" on:focus={()=>{loginModalOpen = true;}}>
-					<ion-icon icon={keySharp} color="dark"></ion-icon>
-					<ion-label>Σύνδεση webmail</ion-label>
-				</ion-chip>
+				{#if $autheticationFlag == false}
+					<ion-chip mode="ios" color="dark" on:click={()=>{loginModalOpen = true;}} aria-hidden>
+						<ion-icon icon={keySharp} color="dark"></ion-icon>
+						<ion-label>Σύνδεση webmail</ion-label>
+					</ion-chip>
+				{/if}
 			</div>
 			<RecentItems />
 		{:catch error}

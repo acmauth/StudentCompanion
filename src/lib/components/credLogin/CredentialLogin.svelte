@@ -8,9 +8,13 @@
 	import { userCreds } from '$stores/credentials.store';
 
     const isProduction = process.env.NODE_ENV === 'production';
+
+
     let authenticating: boolean = false;
     let loginFailed: boolean = false;
     let loginIcon = checkmark;
+
+    export let flag;
 
     $: loginIcon = loginFailed ? reloadOutline : checkmark;
 
@@ -51,63 +55,72 @@
 
         let username = (document.getElementById('username') as HTMLInputElement).value.trim();
         let password = (document.getElementById('password') as HTMLInputElement)?.value;
+
         
         const validity = await checkCredsValidity(username, password);
 
-        if (!validity) { 
+        if (!validity || !password || !username) { 
             loginFailed = true;
             
             showToast({
                 color: 'danger',
-                duration: 2000,
+                duration: 1000,
                 message: 'Αποτυχία σύνδεσης!',
                 mode: 'ios',
                 translucent: true,
-                layout: 'baseline',
-                positionAnchor: "bottom",
+                layout: 'stacked',
             });
 
             const usernameInput = document.getElementById('username') as HTMLIonInputElement;
             const passwordInput = document.getElementById('password') as HTMLIonInputElement;
             usernameInput?.setFocus();
             passwordInput.value = "";
+
         }
         else {
             loginFailed = false;
+            flag = true;
             
             showToast({
                 color: 'success',
-                duration: 2000,
-                message: 'Επιτυχ`ής σύνδεση!',
+                duration: 1000,
+                message: 'Επιτυχής σύνδεση!',
                 mode: 'ios',
                 translucent: true,
-                layout: 'baseline',
+                layout: 'stacked',
             });
-            
-            goto("/pages/homepage");
         }
         
         authenticating = false;
     }
 </script>
 
-    
-<ion-card>
+
+<ion-card style="margin-block: 1rem; margin-block-end: 1.7rem">
 
     <div style="padding: 5%; color:var(--ion-color-dark); padding-bottom:2%">
-        <div style="margin-bottom:5%; font-size:large;">
+        <div style="margin-bottom:5%; font-size:large; display:flex; justify-content:space-between; align-items:center;">
             Ολοκλήρωσε την εμπειρία σου!
+            <div style="display:flex; align-self:end; justify-content: space-between;">
+                {#if authenticating}
+                <ion-spinner name="crescent" color="primary" style="align-self:center;"></ion-spinner>
+                {:else}
+                <ion-button shape="round" size="small" id="login" on:ionFocus={submit}> 
+                    <ion-icon slot="icon-only" id="checkmark" icon={loginIcon}></ion-icon>
+                </ion-button>
+                {/if}
+            </div>
         </div>
         
         <div style="margin-bottom: 2%">
             Αποθήκευσε τον ιδρυματικό σου λογαριασμό απευθείας στη συσκευή σου για να λαμβάνεις ειδοποιήσεις από το webmail και το eLearning!
             {#if isProduction}
-                <ion-icon src={informationCircleOutline} on:click={showAlert} aria-hidden/>
+            <ion-icon src={informationCircleOutline} on:click={showAlert} aria-hidden/>
             {/if}
         </div>
         
         <div style="display:flex; flex-direction:column; margin-top:0; padding-bottom:2%;">
-
+            
             <ion-input
             label="Ιδρυματικό όνομα χρήστη"
             label-placement="floating"
@@ -129,16 +142,7 @@
             spellcheck={false}
             clear-input={true}
             />
-
-            <div style="display:flex; align-self:center; justify-content: space-between;">
-                {#if authenticating}
-                    <ion-spinner name="crescent" color="primary" style="align-self:center;"></ion-spinner>
-                {:else}
-                    <ion-button shape="round" size="small" id="login" on:ionFocus={submit}> 
-                        <ion-icon slot="icon-only" id="checkmark" icon={loginIcon}></ion-icon>
-                    </ion-button>
-                {/if}
-            </div>
     </div>
+</div>
+
 </ion-card>
-    
