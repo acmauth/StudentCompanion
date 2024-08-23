@@ -10,6 +10,7 @@
     import observatory from '$lib/assets/observatory.png';
     import coordinates from "$lib/components/map/coordinates.json";
 	import Fuse from 'fuse.js';
+    import { t, locale, locales, getLocale} from "$lib/i18n";
 
 
     let points = coordinates;
@@ -18,6 +19,9 @@
     let mapElement;
     let map; 
     let searchQuery = '';
+    
+    let lang = getLocale();
+
 
     onMount(async () => {
 
@@ -68,8 +72,18 @@
         });
         
         for (const point of filteredPoints) {
-            const { name, name_el, coordinates, pointer, url } = point;
-            let popupContent = `${name_el}<br><a href=${url}> ${url} </a>`;
+            const { name_en, name_el, coordinates, pointer, url } = point;
+
+            let popupContent;
+
+            if (lang == "en") {
+                popupContent = `${name_en}<br><a href=${url}> ${url} </a>`;
+            }
+            else{
+                popupContent = `${name_el}<br><a href=${url}> ${url} </a>`;
+            }
+        
+
 
             let iconUrl;
             if (pointer == "department"){
@@ -111,10 +125,18 @@
             filteredPoints = points;
             map.closePopup();
         } else {
-            // Initialize Fuse.js with the points data
+        
+        let key;
+        if (lang == "en") {
+            key = 'name_en';
+        }
+        else{
+            key = 'name_el';
+        }
+
         const fuse = new Fuse(points, {
-            keys: ['name_el'],
-            threshold: 0.3, // Adjust the threshold for fuzzy matching sensitivity
+            keys: [key],
+            threshold: 0.3, 
             includeScore: true
         });
 
@@ -126,8 +148,18 @@
 
         // Open popup for the marker corresponding to the first occurrence of the search query
         if (bestPoint) {
-            const { coordinates, name_el, url } = bestPoint.item;
-            const popupContent = `${name_el}<br><a href=${url}> ${url} </a>`;
+            const { coordinates, name_el, name_en, url } = bestPoint.item;
+            let variable;
+            if (lang == "en"){
+                variable = name_en;
+            }
+            else {
+                variable = name_el;
+            }
+
+            const popupContent = `${variable}<br><a href=${url}> ${url} </a>`;
+
+
             map.eachLayer(layer => {
                 if (layer instanceof L.Marker && layer.getLatLng().equals(coordinates)) {
                     layer.bindPopup(popupContent).openPopup();
@@ -141,7 +173,7 @@
 </script>
 
 <ion-page>
-    <SubPageHeader title="Χάρτης του Campus" stackedNav />
+    <SubPageHeader title={$t("maps.title")} stackedNav />
     <div class="search-container">
         <input type="text" placeholder="Search..." on:input={handleSearch} class="search-input" />
     </div>

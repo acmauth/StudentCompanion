@@ -48,7 +48,8 @@ export default {
       "faq.error_bug_q" : "Εντόπισα λάθος στα δεδομένα της εφαρμογής. Τι κάνω;",
       "faq.error_bug_a" : "Οι πληροφορίες για τα μαθήματα, τις επιδόσεις σου και τα προσωπικά σου στοιχεία λαμβάνονται από κατάλληλα συστήματα του ΑΠΘ. Η διαλειτουργικότητα μεταξύ συστημάτων πάντα ενέχει την πιθανότητα ελλείψεων ή παραλλαγμένης παρουσίασης των δεδομένων. Αν σε προβληματίζει κάτι που βλέπεις στην εφαρμογή, βασίσου στις πληροφορίες που παρουσιάζονται online απευθείας από το πανεπιστήμιο. Ωστόσο, θα μας βοηθούσε πολύ να επικοινωνήσεις μαζί μας στο <a href='mailto:aristomate@auth.acm.org'>aristomate@auth.acm.org</a> για να μας περιγράψεις το πρόβλημα!",
       "faq.ideas_q" : "Θέλω να προτείνω μερικές ιδέες για την εφαρμογή",
-      "faq.ideas_a" : "Θα χαρούμε πάρα πολύ να ακούσουμε τι έχεις να μας πεις!<br> Μπορείς να προτείνεις ιδέες μέσω της φόρμας \"Πες μας την άποψή σου\" στην κεντρική σελίδα της εφαρμογής."
+      "faq.ideas_a" : "Θα χαρούμε πάρα πολύ να ακούσουμε τι έχεις να μας πεις!<br> Μπορείς να προτείνεις ιδέες μέσω της φόρμας \"Πες μας την άποψή σου\" στην κεντρική σελίδα της εφαρμογής.",
+      "maps.title": "Χάρτης του Campus",
     },
     en: {
       "menu.title" : "Club menu",
@@ -99,7 +100,8 @@ export default {
       "faq.error_bug_q" : "I found an error in the application's data. What should I do?",
       "faq.error_bug_a" : "The information about courses, your performance, and your personal details is obtained from appropriate AUTH systems. Interoperability between systems always carries the risk of omissions or distorted data presentation. If something in the application concerns you, rely on the information presented online directly by the university. However, it would greatly help us if you contact us at <a href='mailto:aristomate@auth.acm.org'>aristomate@auth.acm.org</a> to describe the problem!",
       "faq.ideas_q" : "I want to suggest some ideas for the application",
-      "faq.ideas_a" : "We would be very happy to hear what you have to say!<br> You can suggest ideas through the 'Tell us your opinion' form on the application's main page."
+      "faq.ideas_a" : "We would be very happy to hear what you have to say!<br> You can suggest ideas through the 'Tell us your opinion' form on the application's main page.",
+      "maps.title": "Campus Map",
     
     },
   };
