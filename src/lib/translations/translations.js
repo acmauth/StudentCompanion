@@ -1,7 +1,6 @@
 export default {
     el: {
       "menu.title" : "Μενού Λέσχης",
-      "menu.today" : "Σημερινό Μενού",
       "menu.week" : "Το Μενού της Εβδομάδας",
       "menu.morning_open": "Λέσχη ανοιχτή για Πρωινό - Κλείνει στις 10:00",
       "menu.morning_closed": "Λέσχη κλειστή - Ανοίγει στις 12:00",
@@ -9,11 +8,36 @@ export default {
       "menu.midday_closed": "Λέσχη κλειστή - Ανοίγει στις 18:00",
       "menu.evening_open": "Λέσχη ανοιχτή για Βραδινό - Κλείνει στις 21:00",
       "menu.evening_closed": "Λέσχη κλειστή - Ανοίγει στις 08:30",
-      "menu.link": "https://www.auth.gr/weekly-menu/"
+      "menu.link": "https://www.auth.gr/weekly-menu/",
+      "menu.tomorrowsMenu": "Αυριανό μενού",
+      "menu.todaysMenu": "Σημερινό μενού",
+      "menu.monday": "Δευτέρα",
+      "menu.tuesday": "Τρίτη",
+      "menu.wednesday": "Τετάρτη",
+      "menu.thursday": "Πέμπτη",
+      "menu.friday" : "Παρασκευή",
+      "menu.saturday": "Σάββατο",
+      "menu.sunday": "Κυριακή",
+      "menu.closedForHolidays": 'Λέσχη κλειστή λόγω διακοπών',
+      "about.title": "Σχετικά με εμάς",
+      "about.who_are_we": "Ποιοί είμαστε",
+      "about.who_are_we_text_1": "  Γεια χαρά! Χαιρόμαστε πολύ που χρησιμοποιείς το Aristomate, την εφαρμογή που φτιάχτηκε από φοιτητές για φοιτητές!",
+      "about.who_are_we_text_2" : "Οκτώ φοιτητές από την ομάδα της",
+      "about.who_are_we_text_3" : "διαπιστώσαμε ότι στο χάος της καθημερινότητας ενός φοιτητή, ένας 'ψηφιακός φίλος' που συγκεντρώνει την ακαδημαϊκή του εμπειρία σε ένα και μοναδικό σημείο είναι χρήσιμος για την επιβίωσή του.",
+      "about.meet_team" : "Γνώρισε την ομάδα μας",
+      "about.mission": "Η αποστολή μας",
+      "about.mission_text": "Στόχος μας είναι να διευκολύνουμε τους φοιτητές του πανεπιστημίου τόσο στη γρηγορότερη ενημέρωσή τους πάνω στα μαθήματα και την πρόοδό τους, όσο και στην ευκολότερη φοιτητική 'επιβίωση'.",
+      "about.find_us": "Βρες μας",
+      "settings.language":"Γλώσσα",
+      "settings.about": "Σχετικά με εμάς",
+      "settings.analytics": "Αποστολή analytics",
+      "settings.logout": "Αποσύνδεση",
+      "settings.personal": "Προσωπικές Πληροφορίες",
+      "settings.analyticsFailed": "Αδύνατη αποστολή!",
+      "settings.analyticsSucceded": "Τα analytics στάλθηκαν επιτυχώς!",
     },
     en: {
       "menu.title" : "Club menu",
-      "menu.today" : "Today's menu",
       "menu.week" : "The week's menu",
       "menu.morning_open": "Club open for Breakfast - Closes at 10:00",
       "menu.morning_closed": "Club Closed - Opens at 12:00",
@@ -21,7 +45,40 @@ export default {
       "menu.midday_closed": "Club Closed - Opens at 6pm",
       "menu.evening_open": "Club open for Dinner - Closes at 21:00",
       "menu.evening_closed": "Club Closed - Opens at 08:30",
-      "menu.link": "https://www.auth.gr/en/weekly-menu-en/"
+      "menu.link": "https://www.auth.gr/en/weekly-menu-en/",
+      "menu.tomorrowsMenu": "Tomorrow's menu",
+      "menu.todaysMenu": "Today's menu",
+      "menu.monday": "Monday",
+      "menu.tuesday": "Tuesday",
+      "menu.wednesday": "Wednesday",
+      "menu.thursday": "Thursday",
+      "menu.friday" : "Friday",
+      "menu.saturday": "Saturday",
+      "menu.sunday": "Sunday",
+      "menu.closedForHolidays": 'Club closed due to holidays',
+      "about.title": "About us",
+      "about.who_are_we": "Who are we",
+      "about.who_are_we_text_1": "Hello! We are very happy that you are using Aristomate, an app made by students for students!",
+      "about.who_are_we_text_2" : "Eight students from the team",
+      "about.who_are_we_text_3" : "have realized that in the chaos of a student's daily life, a 'digital friend' that consolidates the academic experience into a single point is useful for their survival.",
+      "about.meet_team" : "Meet our team",
+      "about.mission": "Our mission",
+      "about.mission_text": "Our goal is to facilitate university students both in their faster information on courses and progress as well as in easier student 'survival'.",
+      "about.find_us": "Find us",
+      "settings.language": "Language",
+      "settings.about": "About us",
+      "settings.analytics": "Send analytics",
+      "settings.logout": "Log Out",
+      "settings.personal": "Personal Information",
+      "settings.analyticsFailed": "Sending Failed!",
+      "settings.analyticsSucceded": "Analytics were sent successfully",
+    
     },
   };
+
+
+
+
+
+
   
