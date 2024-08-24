@@ -67,7 +67,7 @@
         selectedEvent = null;
 
         if (tmpEvent.notify){
-            scheduleRepeatedNotifications(tmpEvent);
+            scheduleNotification(tmpEvent, undefined);
         }
         recreatePrototype();
         modalOpen = false;

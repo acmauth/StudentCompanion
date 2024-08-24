@@ -1,20 +1,12 @@
-import { scheduledNotifications } from "./notificationsStore";
+import { addToScheduledNotifications, getIds } from "./notificationsStore";
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
-import { calcNotifyDate } from './notificationFunctions';
+import { cutId, calcNotifyDate } from './notificationFunctions';
 import { schedule } from './scheduleNotifications';
 
 const daysToSchedule = 365;
 
-//Adding the exam to the dismissed items
-function addToScheduledNotifications(id: number){
-    scheduledNotifications.update(ids => [...ids, id]);
-}
 
-// Removing the exam from the dismissed items
-function removeFromScheduledNotficiations(id: number){
-    scheduledNotifications.update((items) => items.filter((item) => false));
-}
 
 // true if date is within the threshold
 function isDateInThreshold(date: Date) {
@@ -35,7 +27,8 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
     let notifDate = new Date();   
     if(event.repeat == EventRepeatType.DAILY) {
         notifDate = new Date(previousNotifDate);
-        notifDate.setDate(previousNotifDate.getDate() + repeatInterval);     
+        // notifDate.setDate(previousNotifDate.getDate() + repeatInterval);    
+        notifDate.setMinutes(previousNotifDate.getMinutes() + repeatInterval); 
         return notifDate;
 
     } else if (event.repeat == EventRepeatType.WEEKLY) {
@@ -75,11 +68,19 @@ export function scheduleRepeatedNotifications(event: Event){
     let repeatUntil = new Date();
     if (event.repeatUntil) repeatUntil = new Date(event.repeatUntil);
 
+    let notificationId = cutId(event.id);
     let notifyDate = calcNotifyDate(event);  
-    let date = new Date();  
-    while (isDateInThreshold(notifyDate) && notifyDate < repeatUntil){
-        console.log(notifyDate);  
-        schedule(event, notifyDate);
+    let ids:number[] = [];
+    while (isDateInThreshold(notifyDate) && notifyDate < repeatUntil){ 
+        schedule(event, notifyDate, notificationId);
         notifyDate = nextNotifDate(event, notifyDate);
+        ids.push(notificationId);
+        notificationId++;
     }
+    const storedIds = {
+        eventId: event.id,
+        notificationIds: ids,
+        repeats: true
+    };
+    addToScheduledNotifications(storedIds);
 }

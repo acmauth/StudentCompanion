@@ -3,7 +3,7 @@
     import SwipeCard from "./swipeCard.svelte";
     import RecentGrade from "./recentGrades.svelte";
     import Notification from "$components/notifications/notification.svelte";
-    import { dismissedItems } from "$components/recentResults/dismissedItems";
+    import { dismissedItems } from "./dismissedItems";
     import { refresh } from "ionicons/icons";
     import { flip } from "svelte/animate";
     import { quintOut } from 'svelte/easing';
@@ -59,7 +59,7 @@
         clearTimeout(timer);
     }
 
-    function handleInteraction(event) {
+    function handleInteraction(event: any) {
         if (event.target.closest('.undoButton')) {
             return; // Ignore interaction if it is the undo button
         }
