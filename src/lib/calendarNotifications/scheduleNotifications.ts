@@ -37,7 +37,7 @@ export async function schedule(event: Event, date: Date | undefined, id: number)
     }
 }
 
-//cancels a scheduled notification
+//cancels certain scheduled notifications
 async function cancelNotifications(ids: number[]){ 
     console.log("cancel");
     try{    
@@ -49,14 +49,7 @@ async function cancelNotifications(ids: number[]){
     }
 }
 
-// checking if a notification is scheduled for an event
-async function isNotificationScheduled(id: number): Promise<boolean> {
-    const notificationId = cutId(id);
-
-    const pendingNotifications = await LocalNotifications.getPending();
-    return pendingNotifications.notifications.some(notification => notification.id === notificationId);
-}
-
+// handles the calendar notifications
 export function scheduleNotification(event: Event, date: Date | undefined){
     // permissionsService.ensurePermission("POST_NOTIFICATIONS"); 
     const ids = getIds();

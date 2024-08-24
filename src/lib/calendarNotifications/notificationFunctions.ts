@@ -10,13 +10,11 @@ export function cutId(id: number){
     return notifId;
 }
 
-
+// calculate the date that the notification should be send
 export function calcNotifyDate(event: Event){
     let notifyDate: Date;
 
-    // notifyTime can not be undefined, but checking just to avoid the warning
     if (event.notifyTime){
-
         const notifyMinsEarly = event.notifyTime * 60 * 1000;
         let notifyTime = 0;
 

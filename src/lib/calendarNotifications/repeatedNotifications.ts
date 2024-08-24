@@ -13,13 +13,13 @@ function isDateInThreshold(date: Date) {
     const now = new Date();
     const threshold = new Date(now);
     
-    // Adjust for x days later
     threshold.setDate(now.getDate() + daysToSchedule);
 
-    // Check if the given date is between now and x days from now
+    // Check if the given date is before the threshold
     return date < threshold;
 }
 
+// calculates the next date of a notification from a repeated event
 function nextNotifDate(event: Event, previousNotifDate: Date){
     let repeatInterval = 0;
     if (event.repeatInterval) repeatInterval = event.repeatInterval;
@@ -27,8 +27,8 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
     let notifDate = new Date();   
     if(event.repeat == EventRepeatType.DAILY) {
         notifDate = new Date(previousNotifDate);
-        // notifDate.setDate(previousNotifDate.getDate() + repeatInterval);    
-        notifDate.setMinutes(previousNotifDate.getMinutes() + repeatInterval); 
+        notifDate.setDate(previousNotifDate.getDate() + repeatInterval);    
+        // notifDate.setMinutes(previousNotifDate.getMinutes() + repeatInterval); // for testing
         return notifDate;
 
     } else if (event.repeat == EventRepeatType.WEEKLY) {

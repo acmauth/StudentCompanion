@@ -1,9 +1,10 @@
 import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
 import { get } from "svelte/store";
 
-// Store for the last scheduled repeated notification from each event
+// Store the id of each notification
 export const scheduledNotifications = new CapacitorPersistedStore<any[]>([], 'scheduledNotifications');
 
+// get the value of the store that is the ids
 export function getIds():any[]{
     let storedIds:any;
     scheduledNotifications.subscribe(ids => {
@@ -21,13 +22,13 @@ export function getIds():any[]{
     return storedIds;
 }
 
-//Adding the exam to the dismissed items
+//Adding the ids of the new notifications
 export function addToScheduledNotifications(newIds: any){
     get(scheduledNotifications);
     scheduledNotifications.update(ids => [...ids, newIds]);
 }
 
-// Removing the exam from the dismissed items
+// Removing the ids of some notifications
 export function removeFromScheduledNotficiations(id: number){
     get(scheduledNotifications);
     scheduledNotifications.update((items) => items.filter((item) => item.eventId !== id));
