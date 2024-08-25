@@ -6,6 +6,7 @@
 	import Maps from '$src/routes/maps/maps.svelte';
 	import QuickLinks from '$src/routes/quickLinks/quickLinks.svelte';
 	import { Browser } from '@capacitor/browser';
+	import { t, locale, locales} from "$lib/i18n";
 
 	// Function to navigate to the applet using stacked navigation
 	function navigateToApplet(applet) {
@@ -34,7 +35,7 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={fastFood} />
-				<ion-label><span class="overflowingtext">Μενού Λέσχης</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t("homepage.club")}</span></ion-label>
 			</div>
 		</AppCard>
 		<AppCard
@@ -47,7 +48,7 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={map} />
-				<ion-label><span class="overflowingtext">Χάρτης ΑΠΘ</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t("homepage.maps")}</span></ion-label>
 			</div>
 		</AppCard>
 		<AppCard
@@ -60,7 +61,7 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={link} />
-				<ion-label><span class="overflowingtext">Σύνδεσμοι</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t("homepage.links")}</span></ion-label>
 			</div>
 		</AppCard>
 		<AppCard
@@ -73,7 +74,7 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={barbell} />
-				<ion-label><span class="overflowingtext">Γυμναστήριο</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t("homepage.gym")}</span></ion-label>
 			</div>
 		</AppCard>
 	</div>

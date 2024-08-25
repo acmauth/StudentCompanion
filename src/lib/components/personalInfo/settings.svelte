@@ -144,7 +144,7 @@
 		{#if Capacitor.isNativePlatform()}
 			<ion-item button on:click={launchNativenotificationSettings} aria-hidden>
 				<ion-icon size="small" icon={cog_solid} />
-				<ion-label class="ion-padding-start">Ρυθμίσεις ειδοποιήσεων</ion-label>
+				<ion-label class="ion-padding-start">{$t("settings.notifications")}</ion-label>
 				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} aria-hidden />
 			</ion-item>
 		{/if}
