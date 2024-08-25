@@ -1,7 +1,9 @@
 import { derived, writable, get } from "svelte/store";
 import translations from "./translations/translations.js";
+import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
 
-export const locale = writable("el");
+export const locale = new CapacitorPersistedStore("el", 'lang');
+// export const locale = writable("el");
 export const locales = Object.keys(translations);
 
 function translate(locale: string, key:string, vars) {

@@ -7,6 +7,8 @@
     import { eyeOff, eye, informationCircleOutline } from 'ionicons/icons';
     import { alertController } from 'ionic-svelte';
     const isProduction = process.env.NODE_ENV === 'production';
+	import { t, locale, locales} from "$lib/i18n";
+
 
     let username = '';
     let password = '';
@@ -17,10 +19,10 @@
 
     const showAlert = async () => {
         const options = {
-            header: 'Είναι ασφαλή τα στοιχεία μου;',
-            subHeader: "Πάντα!",
-            message: 'Τα στοιχεία σύνδεσής σου μένουν μόνο μεταξύ της συσκευής σου και του ΑΠΘ. Η ομάδα του Aristomate δεν θα έχει ποτέ πρόσβαση σε αυτά.',
-            buttons: ['ΟΚ']
+            header: $t("login.safetyMessage"),
+            subHeader: $t("login.safetyConfirmation"),
+            message: $t("login.safetyConfirmationMessage"),
+            buttons: [$t("option.ok")]
         };
         const alert = await alertController.create(options);
         alert.present();
@@ -70,32 +72,32 @@
         <img src={Logo} alt="Aristomate logo" style="width: 30%; margin-bottom: 25px;">
 
         <div class="academiclogin" style="display:flex; flex-direction:row; align-items: center; justify-content: center; gap: 4px;">
-            <ion-text>Σύνδεση ΑΠΘ</ion-text>
+            <ion-text>{$t("login.connection")}</ion-text>
             {#if isProduction}
                 <ion-icon src={informationCircleOutline} on:click={showAlert} aria-hidden/>
             {/if}
         </div>
 
-        <input id='usernameInput' class="custom-input" placeholder="Όνομα χρήστη ΑΠΘ" style="margin-bottom: 10px;">
+        <input id='usernameInput' class="custom-input" placeholder={$t("login.username")} style="margin-bottom: 10px;">
         
         <div class="input-button-container">
-            <input id="passwordInput" class="custom-input" type={showPassword ? 'text' : 'password'} placeholder="Κωδικός πρόσβασης" style="margin-bottom: 10px; width:100%">
+            <input id="passwordInput" class="custom-input" type={showPassword ? 'text' : 'password'} placeholder={$t("login.password")} style="margin-bottom: 10px; width:100%">
             <button id="eyeIcon" style="background: none; border: none;" on:click={togglePasswordVisibility}>
                 <ion-icon src={showPassword ? eyeOff : eye} alt="eye icon" style="width: 24px; height: 24px;"/>
             </button>
         </div>
 
         {#if invalidData}
-            <ion-label class="error">Λανθασμένα στοιχεία σύνδεσης</ion-label>
+            <ion-label class="error">{$t("login.incorrectDataMessage")}</ion-label>
         {/if}
         {#if isVisible}
             <div class="loading-panel">
                 <ion-spinner class="loginSpinner"></ion-spinner>
-                <p class="loginP">Περιμένετε...</p>
+                <p class="loginP">{$t("login.waitMessage")}</p>
             </div>
         {/if}
       
-        <ion-button aria-hidden class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">ΕΙΣΟΔΟΣ</ion-button>
+        <ion-button aria-hidden class="custom" on:click={submit} style="margin-bottom:20px; margin-top:20px;">{$t("login.login")}</ion-button>
         <!-- <ion-checkbox label-placement="start" style="margin-top: 5px; margin-bottom:15px" class="custom" checked={true}> 
 
             <ion-label class="custom" style="font-size:small;">Διατήρηση σύνδεσης</ion-label>
