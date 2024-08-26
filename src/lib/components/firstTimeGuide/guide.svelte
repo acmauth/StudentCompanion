@@ -95,6 +95,10 @@
     margin: 0px; 
   }
 
+  :global(body.dark) .title-of-slide{
+    color: white; 
+  }
+
   .image-placeholder{
     margin-bottom: 2%; 
   }
