@@ -28,24 +28,18 @@ ion-chip{
 	background-color: transparent; 
 }
 
-.chipFlex {
-		display: flex;
-		gap: 0.2rem;
-		align-items: center;
-		font-size: 1.3rem;
-		margin: 0.2rem;
-		padding: .7rem 1.5rem .7rem 1.5rem;
-		border: 1px solid var(--ion-color-primary-shade);
-		border-radius: 30px; 
-		background-color: rgba(var(--ion-color-primary-shade), 80%);
-}
-
-
 .chip {
 	margin-top: 1.5rem;
+	padding: .8rem 1.7rem; 
 	color: var(--ion-color-primary);
 	font-weight: 700;
+	font-size: 1.2rem; 
+	border: 1px solid var(--ion-color-primary); 
+	border-radius: 999px;
+}
 
+:global(body.dark) .chip{
+	background-color: white; 
 }
 
 </style>
