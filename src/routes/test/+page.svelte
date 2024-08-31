@@ -1,8 +1,8 @@
 <script lang="ts">
 import Keycloak from 'keycloak-js';
-import { onMount } from 'svelte';
-import {page} from '$app/stores';
+import { userTokens } from "$stores/credentials.store";
 import type { KeycloakInitOptions, KeycloakConfig } from 'keycloak-js';
+import { goto } from '$app/navigation';
 
 // Initialize Keycloak
 const keycloak = new Keycloak({
@@ -17,20 +17,16 @@ keycloak.init({redirectUri: "https://applink.aristomate.gr/authsso/callback", sc
             if (authenticated && keycloak.tokenParsed) {
                 console.log('User is authenticated');
                 // Display relevant information
-                var token = keycloak.token;
-
-                // Display the token, username, and email on the page
-                var tokenElement = document.createElement('p');
-                tokenElement.textContent = 'Token: ' + token;
-                document.body.appendChild(tokenElement);
-
-                // Add logout button
-                var logoutButton = document.createElement('button');
-                logoutButton.textContent = 'Logout';
-                logoutButton.addEventListener('click', function() {
-                    keycloak.logout();
+                const token = keycloak.token;
+                console.log(token);
+                console.log(keycloak);
+                userTokens.update((newTokens) => {
+                    newTokens.universis.token = token as string; // Type assertion added here
+                    return newTokens;
                 });
-                document.body.appendChild(logoutButton);
+
+                goto('pages/homepage');
+
             } else {
                 console.log('User is not authenticated');
             }
