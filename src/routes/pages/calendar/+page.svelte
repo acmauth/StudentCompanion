@@ -12,7 +12,6 @@
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { universisGet } from '$src/lib/dataService';
-	
     
     let activeDate: Date;
     let eventList: Event[];
