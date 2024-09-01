@@ -85,41 +85,22 @@
 
 <style>
   .modal-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
     text-align: center;
-    box-sizing: border-box;
-    max-height: 100vh; 
-    overflow-y: auto;
   }
 
-  .title-of-slide {
-    color: #292929;
-    font-weight: 700;
-    font-size: 2rem; 
-    margin: 0px;
+  .title-of-slide{
+    color: #292929;  
+    font-weight: 700; 
+    font-size: 32px;
+    margin: 0px; 
   }
 
-  :global(body.dark) .title-of-slide {
-    color: white;
+  :global(body.dark) .title-of-slide{
+    color: white; 
   }
 
-  .image-placeholder {
-    width: 100%;
-    max-width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  .image-placeholder img {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-    max-height: 50vh;
-    object-fit: contain; 
+  .image-placeholder{
+    margin-bottom: 2%; 
   }
 
   .unstyled-button {
@@ -136,7 +117,7 @@
     --border-width: 0;
     --border-style: none;
     --border-color: transparent;
-    color: grey;
+    color: grey; 
     text-transform: none;
     --font-size: inherit;
     --line-height: inherit;
@@ -144,36 +125,39 @@
   }
 
   .slide {
-    align-self: flex-center;
-    width: 100%;
+    align-self: flex-center; 
+    min-width: 100%;
     text-align: center;
-    padding: 1rem;
+    padding: 5%;
     box-sizing: border-box;
+    opacity: 0.8;
     display: none;
   }
 
   .slide.selected {
     display: block;
+    opacity: 1;
+    animation: fadeInOut 0.5s ease-in-out forwards;
   }
 
-  .dots {
+   .dots { 
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    margin: 1rem 0; 
+    justify-content: center; 
+    align-items: flex-end; 
+    margin-top: auto; 
   }
 
   .dot {
-    width: 1rem;
-    height: 1rem;
+    width: 2.5vw;
+    height: 2.5vw;
     border-radius: 50%;
     margin: 0 5px;
-    background-color: var(--ion-color-medium);
+    background-color: var(--ion-color-medium); /* Inactive dot color */
     cursor: pointer;
   }
 
   .dot.selected {
-    background-color: var(--ion-color-primary);
+    background-color: var(--ion-color-primary); /* Active dot color */
   }
 
   .guide-navigation {
@@ -182,22 +166,24 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    gap: 1rem; 
+    gap: 10px;
   }
 
-  @media (max-width: 768px) {
-    .modal-content {
-      padding: 1rem;
-    }
+  @media (max-height: 780px){
+   .slide{
+    font-size: 15px;
+    padding: 5px 10px 0px 10px; 
+   }
 
-    .title-of-slide {
-      font-size: 1.5rem;
-    }
+   .title-of-slide {
+    font-size: 24px;
+   }
 
-    .dot {
-      width: 0.8rem;
-      height: 0.8rem;
-    }
-  }
+   .image-placeholder img {
+    width: 100%; 
+    height: 60vh; 
+    object-fit: cover; 
+   }
+
+ }
 </style>
-
