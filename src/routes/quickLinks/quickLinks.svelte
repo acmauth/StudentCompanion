@@ -14,6 +14,7 @@
 	import gymLogo from '$lib/assets/gymLogo.png';
 	import campingLogo from '$lib/assets/campingLogo.png'; 
 	import erasmusLogo from '$lib/assets/erasmusLogo.png'; 
+	import { t, locale, locales} from "$lib/i18n";
 
 	let department: any;
 	let departmentName = '';
@@ -21,7 +22,7 @@
 
 	let links = [
 		{
-			linktitle: 'Ιστότοπος ΑΠΘ',
+			linktitle: $t("links.uni"),
 			linkaddress: 'https://www.auth.gr',
 			imagelink: authLogo
 		},
@@ -31,42 +32,42 @@
 			imagelink: elearningLogo
 		},
 		{
-			linktitle: 'Ηλεκτρονικό Ταχυδρομείο',
+			linktitle: $t("links.mail"),
 			linkaddress: 'https://webmail.auth.gr',
 			imagelink: webmailLogo
 		},
 		{
-			linktitle: 'Κέντρο Ηλεκτρονικής Διακυβέρνησης',
+			linktitle: $t("links.itc"),
 			linkaddress: 'https://it.auth.gr',
 			imagelink: itLogo
 		},
 		{
-			linktitle: 'Ηλεκτρονική Γραμματεία Φοιτητών',
+			linktitle: $t("links.sis"),
 			linkaddress: 'https://students.auth.gr',
 			imagelink: sisLogo
 		},
 		{
-			linktitle: 'Εύδοξος',
+			linktitle: $t("links.eudoxos"),
 			linkaddress: 'http://eudoxus.gr',
 			imagelink: eudoxusLogo
 		},
 		{
-			linktitle: 'Φοιτητική Λέσχη',
+			linktitle: $t("links.club"),
 			linkaddress: 'http://www.pfl.auth.gr',
 			imagelink: restaurantLogo
 		},
 		{
-			linktitle: 'Πανεπιστημιακό Γυμναστήριο',
+			linktitle: $t("links.gym"),
 			linkaddress: 'https://gym.auth.gr/reservations/',
 			imagelink: gymLogo
 		},
 		{
-			linktitle: 'Πανεπιστημιακή Κατασκήνωση', 
+			linktitle: $t("links.camping"),
 			linkaddress: 'https://camping.auth.gr/en/', 
 			imagelink: campingLogo
 		},
 		{
-			linktitle: 'Γραφείο Erasmus', 
+			linktitle: $t("links.erasmus"), 
 			linkaddress: 'https://eurep.auth.gr/', 
 			imagelink: erasmusLogo
 		}
@@ -85,7 +86,7 @@
 
 
 <ion-content >
-	<SubPageHeader title="Χρήσιμοι σύνδεσμοι" stackedNav />
+	<SubPageHeader title={$t("links.title")} stackedNav />
 	<div class="ion-padding">
 		{#each links as { linktitle, linkaddress, imagelink }}
 		<LinkCard {linktitle} {linkaddress} {imagelink} />
