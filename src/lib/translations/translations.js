@@ -110,6 +110,12 @@ export default {
       "event.deleteThis" : "Το τρέχον μόνο",
       "event.deleteAll" : "Το τρέχον και τα επόμενα",
       "event.cancel" : "Ακύρωση",
+      "notifications.title" :"Ειδοποιήσεις",
+      "notifications.all" :"Όλες οι ειδοποιήσεις",
+      "notifications.open" :"Άνοιγμα",
+      "notifications.description" :"Περιγραφή",
+      "notifications.date" :"Ημερομηνία",
+
     },
     en: {
       "menu.title" : "Club menu",
@@ -222,6 +228,11 @@ export default {
       "event.deleteThis" : "Only this",
       "event.deleteAll" : "This and the following",
       "event.cancel" : "Cancel",
+      "notifications.title" :"Notifications",
+      "notifications.all" :"All notifications",
+      "notifications.open" :"Open",
+      "notifications.description" :"Description",
+      "notifications.date" : "Date",
     },
   };
 

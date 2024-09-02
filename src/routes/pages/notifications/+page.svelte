@@ -11,6 +11,7 @@
 	import AppCard from '$components/shared/AppCard.svelte';
     import cog from "$customIcons/cog-outline.svg";
     import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
+	import { t } from "$lib/i18n";
 
     let refresher: HTMLIonRefresherElement;
     let notificationsPromise = gatherNotifications();
@@ -31,14 +32,14 @@
 <ion-tab tab="notifications">
     <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
             <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-              <ion-title>Ειδοποιήσεις</ion-title>
+              <ion-title>{$t('notifications.title')}</ion-title>
             </ion-toolbar>
     </ion-header>
 
     <ion-content fullscreen={true}>
         <ion-header collapse="condense" mode="ios">
             <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-                <ion-title size="large">Ειδοποιήσεις</ion-title>
+                <ion-title size="large">{$t('notifications.title')}</ion-title>
                 {#if Capacitor.isNativePlatform()}
                     <ion-chip slot="end" style="background-color: transparent;">
                         <ion-icon icon={cog} style="font-size: 1.5rem; margin: 0;" on:click={launchNativenotificationSettings} aria-hidden/>

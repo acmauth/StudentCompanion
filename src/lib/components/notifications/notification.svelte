@@ -7,6 +7,7 @@
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
     import DOMPurify, { sanitize } from 'dompurify';
 	import { onMount } from "svelte";
+    import { t, getLocale } from "$lib/i18n";
 
     export let notification: notification;
     let iframe: HTMLIFrameElement;
@@ -83,7 +84,7 @@
               </ion-label>
               <p>-</p>
               <ion-label class="notification-label date">
-                <p>{timeSinceDate(notification.dateReceived)}</p>
+                <p>{timeSinceDate(notification.dateReceived, getLocale())}</p>
               </ion-label>
               
             
@@ -131,13 +132,13 @@
                         <ion-item lines="none"> 
                             <ion-chip color="primary" on:click={()=>{window.location = notification.url}} aria-hidden>
                                 <ion-icon icon={open} ></ion-icon>
-                                <ion-label>Άνοιγμα</ion-label>
+                                <ion-label>{$t('notifications.open')}</ion-label>
                             </ion-chip>
                         </ion-item>
                         {/if}
                     </ion-item>
                     <ion-item-divider>
-                        <ion-label>Περιεχόμενο </ion-label>
+                        <ion-label>{$t('notifications.description')} </ion-label>
                       </ion-item-divider>                    
                     <ion-item lines="none" class="item-text-wrap ion-no-padding">
                         <iframe bind:this={iframe}
@@ -147,7 +148,7 @@
                         style="width: 100%; border: none;"/>
                     </ion-item>
                     <ion-item-divider >
-                        <ion-label>Ημερομηνία: {notification.dateReceived.toLocaleString()}</ion-label>
+                        <ion-label>{$t('notifications.date')}: {notification.dateReceived.toLocaleString()}</ion-label>
                       </ion-item-divider> 
                 </ion-item-group>
             </div>

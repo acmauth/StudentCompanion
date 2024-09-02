@@ -1,14 +1,15 @@
 <script lang="ts">
-   import universisLogo from "$images/universis.png";
-   import elearningLogo from "$images/elearning.png";
-   import mail from "$images/mail.png";
-   import { toggleAll, toggleElearning, toggleUniversis, toggleelSystem, toggles, toggleWebmail } from './notificationToggles';
-   import { checkmark } from "ionicons/icons"; 
+    import universisLogo from "$images/universis.png";
+    import elearningLogo from "$images/elearning.png";
+    import mail from "$images/mail.png";
+    import { toggleAll, toggleElearning, toggleUniversis, toggleelSystem, toggles, toggleWebmail } from './notificationToggles';
+    import { checkmark } from "ionicons/icons"; 
+    import { t } from "$lib/i18n";  
 </script>
 
 <div class="chipsrow">
     <ion-chip color="primary" outline={!$toggles.all} on:click={() => {toggleAll()}} aria-hidden>
-       <ion-label>Όλες οι ειδοποιήσεις</ion-label>
+       <ion-label>{$t('notifications.all')}</ion-label>
        {#if $toggles.all}
             <ion-icon icon={checkmark}></ion-icon>
         {/if}
