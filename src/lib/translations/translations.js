@@ -106,6 +106,10 @@ export default {
       "event.notifyTime" : "Πριν από (λεπτά)",
       "event.repeatInterval" : "Κύκλος",
       "event.repeatUntil" : "Μέχρι",
+      "event.delete" : "Διαγραφή συμβάντος",
+      "event.deleteThis" : "Το τρέχον μόνο",
+      "event.deleteAll" : "Το τρέχον και τα επόμενα",
+      "event.cancel" : "Ακύρωση",
     },
     en: {
       "menu.title" : "Club menu",
@@ -214,6 +218,10 @@ export default {
       "event.notifyTime" : "Before (minutes)",
       "event.repeatInterval" : "Interval",
       "event.repeatUntil" : "Until",
+      "event.delete" : "Delete event",
+      "event.deleteThis" : "Only this",
+      "event.deleteAll" : "This and the following",
+      "event.cancel" : "Cancel",
     },
   };
 

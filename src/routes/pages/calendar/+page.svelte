@@ -211,24 +211,24 @@
 
         <ion-alert
             is-open={deleteModalOpen}
-            header="Διαγραφή συμβάντος"
+            header={$t('event.delete')}
             buttons={[
                 {
-                  text: 'Το τρέχον μόνο',
+                  text: $t('event.deleteThis'),
                   role: 'destructive',
                   handler: () => {
                     addInactiveDateToEvent(selectedEvent);
                   }
                 },
                 {
-                  text: 'Το τρέχον και τα επόμενα',
+                  text: $t('event.deleteAll'),
                   role: 'destructive',
                   handler: () => {
                     removeEvent(selectedEvent);
                   }
                 },
                 {
-                  text: 'Άκυρο',
+                  text: $t('event.cancel'),
                   role: 'cancel',                
                   handler: () => {
                     deleteModalOpen = false;
