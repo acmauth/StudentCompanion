@@ -45,7 +45,7 @@
         }
         else {
             isVisible = false;
-            goto("/pages/guide");
+            goto("/guide");
         }
 
 
