@@ -12,6 +12,7 @@
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { universisGet } from '$src/lib/dataService';
+	import { t } from "$lib/i18n";
     
     let activeDate: Date;
     let eventList: Event[];
@@ -151,7 +152,7 @@
 <ion-tab tab="calendar">
     <ion-header collapse="condense" mode="ios">
         <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-        <ion-title class="ion-padding-vertical" size="large" style="padding-top:0; padding-bottom:0;">Πρόγραμμα μαθημάτων</ion-title>
+        <ion-title class="ion-padding-vertical" size="large" style="padding-top:0; padding-bottom:0;">{$t('schedule.title')}</ion-title>
         <ion-buttons slot="secondary">
             <ion-button on:click={() => {modalOpen=true; selectedEvent=null; recreatePrototype();}} aria-hidden>
             <ion-icon slot="icon-only" icon={add}></ion-icon>  
@@ -178,7 +179,7 @@
             {:else}
                 <div class="container no-events">
                     <ion-icon icon={calendarClearOutline} size="large" style="padding: 15px"></ion-icon>
-                    <ion-label>Δεν υπάρχουν προγραμματισμένα συμβάντα αυτήν τη μέρα.</ion-label>
+                    <ion-label>{$t('schedule.no_event')}</ion-label>
                 </div>
             {/if}
 
@@ -198,7 +199,7 @@
                         <ion-icon slot="icon-only" icon={checkmark}/>
                     </ion-button>
                 </ion-buttons>
-                <ion-title class="ion-text-center">{selectedEvent?.title? selectedEvent.title : 'Συμβάν'}</ion-title>
+                <ion-title class="ion-text-center">{selectedEvent?.title? selectedEvent.title : $t('event.title')}</ion-title>
                 <ion-buttons slot="start">
                     <ion-button id="cancel" on:click={()=>{modalOpen=false; selectedEvent=null; recreatePrototype();}} aria-hidden>
                         <ion-icon slot="icon-only" icon={close}/>
