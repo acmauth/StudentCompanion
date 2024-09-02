@@ -103,6 +103,7 @@ export default {
       "event.description" : "Περιγραφή",
       "event.isRepeated" : "Να επαναλαμβάνεται",
       "event.notification" : "Ειδοποίηση",
+      "event.notifyTime" : "Πριν από (λεπτά)",
     },
     en: {
       "menu.title" : "Club menu",
@@ -208,6 +209,7 @@ export default {
       "event.description" : "Description",
       "event.isRepeated" : "Repeat",
       "event.notification" : "Alert",
+      "event.notifyTime" : "Before (minutes)",
     },
   };
 

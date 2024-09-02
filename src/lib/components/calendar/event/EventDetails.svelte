@@ -192,7 +192,7 @@
             {#if copyEvent.notify}
                 <div style="padding-inline:10px;"/>
                 <ion-input
-                    label="Πριν από (λεπτά)"
+                    label={$t('event.notifyTime')}
                     label-placement="floating"
                     id="notifyTime"
                     type="number"
