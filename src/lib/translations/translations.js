@@ -104,6 +104,8 @@ export default {
       "event.isRepeated" : "Να επαναλαμβάνεται",
       "event.notification" : "Ειδοποίηση",
       "event.notifyTime" : "Πριν από (λεπτά)",
+      "event.repeatInterval" : "Κύκλος",
+      "event.repeatUntil" : "Μέχρι",
     },
     en: {
       "menu.title" : "Club menu",
@@ -210,6 +212,8 @@ export default {
       "event.isRepeated" : "Repeat",
       "event.notification" : "Alert",
       "event.notifyTime" : "Before (minutes)",
+      "event.repeatInterval" : "Interval",
+      "event.repeatUntil" : "Until",
     },
   };
 

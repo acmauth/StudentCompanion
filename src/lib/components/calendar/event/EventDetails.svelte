@@ -162,7 +162,7 @@
         {#if copyEvent.repeat != EventRepeatType.NEVER}
             <ion-item>
                 <ion-input
-                    label="Κύκλος"
+                    label={$t('event.repeatInterval')}
                     label-placement="stacked"
                     id="repeatInterval"
                     type="number"
@@ -174,7 +174,7 @@
             
                 <div style="padding-inline:10px;"/>
                 
-                <ion-label>Μέχρι</ion-label>    
+                <ion-label>{$t('event.repeatUntil')}</ion-label>    
 
                 <ion-datetime-button style="width: fit-content;" datetime="until"></ion-datetime-button>
                 <ion-modal keep-contents-mounted={true}>
