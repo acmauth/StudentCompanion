@@ -64,7 +64,7 @@
 				{#if course.examPeriod && course.gradeYear}
 					{course.examPeriod.name} {course.gradeYear.name}
 				{:else}
-					ΔΗΛΩΜΕΝΟ
+					{$t('progress.declared')}
 				{/if}
 			</ion-label>
 
