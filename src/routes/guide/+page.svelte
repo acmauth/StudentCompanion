@@ -145,6 +145,7 @@
 	}
   
 	.guide-navigation {
+	  padding: 0rem 1rem 0rem 1rem; 
 	  display: flex;
 	  flex-direction: column;
 	  align-items: center;
@@ -154,7 +155,7 @@
 	}
   
 	@media (max-height: 780px) {
-	  .slide {
+	  .guide-navigation {
 		font-size: 15px;
 		padding: 5px 10px 0px 10px;
 	  }
@@ -166,6 +167,5 @@
 	  .image-placeholder img {
 		height: 60vh;
 	  }
-  
    }
   </style>
