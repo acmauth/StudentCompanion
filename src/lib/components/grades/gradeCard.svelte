@@ -7,8 +7,11 @@
 	import * as allIonicIcons from 'ionicons/icons';
 	import Course from '$components/courses/coursePage.svelte';
 	import { navController } from '$components/shared/StackedNav';
+	import { getSemester } from '$components/courses/getSemester';
+	import { t, getLocale } from '$lib/i18n';
 
-
+	for (let course of filteredSubjects) {
+		console.log(course);}
 
 	let childrenOpen: boolean[] = [];
 
@@ -30,14 +33,14 @@
 {#if filteredSubjects.length > 0}
 <div class="ion-padding-start ion-padding-vertical semester">
 	{#if semesterId <= 24}
-	<ion-text class="title"><b>{semesterId}ο Εξάμηνο</b></ion-text>
+	<ion-text class="title"><b>{getSemester(semesterId, getLocale())} {$t('progress.semester')}</b></ion-text>
 	{:else}
 	<ion-text class="title"><b>{semesterName}</b></ion-text>
 	{/if}
 		{#if semesterAverage}
-		<ion-text class="subtitle">Μ.Ο Εξαμήνου: {semesterAverage}</ion-text>
+		<ion-text class="subtitle">{$t('progress.semesterAverage')}: {semesterAverage}</ion-text>
 		{:else}
-		<ion-text class="subtitle">Μ.Ο Εξαμήνου: -</ion-text>
+		<ion-text class="subtitle">{$t('progress.semesterAverage')}: -</ion-text>
 		{/if}
 		
 
@@ -97,7 +100,7 @@
 				{#if course.examPeriod && course.gradeYear}
 					{course.examPeriod.name} {course.gradeYear.name}
 				{:else}
-					ΔΗΛΩΜΕΝΟ
+					{$t('progress.declared')}
 				{/if}
 			</ion-label>
 
@@ -139,7 +142,7 @@
 									{#if childCourse.examPeriod && childCourse.gradeYear}
 										{childCourse.examPeriod.name} {childCourse.gradeYear.name}
 									{:else}
-										ΔΗΛΩΜΕΝΟ
+										{$t('progress.declared')}
 									{/if}
 								</ion-label>
 							{:else}

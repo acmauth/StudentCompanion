@@ -155,7 +155,7 @@ import { t } from "$lib/i18n";
 		  <ion-title class="ion-padding-vertical" size="large">{$t('progress.title')}</ion-title>
 		
 	
-		  <ion-searchbar debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>
+		  <ion-searchbar debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder={$t('progress.search')}></ion-searchbar>
 		  
 		  {#if Object.entries(coursesBySemester).length > 0}
 			  <Chips coursesBySemester={coursesBySemester} semesterId={semesterId} />

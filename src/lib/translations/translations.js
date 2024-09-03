@@ -125,7 +125,12 @@ export default {
       "progress.average_prediction_desc" : "Βάλε τους βαθμούς που περιμένεις να λάβεις για να δεις πώς επηρεάζεται ο Μ.Ο. σου",
       "progress.gpa" : "Μέσος Όρος",
       "progress.ects" : "Με συντελεστές",
-      "progress.simple" : "Απλός"
+      "progress.simple" : "Απλός",
+      "progress.search" : "Αναζήτηση Μαθήματος",
+      "progress.semester" : "Εξάμηνο",
+      "progress.semesterL" : "εξάμηνο",
+      "progress.semesterAverage" : "Μ.Ο Εξαμήνου",
+      "progress.declared" : "ΔΗΛΩΜΕΝΟ",
 
     },
     en: {
@@ -254,7 +259,12 @@ export default {
       "progress.average_prediction_desc" : "Enter the grades you expect to receive to see how your GPA is affected",
       "progress.gpa" : "GPA",
       "progress.ects" : "with ECTS credits",
-      "progress.simple" : "without ECTS credits"
+      "progress.simple" : "without ECTS credits",
+      "progress.search" : "Search for a course",
+      "progress.semester" : "Semester",
+      "progress.semesterL" : "semester",
+      "progress.semesterAverage" : "Semester Av",
+      "progress.declared" : "DECLARED",
     },
   };
 
