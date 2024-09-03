@@ -17,6 +17,7 @@ import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSem
 import { writable } from 'svelte/store';
 import Fuse from 'fuse.js';
 import { onMount } from 'svelte';
+import { t } from "$lib/i18n";
 
 	
 	// Fix for flipper covering content
@@ -151,7 +152,7 @@ import { onMount } from 'svelte';
 
 	<ion-header collapse="condense" mode="ios">
 		<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-		  <ion-title class="ion-padding-vertical" size="large">Πρόοδος</ion-title>
+		  <ion-title class="ion-padding-vertical" size="large">{$t('progress.title')}</ion-title>
 		
 	
 		  <ion-searchbar debounce={500} on:ionInput={handleChange} inputmode="text" show-clear-button="always" placeholder="Αναζήτηση Μαθημάτων"></ion-searchbar>

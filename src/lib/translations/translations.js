@@ -115,6 +115,17 @@ export default {
       "notifications.open" :"Άνοιγμα",
       "notifications.description" :"Περιγραφή",
       "notifications.date" :"Ημερομηνία",
+      "progress.title" : "Πρόοδος",
+      "progress.passed" : "Περασμένα μαθήματα",
+      "progress.grade_ects" : "M.O με συντελεστές",
+      "progress.grade_simple" : "M.O απλός",
+      "progress.average_evolution" : "Εξέλιξη Μέσου όρου",
+      "progress.average_prediction" : "Πρόβλεψη Μ.Ο.",
+      "progress.average_prediction_full" : "Πρόβλεψη Μέσου Όρου",
+      "progress.average_prediction_desc" : "Βάλε τους βαθμούς που περιμένεις να λάβεις για να δεις πώς επηρεάζεται ο Μ.Ο. σου",
+      "progress.gpa" : "Μέσος Όρος",
+      "progress.ects" : "Με συντελεστές",
+      "progress.simple" : "Απλός"
 
     },
     en: {
@@ -233,6 +244,17 @@ export default {
       "notifications.open" :"Open",
       "notifications.description" :"Description",
       "notifications.date" : "Date",
+      "progress.title" : "Progress",
+      "progress.passed" : "Passed courses",
+      "progress.grade_ects" : "GPA with ECTS credits",
+      "progress.grade_simple" : "GPA without ECTS credits",
+      "progress.average_evolution" : "Evolution of the GPA",
+      "progress.average_prediction" : "Predict your GPA",
+      "progress.average_prediction_full" : "Predict your GPA",
+      "progress.average_prediction_desc" : "Enter the grades you expect to receive to see how your GPA is affected",
+      "progress.gpa" : "GPA",
+      "progress.ects" : "with ECTS credits",
+      "progress.simple" : "without ECTS credits"
     },
   };
 

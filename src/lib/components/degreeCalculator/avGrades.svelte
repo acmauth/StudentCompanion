@@ -1,24 +1,24 @@
 <script>
-
+    import { t } from "$lib/i18n";
     /** @type { { based: {value: number, stringed: string}, simple: {value: number, stringed: string}; } } */
     export let degree_grade;
     
 </script>
 
-<h2 id="new-average">Μέσος Όρος</h2>
+<h2 id="new-average">{$t('progress.gpa')}</h2>
 
 <div id="grades-box">
 
     <div class="grade-box" >
         <h1 class="grade-text">{degree_grade.based.stringed}</h1>
-        <p class="grade-subtext">Με συντελεστές</p>
+        <p class="grade-subtext">{$t('progress.ects')}</p>
     </div>
 
     <div id="grade-line"> </div>
 
     <div class="grade-box">
         <h1 class="grade-text">{degree_grade.simple.stringed}</h1>
-        <p class="grade-subtext">Απλός</p> 
+        <p class="grade-subtext">{$t('progress.simple')}</p> 
     </div>
 </div>  
 
