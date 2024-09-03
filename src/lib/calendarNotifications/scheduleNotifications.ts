@@ -2,20 +2,13 @@ import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { cutId, calcNotifyDate } from './notificationFunctions';
-import { scheduleRepeatedNotifications } from './repeatedNotifications';
+import { scheduleRepeatedNotifications, schedulePendingNotifications } from './repeatedNotifications';
 import { getIds, removeFromScheduledNotficiations, addToScheduledNotifications} from "./notificationsStore";
 
 
 
 // schedules a notification at a specific date
-export async function schedule(event: Event, date: Date | undefined, id: number){
-    
-    let notifyDate: Date;
-    if (date){
-        notifyDate = new Date(date);
-    } else {
-        notifyDate = calcNotifyDate(event);
-    }
+export async function schedule(event: Event, notifyDate: Date, id: number){
     console.log(notifyDate);
     
     try{        
@@ -56,8 +49,8 @@ export function scheduleNotification(event: Event, date: Date | undefined){
     let notifIds = [0];
     let flag = false;
     for (const id of ids){
-        console.log(event.id+"-"+id.eventId);
-        if (event.id === id.eventId){
+        console.log(event.id+"-"+id.event.id);
+        if (event.id === id.event.id){
             notifIds = [...id.notificationIds];
             flag = true;
         }
@@ -71,16 +64,17 @@ export function scheduleNotification(event: Event, date: Date | undefined){
 
     if (event.repeat != EventRepeatType.NEVER){     
         scheduleRepeatedNotifications(event);
+
     } else {
         let notificationId = cutId(event.id);
+        const notifyDate = calcNotifyDate(event);
         const storedIds = {
-            eventId: event.id,
+            event: event,
             notificationIds: [ notificationId ],
-            repeats: false
+            lastNotification: notifyDate,
         };
         addToScheduledNotifications(storedIds);
-
-        schedule(event, undefined, notificationId);
+        
+        schedule(event, notifyDate, notificationId);
     }
-    getIds();
 }

@@ -12,8 +12,7 @@ export function getIds():any[]{
     })
     // console.log(storedIds.length);
     // for (const array of storedIds){
-    //     console.log(array.eventId);
-    //     console.log(array.repeats);
+    //     console.log(array.event.id);
     //     for (const id of array.notificationIds){
     //         console.log(id);  
     //     }
@@ -31,5 +30,5 @@ export function addToScheduledNotifications(newIds: any){
 // Removing the ids of some notifications
 export function removeFromScheduledNotficiations(id: number){
     get(scheduledNotifications);
-    scheduledNotifications.update((items) => items.filter((item) => item.eventId !== id));
+    scheduledNotifications.update((items) => items.filter((item) => false));//item.event.id !== id
 }

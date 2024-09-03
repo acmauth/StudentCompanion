@@ -15,6 +15,7 @@
     import { scheduleNotification } from '$src/lib/calendarNotifications/scheduleNotifications';
     import { scheduleRepeatedNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
     import { permissionsService } from '$src/lib/calendarNotifications/runtimePermissions';
+    import { removeFromScheduledNotficiations, getIds} from '$src/lib/calendarNotifications/notificationsStore';
 	
     
     let activeDate: Date;
