@@ -44,4 +44,5 @@ let authenticated = false;
         <p>User is not authenticated</p>
         <ion-button on:click={() => keycloak.login({scope:"students:read"})} aria-hidden>Login</ion-button>
     {/if}
+    <ion-button on:click={()=>{goto("pages/personalInfo")}} aria-hidden>Go to personal info</ion-button>
 </ion-content>

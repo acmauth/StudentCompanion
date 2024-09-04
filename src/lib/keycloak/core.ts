@@ -1,5 +1,6 @@
 import Keycloak from 'keycloak-js';
 import type { KeycloakInitOptions, KeycloakConfig } from 'keycloak-js';
+import { aristomateAdapter } from './aristomateAdapter';
 import { keyCloakStore } from "$stores/keycloak.store";
 import { get } from 'svelte/store';
 import { userTokens } from "$stores/credentials.store";
@@ -25,7 +26,7 @@ keycloak.init({
             token: get(keyCloakStore).token,
             refreshToken: get(keyCloakStore).refreshToken,
             idToken: get(keyCloakStore).idToken,
-            adapter: isProduction? 'cordova-native' : 'default'}
+            adapter: isProduction? 'cordova' : 'default'}
 ).then(function(authenticated) {
     console.log(authenticated);
     if (authenticated && keycloak.tokenParsed) {

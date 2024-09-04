@@ -8,6 +8,7 @@
 	import Dexie from 'dexie';
 	import { onMount } from 'svelte';
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
+	import { goto } from '$app/navigation';
 
 	/**
 	 * @type {any}
@@ -163,6 +164,18 @@
 		<ion-item button on:click={sentAnalytics}>
 			<ion-icon size="small" icon={allIonicIcons.paperPlane} />
 			<ion-label class="ion-padding-start">Αποστολή analytics</ion-label>
+			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
+		</ion-item>
+
+		<ion-item button on:click={()=>{goto("/test")}} aria-hidden>
+			<ion-icon size="small" icon={allIonicIcons.paperPlane} />
+			<ion-label class="ion-padding-start">SSO Testing page</ion-label>
+			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
+		</ion-item>
+
+		<ion-item button on:click={()=>{goto("/login")}} aria-hidden>
+			<ion-icon size="small" icon={allIonicIcons.paperPlane} />
+			<ion-label class="ion-padding-start">Login Testing page</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 

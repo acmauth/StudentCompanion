@@ -20,11 +20,13 @@
 	onMount(async () => {
 		await loadPersistedStores();
 		await delay(1000);
-		if (await judgeAuth()) {
-			await preFlightCache();
-			goto('pages/homepage');
-		} else {
-			goto('login');}
+		// if (await judgeAuth()) {
+		// 	await preFlightCache();
+		// 	goto('pages/homepage');
+		// } else {
+		// 	goto('login');}
+		// }
+		goto('pages/personalInfo');
 		}
 	);
 </script>
