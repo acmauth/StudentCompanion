@@ -16,6 +16,7 @@ ios
 ios/*
 src/debug/*
 visit-log.csv
+pnpm-lock.yaml
 
 android/.gradle/
 android/build
