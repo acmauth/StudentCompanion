@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import java.io.ByteArrayOutputStream;
 import javax.mail.*;
+import javax.mail.search.FlagTerm;
 import javax.mail.internet.*;
 import java.io.ByteArrayOutputStream;
 import java.util.*;
@@ -22,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class WebmailInboxScraperLogic {
 
-    public static JSObject getInboxEmails(String username, String password, String server, String port) {
+    public static JSObject getInboxEmails(String username, String password, String server, String port, boolean isNotification) {
         try {
             // IMAP settings
             Properties props = new Properties();
@@ -42,6 +43,7 @@ public class WebmailInboxScraperLogic {
 
             Folder inbox = store.getFolder("INBOX");
             inbox.open(Folder.READ_ONLY);
+
             int lastMessageNo = inbox.getMessageCount() >= 6 ? inbox.getMessageCount() - 6 : 1;
             Message[] messages = inbox.getMessages(lastMessageNo, inbox.getMessageCount());
 
@@ -51,11 +53,13 @@ public class WebmailInboxScraperLogic {
             // Iterate through messages and extract details
             for (int i = messages.length - 1; i >= 0; i--) {
                 JSONObject emailJson = new JSONObject();
-                emailJson.put("data", getRawMessageSource(messages[i]));
-                emailJson.put("subject", getDecodedText(messages[i].getSubject()));
-                emailJson.put("sender", getDecodedText(messages[i].getFrom()[0].toString()));
-                emailJson.put("date", messages[i].getSentDate());
-                emailsArray.put(emailJson);
+                if (!messages[i].isSet(Flags.Flag.SEEN) || !isNotification){
+                    emailJson.put("data", getRawMessageSource(messages[i]));
+                    emailJson.put("subject", getDecodedText(messages[i].getSubject()));
+                    emailJson.put("sender", getDecodedText(messages[i].getFrom()[0].toString()));
+                    emailJson.put("date", messages[i].getSentDate());
+                    emailsArray.put(emailJson);
+                }
             }
 
             // Close connections
