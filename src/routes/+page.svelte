@@ -19,9 +19,9 @@
 	// Handling the redirect to the homepage
 	onMount(async () => {
 		await loadPersistedStores();
-		await delay(1000);
+		// await delay(1000);
 		if (await judgeAuth()) {
-			// await preFlightCache();
+			await preFlightCache();
 			goto('pages/homepage');
 		} else {
 			goto('login');}

@@ -13,14 +13,6 @@
 			"CapacitorCookies": {
 				"enabled": true,
 				"androidCustomSchemeAllowInsecureAccess": true
-			},
-			"BackgroundRunner": {
-				"label": "app.aristomate.gr.background.task",
-				"src": "runners/background.js",
-				"event": "updateRefreshToken",
-				"repeat": true,
-				"interval": 15,
-				"autoStart": true
 			}
 		  },
 		  "server": {
