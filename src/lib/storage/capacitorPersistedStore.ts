@@ -9,8 +9,8 @@ import type { GetResult } from '@capacitor/preferences';
  * @template T - The type of the store value.
  */
 class CapacitorPersistedStore<T> {
-    private store: Writable<T>;
-    private key: string;
+    protected store: Writable<T>;
+    protected key: string;
 
     /**
      * Creates a new instance of CapacitorPersistedStore.
@@ -40,7 +40,7 @@ class CapacitorPersistedStore<T> {
      * @param key - The key used for storing the value.
      * @returns A promise that resolves to the stored value, or null if it doesn't exist.
      */
-    private async getStoredValue(key: string): Promise<Awaited<T> | null> {
+    protected async getStoredValue(key: string): Promise<Awaited<T> | null> {
         const result: GetResult = await Preferences.get({ key });
         return result.value !== null ? JSON.parse(result.value) : null;
     }
@@ -49,7 +49,7 @@ class CapacitorPersistedStore<T> {
      * Subscribes to changes in the store and updates the stored value in Capacitor's Preferences.
      * @param key - The key used for storing the value.
      */
-    private subscribeToStoreChanges(key: string) {
+    protected subscribeToStoreChanges(key: string) {
         this.store.subscribe((value) => {
             Preferences.set({ key, value: JSON.stringify(value) });
         });
