@@ -1,6 +1,5 @@
 <script lang='ts'>
     import { goto } from '$app/navigation';
-	import Keycloak from 'keycloak-js';
 	import { userTokens } from "$stores/credentials.store";
     import { getUniversisToken, getElearningToken} from "$lib/components/loginService/helpers"
     import Vector from "$lib/components/loginService/Vector.svg"
@@ -10,14 +9,37 @@
     import { alertController } from 'ionic-svelte';
 	import type { KeycloakInitOptions, KeycloakConfig } from 'keycloak-js';
 	import { keyCloakStore } from "$stores/keycloak.store";
-	import Keycloakthings from "$lib/keycloak/core";
+	import Keycloakthings from "$src/routes/login/core";
+    import { page } from '$app/stores';
+    import { App, URLOpenListenerEvent } from '@capacitor/app';
+	import { onMount } from 'svelte';
 
     const isProduction = process.env.NODE_ENV === 'production';
 
+    console.log("LOGIN PAGE");
+    $: console.log($page.url.href);
 
     let invalidData = false;
     let isVisible = false;
 
+    onMount(async () => {
+        await App.addListener('appUrlOpen', function (event) {
+            // slug = /tabs/tabs2
+            const slug = event.url.split('#')[1];
+            console.log(event.url);
+            console.log(slug);
+    
+            goto(`authenticate#${slug}`);
+    
+            // We only push to the route if there is a slug present
+            // if (slug) {
+            // 	goto(slug);
+            // }
+        });
+        
+        console.log("LOGIN PAGE");
+        console.log(await Keycloakthings.updateToken(1));
+    })
 
 </script>
 

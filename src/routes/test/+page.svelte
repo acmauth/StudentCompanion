@@ -25,7 +25,7 @@ keycloak.init({redirectUri: "https://applink.aristomate.gr/authsso/callback", sc
                     return newTokens;
                 });
 
-                goto('pages/homepage');
+                goto('/pages/homepage');
 
             } else {
                 console.log('User is not authenticated');
@@ -44,5 +44,5 @@ let authenticated = false;
         <p>User is not authenticated</p>
         <ion-button on:click={() => keycloak.login({scope:"students:read"})} aria-hidden>Login</ion-button>
     {/if}
-    <ion-button on:click={()=>{goto("pages/personalInfo")}} aria-hidden>Go to personal info</ion-button>
+    <ion-button on:click={()=>{goto("/pages/personalInfo")}} aria-hidden>Go to personal info</ion-button>
 </ion-content>

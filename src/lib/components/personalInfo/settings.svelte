@@ -167,18 +167,6 @@
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 
-		<ion-item button on:click={()=>{goto("/test")}} aria-hidden>
-			<ion-icon size="small" icon={allIonicIcons.paperPlane} />
-			<ion-label class="ion-padding-start">SSO Testing page</ion-label>
-			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-		</ion-item>
-
-		<ion-item button on:click={()=>{goto("/login")}} aria-hidden>
-			<ion-icon size="small" icon={allIonicIcons.paperPlane} />
-			<ion-label class="ion-padding-start">Login Testing page</ion-label>
-			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-		</ion-item>
-
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<ion-item button lines="none" on:click={logOut}>

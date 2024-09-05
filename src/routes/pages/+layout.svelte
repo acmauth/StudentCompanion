@@ -12,6 +12,8 @@
 	import chart_bar from "$customIcons/chart-bar.svg";
 	import { onMount } from 'svelte';
 	import initializeNotifications from '$lib/-notifications/core';
+	import { BackgroundRunner } from '@capacitor/background-runner';
+	import { Capacitor } from '@capacitor/core';
 	// Routes
 	let bottomNav = [
 		{
@@ -44,6 +46,9 @@
 	const logsStuff =()=>{};
 
 	onMount(async ()=>{
+		if (Capacitor.isNativePlatform()) {
+			BackgroundRunner.dispatchEvent({label: "app.aristomate.gr.background.task", event: "updateRefreshToken", details: {}});
+		}
 		await initializeNotifications();
 	});
 
