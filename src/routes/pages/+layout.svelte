@@ -41,7 +41,7 @@
 	const logsStuff =()=>{};
 
 	onMount(async ()=>{
-		await initializeRefresherService();
+		// await initializeRefresherService();
 		if ($webmailAuthenticated) {
 			await initializeNotifications();
 		}

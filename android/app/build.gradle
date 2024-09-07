@@ -10,8 +10,8 @@ android {
         applicationId "app.aristomate.gr"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 34
-        versionCode 18
-        versionName '1.3.1 Dark Side'
+        versionCode 20
+        versionName '1.4.1 We`re so back'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
