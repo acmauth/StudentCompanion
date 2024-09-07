@@ -37,7 +37,7 @@
             
             updateStore(token, refreshToken);
 
-            goto('/pages/homepage');
+            goto('/login/guide');
 
         } else {
             console.log('User is not authenticated | login/authenticate');
@@ -58,7 +58,7 @@
     onMount(async () => {
         if (!isProduction) {
             console.log("Token exists");
-            goto('/pages/homepage');
+            goto('/login/guide');
         }
     })
 
