@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import sisAuthenticator from '$lib/-universis/plugins/webserver/webScraper';
+import sisAuthenticator from '$src/lib/-universis/plugins-deprecated/webserver/webScraper';
 
 // Server function that handles the login request
 export const GET: RequestHandler = async ({ url }) => {

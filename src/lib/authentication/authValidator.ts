@@ -1,9 +1,10 @@
 import { userCreds, userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
-import reauthenticate from "../-universis/authenticator/reauthenticate.js";
+import reauthenticate from "../-universis/authenticator-deprecated/reauthenticate.js";
 import { Network } from '@capacitor/network';
 import { Preferences } from "@capacitor/preferences";
 import Dexie from "dexie";
+import { keyCloakStore, getValidity, getRefreshLife } from '$stores/keycloak.store';
 
 // Do we wanna log out? Let's clear our path
 export function invalidateAuth(){
@@ -19,11 +20,15 @@ export async function judgeAuth() {
     // If the user if offline, we return true, unless they don't have a token, in which case we return false
 
     const onLineStatus = (await Network.getStatus()).connected;
-    const _userCreds: any = get(userCreds);
+    // const _userCreds: any = get(userCreds);
     
-    if (!_userCreds.password || !_userCreds.username) return false; // If we don't have any credentials, we're not logged in
-    if (!onLineStatus) return true;                                 // If we're offline, there is no way to check if we're logged in, so we assume we are and use cached data
-    return await getLoginStatus();
+    // if (!_userCreds.password || !_userCreds.username) return false; // If we don't have any credentials, we're not logged in
+    // if (!onLineStatus) return true;                                 // If we're offline, there is no way to check if we're logged in, so we assume we are and use cached data
+    // return await getLoginStatus();
+    const keyCloakStoreValue = get(keyCloakStore);
+    if (!keyCloakStoreValue.token) return false;
+    if (getRefreshLife()) return true;
+    return false
 
 }
 

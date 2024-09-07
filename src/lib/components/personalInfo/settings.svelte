@@ -8,6 +8,7 @@
 	import Dexie from 'dexie';
 	import { onMount } from 'svelte';
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
+	import { goto } from '$app/navigation';
 
 	/**
 	 * @type {any}

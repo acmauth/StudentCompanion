@@ -1,6 +1,6 @@
 <script lang='ts'>
     import { goto } from '$app/navigation';
-    import { getUniversisToken, getElearningToken} from "./helpers"
+    import { getUniversisToken, getElearningToken} from "$lib/components/loginService/helpers"
     import Vector from "$lib/components/loginService/Vector.svg"
     import Vector1 from "$lib/components/loginService/Vector(1).svg"
     import Logo from "$lib/assets/Logo_head.png";

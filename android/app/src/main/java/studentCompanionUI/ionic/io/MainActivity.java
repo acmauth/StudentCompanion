@@ -13,6 +13,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(ElearningScraperDefinition.class);
         registerPlugin(WebmailInboxScraperDefinition.class);
         registerPlugin(NotificationServiceDefinition.class);
+        registerPlugin(RefresherServiceDefinition.class);
         super.onCreate(savedInstanceState);
     }
 }

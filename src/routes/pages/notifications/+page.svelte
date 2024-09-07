@@ -11,6 +11,7 @@
 	import AppCard from '$components/shared/AppCard.svelte';
     import cog from "$customIcons/cog-outline.svg";
     import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
+    import WebmailPlaceholder from "./webmailplaceholderComponent/webmailPlaceholder.svelte"
 
     let refresher: HTMLIonRefresherElement;
     let notificationsPromise = gatherNotifications();
@@ -58,6 +59,7 @@
                 <NotifSkeleton/>
             {/each}
         {:then notifications}
+            <WebmailPlaceholder/>
             {#each notifications as notification (notification.id)}
                 <div animate:flip={{ duration: 500, easing: quintOut }}>
                     {#if $toggles.all || ($toggles.universis && notification.type === 'universis') || ($toggles.elearning && notification.type === 'elearning') || ($toggles.elSystem && notification.type === 'system')}
