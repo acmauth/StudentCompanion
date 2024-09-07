@@ -13,24 +13,6 @@
             <ion-icon icon={checkmark}></ion-icon>
         {/if}
     </ion-chip>
-    <ion-chip color="warning" outline={!$toggles.elearning} on:click={() => {toggleElearning()}} aria-hidden>
-        <ion-avatar>
-           <img src={elearningLogo} alt="elearning logo"/>
-        </ion-avatar>
-        <ion-label>eLearning</ion-label>
-        {#if $toggles.elearning}
-            <ion-icon icon={checkmark}></ion-icon>
-        {/if}
-     </ion-chip>
-    <ion-chip color="tertiary" outline={!$toggles.universis} on:click={() => {toggleUniversis()}} aria-hidden>
-       <ion-avatar>
-          <img src={universisLogo} alt="universis logo"/>
-       </ion-avatar>
-       <ion-label>Universis</ion-label>
-       {#if $toggles.universis}
-            <ion-icon icon={checkmark}></ion-icon>
-        {/if}
-    </ion-chip>
     <ion-chip color="secondary" outline={!$toggles.webmail} on:click={() => {toggleWebmail()}} aria-hidden>
         <ion-avatar>
            <img src={mail} alt="mail icon"/>
@@ -39,6 +21,24 @@
         {#if $toggles.webmail}
              <ion-icon icon={checkmark}></ion-icon>
          {/if}
+     </ion-chip>
+     <ion-chip color="tertiary" outline={!$toggles.universis} on:click={() => {toggleUniversis()}} aria-hidden>
+        <ion-avatar>
+           <img src={universisLogo} alt="universis logo"/>
+        </ion-avatar>
+        <ion-label>Universis</ion-label>
+        {#if $toggles.universis}
+             <ion-icon icon={checkmark}></ion-icon>
+         {/if}
+     </ion-chip>
+    <ion-chip color="warning" outline={!$toggles.elearning} on:click={() => {toggleElearning()}} aria-hidden>
+        <ion-avatar>
+           <img src={elearningLogo} alt="elearning logo"/>
+        </ion-avatar>
+        <ion-label>eLearning</ion-label>
+        {#if $toggles.elearning}
+            <ion-icon icon={checkmark}></ion-icon>
+        {/if}
      </ion-chip>
      <ion-chip color="warning" outline={!$toggles.elSystem} on:click={() => {toggleelSystem()}} aria-hidden>
         <ion-avatar>

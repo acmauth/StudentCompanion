@@ -15,7 +15,7 @@
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import CredentialLoginButton from '$components/credLogin/CredentialLoginButton.svelte';
+	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
 	
 	let givenName = '';
 	let gender = '';

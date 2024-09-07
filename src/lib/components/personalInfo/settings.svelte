@@ -8,7 +8,7 @@
 	import Dexie from 'dexie';
 	import { onMount } from 'svelte';
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
-	import CredentialLoginItem from '$components/credLogin/CredentialLoginItem.svelte';
+	import CredentialLoginItem from '$components/webmailLogin/CredentialLoginItem.svelte';
 
 
 	/**

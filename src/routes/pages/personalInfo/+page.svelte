@@ -7,7 +7,7 @@
 	import { Capacitor } from '@capacitor/core';
 	import Settings from '$components/personalInfo/settings.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import { userCredsFlag } from '$components/credLogin/userCredsFlagStore';
+	import { userCredsFlag } from '$components/webmailLogin/userCredsFlagStore';
 	// Keep personal info
 
 	let aem: String = '';

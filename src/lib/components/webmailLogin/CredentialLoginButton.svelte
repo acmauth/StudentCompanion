@@ -1,7 +1,7 @@
 <script>
     import CredentialLogin from "./CredentialLogin.svelte";
     import { keySharp } from 'ionicons/icons';
-	import { userCredsFlag as autheticationFlag} from '$components/credLogin/userCredsFlagStore';
+	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
 
 	let loginModalOpen = false;
 	$:	if ($autheticationFlag) loginModalOpen = false;
@@ -15,7 +15,7 @@
     </ion-chip>
 {/if}
 <ion-modal
-    is-open={loginModalOpen}
+    is-open={loginModalOpen && !$autheticationFlag}
     initial-breakpoint={0.34}
     on:ionModalDidDismiss={() => {loginModalOpen = false;}}
     breakpoints={[0, 0.34	]}

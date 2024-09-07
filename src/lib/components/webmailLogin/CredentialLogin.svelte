@@ -1,11 +1,12 @@
 <script lang='ts'>
     import { alertController } from 'ionic-svelte';
     import { checkmark, informationCircleOutline, reloadOutline } from 'ionicons/icons';
-    import sisAuthenticator from "$lib/-universis/authenticator/core";
+    import sisAuthenticator from "$lib/-universis/authenticator-deprecated/core";
     import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { goto } from '$app/navigation';
 	import { userCreds } from '$stores/credentials.store';
+    import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
 
     const isProduction = process.env.NODE_ENV === 'production';
 
@@ -45,6 +46,8 @@
             username: username,
             password: password
         });
+
+        autheticationFlag.set(true);
 
         return true;
     }

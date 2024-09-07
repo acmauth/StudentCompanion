@@ -7,6 +7,8 @@
 	import { onMount } from 'svelte';
 	import initializeNotifications from '$lib/-notifications/core';
 	import initializeRefresherService from '$src/lib/-keycloakRefresher/core';
+	import { userCredsFlag as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
+
 	// Routes
 	let bottomNav = [
 		{
@@ -40,7 +42,9 @@
 
 	onMount(async ()=>{
 		await initializeRefresherService();
-		// await initializeNotifications();
+		if ($webmailAuthenticated) {
+			await initializeNotifications();
+		}
 	});
 
 </script>

@@ -11,7 +11,7 @@
 	import AppCard from '$components/shared/AppCard.svelte';
     import cog from "$customIcons/cog-outline.svg";
     import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
-    import WebmailPlaceholder from "./webmailplaceholderComponent/webmailPlaceholder.svelte"
+    import WebmailPlaceholder from "$lib/components/webmailLogin/webmailplaceholderComponent/webmailPlaceholder.svelte"
 
     let refresher: HTMLIonRefresherElement;
     let notificationsPromise = gatherNotifications();

@@ -5,7 +5,7 @@ import { qrStore } from "$components/wallet/qrStore";
 import { userCreds, userTokens } from "$stores/credentials.store";
 import { keyCloakStore } from "$stores/keycloak.store";
 import type CapacitorPersistedStore from "$lib/storage/capacitorPersistedStore";
-import { userCredsFlag } from "$components/credLogin/userCredsFlagStore";
+import { userCredsFlag } from "$components/webmailLogin/userCredsFlagStore";
 
 const persistedStores: CapacitorPersistedStore<any>[] = [
     toggles,
@@ -14,7 +14,7 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
     EventStore,
     qrStore,
     userTokens,
-    userCredsFlag
+    userCredsFlag,
     keyCloakStore
     // Add new stores here
 ];

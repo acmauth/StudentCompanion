@@ -1,6 +1,8 @@
 <script>
     import darkIcon from "./icon_dark.png";
     import lightIcon from "./icon_light.png";
+    import CredentialLogin from "../CredentialLogin.svelte";
+	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
 
     let inlineModalOpen = false;
     let breakpoints = [0, 0.5, 1];
@@ -10,19 +12,21 @@
 
 </script>
 
-<ion-card href="" aria-hidden on:click ={() => {inlineModalOpen = true}}>
-    <div class="mainContents">
-        <img src={darkIcon} alt="Dark Icon" class="icon darkIcon"/>
-        <img src={lightIcon} alt="Light Icon" class="icon lightIcon"/>
-        <div class="ComingSoonContainer">
-            <ion-title class="cardTitle">Webmail | e-learning</ion-title>
-            <ion-subtitle>Επιστρέφουν Σύνομα!</ion-subtitle>
+{#if !$autheticationFlag}
+    <ion-card href="" aria-hidden on:click ={() => {inlineModalOpen = true}}>
+        <div class="mainContents">
+            <img src={darkIcon} alt="Dark Icon" class="icon darkIcon"/>
+            <img src={lightIcon} alt="Light Icon" class="icon lightIcon"/>
+            <div class="ComingSoonContainer">
+                <ion-title class="cardTitle">Webmail | e-learning</ion-title>
+                <ion-subtitle>Ολοκλήρωσε την εμπειρία σου!</ion-subtitle>
+            </div>
         </div>
-    </div>
-</ion-card>
+    </ion-card>
+{/if}
 
 <ion-modal
-      is-open={inlineModalOpen}
+      is-open={inlineModalOpen && !$autheticationFlag}
       initial-breakpoint={0.5}
       {breakpoints}
       on:ionModalDidDismiss={inlineModalDismissed}>
@@ -31,7 +35,7 @@
             <ion-label><b>Τα webmail και e-learning είναι σε αναβάθμιση</b></ion-label>
 
           </div> -->
-          <ion-item-group>
+          <!-- <ion-item-group>
             <ion-item lines="none">
                 <ion-text>
                     <h2>Τα webmail και e-learning είναι σε αναβάθμιση</h2>
@@ -44,7 +48,8 @@
                     <img src={lightIcon} alt="Light Icon" class="icon lightIcon" style="width: 50%; height:auto; left:50%"/>            
                 </ion-text>
             </ion-item>
-            </ion-item-group>
+            </ion-item-group> -->
+            <CredentialLogin/>
       </ion-content>
    </ion-modal>
 
