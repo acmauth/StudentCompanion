@@ -35,9 +35,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@capacitor/android": "^6.0.0",
+    "@capacitor/android": "^6.1.2",
     "@capacitor/app": "^6.0.0",
-    "@capacitor/background-runner": "1.0.6-dev-20240628T145630.0",
     "@capacitor/browser": "^6.0.2",
     "@capacitor/clipboard": "^6.0.0",
     "@capacitor/core": "^6.0.0",
@@ -48,6 +47,7 @@
     "@capacitor/toast": "^6.0.0",
     "@hugotomazi/capacitor-navigation-bar": "^4.0.0",
     "@ionic/core": "7.8.5",
+    "@ionic/pwa-elements": "^3.2.2",
     "@protontech/jsmimeparser": "^3.0.1",
     "@sveltejs/adapter-auto": "^2.1.0",
     "axios": "^1.5.1",

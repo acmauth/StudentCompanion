@@ -2,13 +2,13 @@
 	import IonPage from 'ionic-svelte/components/IonPage.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
 	const isProduction = process.env.NODE_ENV === 'production';
-	import { getMenu } from '$lib/menuScrapper/scraper';
+	import { getMenu } from '$lib/menuScraper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
 
 	let cafeteriaData: string | any[] = [];
 	let todaydata: string;
-	let title: string = "Σημερινό μενού";
+	let title: string = 'Σημερινό μενού';
 
 	const date = new Date();
 	let today = date.getDay();
@@ -17,8 +17,6 @@
 	} else {
 		today = 6;
 	}
-	
-	
 
 	const hours = date.getHours();
 	const mins = date.getMinutes();
@@ -28,41 +26,36 @@
 	let color = 'success';
 	let menuDate = '';
 
-	
-	
-	
 	if ((hours == 8 && mins >= 30) || (hours > 8 && hours < 10)) {
 		message = 'Λέσχη ανοιχτή για Πρωινό - Κλείνει στις 10:00';
-		now = "Πρωινό";
-		next = "Μεσημεριανό";
+		now = 'Πρωινό';
+		next = 'Μεσημεριανό';
 	} else if (hours >= 10 && hours < 12) {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 12:00';
 		color = 'danger';
-		now = "Μεσημεριανό";
-		next = "Βραδινό";
+		now = 'Μεσημεριανό';
+		next = 'Βραδινό';
 	} else if (hours >= 12 && hours < 16) {
 		message = 'Λέσχη ανοιχτή για Μεσημεριανό - Κλείνει στις 16:00';
-		now = "Μεσημεριανό";
-		next = "Βραδινό";
+		now = 'Μεσημεριανό';
+		next = 'Βραδινό';
 	} else if (hours >= 16 && hours < 18) {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 18:00';
 		color = 'danger';
-		now = "Βραδινό";
-		next = "";
+		now = 'Βραδινό';
+		next = '';
 	} else if (hours >= 18 && hours < 21) {
 		message = 'Λέσχη ανοιχτή για Βραδινό - Κλείνει στις 21:00';
-		now = "Βραδινό";
-		next = "";
+		now = 'Βραδινό';
+		next = '';
 	} else {
 		message = 'Λέσχη κλειστή - Ανοίγει στις 08:30';
 		color = 'danger';
-		now = "Πρωινό";
-		next = "Μεσημεριανό";
+		now = 'Πρωινό';
+		next = 'Μεσημεριανό';
 
-		if (hours >= 21 && hours <= 23 && mins <= 59) 
-			title = "Αυριανό μενού";
-		else
-			title = "Σημερινό μενού";
+		if (hours >= 21 && hours <= 23 && mins <= 59) title = 'Αυριανό μενού';
+		else title = 'Σημερινό μενού';
 
 		today = (today + 1) % 7;
 		if (today) {
@@ -71,7 +64,6 @@
 			today = 6;
 		}
 	}
-
 
 	async function getMenuData() {
 		if (!isProduction) {
@@ -85,55 +77,51 @@
 		} else {
 			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
 		}
-		const todayHTML = cafeteriaData[0];
-		
+		const todayHTML = cafeteriaData[today];
 
 		// Regex for finding today's date
 		// Checks for both <h3> and <h4> headings and <p> tags
-		const dateRegex = /<(h[34]) class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})\s*<\/\1>|<p><strong><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/strong><\/p>/;
+		const dateRegex =
+			/<(h[34]) class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})\s*<\/\1>|<p><strong><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/strong><\/p>/;
 
-
-		const startString = "<h2 class=\"wp-block-heading\"><strong>" 
-		+ now + "&nbsp;";
+		const startString = '<h2 class="wp-block-heading"><strong>' + now + '&nbsp;';
 
 		let regex;
-		
-		if (next === "") { 
-			regex = new RegExp(`(${startString})([^]*?)$`, "si");
+
+		if (next === '') {
+			regex = new RegExp(`(${startString})([^]*?)$`, 'si');
 		} else {
-			const endString = "<h2 class=\"wp-block-heading\"><strong>" + next + "&nbsp;";
-			regex = new RegExp(`(${startString})(.*?)(?=${endString})`, "si");
+			const endString = '<h2 class="wp-block-heading"><strong>' + next + '&nbsp;';
+			regex = new RegExp(`(${startString})(.*?)(?=${endString})`, 'si');
 		}
-		
+
 		const match = cafeteriaData[today].match(regex);
-		
+		if (match && match[0]) todaydata = match[0].trim();
 
-		if (match && match[0])
-			todaydata = match[0].trim();
-
-		
 		// Extract the date from today's menu
 		const matchDate = todayHTML.match(dateRegex);
-	
-	    if (matchDate) {
-		    const dateRegexCapture = /(\d{2}\/\d{2}\/\d{4})/;
-		    const dateMatch = matchDate[0].match(dateRegexCapture);
-		    if (dateMatch) {
-		        menuDate = dateMatch[1];
-		    }
+
+		if (matchDate) {
+			const dateRegexCapture = /(\d{2}\/\d{2}\/\d{4})/;
+			const dateMatch = matchDate[0].match(dateRegexCapture);
+
+			if (dateMatch) {
+				menuDate = dateMatch[1];
+			}
+			console.log(menuDate);
 		}
 
 		// Validate menuDate format (should be DD/MM/YYYY)
 		const dateValidationRegex = /^\d{2}\/\d{2}\/\d{4}$/;
-	    if (!dateValidationRegex.test(menuDate)) {
-	        menuDate = new Date().toLocaleDateString('en-GB'); // Set to current date if invalid
-	    }
+		if (!dateValidationRegex.test(menuDate)) {
+			menuDate = new Date().toLocaleDateString('en-GB'); // Set to current date if invalid
+		}
 		// Check if the cafeteria is closed for vacation
 		else if (menuDate !== new Date().toLocaleDateString('en-GB')) {
-			message = 'Λέσχη κλειστή λόγω διακοπών'
-			color = 'danger';	
+			message = 'Λέσχη κλειστή λόγω διακοπών';
+			color = 'danger';
 		}
-
+		console.log(new Date().toLocaleDateString('en-GB'));
 	}
 </script>
 
@@ -149,9 +137,9 @@
 				>
 			</div>
 
-
 			<h1 class="ion-padding">
-				<ion-icon icon={allIonicIcons.restaurantOutline} /> {title}
+				<ion-icon icon={allIonicIcons.restaurantOutline} />
+				{title}
 			</h1>
 			<ion-card color="light">
 				<ion-card-content>

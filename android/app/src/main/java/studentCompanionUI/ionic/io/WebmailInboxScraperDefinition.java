@@ -22,7 +22,7 @@ public class WebmailInboxScraperDefinition extends Plugin {
         assert password != null;
         assert server != null;
         assert port != null;
-        call.resolve(getInboxEmails(username, password, server, port));
+        call.resolve(getInboxEmails(username, password, server, port, false));
     }
 
 }
