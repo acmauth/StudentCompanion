@@ -8,6 +8,7 @@
 	import Dexie from 'dexie';
 	import { onMount } from 'svelte';
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
+	import CredentialLoginItem from '$components/credLogin/CredentialLoginItem.svelte';
 
 	/**
 	 * @type {any}
@@ -138,12 +139,7 @@
 			</ion-toggle>
 		</ion-item>
 
-		<ion-item button href="/webmailLogin">
-			<ion-icon size="small" icon={allIonicIcons.mail} />
-			<ion-label class="ion-padding-start">Σύνδεση webmail</ion-label>
-			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-		</ion-item>
-
+		<CredentialLoginItem />
 
 		{#if Capacitor.isNativePlatform()}
 			<ion-item button on:click={launchNativenotificationSettings} aria-hidden>
