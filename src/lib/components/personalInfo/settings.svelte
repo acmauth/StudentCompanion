@@ -8,7 +8,8 @@
 	import Dexie from 'dexie';
 	import { onMount } from 'svelte';
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
-	import { goto } from '$app/navigation';
+	import CredentialLoginItem from '$components/credLogin/CredentialLoginItem.svelte';
+
 
 	/**
 	 * @type {any}
@@ -138,6 +139,8 @@
 				Dark Mode
 			</ion-toggle>
 		</ion-item>
+
+		<CredentialLoginItem />
 
 		{#if Capacitor.isNativePlatform()}
 			<ion-item button on:click={launchNativenotificationSettings} aria-hidden>

@@ -7,7 +7,7 @@
 	import { Capacitor } from '@capacitor/core';
 	import Settings from '$components/personalInfo/settings.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-
+	import { userCredsFlag } from '$components/credLogin/userCredsFlagStore';
 	// Keep personal info
 
 	let aem: String = '';
@@ -45,6 +45,7 @@
 
 	// Log out
 	function logOut(){
+		$userCredsFlag = false;
         invalidateAuth();
         goto("/login");
     }

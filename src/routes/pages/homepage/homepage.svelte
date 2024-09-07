@@ -1,13 +1,10 @@
-
-
 <script lang='ts'>
-
 	import AppCard from '$shared/AppCard.svelte';
 	import AppletsSlides from './appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
-	import { wallet } from 'ionicons/icons';
+	import { wallet, mailOutline } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
@@ -18,16 +15,16 @@
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
+	import CredentialLoginButton from '$components/credLogin/CredentialLoginButton.svelte';
 	
-
 	let givenName = '';
 	let gender = '';
 	let numPassedSubjects = 0;
 	let numSubjects = 0;
 	let average = 0;
 	
-	let modalOpen = false;
-
+	let qrModalOpen = false;
+		
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet('Students/me/');
@@ -88,6 +85,7 @@
 			shouldFocus = false;
 		}
 	}
+	
 </script>
 
 
@@ -95,18 +93,6 @@
 		{#await getInfo()}
 			<HomepageSkeleton />
 		{:then}
-			<!-- <AnnouncementBanner>
-				<ion-text
-					color="light"
-					on:click={() => {
-						window.open('https://forms.google.com', '_blank');
-					}}
-					aria-label="feedback form"
-				>
-					<ion-label>Early Access Beta - Η γνώμη σου μετράει!</ion-label>
-					<ion-icon icon={open} />
-				</ion-text>
-			</AnnouncementBanner> -->
 			<div class="info-container">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -122,7 +108,7 @@
 					</div>
 				</div>
 
-				<div class="student-id" on:click={() => {modalOpen = true;}}>
+				<div class="student-id" on:click={() => {qrModalOpen = true;}} aria-hidden>
 					<AppCard margin={false} shadow={true} >
 						<div class="wallet-icon">
 							<ion-icon class="id-icon" icon={wallet} />
@@ -131,9 +117,9 @@
 				</div>
 
 				<ion-modal
-					is-open={modalOpen}
+					is-open={qrModalOpen}
 					initial-breakpoint={$qrStore.length > 0? 0.5 : 0.2}
-					on:ionModalDidDismiss={() => {modalOpen = false;}}
+					on:ionModalDidDismiss={() => {qrModalOpen = false;}}
 					on:ionModalDidPresent={() => {shouldFocus = true;}}
 					breakpoints={[0, 0.1, 0.2, 0.3, 0.5]}>
 					<ion-content>
@@ -191,7 +177,12 @@
 			<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
 			<AppletsSlides />
 			<Banner altText="Πες μας τη γνώμη σου" />
-			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατα</b></p>
+			<div style="display:flex; justify-content:space-between; align-items: center; margin-inline-end:0.75rem;">
+				<p style="margin-top:0" class="info-text">
+					<b>Πρόσφατα</b>
+				</p>
+				<CredentialLoginButton />
+			</div>
 			<RecentItems />
 		{:catch error}
 		
