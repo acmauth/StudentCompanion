@@ -164,8 +164,10 @@ type options = {
 export async function gatherNotifications(options?: options){
     if (!options) options = {};
 
-    let webmailNotifications = await getWebmailNotifications(options.refresh);
-    let elearningNotifications = await getElearningNotifications(options.refresh);
+    // let webmailNotifications = await getWebmailNotifications(options.refresh); TODO: Reimplement
+    // let elearningNotifications = await getElearningNotifications(options.refresh);
+    const webmailNotifications: ConcatArray<any> = [];
+    const elearningNotifications: any[] = [];
     let universisNotifications = await getUniversisNotifications(options.refresh);
 
     let notifications = elearningNotifications.concat(webmailNotifications)

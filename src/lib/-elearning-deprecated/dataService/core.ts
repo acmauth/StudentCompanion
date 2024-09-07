@@ -1,8 +1,8 @@
 import { Capacitor } from "@capacitor/core";
 import { apiRequest as webApiRequest } from "../plugins/webserver/dataservice";
 import { apiRequest as nativeApiRequest } from "../plugins/native/dataservice";
-import type { ElearningRequest, ApiRequestResults, ElearningCredentials } from "$lib/-elearning/types";
-import reauthenticate from "$lib/-elearning/authenticator/reauthenticate";
+import type { ElearningRequest, ApiRequestResults, ElearningCredentials } from "$lib/-elearning-deprecated/types";
+import reauthenticate from "$lib/-elearning-deprecated/authenticator/reauthenticate";
 import { get } from "svelte/store";
 import { userTokens } from "$stores/credentials.store";
 import { tries, increment, reset } from "../stores/reAuthTries.store.js";

@@ -3,6 +3,7 @@ import { dismissedItems } from "$components/recentResults/dismissedItems";
 import { EventStore } from "$components/calendar/event/EventStore";
 import { qrStore } from "$components/wallet/qrStore";
 import { userCreds, userTokens } from "$stores/credentials.store";
+import { keyCloakStore } from "$stores/keycloak.store";
 import type CapacitorPersistedStore from "$lib/storage/capacitorPersistedStore";
 
 const persistedStores: CapacitorPersistedStore<any>[] = [
@@ -12,6 +13,7 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
     EventStore,
     qrStore,
     userTokens,
+    keyCloakStore
     // Add new stores here
 ];
 
