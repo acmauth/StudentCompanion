@@ -15,7 +15,7 @@
         <img src={darkIcon} alt="Dark Icon" class="icon darkIcon"/>
         <img src={lightIcon} alt="Light Icon" class="icon lightIcon"/>
         <div class="ComingSoonContainer">
-            <ion-title class="cardTitle">Webmail e-learning</ion-title>
+            <ion-title class="cardTitle">Webmail | e-learning</ion-title>
             <ion-subtitle>Επιστρέφουν Σύνομα!</ion-subtitle>
         </div>
     </div>
