@@ -40,7 +40,7 @@
 
 	onMount(async ()=>{
 		await initializeRefresherService();
-		await initializeNotifications();
+		// await initializeNotifications();
 	});
 
 </script>

@@ -1,4 +1,4 @@
-import Keycloak from 'keycloak-capacitor';
+import Keycloak from 'keycloak-js';
 import type { KeycloakInitOptions, KeycloakConfig } from 'keycloak-js';
 import { keyCloakStore } from "$stores/keycloak.store";
 import { get } from 'svelte/store';
