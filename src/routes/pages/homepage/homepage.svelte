@@ -4,7 +4,7 @@
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
-	import { wallet, mailOutline, keySharp } from 'ionicons/icons';
+	import { wallet, mailOutline } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
@@ -15,8 +15,7 @@
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import CredentialLogin from '$lib/components/credLogin/CredentialLogin.svelte';
-	import { userCredsFlag as autheticationFlag} from '$components/credLogin/userCredsFlagStore';
+	import CredentialLoginButton from '$components/credLogin/CredentialLoginButton.svelte';
 	
 	let givenName = '';
 	let gender = '';
@@ -25,10 +24,6 @@
 	let average = 0;
 	
 	let qrModalOpen = false;
-	let loginModalOpen = false;
-
-
-	$:	if ($autheticationFlag) loginModalOpen = false;
 		
 
 	async function getInfo() {
@@ -156,17 +151,6 @@
 					</ion-content>
 				</ion-modal>
 
-				<ion-modal
-					is-open={loginModalOpen}
-					initial-breakpoint={0.34}
-					on:ionModalDidDismiss={() => {loginModalOpen = false;}}
-					breakpoints={[0, 0.34	]}
-					>
-					<ion-content>
-						<CredentialLogin bind:flag={$autheticationFlag}/>
-					</ion-content>
-				</ion-modal>
-
 			</div>
 			<div class="card-container">
 				<AppCard colour="primary" margin={false} href="/pages/grades">
@@ -197,12 +181,7 @@
 				<p style="margin-top:0" class="info-text">
 					<b>Πρόσφατα</b>
 				</p>
-				{#if $autheticationFlag == false}
-					<ion-chip mode="ios" color="dark" on:click={()=>{loginModalOpen = true;}} aria-hidden>
-						<ion-icon icon={keySharp} color="dark"></ion-icon>
-						<ion-label>Σύνδεση webmail</ion-label>
-					</ion-chip>
-				{/if}
+				<CredentialLoginButton />
 			</div>
 			<RecentItems />
 		{:catch error}

@@ -114,9 +114,7 @@
         
         <div style="margin-bottom: 2%">
             Αποθήκευσε τον ιδρυματικό σου λογαριασμό απευθείας στη συσκευή σου για να λαμβάνεις ειδοποιήσεις από το webmail και το eLearning!
-            {#if isProduction}
             <ion-icon src={informationCircleOutline} on:click={showAlert} aria-hidden/>
-            {/if}
         </div>
         
         <div style="display:flex; flex-direction:column; margin-top:0; padding-bottom:2%;">
