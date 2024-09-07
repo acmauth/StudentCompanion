@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from '@sveltejs/kit';
-import elearningAuthenticator from '$lib/-elearning/plugins/webserver/_webScraper';
-import { ElearningGet } from '$lib/-elearning/plugins/webserver/_webDataservice';
+import elearningAuthenticator from '$lib/-elearning-deprecated/plugins/webserver/_webScraper';
+import { ElearningGet } from '$lib/-elearning-deprecated/plugins/webserver/_webDataservice';
 
 // Server function that handles the login request
 export const GET: RequestHandler = async ({ url }) => {

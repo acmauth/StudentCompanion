@@ -424,7 +424,7 @@ public class NotificationService extends Worker {
             String username = credentials.getString("username");
             String password = credentials.getString("password");
 
-            JSONObject emails = WebmailInboxScraperLogic.getInboxEmails(username,password,"mail.auth.gr","993");
+            JSONObject emails = WebmailInboxScraperLogic.getInboxEmails(username,password,"mail.auth.gr","993", true);
 
             if (emails.has("error") && emails.getBoolean("error")){
                 throw new RuntimeException("Error in WebmailInboxScraperLogic.getInboxEmails");

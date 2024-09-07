@@ -10,6 +10,7 @@
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
 	import CredentialLoginItem from '$components/credLogin/CredentialLoginItem.svelte';
 
+
 	/**
 	 * @type {any}
 	 */
