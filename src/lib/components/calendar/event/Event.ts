@@ -67,6 +67,23 @@ export function getEventRepeatTypeValue(type: string, lang?: string): string {
     }
 }
 
+export function getEventRepeatTypeCycleValue(type: string, lang?: string): string {
+    const eventRepeatType = EventRepeatType[type as keyof typeof EventRepeatType];
+    switch (eventRepeatType) {
+        case EventRepeatType.NEVER:
+            return lang == 'el' ? 'Ποτέ' : 'Never';
+        case EventRepeatType.DAILY:
+            return lang == 'el' ? 'ημέρες' : 'days';
+        case EventRepeatType.WEEKLY:
+            return lang == 'el' ? 'εβδομάδες' : 'weeks';
+        case EventRepeatType.MONTHLY:
+            return lang == 'el' ? 'μήνες' : 'μήνες';
+        case EventRepeatType.YEARLY:
+            return lang == 'el' ? 'χρόνια' : 'years';
+    }
+}
+
+
 interface EventCheckFormatResult {
     error: boolean
     description: string | undefined
