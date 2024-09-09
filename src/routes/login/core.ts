@@ -1,9 +1,10 @@
-import Keycloak from 'keycloak-js';
-import type { KeycloakInitOptions, KeycloakConfig } from 'keycloak-js';
+import Keycloak from './keycloak';
 import { keyCloakStore } from "$stores/keycloak.store";
 import { get } from 'svelte/store';
 import { userTokens } from "$stores/credentials.store";
 import { goto } from '$app/navigation';
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 // Initialize Keycloak
 export const keycloakSettings = {keycloakConfig: {
@@ -15,10 +16,13 @@ export const keycloakSettings = {keycloakConfig: {
                         redirectUri: "https://applink.aristomate.gr/authsso/callback"};
 
                         
-const keycloak = new Keycloak(keycloakSettings.keycloakConfig as KeycloakConfig);
+const keycloak = new Keycloak(keycloakSettings.keycloakConfig );
 
-keycloak.init({redirectUri: keycloakSettings.redirectUri, scope:keycloakSettings.scope, pkceMethod: 'S256',adapter: 'default'})
+console.log(`${isProduction} CORE.TS`);
+
+keycloak.init({redirectUri: keycloakSettings.redirectUri, scope:keycloakSettings.scope, pkceMethod: 'S256', adapter: !isProduction? 'default' : "capacitor-browser"})
 .then(function(authenticated) {
+    console.log(`[Keycloak] Authenticated: ${authenticated}`);
     if (authenticated && keycloak.tokenParsed) {
         console.log('User is authenticated | Core');
         // Display relevant information
