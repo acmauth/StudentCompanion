@@ -56,10 +56,10 @@
     
     // DEV: Redirect to homepage if token exists | Bypass login
     onMount(async () => {
-        if (!isProduction) {
-            console.log("Token exists");
-            goto('/login/guide');
-        }
+        // if (!isProduction) {
+        //     console.log("Token exists");
+        //     goto('/login/guide');
+        // }
     })
 
 </script>
