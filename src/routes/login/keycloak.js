@@ -1773,20 +1773,7 @@ function Keycloak (config) {
                     //     processCallback(oauth, promise);
                     //     addUrlListener.remove();
                     // });
-
-                    // const UrlChangeListener = Browser.addListener('urlChangeEvent', (data) => {
-                    //     console.log(`[KEYCLOAK] urlChangeEvent: ${JSON.stringify(data)}`);
-                    //     if (data.url.indexOf(kc.redirectUri) === 0) {
-                    //         var oauth = parseCallback(data.url);
-                    //         console.log(`[KEYCLOAK] oauth: ${JSON.stringify(oauth)}`);
-                    //         processCallback(oauth, promise);
-                    //         Browser.close();
-                    //         UrlChangeListener.remove();
-                    //     }
-                    // });
-
-                    // window.open(loginUrl, "_system");
-                    // Browser.openWebView({url: loginUrl}).then(() => {return promise.promise});
+                    
                     Browser.open({url: loginUrl});
                     return promise.promise;
                 },

@@ -1,7 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    // import Keycloak from 'keycloak-capacitor';
-    import Keycloak from "keycloak-js";
+    import Keycloak from "../keycloak";
     import {goto} from "$app/navigation";
     import { updateStore, keycloakSettings } from "../core";
 	import { onMount } from "svelte";
