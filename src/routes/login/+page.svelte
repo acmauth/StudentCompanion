@@ -1,17 +1,11 @@
 <script lang='ts'>
     import { goto } from '$app/navigation';
-	import { userTokens } from "$stores/credentials.store";
-    import { getUniversisToken, getElearningToken} from "$lib/components/loginService/helpers"
     import Vector from "$lib/components/loginService/Vector.svg"
     import Vector1 from "$lib/components/loginService/Vector(1).svg"
     import Logo from "$lib/assets/Logo_head.png";
-    import { eyeOff, eye, informationCircleOutline, open } from 'ionicons/icons';
-    import { alertController } from 'ionic-svelte';
-	import type { KeycloakInitOptions, KeycloakConfig } from 'keycloak-js';
-	import { keyCloakStore } from "$stores/keycloak.store";
 	import Keycloakthings from "$src/routes/login/core";
     import { page } from '$app/stores';
-    import { App, URLOpenListenerEvent } from '@capacitor/app';
+    import { App } from '@capacitor/app';
 	import { onMount } from 'svelte';
 
     const isProduction = process.env.NODE_ENV === 'production';
@@ -38,7 +32,6 @@
         });
         
         console.log("LOGIN PAGE");
-        console.log(await Keycloakthings.updateToken(1));
     })
 
 </script>

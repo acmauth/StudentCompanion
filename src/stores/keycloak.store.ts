@@ -1,6 +1,4 @@
 import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
-import type { KeycloakInitOptions, KeycloakConfig } from 'keycloak-js';
-import type Keycloak from 'keycloak-js';
 import { jwtDecode } from "jwt-decode";
 import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
