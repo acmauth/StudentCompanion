@@ -1,7 +1,7 @@
 <script lang="ts">
 	import StackedNav from "$components/shared/StackedNav"
 	import Homepage from './homepage.svelte';
-	</script>
+</script>
 	
 	<ion-tab tab="homepage">
 		
