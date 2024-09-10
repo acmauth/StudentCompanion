@@ -1,23 +1,15 @@
 import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
 import { get } from "svelte/store";
 
-// Store the id of each notification
+// stores objects with properties event: Event, notificationIds: number[], lastNotification: Date
 export const scheduledNotifications = new CapacitorPersistedStore<any[]>([], 'scheduledNotifications');
 
-// get the value of the store that is the ids
+// get the value of the store
 export function getIds():any[]{
     let storedIds:any;
     scheduledNotifications.subscribe(ids => {
         storedIds = [...ids]; // Create a shallow copy of the array
-    })
-    // console.log(storedIds.length);
-    // for (const array of storedIds){
-    //     console.log(array.event.id);
-    //     for (const id of array.notificationIds){
-    //         console.log(id);  
-    //     }
-    //     console.log('----------------');
-    // }  
+    });
     return storedIds;
 }
 
@@ -30,5 +22,5 @@ export function addToScheduledNotifications(newIds: any){
 // Removing the ids of some notifications
 export function removeFromScheduledNotficiations(id: number){
     get(scheduledNotifications);
-    scheduledNotifications.update((items) => items.filter((item) => false));//item.event.id !== id
+    scheduledNotifications.update((items) => items.filter((item) => item.event.id !== id));//item.event.id !== id
 }

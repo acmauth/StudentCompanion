@@ -1,16 +1,13 @@
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { cutId, calcNotifyDate } from './notificationFunctions';
-import { scheduleRepeatedNotifications, schedulePendingNotifications } from './repeatedNotifications';
-import { getIds, removeFromScheduledNotficiations, addToScheduledNotifications} from "./notificationsStore";
-
-
+import { cutId, calcNotifyDate, calcNotifId } from './notificationFunctions';
+import { scheduleRepeatedNotifications,} from './repeatedNotifications';
+import { getIds, addToScheduledNotifications, removeFromScheduledNotficiations } from "./notificationsStore";
 
 // schedules a notification at a specific date
 export async function schedule(event: Event, notifyDate: Date, id: number){
     console.log(notifyDate);
-    
     try{        
         await LocalNotifications.schedule({notifications: [{
             title: event.title,
@@ -32,7 +29,7 @@ export async function schedule(event: Event, notifyDate: Date, id: number){
 
 //cancels certain scheduled notifications
 async function cancelNotifications(ids: number[]){ 
-    console.log("cancel");
+
     try{    
         await LocalNotifications.cancel({
             notifications: ids.map(id => ({ id }))
@@ -43,8 +40,8 @@ async function cancelNotifications(ids: number[]){
 }
 
 // handles the calendar notifications
-export function scheduleNotification(event: Event, date: Date | undefined){
-    // permissionsService.ensurePermission("POST_NOTIFICATIONS"); 
+export async function scheduleNotification(event: Event, date: Date | undefined){
+    // check if the the user resubmits the same event
     const ids = getIds();
     let notifIds = [0];
     let flag = false;
@@ -55,8 +52,7 @@ export function scheduleNotification(event: Event, date: Date | undefined){
             flag = true;
         }
     }
-    console.log(flag);
-    console.log(notifIds);
+
     if (flag){
         cancelNotifications(notifIds);
         removeFromScheduledNotficiations(event.id);
@@ -66,7 +62,7 @@ export function scheduleNotification(event: Event, date: Date | undefined){
         scheduleRepeatedNotifications(event);
 
     } else {
-        let notificationId = cutId(event.id);
+        const notificationId = await calcNotifId(cutId(event.id));
         const notifyDate = calcNotifyDate(event);
         const storedIds = {
             event: event,

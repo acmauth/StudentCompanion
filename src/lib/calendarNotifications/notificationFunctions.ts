@@ -1,4 +1,5 @@
 import type { Event } from '$lib/components/calendar/event/Event';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 // taking the id from the event and removing the first 4 digits, because on Android it's a 32-bit int
 export function cutId(id: number){
@@ -15,6 +16,7 @@ export function calcNotifyDate(event: Event){
     let notifyDate: Date;
 
     if (event.notifyTime){
+        //converting to milliseconds
         const notifyMinsEarly = event.notifyTime * 60 * 1000;
         let notifyTime = 0;
 
@@ -32,4 +34,25 @@ export function calcNotifyDate(event: Event){
     }
 
     return notifyDate;
+}
+
+// ensuring that the notification id is not already pending
+export async function calcNotifId(notificationId: number){
+    try {
+        // Get all pending notifications
+        const { notifications } = await LocalNotifications.getPending();
+
+        notificationId++;
+        // Check if the specific notification is pending
+        let isPending = notifications.some(notification=> notification.id === notificationId);
+        while (isPending){
+            notificationId+=50;
+            isPending = notifications.some(notification=> notification.id === notificationId);
+        }
+
+        return notificationId;
+    } catch (error) {
+        console.error('Error fetching pending notifications', error);
+        return notificationId;
+    }
 }

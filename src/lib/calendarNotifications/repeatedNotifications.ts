@@ -1,47 +1,63 @@
 import { addToScheduledNotifications, getIds, removeFromScheduledNotficiations } from "./notificationsStore";
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
-import { cutId, calcNotifyDate } from './notificationFunctions';
+import { cutId, calcNotifyDate, calcNotifId } from './notificationFunctions';
 import { schedule } from './scheduleNotifications';
 
-// const daysToSchedule = 365;
-const daysToSchedule = 5; // 5 minutes for testing
+const daysToSchedule = 365;
 
 // true if date is within the threshold
 function isDateInThreshold(date: Date) {
     const now = new Date();
     const threshold = new Date(now);
     
-    // threshold.setDate(now.getDate() + daysToSchedule);
-    threshold.setMinutes(now.getMinutes() + daysToSchedule);
+    threshold.setDate(now.getDate() + daysToSchedule);
+
     // Check if the given date is before the threshold
     return date < threshold;
 }
 
-export function schedulePendingNotifications(){
+// removes from the store the notifications that are already send
+export function removePastNotifications(){
     let storedIds = getIds();
-    console.log('length'+storedIds.length);
+    const now = new Date();
+    
+    for (const storedId of storedIds){
+        if (storedId.event.repeat != EventRepeatType.NEVER){
+            if ( now > storedId.event.repeatUntil ){
+                removeFromScheduledNotficiations(storedId.event.id);
+            }
+        } else {
+            if ( now > storedId.lastNotification ){
+                removeFromScheduledNotficiations(storedId.event.id);              
+            }
+        }
+    }
+}
+
+// schedules the notifications that are in the threshold but were not scheduled
+export async function schedulePendingNotifications(){
+    let storedIds = getIds();
+
     for (const storedId of storedIds){
         if (storedId.event.repeat != EventRepeatType.NEVER){
             let repeatUntil = new Date();
             if (storedId.event.repeatUntil) repeatUntil = new Date(storedId.event.repeatUntil);
 
             let notifyDate = new Date(storedId.lastNotification);
-            let lastDate = new Date(notifyDate);
             notifyDate = nextNotifDate(storedId.event, notifyDate);
+            let lastDate = new Date();   
             let storedNotifIds = [...storedId.notificationIds];
-            let notificationId = storedNotifIds[storedNotifIds.length - 1];
-            console.log(storedId.event.title);
-            console.log("last id"+notificationId);
-            console.log("last date"+ storedId.lastNotification);
+            let notificationId: number = await calcNotifId(storedNotifIds[storedNotifIds.length - 1]);
+
             while (isDateInThreshold(notifyDate) && notifyDate < repeatUntil ){
                 schedule(storedId.event, notifyDate, notificationId);
                 lastDate = new Date(notifyDate);
                 notifyDate = nextNotifDate(storedId.event, notifyDate);
                 storedNotifIds.push(notificationId);
-                notificationId++;
+                notificationId = await calcNotifId(notificationId);
             }
-            console.log(storedNotifIds)
+
             const Ids = {
                 event: storedId.event,
                 notificationIds: storedNotifIds,
@@ -62,8 +78,7 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
     let notifDate = new Date();   
     if(event.repeat == EventRepeatType.DAILY) {
         notifDate = new Date(previousNotifDate);
-        // notifDate.setDate(previousNotifDate.getDate() + repeatInterval);    
-        notifDate.setMinutes(previousNotifDate.getMinutes() + repeatInterval); // for testing
+        notifDate.setDate(previousNotifDate.getDate() + repeatInterval);    
         return notifDate;
 
     } else if (event.repeat == EventRepeatType.WEEKLY) {
@@ -99,20 +114,21 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
 }
 
 // scheduling as many notifications inside the "daysToSchedule" threshold
-export function scheduleRepeatedNotifications(event: Event){
+export async function scheduleRepeatedNotifications(event: Event){
     let repeatUntil = new Date();
     if (event.repeatUntil) repeatUntil = new Date(event.repeatUntil);
 
-    let notificationId = cutId(event.id);
+    let notificationId = await calcNotifId(cutId(event.id));
     let notifyDate = calcNotifyDate(event);
     let lastDate = new Date();
     let ids:number[] = [];
+    
     while (isDateInThreshold(notifyDate) && notifyDate < repeatUntil){ 
         schedule(event, notifyDate, notificationId);
         lastDate = new Date(notifyDate);
         notifyDate = nextNotifDate(event, notifyDate);
         ids.push(notificationId);
-        notificationId++;
+        notificationId = await calcNotifId(notificationId);
     }
 
     const storedIds = {

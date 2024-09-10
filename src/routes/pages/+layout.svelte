@@ -12,6 +12,8 @@
 	import chart_bar from "$customIcons/chart-bar.svg";
 	import { onMount } from 'svelte';
 	import initializeNotifications from '$lib/-notifications/core';
+
+
 	// Routes
 	let bottomNav = [
 		{
