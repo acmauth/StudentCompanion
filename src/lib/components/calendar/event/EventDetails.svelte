@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type {Event} from '$components/calendar/event/Event';
-    import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
+    import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue, getEventRepeatTypeCycleValue} from '$components/calendar/event/Event';
 		import type { DatetimeChangeEventDetail } from '@ionic/core';
 import { onMount } from 'svelte';
 
@@ -14,7 +14,7 @@ import { onMount } from 'svelte';
         let start: Date = new Date(copyEvent.slot.start);
         let end: Date = new Date(copyEvent.slot.end);
         let repeatUntil: Date = new Date(copyEvent.repeatUntil);
-        
+                
         try{
             templateStartTime = start.getFullYear() + "-" +
                                 (String(start.getMonth() + 1)).padStart(2, '0') + "-" +
@@ -47,6 +47,7 @@ import { onMount } from 'svelte';
             copyEvent.repeatInterval = parseInt(String(copyEvent.repeatInterval ?? 1));
             copyEvent.repeatUntil = new Date(String(templateRepeatUntil));
         }
+
     };
 
     function UpdateStartTime(event) {
@@ -151,8 +152,9 @@ import { onMount } from 'svelte';
             />
         </ion-item>
 
+        
         <ion-item>
-            <ion-select style="width:50%;" label="Να επαναλαμβάνεται" interface="popover" value={copyEvent.repeat} on:ionChange={(event)=>{copyEvent.repeat=event.detail.value;}} label-placement="floating">
+            <ion-select id="repeatSelector" style="width:50%;" label="Να επαναλαμβάνεται" interface="popover" value={copyEvent.repeat} on:ionChange={(event)=>{copyEvent.repeat=event.detail.value;}} label-placement="floating">
                 {#each Object.values(EventRepeatType) as type}
                     <ion-select-option value={type}>{getEventRepeatTypeValue(type,'el')}</ion-select-option>
                 {/each}
@@ -160,27 +162,33 @@ import { onMount } from 'svelte';
         </ion-item>
 
         {#if copyEvent.repeat != EventRepeatType.NEVER}
-            <ion-item>
-                <ion-input
-                    label="Κύκλος"
-                    label-placement="stacked"
-                    id="repeatInterval"
-                    type="number"
-                    value={copyEvent.repeatInterval ?? 1}
-                    contenteditable="true"
-                    style="width: 25%;"
-                    on:ionChange={(event)=>{copyEvent.repeatInterval = parseInt(String(event.detail.value));}}
-                />
-            
-                <div style="padding-inline:10px;"/>
+            <div style="display:flex; justify-self:space-between;">
+                <ion-item lines="none">
+                    <ion-label>Ανά</ion-label>
+                    <ion-input
+                        id="repeatInterval"
+                        type="number"
+                        placeholder="1"
+                        value={copyEvent.repeatInterval ?? 1}
+                        contenteditable="true"
+                        style="width:   20%;"
+                        on:ionChange={(event)=>{copyEvent.repeatInterval = parseInt(String(event.detail.value));}}
+                    />
+                                
+                    <ion-label style="margin-inline:5px;">
+                        {getEventRepeatTypeCycleValue(copyEvent.repeat,'el')}
+                    </ion-label>
+                </ion-item>
+            </div>
                 
+            <ion-item>    
                 <ion-label>Μέχρι</ion-label>    
-
+                
                 <ion-datetime-button style="width: fit-content;" datetime="until"></ion-datetime-button>
                 <ion-modal keep-contents-mounted={true}>
                     <ion-datetime id="until" presentation="date-time" minute-values="0,15,30,45" value={templateRepeatUntil} hour-cycle="h23" on:ionChange={(event) => {copyEvent.repeatUntil = new Date(String(event.detail.value));}}></ion-datetime>
-                </ion-modal>
-
+                    </ion-modal>
+                    
             </ion-item>
         {/if}
 
