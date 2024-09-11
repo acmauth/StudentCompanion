@@ -36,7 +36,7 @@
             
             updateStore(token, refreshToken);
 
-            goto('/login/guide');
+            goto('/pages/homepage');
 
         } else {
             console.log('User is not authenticated | login/authenticate');

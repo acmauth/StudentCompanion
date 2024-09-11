@@ -162,6 +162,12 @@
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 
+		<ion-item button href="/login/guide">
+			<ion-icon size="small" icon={allIonicIcons.helpCircle} />
+			<ion-label class="ion-padding-start">Οδηγός χρήσης</ion-label>
+			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
+		</ion-item>
+
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<ion-item button on:click={sentAnalytics}>

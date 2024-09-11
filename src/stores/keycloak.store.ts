@@ -98,7 +98,7 @@ export function logout(){
         const toast = await toastController.create({
            color: 'danger',
            duration: 4000,
-           message: 'Η σύνδεσή σου έληξε. Παρακαλώ συνδεθείτε ξανά.',
+           message: 'Η σύνδεσή σου έληξε. Θα χρειαστεί να συνδεθείς ξανά.',
         });
      
         toast.present();
