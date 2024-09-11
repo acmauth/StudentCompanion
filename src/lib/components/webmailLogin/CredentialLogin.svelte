@@ -4,7 +4,6 @@
     import sisAuthenticator from "$lib/-universis/authenticator-deprecated/core";
     import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
-	import { goto } from '$app/navigation';
 	import { userCreds } from '$stores/credentials.store';
     import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
 
@@ -14,8 +13,7 @@
     let authenticating: boolean = false;
     let loginFailed: boolean = false;
     let loginIcon = checkmark;
-
-    export let flag;
+    export let openModalFlag;
 
     $: loginIcon = loginFailed ? reloadOutline : checkmark;
 
@@ -37,19 +35,21 @@
 
     async function checkCredsValidity(username: string, password: string) {    
         const authResult = await sisAuthenticator(username, password);
-        
-        if (authResult.error || authResult.message == 'Unauthorized') {
-            return false;
+
+        if (authResult.error == null && authResult.token) {
+            userCreds.set({
+                username: username,
+                password: password
+            });
+
+            autheticationFlag.set(true);
+
+            openModalFlag = false;
+            
+            return true;
         }
-        
-        userCreds.set({
-            username: username,
-            password: password
-        });
-
-        autheticationFlag.set(true);
-
-        return true;
+    
+        return false;
     }
 
 
@@ -58,7 +58,6 @@
 
         let username = (document.getElementById('username') as HTMLInputElement).value.trim();
         let password = (document.getElementById('password') as HTMLInputElement)?.value;
-
         
         const validity = await checkCredsValidity(username, password);
 
@@ -82,8 +81,7 @@
         }
         else {
             loginFailed = false;
-            flag = true;
-            
+
             showToast({
                 color: 'success',
                 duration: 1000,

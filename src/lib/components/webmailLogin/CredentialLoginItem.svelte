@@ -1,12 +1,13 @@
 <script>
     import CredentialLogin from "./CredentialLogin.svelte";
-    import { keySharp, mail, chevronForwardCircle } from 'ionicons/icons';
+    import { mail, chevronForwardCircle } from 'ionicons/icons';
 	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
 
 	let loginModalOpen = false;
 	$:	if ($autheticationFlag) loginModalOpen = false;
 
 </script>
+
 {#if $autheticationFlag == false}
     <ion-item button on:click={()=>{loginModalOpen = true;}} aria-hidden>
         <ion-icon size="small" icon={mail} />
@@ -16,14 +17,14 @@
 {/if}
 
 <ion-modal
-    is-open={loginModalOpen && !$autheticationFlag}
-    initial-breakpoint={0.34}
+    is-open={loginModalOpen}
+    initial-breakpoint={0.5}
     on:ionModalDidDismiss={() => {loginModalOpen = false;}}
-    breakpoints={[0, 0.34	]}
+    breakpoints={[0, 0.5]}
     mode="ios"
     >
     <ion-content>
-        <CredentialLogin bind:flag={$autheticationFlag}/>
+        <CredentialLogin bind:openModalFlag={loginModalOpen} />
     </ion-content>
 </ion-modal>
 

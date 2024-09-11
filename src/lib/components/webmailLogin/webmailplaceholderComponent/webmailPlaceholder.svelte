@@ -6,9 +6,6 @@
 
     let inlineModalOpen = false;
     let breakpoints = [0, 0.5, 1];
-    const inlineModalDismissed = (val) => {
-        inlineModalOpen = false;
-    };
 
 </script>
 
@@ -26,10 +23,10 @@
 {/if}
 
 <ion-modal
-      is-open={inlineModalOpen && !$autheticationFlag}
+      is-open={inlineModalOpen}
       initial-breakpoint={0.5}
       {breakpoints}
-      on:ionModalDidDismiss={inlineModalDismissed}>
+      on:ionModalDidDismiss={() => {inlineModalOpen = false;}}>
       <ion-content class="ion-padding">
         <!-- <div class="ion-margin-top">
             <ion-label><b>Τα webmail και e-learning είναι σε αναβάθμιση</b></ion-label>
@@ -49,7 +46,7 @@
                 </ion-text>
             </ion-item>
             </ion-item-group> -->
-            <CredentialLogin/>
+            <CredentialLogin bind:openModalFlag={inlineModalOpen}/>
       </ion-content>
    </ion-modal>
 

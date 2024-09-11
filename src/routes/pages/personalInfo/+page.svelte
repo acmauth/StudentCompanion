@@ -45,7 +45,6 @@
 
 	// Log out
 	function logOut(){
-		$userCredsFlag = false;
         invalidateAuth();
         goto("/login");
     }

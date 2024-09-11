@@ -4,9 +4,6 @@
 	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
 
 	let loginModalOpen = false;
-    if (!autheticationFlag) $autheticationFlag = true;
-	$:	if ($autheticationFlag) loginModalOpen = false;
-
 </script>
 
 {#if $autheticationFlag == false}
@@ -15,14 +12,15 @@
         <ion-label>Σύνδεση webmail</ion-label>
     </ion-chip>
 {/if}
+
 <ion-modal
-    is-open={loginModalOpen && !$autheticationFlag}
+    is-open={loginModalOpen }
     initial-breakpoint={0.5}
     on:ionModalDidDismiss={() => {loginModalOpen = false;}}
     breakpoints={[0, 0.5]}
     mode="ios"
     >
     <ion-content>
-        <CredentialLogin bind:flag={$autheticationFlag}/>
+        <CredentialLogin bind:openModalFlag={loginModalOpen} />
     </ion-content>
 </ion-modal>
