@@ -1,16 +1,17 @@
 import { LocalNotifications } from '@capacitor/local-notifications';
+import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
 
 /**
  * Function to check if the app has permission to post notifications
  * @returns A Promise<boolean> indicating if the permission is granted
  */
-async function checkNotificationPermission(): Promise<boolean> {
+export async function checkNotificationPermission(): Promise<boolean> {
   const permissionStatus = await LocalNotifications.checkPermissions();
-  
+
   if (permissionStatus.display === 'granted') {
     return true;
   } else if (permissionStatus.display === 'denied') {
-    return false;
+    return  false;
   } else {
     // Handle case for unknown or undetermined status
     return false;
@@ -39,13 +40,19 @@ export async function handleNotificationPermission() {
     
     if (permissionGranted) {
       console.log('Notification permission granted!');
-      // Proceed with scheduling notifications
+      return true;
     } else {
       console.log('Notification permission denied.');
-      // Handle case where permission is denied
+      // Prompt user to go to settings
+      const userConfirmed = confirm('Notification permission is denied. Would you like to open settings to enable it?');
+      
+      if (userConfirmed) {
+        launchNativenotificationSettings();
+      }
+      return false;
     }
   } else {
     console.log('Already has notification permission.');
-    // Proceed with scheduling notifications
+    return true;
   }
 }

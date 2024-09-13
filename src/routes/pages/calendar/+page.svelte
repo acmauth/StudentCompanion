@@ -14,9 +14,9 @@
 	import { universisGet } from '$src/lib/dataService';
     import { scheduleNotification } from '$src/lib/calendarNotifications/scheduleNotifications';
     import { scheduleRepeatedNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
-    // import { checkNotificationPermission } from '$src/lib/calendarNotifications/runtimePermissions';
+    import { handleNotificationPermission } from '$src/lib/calendarNotifications/runtimePermissions';
     import { removeFromScheduledNotficiations, getIds} from '$src/lib/calendarNotifications/notificationsStore';
-	
+	import { removePastNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
     
     let activeDate: Date;
     let eventList: Event[];
@@ -68,7 +68,9 @@
         selectedEvent = null;
 
         if (tmpEvent.notify){
-            scheduleNotification(tmpEvent, undefined);
+            handleNotificationPermission();
+            removePastNotifications();
+            scheduleNotification(tmpEvent); 
         }
         recreatePrototype();
         modalOpen = false;

@@ -29,7 +29,7 @@ export async function schedule(event: Event, notifyDate: Date, id: number){
 
 //cancels certain scheduled notifications
 async function cancelNotifications(ids: number[]){ 
-
+    console.log("cancel");
     try{    
         await LocalNotifications.cancel({
             notifications: ids.map(id => ({ id }))
@@ -40,24 +40,23 @@ async function cancelNotifications(ids: number[]){
 }
 
 // handles the calendar notifications
-export async function scheduleNotification(event: Event, date: Date | undefined){
+export async function scheduleNotification(event: Event){
     // check if the the user resubmits the same event
     const ids = getIds();
     let notifIds = [0];
     let flag = false;
     for (const id of ids){
-        console.log(event.id+"-"+id.event.id);
         if (event.id === id.event.id){
             notifIds = [...id.notificationIds];
             flag = true;
         }
     }
-
     if (flag){
         cancelNotifications(notifIds);
         removeFromScheduledNotficiations(event.id);
     }
 
+    // schedule repeated or single notifications
     if (event.repeat != EventRepeatType.NEVER){     
         scheduleRepeatedNotifications(event);
 
@@ -70,7 +69,7 @@ export async function scheduleNotification(event: Event, date: Date | undefined)
             lastNotification: notifyDate,
         };
         addToScheduledNotifications(storedIds);
-        
+
         schedule(event, notifyDate, notificationId);
     }
 }
