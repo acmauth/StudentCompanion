@@ -7,6 +7,7 @@
   import linkedin from "$lib/assets/linkedin.svg";
   import facebook from "$lib/assets/facebook.svg";
   import contributors from "$lib/components/about/contributors.json";
+  import { t, locale, locales} from "$lib/i18n";
 
   const teamMembers = writable([]);
   
@@ -33,15 +34,15 @@
 
     <!-- Introduction -->
     <div class="section">
-      <h2 class="section-title">Ποιοι είμαστε</h2>
-      <p style="font-size: 14px;">Γεια χαρά! Χαιρόμαστε πολύ που χρησιμοποιείς το Aristomate, την εφαρμογή που φτιάχτηκε από φοιτητές για φοιτητές! <br> <br>
-        Οκτώ φοιτητές από την ομάδα της <a href="https://auth.acm.org/">ACM AUTh</a> διαπιστώσαμε ότι στο χάος της καθημερινότητας ενός φοιτητή, ένας “ψηφιακός φίλος” που συγκεντρώνει την ακαδημαϊκή του εμπειρία σε ένα και μοναδικό σημείο είναι χρήσιμος για την επιβίωσή του. 
+      <h2 class="section-title">{$t("about.who_are_we")}</h2>
+      <p style="font-size: 14px;">{$t("about.who_are_we_text_1")} <br> <br>
+        {$t("about.who_are_we_text_2")} <a href="https://auth.acm.org/">ACM AUTh</a> {$t("about.who_are_we_text_3")} 
         </p>
     </div>          
 
     <!-- Meet the Team -->
     <div class="section">
-      <h2 class="section-title">Γνώρισε την ομάδα μας</h2>
+      <h2 class="section-title">{$t("about.meet_team")}</h2>
         {#each $teamMembers as member}
           <ion-card href={member.personal_link}>
             <ion-card-content class="team-card-content">
@@ -58,13 +59,13 @@
 
     <!-- Mission Statement -->
     <div class="section">
-      <h2 class="section-title">Η αποστολή μας</h2>
-      <p style="font-size: 14px;">Στόχος μας είναι να διευκολύνουμε τους φοιτητές του πανεπιστημίου τόσο στη γρηγορότερη ενημέρωσή τους πάνω στα μαθήματα και την πρόοδό τους, όσο και στην ευκολότερη φοιτητική “επιβίωση”.</p>
+      <h2 class="section-title">{$t("about.mission")}</h2>
+      <p style="font-size: 14px;">{$t("about.mission_text")}</p>
     </div>
 
     <!-- Contact Information -->
     <div class="section">
-      <h2 class="section-title">Βρες μας</h2>
+      <h2 class="section-title">{$t("about.find_us")}</h2>
       <div class="social-icons">
         <a href="https://www.facebook.com/acmauth" target="_blank">
           <img src={facebook} alt="Facebook" class="social-icon facebook">

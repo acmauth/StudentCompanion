@@ -9,6 +9,8 @@
 	import { onMount } from 'svelte';
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
 	import CredentialLoginItem from '$components/webmailLogin/CredentialLoginItem.svelte';
+	import Modal, {getModal} from '$components/language/Modal.svelte'
+	import { t, locale, locales} from "$lib/i18n";
 
 
 	/**
@@ -95,7 +97,7 @@
 					showToast({
 						color: 'danger',
 						duration: 3000,
-						message: 'Αδύνατη αποστολή!',
+						message: $t("settings.analyticsFailed"),
 						mode: 'ios',
 						translucent: true,
 						position: 'bottom',
@@ -107,7 +109,7 @@
 					showToast({
 						color: 'success',
 						duration: 3000,
-						message: 'Τα analytics στάλθηκαν επιτυχώς!',
+						message: $t("settings.analyticsSucceded"),
 						mode: 'ios',
 						translucent: true,
 						position: 'bottom',
@@ -145,14 +147,22 @@
 		{#if Capacitor.isNativePlatform()}
 			<ion-item button on:click={launchNativenotificationSettings} aria-hidden>
 				<ion-icon size="small" icon={cog_solid} />
-				<ion-label class="ion-padding-start">Ρυθμίσεις ειδοποιήσεων</ion-label>
+				<ion-label class="ion-padding-start">{$t("settings.notifications")}</ion-label>
 				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} aria-hidden />
 			</ion-item>
 		{/if}
 
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<ion-item button on:click={()=>getModal().open()}>
+			<ion-icon size="small" icon={allIonicIcons.language} />
+			<ion-label class="ion-padding-start">{$t("settings.language")}</ion-label>
+			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
+		</ion-item>
+
 		<ion-item button href="/about">
 			<ion-icon size="small" icon={allIonicIcons.people} />
-			<ion-label class="ion-padding-start">Σχετικά με εμάς</ion-label>
+			<ion-label class="ion-padding-start">{$t("settings.about")}</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 
@@ -172,7 +182,7 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<ion-item button on:click={sentAnalytics}>
 			<ion-icon size="small" icon={allIonicIcons.paperPlane} />
-			<ion-label class="ion-padding-start">Αποστολή analytics</ion-label>
+			<ion-label class="ion-padding-start">{$t("settings.analytics")}</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 
@@ -181,11 +191,14 @@
 		<ion-item button lines="none" on:click={logOut}>
 			<ion-icon color="danger" size="small" icon={allIonicIcons.exit} />
 
-			<ion-label color="danger" class="ion-padding-start">Αποσύνδεση</ion-label>
+			<ion-label color="danger" class="ion-padding-start">{$t("settings.logout")}</ion-label>
 			<ion-icon color="danger" size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 	</ion-card-content>
 </ion-card>
+
+<!-- the modal without an `id` -->
+<Modal />
 
 <style>
 	ion-icon {
