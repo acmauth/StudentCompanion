@@ -14,7 +14,7 @@
   import VectorGreece from "$lib/components/language/Greece.svg"
   import VectorUSA from "$lib/components/language/USA.svg"
 
-  import { changeLocale } from '$lib/i18n.ts';
+  import { changeLocale } from '$lib/i18n';
 
   function flagClick(this: any)
   {
@@ -120,6 +120,10 @@
 		stroke:#FFF;
 		stroke-width: 0.12em;
 	}
+
+  :global(body.dark) #modal {
+    background: #1A1A1A;
+  }
 	
   #flags{
     margin-top: 1.5em;
@@ -136,9 +140,12 @@
   }
 
   .flag-name{
-    font-size: 0.7em;
     text-align: center;
     margin-top: 0.2em;
+  }
+
+  :global(body.dark) .flag-name {
+    color: #FFF;
   }
 
 </style>
