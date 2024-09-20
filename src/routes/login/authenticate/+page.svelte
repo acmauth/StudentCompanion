@@ -1,7 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    // import Keycloak from 'keycloak-capacitor';
-    import Keycloak from "keycloak-js";
+    import Keycloak from "../keycloak";
     import {goto} from "$app/navigation";
     import { updateStore, keycloakSettings } from "../core";
 	import { onMount } from "svelte";
@@ -37,7 +36,7 @@
             
             updateStore(token, refreshToken);
 
-            goto('/login/guide');
+            goto('/pages/homepage');
 
         } else {
             console.log('User is not authenticated | login/authenticate');
@@ -56,10 +55,10 @@
     
     // DEV: Redirect to homepage if token exists | Bypass login
     onMount(async () => {
-        if (!isProduction) {
-            console.log("Token exists");
-            goto('/login/guide');
-        }
+        // if (!isProduction) {
+        //     console.log("Token exists");
+        //     goto('/login/guide');
+        // }
     })
 
 </script>

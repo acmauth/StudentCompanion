@@ -1,6 +1,4 @@
 import CapacitorPersistedStore from '$lib/storage/capacitorPersistedStore';
-import type { KeycloakInitOptions, KeycloakConfig } from 'keycloak-js';
-import type Keycloak from 'keycloak-js';
 import { jwtDecode } from "jwt-decode";
 import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
@@ -100,7 +98,7 @@ export function logout(){
         const toast = await toastController.create({
            color: 'danger',
            duration: 4000,
-           message: 'Η σύνδεσή σου έληξε. Παρακαλώ συνδεθείτε ξανά.',
+           message: 'Η σύνδεσή σου έληξε. Θα χρειαστεί να συνδεθείς ξανά.',
         });
      
         toast.present();

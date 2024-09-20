@@ -4,6 +4,7 @@
 	import type { qrItem } from './qrItem';
   import { alertController } from 'ionic-svelte';
   import { qrStore } from './qrStore';
+  import { t, locale, locales} from "$lib/i18n";
 
 
   export let qr1: qrItem;
@@ -20,17 +21,17 @@
 
   function deleteQR() {
     const options = {
-      header: 'Αφαίρεση QR;',
-      message: 'Θέλεις να αφαιρεθεί το QR από το πορτοφόλι σου;',
+      header: $t("wallet.remove"),
+      message: $t("wallet.removalMessage"),
       buttons: [{
-            text: 'ΟΧΙ',
+            text: $t("option.no"),
             role: 'cancel',
             handler: () => {
                return;
             }
          },
          {
-            text: 'ΝΑΙ',
+            text: $t("option.yes"),
             role: 'confirm',
             handler: () => {
               qrStore.update((store) => store.filter((item) => item.data !== qr1.data));

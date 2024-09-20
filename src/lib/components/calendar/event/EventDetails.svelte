@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type {Event} from '$components/calendar/event/Event';
+    import type {Event} from '$components/calendar/event/Event';
     import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
-		import type { DatetimeChangeEventDetail } from '@ionic/core';
-import { onMount } from 'svelte';
-
+    import type { DatetimeChangeEventDetail } from '@ionic/core';
+    import { onMount } from 'svelte';
+    import { t, getLocale} from "$lib/i18n";
 
     export let copyEvent: Event;
     let templateStartTime: string, templateEndTime: string;
@@ -14,7 +14,7 @@ import { onMount } from 'svelte';
         let start: Date = new Date(copyEvent.slot.start);
         let end: Date = new Date(copyEvent.slot.end);
         let repeatUntil: Date = new Date(copyEvent.repeatUntil);
-        
+                
         try{
             templateStartTime = start.getFullYear() + "-" +
                                 (String(start.getMonth() + 1)).padStart(2, '0') + "-" +
@@ -47,6 +47,7 @@ import { onMount } from 'svelte';
             copyEvent.repeatInterval = parseInt(String(copyEvent.repeatInterval ?? 1));
             copyEvent.repeatUntil = new Date(String(templateRepeatUntil));
         }
+
     };
 
     function UpdateStartTime(event) {
@@ -75,7 +76,7 @@ import { onMount } from 'svelte';
         
         <ion-item>
             <ion-input
-            label="Τίτλος"
+            label= {$t('event.name')}
             label-placement="floating"
             id="title"
             type="text"
@@ -87,7 +88,7 @@ import { onMount } from 'svelte';
         </ion-item>
 
         <ion-item lines="none">
-            <ion-label>Έναρξη</ion-label>
+            <ion-label>{$t('event.start')}</ion-label>
             <ion-datetime-button datetime="start"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
                 <ion-datetime id="start" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateStartTime(event)} value="{templateStartTime}"></ion-datetime>
@@ -95,7 +96,7 @@ import { onMount } from 'svelte';
         </ion-item>
             
         <ion-item lines="none">
-            <ion-label>Λήξη</ion-label>    
+            <ion-label>{$t('event.end')}</ion-label>    
             <ion-datetime-button datetime="end"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
                 <ion-datetime id="end" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateEndTime(event)} value="{templateEndTime}"></ion-datetime>
@@ -105,9 +106,9 @@ import { onMount } from 'svelte';
         <div style="padding:10px;"/>
 
         <ion-item>
-            <ion-select label="Τύπος συμβάντος" interface="popover" value={copyEvent.type} on:ionChange={(event)=>copyEvent.type=event.detail.value} label-placement="floating">
+            <ion-select label={$t('event.type')} interface="popover" value={copyEvent.type} on:ionChange={(event)=>copyEvent.type=event.detail.value} label-placement="floating">
                 {#each Object.values(EventType) as type}
-                    <ion-select-option value={type}>{getEventTypeValue(type,'el')}</ion-select-option>
+                    <ion-select-option value={type}>{getEventTypeValue(type, getLocale())}</ion-select-option>
                 {/each}
             </ion-select>
         </ion-item>
@@ -115,7 +116,7 @@ import { onMount } from 'svelte';
         {#if copyEvent.type == EventType.CLASS}
             <ion-item>
                 <ion-input
-                    label="Αίθουσα"
+                    label={$t('event.class')}
                     label-placement="floating"
                     id="location"
                     type="text"
@@ -127,7 +128,7 @@ import { onMount } from 'svelte';
             </ion-item>
             <ion-item>
                 <ion-input
-                    label="Διδάσκων"
+                    label={$t('event.professor')}
                     label-placement="floating"
                     id="professor"
                     type="text"
@@ -141,7 +142,7 @@ import { onMount } from 'svelte';
 
         <ion-item>
             <ion-textarea
-                label="Περιγραφή"
+                label={$t('event.description')}
                 label-placement="floating"
                 id="description"
                 value={copyEvent.description || null}
@@ -151,48 +152,55 @@ import { onMount } from 'svelte';
             />
         </ion-item>
 
+        
         <ion-item>
-            <ion-select style="width:50%;" label="Να επαναλαμβάνεται" interface="popover" value={copyEvent.repeat} on:ionChange={(event)=>{copyEvent.repeat=event.detail.value;}} label-placement="floating">
+            <ion-select id="repeatSelector" style="width:50%;" label={$t("event.isRepeated")} interface="popover" value={copyEvent.repeat} on:ionChange={(event)=>{copyEvent.repeat=event.detail.value;}} label-placement="floating">
                 {#each Object.values(EventRepeatType) as type}
-                    <ion-select-option value={type}>{getEventRepeatTypeValue(type,'el')}</ion-select-option>
+                    <ion-select-option value={type}>{getEventRepeatTypeValue(type, getLocale())}</ion-select-option>
                 {/each}
             </ion-select>
         </ion-item>
 
         {#if copyEvent.repeat != EventRepeatType.NEVER}
-            <ion-item>
-                <ion-input
-                    label="Κύκλος"
-                    label-placement="stacked"
-                    id="repeatInterval"
-                    type="number"
-                    value={copyEvent.repeatInterval ?? 1}
-                    contenteditable="true"
-                    style="width: 25%;"
-                    on:ionChange={(event)=>{copyEvent.repeatInterval = parseInt(String(event.detail.value));}}
-                />
-            
-                <div style="padding-inline:10px;"/>
+            <div style="display:flex; justify-self:space-between;">
+                <ion-item lines="none">
+                    <ion-label>Ανά</ion-label>
+                    <ion-input
+                        id="repeatInterval"
+                        type="number"
+                        placeholder="1"
+                        value={copyEvent.repeatInterval ?? 1}
+                        contenteditable="true"
+                        style="width:   20%;"
+                        on:ionChange={(event)=>{copyEvent.repeatInterval = parseInt(String(event.detail.value));}}
+                    />
+                                
+                    <ion-label style="margin-inline:5px;">
+                        {getEventRepeatTypeCycleValue(copyEvent.repeat,'el')}
+                    </ion-label>
+                </ion-item>
+            </div>
                 
+            <ion-item>    
                 <ion-label>Μέχρι</ion-label>    
-
+                
                 <ion-datetime-button style="width: fit-content;" datetime="until"></ion-datetime-button>
                 <ion-modal keep-contents-mounted={true}>
                     <ion-datetime id="until" presentation="date-time" minute-values="0,15,30,45" value={templateRepeatUntil} hour-cycle="h23" on:ionChange={(event) => {copyEvent.repeatUntil = new Date(String(event.detail.value));}}></ion-datetime>
-                </ion-modal>
-
+                    </ion-modal>
+                    
             </ion-item>
         {/if}
 
         <ion-item>
-            <ion-select style="width:50%;" label="Ειδοποίηση" interface="popover" value={copyEvent.notify} on:ionChange={(event)=>{copyEvent.notify=event.detail.value;}} label-placement="floating">
-                <ion-select-option value={true}>Ναι</ion-select-option>
-                <ion-select-option value={false}>Όχι</ion-select-option>
+            <ion-select style="width:50%;" label={$t('event.notification')} interface="popover" value={copyEvent.notify} on:ionChange={(event)=>{copyEvent.notify=event.detail.value;}} label-placement="floating">
+                <ion-select-option value={true}>{$t('option.yesL')}</ion-select-option>
+                <ion-select-option value={false}>{$t('option.noL')}</ion-select-option>
             </ion-select>
             {#if copyEvent.notify}
                 <div style="padding-inline:10px;"/>
                 <ion-input
-                    label="Πριν από (λεπτά)"
+                    label={$t('event.notifyTime')}
                     label-placement="floating"
                     id="notifyTime"
                     type="number"

@@ -6,6 +6,7 @@
 	import Maps from '$src/routes/maps/maps.svelte';
 	import QuickLinks from '$src/routes/quickLinks/quickLinks.svelte';
 	import { Browser } from '@capacitor/browser';
+	import { t, locale, locales} from "$lib/i18n";
 
 	// Function to navigate to the applet using stacked navigation
 	function navigateToApplet(applet) {
@@ -14,27 +15,21 @@
 
 	async function openCapacitorSite() {
 		await Browser.open({ url: 'https://gym.auth.gr/reservations/' });
-	};
+	}
 </script>
 
-<ion-content
-	scroll-x={true}
-	scroll-y={false}
-	style="max-height: 6.5rem"
-	class="ion-padding scrollingApplets"
->
-	<div class="applets">
+<ion-content style="max-height: 12rem">
+	<div style="max-height: 6.5rem" class="applets">
 		<AppCard
 			colour="orange"
 			margin={false}
 			shadow={false}
 			class="applet"
-			maxWidth="9rem"
 			onClick={() => navigateToApplet(Menu)}
 		>
 			<div class="appletcontent">
 				<ion-icon icon={fastFood} />
-				<ion-label><span class="overflowingtext">Μενού Λέσχης</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t("homepage.club")}</span></ion-label>
 			</div>
 		</AppCard>
 		<AppCard
@@ -42,25 +37,25 @@
 			margin={false}
 			shadow={false}
 			class="applet"
-			maxWidth="9rem"
 			onClick={() => navigateToApplet(Maps)}
 		>
 			<div class="appletcontent">
 				<ion-icon icon={map} />
-				<ion-label><span class="overflowingtext">Χάρτης ΑΠΘ</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t("homepage.maps")}</span></ion-label>
 			</div>
 		</AppCard>
+	</div>
+	<div style="max-height: 6.5rem" class="applets">
 		<AppCard
 			colour="purple"
 			margin={false}
 			shadow={false}
 			class="applet"
-			maxWidth="9rem"
 			onClick={() => navigateToApplet(QuickLinks)}
 		>
 			<div class="appletcontent">
 				<ion-icon icon={link} />
-				<ion-label><span class="overflowingtext">Σύνδεσμοι</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t("homepage.links")}</span></ion-label>
 			</div>
 		</AppCard>
 		<AppCard
@@ -68,12 +63,11 @@
 			margin={false}
 			shadow={false}
 			class="applet"
-			maxWidth="9rem"
 			onClick={() => openCapacitorSite()}
 		>
 			<div class="appletcontent">
 				<ion-icon icon={barbell} />
-				<ion-label><span class="overflowingtext">Γυμναστήριο</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t("homepage.gym")}</span></ion-label>
 			</div>
 		</AppCard>
 	</div>
@@ -91,16 +85,17 @@
         flex-direction: row;
         align-items: flex-start; */
 		/* overflow-x: scroll !important; */
-		/* gap: 1rem;
-        white-space: nowrap; */
+		/*  gap: 1rem; */
 
-		display: flex;
-		flex-direction: row;
-		align-items: flex-start;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		/* flex-direction: row;
+		align-items: flex-start; */
+		justify-content: space-between;
 		gap: 1rem;
-		width: max-content;
-		padding-left: 0.5rem;
-		padding-right: 0.5rem;
+		margin-left: 1.5rem;
+		margin-right: 1.5rem;
+		margin-top: 1rem;
 	}
 
 	.appletcontent {
@@ -113,7 +108,7 @@
 		padding-right: 1rem;
 		padding-top: 0.5rem;
 		padding-bottom: 0.5rem;
-		width: 9rem;
+		width: 11rem;
 	}
 	.appletcontent ion-icon {
 		font-size: 2rem;

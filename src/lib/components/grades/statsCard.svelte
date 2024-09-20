@@ -5,6 +5,7 @@
 	import {averagesPerSemester} from '$lib/functions/gradeAverages/averagesPerSemester';
 	import * as allIonicIcons from 'ionicons/icons';
 	import Chip from "$components/shared/Chips.svelte";
+	import { t } from "$lib/i18n";
 
 
 	/**
@@ -146,7 +147,7 @@
 					},
 					title: {
 						display: true,
-						text: 'Εξέλιξη Μέσου όρου',
+						text:$t('progress.average_evolution'),
 						font: {
 							size: 15
 						},
@@ -168,7 +169,7 @@
 <ion-card class="ion-text-center stats">
 	<ion-card-header>
 		<ion-card-subtitle>
-			<h2 class="subtitle">Περασμένα μαθήματα</h2>
+			<h2 class="subtitle">{$t('progress.passed')}</h2>
 		</ion-card-subtitle>
 	</ion-card-header>
 	<ion-card-content>
@@ -180,13 +181,13 @@
 		<ion-list>
 
 			<ion-item>
-				<ion-label>M.O με συντελεστές</ion-label>
+				<ion-label>{$t('progress.grade_ects')}</ion-label>
 				<ion-text>
 					<h2>{gradesObject.weightedAverage}</h2>
 				</ion-text>
 			</ion-item>
 			<ion-item>
-				<ion-label>M.O απλός</ion-label>
+				<ion-label>{$t('progress.grade_simple')}</ion-label>
 				<ion-text>
 					<h2>{gradesObject.average}</h2>
 				</ion-text>
@@ -203,11 +204,9 @@
 			<canvas id="gradeChart" />
 
 
-
-
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<Chip chipIcon ={allIonicIcons.calculator} text="Πρόβλεψη Μ.Ο." flip = {flip} />
+			<Chip chipIcon ={allIonicIcons.calculator} text={$t('progress.average_prediction')} flip = {flip} />
 
 
 		</ion-list>

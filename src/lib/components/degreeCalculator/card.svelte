@@ -2,6 +2,7 @@
     //@ts-nocheck
     import { main } from '../../functions/degreeCalculator/main.js';
     import { inputUpdate } from '../../functions/degreeCalculator/inputUpdate.js';
+    import { t } from "$lib/i18n";
 
     import CoursesSkeleton from '$components/degreeCalculator/coursesSkeleton.svelte';
     import AvGrades from '$components/degreeCalculator/avGrades.svelte';
@@ -42,8 +43,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 <ion-card style="overflow-y: auto;" class="ion-padding-vertical">
-    <ion-card-title>Πρόβλεψη Μέσου Όρου</ion-card-title>
-    <ion-card-subtitle>Βάλε τους βαθμούς, μεγαλύτερους ή ίσους του 5, που περιμένεις να λάβεις για να δεις πώς επηρεάζεται ο Μ.Ο. σου</ion-card-subtitle>
+    <ion-card-title>{$t('progress.average_prediction_full')}</ion-card-title>
+    <ion-card-subtitle>{$t('progress.average_prediction_desc')}</ion-card-subtitle>
 
     {#await universis()}
         <CoursesSkeleton />
@@ -71,7 +72,7 @@
         <div class="columnFlex">
             <AvGrades degree_grade={degree_grade}/>
 
-            <Chip chipIcon ={allIonicIcons.cellular} text="Πρόοδος" flip = {flip} />
+            <Chip chipIcon ={allIonicIcons.cellular} text={$t('progress.title')} flip = {flip} />
         </div>
 
     {/await}
