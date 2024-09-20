@@ -1,10 +1,10 @@
-<script>
-// @ts-nocheck
+<script lang="ts">
 
-  
-// import IonNav from 'ionic-svelte/components/IonNav.svelte'
-import StackedNav from "$shared/StackedNav"
-import GradesPage from './gradesPage.svelte';
+
 </script>
 
-<StackedNav root={GradesPage} animation={undefined} rootParams={undefined} swipeGesture={undefined}/>
+<ion-content>
+    <ion-title>
+        Hello World!
+    </ion-title>
+</ion-content>

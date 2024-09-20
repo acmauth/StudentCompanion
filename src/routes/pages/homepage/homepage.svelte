@@ -1,13 +1,10 @@
-
-
 <script lang='ts'>
-
 	import AppCard from '$shared/AppCard.svelte';
 	import AppletsSlides from './appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
-	import { wallet } from 'ionicons/icons';
+	import { wallet, mailOutline } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
@@ -18,16 +15,18 @@
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	
+	import { t, locale, locales} from "$lib/i18n";
 
+	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
+	
 	let givenName = '';
 	let gender = '';
 	let numPassedSubjects = 0;
 	let numSubjects = 0;
 	let average = 0;
 	
-	let modalOpen = false;
-
+	let qrModalOpen = false;
+		
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet('Students/me/');
@@ -67,7 +66,7 @@
 		let qrCode = document.querySelector('ion-input');
 		if (!qrCode || qrCode.value === '') return;
 
-		const newQR: qrItem = { data: String(qrCode.value), title: 'Πάσο' };
+		const newQR: qrItem = { data: String(qrCode.value), title: "Πάσο" };
 		$qrStore = $qrStore.concat(newQR);
 	}
 
@@ -88,6 +87,7 @@
 			shouldFocus = false;
 		}
 	}
+	
 </script>
 
 
@@ -95,18 +95,6 @@
 		{#await getInfo()}
 			<HomepageSkeleton />
 		{:then}
-			<!-- <AnnouncementBanner>
-				<ion-text
-					color="light"
-					on:click={() => {
-						window.open('https://forms.google.com', '_blank');
-					}}
-					aria-label="feedback form"
-				>
-					<ion-label>Early Access Beta - Η γνώμη σου μετράει!</ion-label>
-					<ion-icon icon={open} />
-				</ion-text>
-			</AnnouncementBanner> -->
 			<div class="info-container">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -117,12 +105,12 @@
 						<img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
 					{/if}
 					<div>
-						<h5 class="h5">Γεια σου</h5>
+						<h5 class="h5">{$t("homepage.greeting")}</h5>
 						<h5 class="h5"><b>{getVocativeCase(givenName)}!</b></h5>
 					</div>
 				</div>
 
-				<div class="student-id" on:click={() => {modalOpen = true;}}>
+				<div class="student-id" on:click={() => {qrModalOpen = true;}} aria-hidden>
 					<AppCard margin={false} shadow={true} >
 						<div class="wallet-icon">
 							<ion-icon class="id-icon" icon={wallet} />
@@ -131,18 +119,18 @@
 				</div>
 
 				<ion-modal
-					is-open={modalOpen}
+					is-open={qrModalOpen}
 					initial-breakpoint={$qrStore.length > 0? 0.5 : 0.2}
-					on:ionModalDidDismiss={() => {modalOpen = false;}}
+					on:ionModalDidDismiss={() => {qrModalOpen = false;}}
 					on:ionModalDidPresent={() => {shouldFocus = true;}}
 					breakpoints={[0, 0.1, 0.2, 0.3, 0.5]}>
 					<ion-content>
 						<ion-grid>
 							{#if $qrStore.length == 0}
 								<ion-col style="display: flex; justify-content: center; margin: 30px;">
-									<ion-input id="qrcode-input" placeholder="Κωδικός QR πάσου" type="number"/>
+									<ion-input id="qrcode-input" placeholder={$t("homepage.qrCode")} type="number"/>
 									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary"
-												on:ionFocus={addQR}>Προσθήκη</ion-button>
+												on:ionFocus={addQR}>{$t("homepage.addQR")}</ion-button>
 								</ion-col>
 							
 							<!-- Uncomment if adding gym pass/id is implemented -->
@@ -170,7 +158,7 @@
 				<AppCard colour="primary" margin={false} href="/pages/grades">
 					<div class="courses-passed">
 						<ion-card-title><b> {numPassedSubjects}/{numSubjects} </b></ion-card-title>
-						<ion-card-subtitle>Περασμένα</ion-card-subtitle>
+						<ion-card-subtitle>{$t("homepage.passed")}</ion-card-subtitle>
 
 						<ion-progress-bar class="progress-courses" />
 					</div>
@@ -180,7 +168,7 @@
 					<div class="avg-grade-grid">
 						<div class="avg-grade">
 							<ion-card-title> <b>{average} </b></ion-card-title>
-							<ion-card-subtitle>M.O.</ion-card-subtitle>
+							<ion-card-subtitle>{$t("homepage.average")}</ion-card-subtitle>
 						</div>
 						<div>
 							<ion-progress-bar class="progress-avg" />
@@ -188,14 +176,19 @@
 					</div>
 				</AppCard>
 			</div>
-			<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
+			<p class="info-text"><b>{$t("homepage.usefulInfo")}</b></p>
 			<AppletsSlides />
 			<Banner altText="Πες μας τη γνώμη σου" />
-			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατα</b></p>
+			<div style="display:flex; justify-content:space-between; align-items: center; margin-inline-end:0.75rem;">
+				<p style="margin-top:0" class="info-text">
+					<b>Πρόσφατα</b>
+				</p>
+				<CredentialLoginButton />
+			</div>
 			<RecentItems />
 		{:catch error}
 		
-			<ErrorLandingCard errorMsg={"Προέκυψε ένα πρόβλημα στο ΑΠΘ"} />
+			<ErrorLandingCard errorMsg={$t("homepage.error")} />
 			<AppletsSlides />
 		{/await}
 	</ion-content>

@@ -8,8 +8,8 @@
  * @returns A promise that resolves with the authentication result.
  */
 import { Capacitor } from "@capacitor/core";
-import {authenticate as webAuthenticate} from "../plugins/webserver/authenticate";
-import { authenticate as nativeAuthenticate } from "../plugins/native/authenticate";
+import {authenticate as webAuthenticate} from "../plugins-deprecated/webserver/authenticate";
+import { authenticate as nativeAuthenticate } from "../plugins-deprecated/native/authenticate";
 import type { AuthenticationResult } from "$lib/-universis/types";
 import { userTokens } from "$stores/credentials.store";
 const isNative = Capacitor.isNativePlatform();

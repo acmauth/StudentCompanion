@@ -5,10 +5,11 @@
 	import { getMenu } from '$lib/menuScraper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
+	import { t, locale, locales} from "$lib/i18n";
 
 	let cafeteriaData: string | any[] = [];
 	let todaydata: string;
-	let title: string = 'Σημερινό μενού';
+	let title: string = $t("menu.todaysMenu");
 
 	const date = new Date();
 	let today = date.getDay();
@@ -18,6 +19,8 @@
 		today = 6;
 	}
 
+	
+	
 	const hours = date.getHours();
 	const mins = date.getMinutes();
 	let message = '';
@@ -27,35 +30,37 @@
 	let menuDate = '';
 
 	if ((hours == 8 && mins >= 30) || (hours > 8 && hours < 10)) {
-		message = 'Λέσχη ανοιχτή για Πρωινό - Κλείνει στις 10:00';
-		now = 'Πρωινό';
-		next = 'Μεσημεριανό';
+		message = $t("menu.morning_open");
+		now = "Πρωινό";
+		next = "Μεσημεριανό";
 	} else if (hours >= 10 && hours < 12) {
-		message = 'Λέσχη κλειστή - Ανοίγει στις 12:00';
+		message = $t("menu.morning_closed");
 		color = 'danger';
 		now = 'Μεσημεριανό';
 		next = 'Βραδινό';
 	} else if (hours >= 12 && hours < 16) {
-		message = 'Λέσχη ανοιχτή για Μεσημεριανό - Κλείνει στις 16:00';
-		now = 'Μεσημεριανό';
-		next = 'Βραδινό';
+		message = $t("menu.midday_open");
+		now = "Μεσημεριανό";
+		next = "Βραδινό";
 	} else if (hours >= 16 && hours < 18) {
-		message = 'Λέσχη κλειστή - Ανοίγει στις 18:00';
+		message = $t("menu.midday_closed");
 		color = 'danger';
 		now = 'Βραδινό';
 		next = '';
 	} else if (hours >= 18 && hours < 21) {
-		message = 'Λέσχη ανοιχτή για Βραδινό - Κλείνει στις 21:00';
-		now = 'Βραδινό';
-		next = '';
+		message = $t("menu.evening_open");
+		now = "Βραδινό";
+		next = "";
 	} else {
-		message = 'Λέσχη κλειστή - Ανοίγει στις 08:30';
+		message = $t("menu.evening_closed");
 		color = 'danger';
 		now = 'Πρωινό';
 		next = 'Μεσημεριανό';
 
-		if (hours >= 21 && hours <= 23 && mins <= 59) title = 'Αυριανό μενού';
-		else title = 'Σημερινό μενού';
+		if (hours >= 21 && hours <= 23 && mins <= 59) 
+			title = $t("menu.tomorrowsMenu");
+		else
+			title = $t("menu.todaysMenu");
 
 		today = (today + 1) % 7;
 		if (today) {
@@ -118,15 +123,15 @@
 		}
 		// Check if the cafeteria is closed for vacation
 		else if (menuDate !== new Date().toLocaleDateString('en-GB')) {
-			message = 'Λέσχη κλειστή λόγω διακοπών';
-			color = 'danger';
+			message = $t("menu.closedForHolidays");
+			color = 'danger';	
 		}
 		console.log(new Date().toLocaleDateString('en-GB'));
 	}
 </script>
 
 <IonPage>
-	<SubPageHeader title="Μενού Λέσχης" stackedNav />
+	<SubPageHeader title={$t("menu.title")} stackedNav />
 	<ion-content class="ion-padding">
 		{#await getMenuData()}
 			<MenuSkeleton />
@@ -150,48 +155,48 @@
 			&nbsp;
 
 			<h1 class="ion-padding">
-				<ion-icon icon={allIonicIcons.restaurantOutline} /> Το Μενού της Εβδομάδας
+				<ion-icon icon={allIonicIcons.restaurantOutline} /> {$t("menu.week")}
 			</h1>
 			<ion-accordion-group expand="inset">
 				<ion-accordion value="first">
 					<ion-item slot="header" color="light">
-						<ion-label>Δευτέρα</ion-label>
+						<ion-label>{$t("menu.monday")}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[0]}</div>
 				</ion-accordion>
 				<ion-accordion value="second">
 					<ion-item slot="header" color="light">
-						<ion-label>Τρίτη</ion-label>
+						<ion-label>{$t("menu.tuesday")}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[1]}</div>
 				</ion-accordion>
 				<ion-accordion value="third">
 					<ion-item slot="header" color="light">
-						<ion-label>Τετάρτη</ion-label>
+						<ion-label>{$t("menu.wednesday")}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[2]}</div>
 				</ion-accordion>
 				<ion-accordion value="fourth">
 					<ion-item slot="header" color="light">
-						<ion-label>Πέμπτη</ion-label>
+						<ion-label>{$t("menu.thursday")}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[3]}</div>
 				</ion-accordion>
 				<ion-accordion value="fifth">
 					<ion-item slot="header" color="light">
-						<ion-label>Παρασκευή</ion-label>
+						<ion-label>{$t("menu.friday")}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[4]}</div>
 				</ion-accordion>
 				<ion-accordion value="sixth">
 					<ion-item slot="header" color="light">
-						<ion-label>Σάββατο</ion-label>
+						<ion-label>{$t("menu.saturday")}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[5]}</div>
 				</ion-accordion>
 				<ion-accordion value="seventh">
 					<ion-item slot="header" color="light">
-						<ion-label>Κυριακή</ion-label>
+						<ion-label>{$t("menu.sunday")}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[6]}</div>
 				</ion-accordion>

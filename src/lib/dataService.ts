@@ -1,5 +1,5 @@
 // import { universisGet as internalUniversisGet } from "./universisAuthentication/universisDataService";
-import { apiRequest as internalElearningGet } from "./-elearning/dataService/core";
+import { apiRequest as internalElearningGet } from "./-elearning-deprecated/dataService/core";
 import { apiRequest as internalUniversisGet } from "./-universis/dataService/core";
 import { webmailInboxRequest as internalWebmailInbox} from "./-webmail/dataService/core";
 import { cachedUniversisGet, cachedElearningGet, cachedWebmailInbox } from "./cachedDataService/cachedDataservice";
