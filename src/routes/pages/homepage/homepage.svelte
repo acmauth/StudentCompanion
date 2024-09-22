@@ -15,7 +15,7 @@
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import { t, locale, locales} from "$lib/i18n";
+	import { t } from "$lib/i18n";
 
 	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
 	
@@ -181,7 +181,7 @@
 			<Banner altText="Πες μας τη γνώμη σου" />
 			<div style="display:flex; justify-content:space-between; align-items: center; margin-inline-end:0.75rem;">
 				<p style="margin-top:0" class="info-text">
-					<b>Πρόσφατα</b>
+					<b>{$t("homepage.recents")}</b>
 				</p>
 				<CredentialLoginButton />
 			</div>
