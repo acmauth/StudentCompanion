@@ -173,7 +173,15 @@ export default {
       "course.no_stats": "Δεν υπάρχουν στατιστικά για την εξεταστική ακόμη",
       "course.dist": "Κατανομή Βαθμολογίας",
       "course.title": "Πληροφορίες",
-
+      "credential.header": "Είναι ασφαλή τα στοιχεία μου;",
+      "credential.subheader": "Πάντα!",
+      "credential.message": "Η ομάδα του Aristomate δεσμεύεται ότι δεν έχει ποτέ πρόσβαση σε αυτά τα στοιχεία.",
+      "credential.failed": "Αποτυχία σύνδεσης!",
+      "credential.success": "Επιτυχής σύνδεση!",
+      "credential.experience": "Ολοκλήρωσε την εμπειρία σου!",
+      "credential.save_account": "Αποθήκευσε τον ιδρυματικό σου λογαριασμό απευθείας στη συσκευή σου για να λαμβάνεις ειδοποιήσεις από το webmail και το eLearning!",
+      "credential.academic_name": "Ιδρυματικό όνομα χρήστη",
+      "credential.password": "Κωδικός πρόσβασης",
     },
     en: {
       "menu.title" : "Club menu",
@@ -349,6 +357,15 @@ export default {
       "course.no_stats": "No statistics for the exam period yet",
       "course.dist": "Grade distribution",
       "course.title": "Information",
+      "credential.header": "Is my data safe?",
+      "credential.subheader": "Always!",
+      "credential.message": "The Aristomate team guarantees that it will never have access to this data.",
+      "credential.failed": "Login failed!",
+      "credential.success": "Login successful!",
+      "credential.experience": "Complete your experience!",
+      "credential.save_account": "Save your academic account directly to your device to receive webmail and eLearning notifications!",
+      "credential.academic_name": "Academic username",
+      "credential.password": "Password",
     },
   };
 
