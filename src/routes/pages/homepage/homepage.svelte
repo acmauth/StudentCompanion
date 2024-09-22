@@ -18,6 +18,7 @@
 	import { t, locale, locales} from "$lib/i18n";
 
 	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
+	import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
 	
 	let givenName = '';
 	let gender = '';
@@ -26,7 +27,7 @@
 	let average = 0;
 	
 	let qrModalOpen = false;
-		
+
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet('Students/me/');
@@ -87,6 +88,9 @@
 			shouldFocus = false;
 		}
 	}
+
+
+	checkForUpdates();
 	
 </script>
 

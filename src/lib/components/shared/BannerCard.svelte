@@ -7,7 +7,7 @@
 	let marginStr = `margin: ${margin}rem;`;
 	const date = new Date();
 	let validDateForTif = false;
-	console.log(date.getFullYear(), date.getMonth(), date.getDate());
+	// console.log(date.getFullYear(), date.getMonth(), date.getDate());
 
 	if (date.getFullYear() == 2024 && date.getMonth() == 8 && [11, 12, 13].includes(date.getDate())) {
 		validDateForTif = true;
