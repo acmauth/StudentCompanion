@@ -10,14 +10,11 @@
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
-	import QRGenerator from '$lib/components/wallet/QRGenerator.svelte';
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { t } from "$lib/i18n";
-	import gym_id from '$lib/assets/qr/GYM_PLACEHOLDER.svg';
-	import student_id from '$lib/assets/qr/ID_PLACEHOLDER.svg';
 	import Wallet from '$components/wallet/Wallet.svelte';
 
 	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
@@ -79,7 +76,7 @@
 	$: {
 		if (shouldFocus) {
 			// Get the input field reference using the ref attribute
-			const inputField = document.getElementById('qrcode-input')  | null;
+			const inputField = document.getElementById('qrcode-input')  || null;
 
 			// Check if the input field reference exists and then focus on it
 			if (inputField) {
