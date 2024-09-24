@@ -4,7 +4,7 @@
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
-	import { wallet, mailOutline } from 'ionicons/icons';
+	import { wallet } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
@@ -15,7 +15,10 @@
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import { t, locale, locales} from "$lib/i18n";
+	import { t } from "$lib/i18n";
+	import gym_id from '$lib/assets/qr/GYM_PLACEHOLDER.svg';
+	import student_id from '$lib/assets/qr/ID_PLACEHOLDER.svg';
+	import Wallet from '$components/wallet/Wallet.svelte';
 
 	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
 	
@@ -63,9 +66,9 @@
 	}
 
 	function addQR() {
-		let qrCode = document.querySelector('ion-input');
+		let qrCode = document.getElementById('qrcode-input') as HTMLIonInputElement;
 		if (!qrCode || qrCode.value === '') return;
-
+		
 		const newQR: qrItem = { data: String(qrCode.value), title: "Πάσο" };
 		$qrStore = $qrStore.concat(newQR);
 	}
@@ -76,7 +79,7 @@
 	$: {
 		if (shouldFocus) {
 			// Get the input field reference using the ref attribute
-			const inputField = document.getElementById('qrcode-input') as HTMLIonInputElement | null;
+			const inputField = document.getElementById('qrcode-input')  | null;
 
 			// Check if the input field reference exists and then focus on it
 			if (inputField) {
@@ -118,40 +121,8 @@
 					</AppCard>
 				</div>
 
-				<ion-modal
-					is-open={qrModalOpen}
-					initial-breakpoint={$qrStore.length > 0? 0.5 : 0.2}
-					on:ionModalDidDismiss={() => {qrModalOpen = false;}}
-					on:ionModalDidPresent={() => {shouldFocus = true;}}
-					breakpoints={[0, 0.1, 0.2, 0.3, 0.5]}>
-					<ion-content>
-						<ion-grid>
-							{#if $qrStore.length == 0}
-								<ion-col style="display: flex; justify-content: center; margin: 30px;">
-									<ion-input id="qrcode-input" placeholder={$t("homepage.qrCode")} type="number"/>
-									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary"
-												on:ionFocus={addQR}>{$t("homepage.addQR")}</ion-button>
-								</ion-col>
-							
-							<!-- Uncomment if adding gym pass/id is implemented -->
-						
-							<!-- {:else if $qrStore.length == 1}
-								<ion-col>
-									<QRGenerator qr1={$qrStore[0]}/>
-								</ion-col>
-								<ion-col style="display: flex; justify-content: center;">
-									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary">QR</ion-button>
-								</ion-col> -->
-							{:else}
-								{#each $qrStore as item}	
-									<ion-col>
-										<QRGenerator qr1={item}/>
-									</ion-col>
-								{/each}
-							{/if}
-						</ion-grid>
-					</ion-content>
-				</ion-modal>
+				<Wallet bind:qrModalOpen={qrModalOpen} />
+
 
 			</div>
 			<div class="card-container">
@@ -302,11 +273,4 @@
 		font-size: 0.8rem;
 	}
 
-	ion-grid {
-		display: flex;
-		justify-content: center;
-		align-items: center; 
-	}
-
-	
 </style>
