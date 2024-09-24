@@ -1,8 +1,7 @@
 <script lang="ts">
     import type {Event} from '$components/calendar/event/Event';
-    import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
+    import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue, getEventRepeatTypeCycleValue} from '$components/calendar/event/Event';
     import type { DatetimeChangeEventDetail } from '@ionic/core';
-    import { onMount } from 'svelte';
     import { t, getLocale} from "$lib/i18n";
 
     export let copyEvent: Event;
