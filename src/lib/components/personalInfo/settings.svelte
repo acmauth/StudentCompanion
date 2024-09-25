@@ -10,7 +10,7 @@
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
 	import CredentialLoginItem from '$components/webmailLogin/CredentialLoginItem.svelte';
 	import Modal, {getModal} from '$components/language/Modal.svelte'
-	import { t, locale, locales} from "$lib/i18n";
+	import { t } from "$lib/i18n";
 
 
 	/**
@@ -174,7 +174,7 @@
 
 		<ion-item button href="/login/guide">
 			<ion-icon size="small" icon={allIonicIcons.helpCircle} />
-			<ion-label class="ion-padding-start">Οδηγός χρήσης</ion-label>
+			<ion-label class="ion-padding-start">{$t("settings.guide")}</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 

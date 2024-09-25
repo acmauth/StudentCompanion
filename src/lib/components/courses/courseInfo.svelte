@@ -1,6 +1,8 @@
 <script>
 	import { afterUpdate, onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
+	import { t } from "$lib/i18n";
+
 
 	/**
 	 * @type {{ title: any; code: any; courseType: any; teacher: string; ects: any; semester: any; season: any; weeklyHours: any; period: any; }}
@@ -94,7 +96,7 @@
 
 						title: {
 							display: true,
-							text: 'Κατανομή Βαθμολογίας',
+							text: $t("course.dist"),
 							font: {
 								size: 15,
 							},
@@ -127,7 +129,7 @@
 		<ion-card-header>
 			<ion-card-title class="title">{course.title}</ion-card-title>
 			<ion-card-subtitle color="primary"># {course.code}</ion-card-subtitle>
-			<ion-card-subtitle>Τύπος: {course.courseType}</ion-card-subtitle>
+			<ion-card-subtitle>{$t("course.type")} {course.courseType}</ion-card-subtitle>
 		</ion-card-header>
 
 		<!-- Checking if there is a grade and displays the corresponding color depending if you passed or not -->
@@ -135,7 +137,7 @@
 			{#if !stats.grade && stats.grade!=0}
 				<ion-text><b>-</b></ion-text>
 				<br>
-				<ion-text class="danger">Δεν έχεις βαθμολογήθει ακόμα στο μάθημα</ion-text>
+				<ion-text class="danger">{$t("course.graded")}</ion-text>
 			{:else if stats.grade >= 5}
 				<ion-text class="success" id="number">{stats.grade}</ion-text>
 			{:else}
@@ -152,7 +154,7 @@
 				</ion-item>
 
 				<ion-item lines ="full">
-					<ion-label>Εξάμηνο</ion-label>
+					<ion-label>{$t("course.semester")}</ion-label>
 					{#if course.semester <= 24}
 					<ion-text slot="end">{course.semester}ο</ion-text>
 					{:else}
@@ -160,18 +162,18 @@
 					{/if}
 				</ion-item>
 				<ion-item lines ="full">
-					<ion-label>Περίοδος</ion-label>
+					<ion-label>{$t("course.period")}</ion-label>
 					<ion-text slot="end">{course.season}</ion-text>
 				</ion-item>
 				<ion-item lines ="full">
-					<ion-label >Εβδομαδιαίες ώρες</ion-label>
+					<ion-label>{$t("course.weekly_hours")}</ion-label>
 					<ion-text slot="end">{course.weeklyHours}</ion-text>
 				</ion-item>
 
 				<ion-accordion-group class="accordion" expand="compact">
 					<ion-accordion value="first">
 						<ion-item slot="header" color="white">
-							<ion-label>Διδάσκοντες</ion-label>
+							<ion-label>{$t("course.professors")}</ion-label>
 						</ion-item>
 						{#each course.teacher.split(', ') as teacher}
 							<h3 class="teachers" slot="content">{teacher}</h3>
@@ -184,9 +186,9 @@
 
 	<ion-card>
 		<ion-card-header>
-			<ion-card-title class="title">Στατιστικά</ion-card-title>
+			<ion-card-title class="title">{$t("course.stats")}</ion-card-title>
 			{#if course.period}
-			<ion-card-subtitle>Εξεταστική {course.period}</ion-card-subtitle>
+			<ion-card-subtitle>{$t("course.exams")} {course.period}</ion-card-subtitle>
 			{:else}
 			<ion-card-subtitle>-</ion-card-subtitle>
 			{/if}
@@ -196,35 +198,35 @@
 			<canvas id="statChart" />
 			<ion-list>
 				<ion-item lines ="full">
-					<ion-label>Βαθμολογημένοι</ion-label>
+					<ion-label>{$t("course.graded_students")}</ion-label>
 					<ion-text slot="end">{stats.totalStudents}</ion-text>
 				</ion-item>
 				<ion-item lines ="full">
-					<ion-label>Φοιτητές με ίδιο βαθμό</ion-label>
+					<ion-label>{$t("course.same_grade")}</ion-label>
 					<ion-text slot="end">{stats.studentsLikeMe}</ion-text>
 				</ion-item>
 				<ion-item lines ="full">
-					<ion-label>Φοιτητές με καλύτερο βαθμό</ion-label>
+					<ion-label>{$t("course.better_grade")}</ion-label>
 					<ion-text slot="end">{stats.studentsBetterThanMe}</ion-text>
 				</ion-item>
 				<ion-item lines ="full">
-					<ion-label>Φοιτητές με χειρότερο βαθμό</ion-label>
+					<ion-label>{$t("course.worse_grade")}</ion-label>
 					<ion-text slot="end">{stats.studentsWorseThanMe}</ion-text>
 				</ion-item>
 				<ion-item lines ="full">
-					<ion-label>Φοιτητές που πέρασαν</ion-label>
+					<ion-label>{$t("course.passed")}</ion-label>
 					<ion-text slot="end">{stats.passedCount}</ion-text>
 				</ion-item>
 				<ion-item lines ="full">
-					<ion-label>Φοιτητές που κόπηκαν</ion-label>
+					<ion-label>{$t("course.failed")}</ion-label>
 					<ion-text slot="end">{stats.failedCount}</ion-text>
 				</ion-item>
 				<ion-item lines ="full">
-					<ion-label>Μέσος όρος</ion-label>
+					<ion-label>{$t("course.average")}</ion-label>
 					<ion-text slot="end">{stats.averageGrade}</ion-text>
 				</ion-item>
 				<ion-item lines="none">
-					<ion-label>Μέσος όρος επιτυχόντων</ion-label>
+					<ion-label>{$t("course.successfull_average")}</ion-label>
 					<ion-text slot="end">{stats.averageGradePassed}</ion-text>
 				</ion-item>
 			</ion-list>
@@ -232,7 +234,7 @@
 			<ion-list>
 				<ion-item>
 					<ion-text class="ion-padding" color="danger"
-						>Δεν υπάρχουν στατιστικά για την εξεταστική ακόμη</ion-text
+						>{$t("course.no_stats")}</ion-text
 					>
 				</ion-item>
 			</ion-list>
