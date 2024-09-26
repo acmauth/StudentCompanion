@@ -26,7 +26,7 @@ export function removePastNotifications(){
 function nextNotifDate(event: Event, previousNotifDate: Date){
     let repeatInterval = 0;
     if (event.repeatInterval) repeatInterval = event.repeatInterval;
-    if (repeatInterval === 0) repeatInterval = 1;
+    if (repeatInterval <= 0) repeatInterval = 1;
 
     let notifDate = new Date();   
     if(event.repeat == EventRepeatType.DAILY) {
