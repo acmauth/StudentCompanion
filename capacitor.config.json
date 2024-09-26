@@ -15,8 +15,7 @@
 				"androidCustomSchemeAllowInsecureAccess": true
 			},
 			"LocalNotifications": {
-				"iconColor": "#0081ff",
-				"sound": "beep.wav"
+				"iconColor": "#0081ff"
 			  }
 		  },
 		  "server": {

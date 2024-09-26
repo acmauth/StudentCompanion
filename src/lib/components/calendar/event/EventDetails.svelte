@@ -163,7 +163,7 @@
         {#if copyEvent.repeat != EventRepeatType.NEVER}
             <div style="display:flex; justify-self:space-between;">
                 <ion-item lines="none">
-                    <ion-label>Ανά</ion-label>
+                    <ion-label>{$t("event.notification.repeatPer")}</ion-label>
                     <ion-input
                         id="repeatInterval"
                         type="number"
@@ -175,13 +175,13 @@
                     />
                                 
                     <ion-label style="margin-inline:5px;">
-                        {getEventRepeatTypeCycleValue(copyEvent.repeat,'el')}
+                        {getEventRepeatTypeCycleValue(copyEvent.repeat, getLocale())}
                     </ion-label>
                 </ion-item>
             </div>
                 
             <ion-item>    
-                <ion-label>Μέχρι</ion-label>    
+                <ion-label>{$t("event.notification.repeatUntil")}</ion-label>    
                 
                 <ion-datetime-button style="width: fit-content;" datetime="until"></ion-datetime-button>
                 <ion-modal keep-contents-mounted={true}>

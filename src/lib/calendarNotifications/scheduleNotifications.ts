@@ -4,6 +4,9 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { cutId, calcNotifyDate, calcNotifId } from './notificationFunctions';
 import { scheduleRepeatedNotifications,} from './repeatedNotifications';
 import { getIds, addToScheduledNotifications, removeFromScheduledNotficiations } from "./notificationsStore";
+import { getEventTypeValue } from '$lib/components/calendar/event/Event';
+import { t, getLocale} from "$lib/i18n";
+import { get } from 'svelte/store';
 
 // schedules a notification at a specific date
 export async function schedule(event: Event, notifyDate: Date, id: number){
@@ -11,7 +14,7 @@ export async function schedule(event: Event, notifyDate: Date, id: number){
     try{        
         await LocalNotifications.schedule({notifications: [{
             title: event.title,
-            body: event.description ? event.description : "Νέα ειδοποίηση",
+            body: event.description ? event.description : `${get(t)("event.notification.descriptionPlaceholder")} ${getEventTypeValue(event.type, getLocale())}`,
             id: id,
             largeIcon: "res://drawable/logo.",
             smallIcon: "res://drawable/logo",

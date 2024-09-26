@@ -1,5 +1,7 @@
 import { LocalNotifications } from '@capacitor/local-notifications';
 import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
+import { get } from 'svelte/store';
+import { t, getLocale} from "$lib/i18n";
 
 /**
  * Function to check if the app has permission to post notifications
@@ -44,7 +46,7 @@ export async function handleNotificationPermission() {
     } else {
       console.log('Notification permission denied.');
       // Prompt user to go to settings
-      const userConfirmed = confirm('Notification permission is denied. Would you like to open settings to enable it?');
+      const userConfirmed = confirm(get(t)("event.notification.permissionConfirmation"));
       
       if (userConfirmed) {
         launchNativenotificationSettings();
