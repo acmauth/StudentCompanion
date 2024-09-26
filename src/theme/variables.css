@@ -194,7 +194,13 @@
     /* --color: inherit !important; */
   }
 
+  .alert-wrapper.sc-ion-alert-ios{
+    --border-radius: 1rem;
+  }
 
+  .alert-button.sc-ion-alert-ios:not(.alert-button-role-destructive) {
+    color: var(--app-color-primary-dark);
+  }
 
   ion-progress-bar {
     --progress-background: var(--app-color-primary-dark);

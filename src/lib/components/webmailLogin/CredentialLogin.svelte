@@ -6,6 +6,7 @@
 	import type { ToastOptions } from '@ionic/core';
 	import { userCreds } from '$stores/credentials.store';
     import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
+    import { t } from "$lib/i18n";
 
     const isProduction = process.env.NODE_ENV === 'production';
 
@@ -19,9 +20,9 @@
 
     const showAlert = async () => {
         const options = {
-            header: 'Είναι ασφαλή τα στοιχεία μου;',
-            subHeader: "Πάντα!",
-            message: 'Η ομάδα του Aristomate δεσμεύεται ότι δεν έχει ποτέ πρόσβαση σε αυτά τα στοιχεία.',
+            header: $t("credential.header"),
+            subHeader: $t("credential.subheader"),
+            message: $t("credential.message"),
             buttons: ['ΟΚ']
         };
         const alert = await alertController.create(options);
@@ -67,7 +68,7 @@
             showToast({
                 color: 'danger',
                 duration: 1000,
-                message: 'Αποτυχία σύνδεσης!',
+                message: $t("credential.failed"),
                 mode: 'ios',
                 translucent: true,
                 layout: 'stacked',
@@ -85,7 +86,7 @@
             showToast({
                 color: 'success',
                 duration: 1000,
-                message: 'Επιτυχής σύνδεση!',
+                message: $t("credential.success"),
                 mode: 'ios',
                 translucent: true,
                 layout: 'stacked',
@@ -101,7 +102,7 @@
 
     <div style="padding: 5%; color:var(--ion-color-dark); padding-bottom:2%">
         <div style="margin-bottom:5%; font-size:large; display:flex; justify-content:space-between; align-items:center;">
-            Ολοκλήρωσε την εμπειρία σου!
+            {$t("credential.experience")}
             <div style="display:flex; align-self:end; justify-content: space-between;">
                 {#if authenticating}
                 <ion-spinner name="crescent" color="primary" style="align-self:center;"></ion-spinner>
@@ -114,14 +115,14 @@
         </div>
         
         <div style="margin-bottom: 2%">
-            Αποθήκευσε τον ιδρυματικό σου λογαριασμό απευθείας στη συσκευή σου για να λαμβάνεις ειδοποιήσεις από το webmail και το eLearning!
+            {$t("credential.save_account")}
             <ion-icon src={informationCircleOutline} on:click={showAlert} aria-hidden/>
         </div>
         
         <div style="display:flex; flex-direction:column; margin-top:0; padding-bottom:2%;">
             
             <ion-input
-            label="Ιδρυματικό όνομα χρήστη"
+            label={$t("credential.academic_name")}
             label-placement="floating"
             id="username"
             type="text"
@@ -132,7 +133,7 @@
             />
             
             <ion-input
-            label="Κωδικός πρόσβασης"
+            label={$t("credential.password")}
             label-placement="floating"
             id="password"
             type="password"
