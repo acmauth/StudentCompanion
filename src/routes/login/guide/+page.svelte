@@ -33,7 +33,13 @@
    let swiperEl: any;
 	onMount(() => {
 		const params = {
-			injectStyles: [`.swiper-pagination {position:relative;padding-top: 10px;}`],
+			injectStyles: [`
+			.swiper-pagination {
+				position:relative;padding-top: 10px;
+				--swiper-pagination-bullet-inactive-color: grey;
+				--swiper-pagination-bullet-inactive-opacity: 0.8;
+			} 
+		`],
 		}
 
 		Object.assign(swiperEl, params);
@@ -132,6 +138,7 @@
 	  --line-height: inherit;
 	  --ion-button-background: none;
 	}
+
   
 	.guide-navigation {
 	  padding: 0rem 1rem 0rem 1rem; 
