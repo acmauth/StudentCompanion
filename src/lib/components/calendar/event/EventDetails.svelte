@@ -168,10 +168,20 @@
                         id="repeatInterval"
                         type="number"
                         placeholder="1"
+                        min="1"
+                        step="1"
+                        max="10"
                         value={copyEvent.repeatInterval ?? 1}
                         contenteditable="true"
                         style="width:   20%;"
-                        on:ionChange={(event)=>{copyEvent.repeatInterval = parseInt(String(event.detail.value));}}
+                        on:ionChange={(event)=>{
+                            let inputValue = parseInt(event.detail.value);
+                            if (inputValue < 1 || isNaN(inputValue)) {
+                                inputValue = 1;
+                            }
+                            copyEvent.repeatInterval = inputValue;
+                            event.target.value = inputValue;
+                        }}
                     />
                                 
                     <ion-label style="margin-inline:5px;">
@@ -203,11 +213,21 @@
                     label-placement="floating"
                     id="notifyTime"
                     type="number"
+                    min="1"
+                    step="1"
+                    max="10"
                     value={copyEvent?.notifyTime || null}
                     contenteditable="true"
                     spellcheck={false}   
                     style="width: 50%;"
-                    on:ionChange={(event)=>{copyEvent.notifyTime = parseInt(String(event.detail.value));}}
+                    on:ionChange={(event)=>{
+                        let inputValue = parseInt(event.detail.value);
+                        if (inputValue < 1 || isNaN(inputValue)) {
+                            inputValue = 1;
+                        }
+                        copyEvent.notifyTime = inputValue;
+                        event.target.value = inputValue;
+                    }}
                 />
             {/if}    
         </ion-item>
