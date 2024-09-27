@@ -2,7 +2,8 @@
 	export let coursesBySemester: any = {};
 	export let semesterId: any = {};
 
-
+	import { getSemester } from '$components/courses/getSemester';
+	import { t, getLocale } from '$lib/i18n';
 
 	/**
 	 * @param {string} semId
@@ -15,27 +16,21 @@
 					behavior: 'smooth',
 					
 				});
-			}
-			
-		
+			}		
 	}
 	
-	
-
-
 
 </script>
 
 
 <div class="chipsrow">
 
-
 	{#each Object.entries(coursesBySemester) as [id, courses]}
 	    <!-- svelte-ignore a11y-click-events-have-key-events -->
 	    <!-- svelte-ignore a11y-no-static-element-interactions -->
 		{#if courses[0].semester.id <= 24}
 	    <ion-chip color="primary" on:click={handleClick(id)}>
-	        <ion-label>{id}ο εξάμηνο</ion-label>
+	        <ion-label>{getSemester(id, getLocale())} {$t('progress.semesterL')}</ion-label>
 	    </ion-chip>
 		{:else}
 		<ion-chip on:click={handleClick(id)} color="primary">
@@ -44,16 +39,10 @@
 		{/if}
 	{/each}
 
-
-
-
 </div>	
 
 
 <style>
-
-	
-
     .chipsrow {
         overflow-x: scroll;
         white-space: nowrap;
@@ -66,11 +55,8 @@
 
     }
 
-
 	ion-chip {
 		color: var(--app-color-primary-dark);
 	}
-
-	
 
 </style>

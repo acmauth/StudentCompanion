@@ -4,6 +4,8 @@
 	import CourseStats from '$lib/components/courses/courseInfo.svelte'
 	import CoursesSkeleton from "$lib/components/courses/coursesSkeleton.svelte";
 	import SubPageHeader from '$shared/subPageHeader.svelte';
+	import { t } from "$lib/i18n";
+
 
 	// Initiniatize variables
 	let course = {
@@ -99,7 +101,7 @@
 </script>
 
 <ion-content fullscreen>
-<SubPageHeader title="Πληροφορίες" stackedNav/> <!-- subtitle={courseCode} /> -->
+<SubPageHeader title={$t("course.title")} stackedNav/> <!-- subtitle={courseCode} /> -->
 
 	
 	{#await getData()}

@@ -194,7 +194,13 @@
     /* --color: inherit !important; */
   }
 
+  .alert-wrapper.sc-ion-alert-ios{
+    --border-radius: 1rem;
+  }
 
+  .alert-button.sc-ion-alert-ios:not(.alert-button-role-destructive) {
+    color: var(--app-color-primary-dark);
+  }
 
   ion-progress-bar {
     --progress-background: var(--app-color-primary-dark);
@@ -298,6 +304,8 @@ body.dark {
   --app-color-purple-dark: rgba(200, 166, 255, 1);
   --app-color-purple: radial-gradient(62.84% 78.34% at 25.38% 37.16%, #261A29 0%, #18181B 100%);
 
+  --app-color-blue-dark: rgba(166, 239, 255, 1);
+  --app-color-blue: radial-gradient(62.84% 78.34% at 25.38% 37.16%, #1A2529 0%, #18181B 100%);
 
   --app-color-green-dark: rgba(45, 184, 59, 1);
   --app-color-orange-dark: rgba(255, 130, 60, 1);

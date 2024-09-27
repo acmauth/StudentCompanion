@@ -29,14 +29,14 @@ export interface Event {
 
 export enum EventRepeatType {
     NEVER = "never",
-    DAILY = "day",
-    WEEKLY = "week",
-    MONTHLY = "month",
-    YEARLY = "year"
+    DAILY = "daily",
+    WEEKLY = "weekly",
+    MONTHLY = "monthly",
+    YEARLY = "yearly"
 }
 
 export function getEventTypeValue(type: string, lang?: string): string {
-    const eventType = EventType[type as keyof typeof EventType];
+    const eventType = EventType[type as keyof typeof EventType]; //FIXME: Επιρρεπές σε σφάλματα
     switch (eventType) {
         case EventType.TASK:
             return lang == 'el' ? 'Δραστηριότητα' : 'Task';
@@ -52,7 +52,7 @@ export function getEventTypeValue(type: string, lang?: string): string {
 }
 
 export function getEventRepeatTypeValue(type: string, lang?: string): string {
-    const eventRepeatType = EventRepeatType[type as keyof typeof EventRepeatType];
+    const eventRepeatType = EventRepeatType[type.toUpperCase() as keyof typeof EventRepeatType]; //FIXME: Επιρρεπές σε σφάλματα
     switch (eventRepeatType) {
         case EventRepeatType.NEVER:
             return lang == 'el' ? 'Ποτέ' : 'Never';
@@ -68,7 +68,7 @@ export function getEventRepeatTypeValue(type: string, lang?: string): string {
 }
 
 export function getEventRepeatTypeCycleValue(type: string, lang?: string): string {
-    const eventRepeatType = EventRepeatType[type as keyof typeof EventRepeatType];
+    const eventRepeatType = EventRepeatType[type.toUpperCase() as keyof typeof EventRepeatType]; //FIXME: Επιρρεπές σε σφάλματα
     switch (eventRepeatType) {
         case EventRepeatType.NEVER:
             return lang == 'el' ? 'Ποτέ' : 'Never';

@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import { register } from 'swiper/element/bundle';
     import { getDayByIndex } from '$lib/components/schedule/day/days';
+	  import { t, locale, locales, getLocale} from "$lib/i18n";
     register();
 
     let previousWeek;
@@ -99,7 +100,7 @@
             <ion-card class="{i==swiperActiveIndex? 'active' : ''}">
                 <ion-card-header>
                     <ion-card-title class="{i==swiperActiveIndex? 'active' : ''}">
-                        {getDayByIndex(date.getDay(), 'el', true, 3)}
+                        {getDayByIndex(date.getDay(), getLocale(), true, 3)}
                     </ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
