@@ -121,7 +121,7 @@ export default {
       "event.cancel" : "Ακύρωση",
       "event.notification.descriptionPlaceholder": "Υπενθύμιση για",
       "event.notification.permissionConfirmation": "Η άδεια των ειδοποιήσεων είναι απενεργοποιημένη, θα θέλατε να ανοίξετε τις ρυθμίσεις για να το ενεργοποιήσετε;",
-      "event.exact_alarm.permissionCOnfirmation": "Οι ακριβείς ειδοποιήσεις είναι απενεργοποιημένες και δεν θα στέλνονται με συνέπεια. Θέλετε να ενεργοποιήσετε την άδεια στις ρυθμίσεις συστήματος;", 
+      "event.exact_alarm.permissionCOnfirmation": "Οι ακριβείς ειδοποιήσεις είναι απενεργοποιημένες. Θέλετε να ενεργοποιήσετε την άδεια στις ρυθμίσεις συστήματος;", 
       "event.notification.repeatPer": "Ανά",
       "event.notification.repeatUntil": "Μέχρι",
       "notifications.title" :"Ειδοποιήσεις",
