@@ -24,7 +24,7 @@ async function checkExactAlarmPermision(): Promise<boolean> {
  * @returns A Promise<boolean> indicating if the permission was granted after the request
  */
 async function requestExactAlarmPermission(){
-    const userConfirmed = confirm('Exact alarms are disabled. Notifications may not be precise. Would you like to enable exact alarms in the system settings?');
+    const userConfirmed = confirm(get(t)("event.exact_alarm.permissionCOnfirmation"));
 
     if (userConfirmed){
       const changeStatus = await LocalNotifications.changeExactNotificationSetting();

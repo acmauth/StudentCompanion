@@ -23,23 +23,6 @@ export function removePastNotifications(){
     }
 }
 
-// schedules all the stored notification when they get deleted by a permission change
-export async function rescheduleDeletedNotifications(){
-    // Get all pending notifications
-    const { notifications } = await LocalNotifications.getPending();
-    const storedIds = getIds();
-
-    // if the notification are deleted (that is getPeding returns empty array) reschedule them from the store
-    console.log('pending '+notifications.length);
-    console.log('store lenght '+storedIds.length);
-    if (notifications.length === 0 && storedIds.length !== 0){
-        for (const id of storedIds){
-            scheduleNotification(id.event);
-            console.log(1);
-        }
-    }
-}
-
 // calculates the next date of a notification from a repeated event
 function nextNotifDate(event: Event, previousNotifDate: Date){
     let repeatInterval = 0;
