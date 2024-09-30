@@ -2,7 +2,8 @@ import { addToScheduledNotifications, getIds, removeFromScheduledNotficiations }
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { cutId, calcNotifyDate, calcNotifId } from './notificationFunctions';
-import { schedule } from './scheduleNotifications';
+import { schedule, scheduleNotification } from './scheduleNotifications';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 // removes from the store the notifications that are already send
 export function removePastNotifications(){
@@ -18,6 +19,23 @@ export function removePastNotifications(){
             if ( now > storedId.lastNotification ){
                 removeFromScheduledNotficiations(storedId.event.id);              
             }
+        }
+    }
+}
+
+// schedules all the stored notification when they get deleted by a permission change
+export async function rescheduleDeletedNotifications(){
+    // Get all pending notifications
+    const { notifications } = await LocalNotifications.getPending();
+    const storedIds = getIds();
+
+    // if the notification are deleted (that is getPeding returns empty array) reschedule them from the store
+    console.log('pending '+notifications.length);
+    console.log('store lenght '+storedIds.length);
+    if (notifications.length === 0 && storedIds.length !== 0){
+        for (const id of storedIds){
+            scheduleNotification(id.event);
+            console.log(1);
         }
     }
 }

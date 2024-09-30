@@ -3,21 +3,50 @@ import launchNativenotificationSettings from '$lib/functions/nativeSettings/laun
 import { get } from 'svelte/store';
 import { t, getLocale} from "$lib/i18n";
 
+
+/**
+ * Function to check if the app has permission to post exact alerts
+ * @returns A Promise<boolean> indicating if the permission is granted
+ */
+async function checkExactAlarmPermision(): Promise<boolean> {
+    const exactAlarm = await LocalNotifications.checkExactNotificationSetting();
+    
+    if (exactAlarm.exact_alarm !== 'granted') {
+        console.log('Exact alarm permission is not granted.');
+        return false;
+    }
+    
+    return true;
+}
+
+/**
+ * Function to request the SCHEDULE_EXACT_ALARM permission
+ * @returns A Promise<boolean> indicating if the permission was granted after the request
+ */
+async function requestExactAlarmPermission(){
+    const userConfirmed = confirm('Exact alarms are disabled. Notifications may not be precise. Would you like to enable exact alarms in the system settings?');
+
+    if (userConfirmed){
+      const changeStatus = await LocalNotifications.changeExactNotificationSetting();
+      
+      if (changeStatus.exact_alarm === 'granted'){
+        return true;
+      }
+    }
+    return false;
+}
 /**
  * Function to check if the app has permission to post notifications
  * @returns A Promise<boolean> indicating if the permission is granted
  */
-export async function checkNotificationPermission(): Promise<boolean> {
-  const permissionStatus = await LocalNotifications.checkPermissions();
+async function checkNotificationPermission(): Promise<boolean> {
+    const permissionStatus = await LocalNotifications.checkPermissions();
 
-  if (permissionStatus.display === 'granted') {
-    return true;
-  } else if (permissionStatus.display === 'denied') {
-    return  false;
-  } else {
-    // Handle case for unknown or undetermined status
-    return false;
-  }
+    if (permissionStatus.display === 'granted') {
+        return true;
+    } else {
+        return  false;
+    }
 }
 
 /**
@@ -53,6 +82,24 @@ export async function handleNotificationPermission() {
       }
       return false;
     }
+  } else {
+    console.log('Already has notification permission.');
+    return true;
+  }
+}
+
+
+export async function handleExactAlarmPermission(){
+  const hasPermission = await checkExactAlarmPermision();
+
+  if (!hasPermission){
+    const permissionGranted = await requestExactAlarmPermission();
+
+    if (permissionGranted){
+      console.log('Exact Alert permission granted');
+      return true;
+    }
+    return false;
   } else {
     console.log('Already has notification permission.');
     return true;
