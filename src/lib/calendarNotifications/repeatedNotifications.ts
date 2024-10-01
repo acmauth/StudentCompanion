@@ -2,7 +2,8 @@ import { addToScheduledNotifications, getIds, removeFromScheduledNotficiations }
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { cutId, calcNotifyDate, calcNotifId } from './notificationFunctions';
-import { schedule } from './scheduleNotifications';
+import { schedule, scheduleNotification } from './scheduleNotifications';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 // removes from the store the notifications that are already send
 export function removePastNotifications(){

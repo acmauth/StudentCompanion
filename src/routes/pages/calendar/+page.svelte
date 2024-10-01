@@ -13,7 +13,7 @@
     import type { ToastOptions } from '@ionic/core';
     import { universisGet } from '$src/lib/dataService';
     import { scheduleNotification } from '$src/lib/calendarNotifications/scheduleNotifications';
-    import { handleNotificationPermission } from '$src/lib/calendarNotifications/runtimePermissions';
+    import { handleNotificationPermission, handleExactAlarmPermission } from '$src/lib/calendarNotifications/runtimePermissions';
     import { removePastNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
     import { t } from "$lib/i18n";
 
@@ -69,6 +69,7 @@
 
         if (tmpEvent.notify){
             handleNotificationPermission();
+            handleExactAlarmPermission();
             removePastNotifications();
             scheduleNotification(tmpEvent); 
         }
