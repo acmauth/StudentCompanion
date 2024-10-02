@@ -1,12 +1,8 @@
 {
 	"android": {
-		"latestVersion": "1.4.3",
-		"priority": 5,
-		"updateUrl": "https://play.google.com/store/apps/details?id=app.aristomate.gr"
+		"priority": 4
 	},
 	"ios": {
-		"latestVersion": "1.4.3",
-		"priority": 5,
-		"updateUrl": "https://apps.apple.com/app/id123456789"
+		"priority": 4
 	}
 }
