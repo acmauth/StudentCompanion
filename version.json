@@ -1,8 +1,8 @@
 {
 	"android": {
-		"priority": 4
+		"priority": 1
 	},
 	"ios": {
-		"priority": 4
+		"priority": 1
 	}
 }
