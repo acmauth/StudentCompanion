@@ -1,6 +1,8 @@
 import { Capacitor } from '@capacitor/core';
 import { AppUpdate, AppUpdateAvailability } from '@capawesome/capacitor-app-update';
 import { alertController } from '@ionic/core';
+import { t } from '$lib/i18n';
+import { get } from 'svelte/store';
 
 const openAppStore = async () => {
 	await AppUpdate.openAppStore();
@@ -47,11 +49,11 @@ const handleUpdate = async (result: any) => {
 	if (update.updateAvailability === AppUpdateAvailability.UPDATE_AVAILABLE) {
 		if (priority === 5) {
 			const alert = await alertController.create({
-				header: 'Update Required',
-				message: 'A new version of the app is available. Please update to the latest version.',
+				header: get(t)('update.UpdateHeaderRequired'),
+				message: get(t)('update.UpdateRequired'),
 				buttons: [
 					{
-						text: 'Update Now',
+						text: get(t)('update.UpdateNow'),
 						handler: async () => {
 							if (result.immediateUpdateAllowed) {
 								await performImmediateUpdate();
@@ -68,11 +70,11 @@ const handleUpdate = async (result: any) => {
 			await alert.present();
 		} else if (priority >= 2 && priority < 5) {
 			const alert = await alertController.create({
-				header: 'Update Available',
-				message: 'A new version of the app is available. Would you like to update?',
+				header: get(t)('update.UpdateHeader'),
+				message: get(t)('update.UpdateAvailable'),
 				buttons: [
 					{
-						text: 'Update Now',
+						text: get(t)('update.UpdateNow'),
 						handler: async () => {
 							if (result.immediateUpdateAllowed) {
 								await performImmediateUpdate();
@@ -84,7 +86,7 @@ const handleUpdate = async (result: any) => {
 						}
 					},
 					{
-						text: 'Later',
+						text: get(t)('update.UpdateLater'),
 						role: 'cancel'
 					}
 				]
