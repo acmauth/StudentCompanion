@@ -10,8 +10,8 @@ android {
         applicationId "app.aristomate.gr"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 34
-        versionCode 23
-        versionName '1.4.3 Ready for TIF'
+        versionCode 35
+        versionName '1.16.3 Ready for TIF'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -56,6 +56,8 @@ dependencies {
     implementation 'commons-net:commons-net:3.10.0'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation 'androidx.work:work-runtime:2.7.0'
+    implementation "com.google.android.play:app-update:$androidPlayAppUpdateVersion"
+    implementation "com.google.android.gms:play-services-base:$androidPlayServicesBaseVersion"
 }
 
 apply from: 'capacitor.build.gradle'
