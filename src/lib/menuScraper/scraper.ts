@@ -1,12 +1,26 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-
+import { t, getLocale } from "$lib/i18n";
+import { get } from 'svelte/store';
+import { menu } from 'ionicons/icons';
 export async function getMenu() {
     let scrapedHTML: Array<string> = []; // Initialize the array
     try {
         // data = ... 
         // getting the data from the cafeteria website
-        const response = await axios.get('https://www.auth.gr/weekly-menu/');
+        let menuLink = get(t)("menu.link");
+
+        let response: any;
+        if (getLocale() === "el") {
+            // console.log(getLocale());
+            // console.log(get(t)("menu.link"));
+
+
+            response = await axios.get("https://www.auth.gr/en/weekly-menu/");
+        } else {
+            response = await axios.get("https://www.auth.gr/en/weekly-menu-en/");
+        }
+        console.log(response);
         const htmlContent = response.data;
         const $ = cheerio.load(htmlContent);
 
