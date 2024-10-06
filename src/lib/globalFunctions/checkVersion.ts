@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { App } from '@capacitor/app';
 import { AppUpdate, AppUpdateAvailability } from '@capawesome/capacitor-app-update';
 import { alertController } from '@ionic/core';
 import { t } from '$lib/i18n';
@@ -30,7 +31,7 @@ const startFlexibleUpdate = async () => {
 
 const checkForUpdates = async () => {
 	try {
-		fetch(
+		await fetch(
 			'https://raw.githubusercontent.com/acmauth/StudentCompanion/refs/heads/appVersion/version.json'
 		).then(async (response) => {
 			const data = await response.json();
@@ -41,13 +42,37 @@ const checkForUpdates = async () => {
 	}
 };
 
+const findMaxPriorityAfterCurrent = (
+	platform: string,
+	currentVersionCode: number,
+	data: { [x: string]: { versions: any } }
+) => {
+	const versions = data[platform].versions;
+
+	// If the platform doesn't exist or the list is empty, return 0
+	if (!versions || versions.length === 0) {
+		return 0;
+	}
+
+	// Find the maximum priority for versions that have a higher versionCode than the current one
+	let maxPriority = 0;
+	for (const version of versions) {
+		if (version.versionCode > currentVersionCode) {
+			maxPriority = Math.max(maxPriority, version.priority);
+		}
+	}
+
+	return maxPriority;
+};
+
 const handleUpdate = async (result: any) => {
 	const platform = Capacitor.getPlatform() === 'android' ? 'android' : 'ios';
-	const priority = result[platform].priority;
 	const update = await AppUpdate.getAppUpdateInfo();
+	const currentVersion = await App.getInfo().then((info) => info.build);
+	const maxPriority = findMaxPriorityAfterCurrent(platform, parseInt(currentVersion), result);
 
 	if (update.updateAvailability === AppUpdateAvailability.UPDATE_AVAILABLE) {
-		if (priority === 5) {
+		if (maxPriority === 5) {
 			const alert = await alertController.create({
 				header: get(t)('update.UpdateHeaderRequired'),
 				message: get(t)('update.UpdateRequired'),
@@ -68,7 +93,7 @@ const handleUpdate = async (result: any) => {
 			});
 
 			await alert.present();
-		} else if (priority >= 2 && priority < 5) {
+		} else if (maxPriority >= 2 && maxPriority < 5) {
 			const alert = await alertController.create({
 				header: get(t)('update.UpdateHeader'),
 				message: get(t)('update.UpdateAvailable'),

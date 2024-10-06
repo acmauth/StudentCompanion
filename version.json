@@ -1,8 +1,26 @@
 {
 	"android": {
-		"priority": 1
+		"versions": [
+			{
+				"versionCode": 25,
+				"priority": 1
+			},
+			{
+				"versionCode": 26,
+				"priority": 5
+			}
+		]
 	},
 	"ios": {
-		"priority": 1
+		"versions": [
+			{
+				"versionCode": 25,
+				"priority": 1
+			},
+			{
+				"versionCode": 26,
+				"priority": 5
+			}
+		]
 	}
 }
