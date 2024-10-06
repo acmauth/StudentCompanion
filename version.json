@@ -8,6 +8,14 @@
 			{
 				"versionCode": 26,
 				"priority": 5
+			},
+			{
+				"versionCode": 27,
+				"priority": 1
+			},
+			{
+				"versionCode": 28,
+				"priority": 4
 			}
 		]
 	},
