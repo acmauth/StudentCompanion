@@ -10,7 +10,7 @@
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
-	import QRGenerator from '$lib/components/wallet/QRGenerator.svelte';
+	import QRGenerator from '$lib/components/wallet/Wallet.svelte';
 	import { qrStore } from '$lib/components/wallet/qrStore';
 	import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
