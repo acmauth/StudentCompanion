@@ -1,7 +1,7 @@
 <script lang="ts">
     import { add, calendarClearOutline, close, checkmark } from 'ionicons/icons';
     import { Capacitor } from '@capacitor/core';
-	import { onMount } from 'svelte';
+    import { onMount } from 'svelte';
     import DateSwiper from '$lib/components/calendar/DateSwiper.svelte';
     import { EventStore } from '$lib/components/calendar/event/EventStore';
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
@@ -9,11 +9,15 @@
     import type { Event } from '$lib/components/calendar/event/Event';
     import { EventRepeatType, EventType, EventCheckFormat } from '$lib/components/calendar/event/Event';
     import { isCurrentDay } from '$lib/components/calendar/CalendarFunctions';
-	import { toastController } from 'ionic-svelte';
-	import type { ToastOptions } from '@ionic/core';
-	import { universisGet } from '$src/lib/dataService';
-	import { t } from "$lib/i18n";
-    
+    import { toastController } from 'ionic-svelte';
+    import type { ToastOptions } from '@ionic/core';
+    import { universisGet } from '$src/lib/dataService';
+    import { scheduleNotification } from '$src/lib/calendarNotifications/scheduleNotifications';
+    import { handleNotificationPermission, handleExactAlarmPermission } from '$src/lib/calendarNotifications/runtimePermissions';
+    import { removePastNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
+    import { t } from "$lib/i18n";
+
+
     let activeDate: Date;
     let eventList: Event[];
     let selectedEvent: Event | null = null;
@@ -63,6 +67,12 @@
         }
         selectedEvent = null;
 
+        if (tmpEvent.notify){
+            handleNotificationPermission();
+            handleExactAlarmPermission();
+            removePastNotifications();
+            scheduleNotification(tmpEvent); 
+        }
         recreatePrototype();
         modalOpen = false;
     }    

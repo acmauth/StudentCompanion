@@ -39,7 +39,9 @@ ion-chip{
 }
 
 :global(body.dark) .chip{
-	background-color: white; 
+	background-color: #004c96; 
+	color: white; 
+	border: 0px; 
 }
 
 </style>

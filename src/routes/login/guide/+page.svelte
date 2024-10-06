@@ -14,25 +14,32 @@
 	import notifications from '$lib/assets/guide_graphics/notifications.png'; 
 	import calendar from '$lib/assets/guide_graphics/calendar.png'; 
 	import darkmode from '$lib/assets/guide_graphics/darkmode.png';
+	import { t } from "$lib/i18n";
   
 	let currentSlide = 0;
   
 	const slides = [
-	  { id: 1, title: "Καλώς σε βρήκαμε", content: "Καλώς όρισες στο Aristomate! Σου έχουμε ετοιμάσει έναν σύντομο οδηγό για να σου δείξουμε όλες τις λειτουργίες της εφαρμογής!", image: intro },
-	  { id: 2, title: "Πεινάωωω", content: "Δες το ωράριο και το μενού της φοιτητικής λέσχης και ενημερώσου για τα γεύματα που θα έχει τις επόμενες μέρες", image: cafeteria },
-	  { id: 3, title: "Είμαι ο Χάρτης!", content: "Διάλεξη σε ξένη σχολή; Μην αγχώνεσαι! Βρες εύκολα τις αίθουσες στα διάφορα κτίρια της πανεπιστημιούπολης!", image: campusMap },
-	  { id: 4, title: "Όλα στο χέρι σου", content: "Πρόσθεσε ψηφιακά το πάσο σου για να το έχεις πάντα μαζί σου! Κανόνισε τις επόμενες προπονήσεις σου αμέσως!", image: gym },
-	  { id: 5, title: "Πτυχίο θα πάρεις;", content: "Τσέκαρε την πρόοδό σου σε κάθε εξάμηνο και πρόβλεψε τον Μ.Ο. σου πριν ακόμη βαθμολογηθεί το μάθημα!", image: grades }, 
-	  { id: 6, title: "Το πέρασες;", content: "Ρίξε μια ματιά στους βαθμούς σου και τα στατιστικά των μαθημάτων που πέρασες ή κόπηκες!", image: stats }, 
-	  { id: 7, title: "Κράτα επαφή", content: "Μη χάνεις τις τελευταίες ανακοινώσεις της γραμματείας ή των καθηγητών σου, τσεκάροντας τις ειδοποιήσεις σου!", image: notifications }, 
-	  { id: 8, title: "Μην πιστολιάσεις", content: "Οργάνωσε το πρόγραμμα των διαλέξεων και τα deadlines των εργασιών σου για να μη χάνεις τίποτα!", image: calendar }, 
-	  { id: 9, title: "Κάνε το δικό σου", content: "Dark ή light mode; Σουβλάκι ή Καλαμάκι; Δημητριακά πριν ή μετά το γάλα; Αντιπαραθέσεις αιώνων (μάλλον), πλέον μπορείς εσύ να διαλέξεις!", image: darkmode }, 
+	  { id: 1, title: $t("guide.welcome"), content: $t("guide.welcome_content"), image: intro },
+	  { id: 2, title: $t("guide.food"), content: $t("guide.food_content"), image: cafeteria },
+	  { id: 3, title: $t("guide.map"), content: $t("guide.map_content"), image: campusMap },
+	  { id: 4, title: $t("guide.functions"), content: $t("guide.functions_content"), image: gym },
+	  { id: 5, title: $t("guide.degree"), content: $t("guide.degree_content"), image: grades }, 
+	  { id: 6, title: $t("guide.exams"), content: $t("guide.exams_content"), image: stats }, 
+	  { id: 7, title: $t("guide.announcements"), content: $t("guide.announcements_content"), image: notifications }, 
+	  { id: 8, title: $t("guide.calendar"), content: $t("guide.calendar_content"), image: calendar }, 
+	  { id: 9, title: $t("guide.unique"), content: $t("guide.unique_content"), image: darkmode }, 
 	];
   
    let swiperEl: any;
 	onMount(() => {
 		const params = {
-			injectStyles: [`.swiper-pagination {position:relative;padding-top: 10px;}`],
+			injectStyles: [`
+			.swiper-pagination {
+				position:relative;padding-top: 10px;
+				--swiper-pagination-bullet-inactive-color: grey;
+				--swiper-pagination-bullet-inactive-opacity: 0.8;
+			} 
+		`],
 		}
 
 		Object.assign(swiperEl, params);
@@ -69,10 +76,10 @@
 					{slides[currentSlide].content}
 				</p>
 				{#if currentSlide == 8}
-					<Chip id="next-button" text="Φύγαμε" flip={dismiss} />
+					<Chip id="next-button" text={$t("guide.finished")} flip={dismiss} />
 				{:else}
-					<Chip id="next-button" text="Επόμενο" flip={() => swiperEl.swiper.slideNext()} />
-					<ion-button class="unstyled-button" on:click={dismiss} role="button" aria-label="Dismiss guide"><u>Κομπλέ, τα ξέρω</u></ion-button>
+					<Chip id="next-button" text={$t("guide.next")} flip={() => swiperEl.swiper.slideNext()} />
+					<ion-button class="unstyled-button" on:click={dismiss} role="button" aria-label="Dismiss guide"><u>{$t("guide.skip")}</u></ion-button>
 				{/if}
 			{/key}
 		</div> 
@@ -92,10 +99,15 @@
 		font-weight: 700;
 		font-size: 32px;
 		margin: 0;
+		text-align: center; 
+    	display: flex;
+    	justify-content: center; 
+    	flex-wrap: wrap;
 	}
 			
 	:global(body.dark) .title-of-slide {
 	  color: white;
+
 	}
   
   
@@ -126,6 +138,7 @@
 	  --line-height: inherit;
 	  --ion-button-background: none;
 	}
+
   
 	.guide-navigation {
 	  padding: 0rem 1rem 0rem 1rem; 
@@ -136,5 +149,5 @@
 	  width: 100%;
 	  gap: 10px;
 	}
-  
-  </style>
+	
+	</style>

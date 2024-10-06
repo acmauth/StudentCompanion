@@ -4,7 +4,7 @@
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
-	import { wallet, mailOutline } from 'ionicons/icons';
+	import { wallet } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
@@ -16,7 +16,6 @@
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { t, locale, locales } from '$lib/i18n';
-	import { App } from '@capacitor/app';
 
 	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
 	import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
@@ -64,7 +63,7 @@
 	}
 
 	function addQR() {
-		let qrCode = document.querySelector('ion-input');
+		let qrCode = document.getElementById('qrcode-input') as HTMLIonInputElement;
 		if (!qrCode || qrCode.value === '') return;
 
 		const newQR: qrItem = { data: String(qrCode.value), title: 'Πάσο' };
@@ -77,7 +76,7 @@
 	$: {
 		if (shouldFocus) {
 			// Get the input field reference using the ref attribute
-			const inputField = document.getElementById('qrcode-input') as HTMLIonInputElement | null;
+			const inputField = document.getElementById('qrcode-input') || null;
 
 			// Check if the input field reference exists and then focus on it
 			if (inputField) {
