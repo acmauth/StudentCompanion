@@ -7,7 +7,6 @@
 	let marginStr = `margin: ${margin}rem;`;
 	const date = new Date();
 	let validDateForTif = false;
-	console.log(date.getFullYear(), date.getMonth(), date.getDate());
 
 	if (date.getFullYear() == 2024 && date.getMonth() == 8 && [11, 12, 13].includes(date.getDate())) {
 		validDateForTif = true;
@@ -28,8 +27,9 @@
 	}
 
 	.card-banner img {
-		object-fit: contain;
+		object-fit: cover;
 		width: 100%;
+		aspect-ratio: 20/6;
 		border-radius: 1rem;
 	}
 
