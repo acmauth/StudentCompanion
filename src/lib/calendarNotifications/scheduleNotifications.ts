@@ -10,7 +10,7 @@ import { get } from 'svelte/store';
 
 // schedules a notification at a specific date
 export async function schedule(event: Event, notifyDate: Date, id: number){
-    console.log(notifyDate);
+
     try{        
         await LocalNotifications.schedule({notifications: [{
             title: event.title,
@@ -31,8 +31,8 @@ export async function schedule(event: Event, notifyDate: Date, id: number){
 }
 
 //cancels certain scheduled notifications
-async function cancelNotifications(ids: number[]){ 
-    console.log("cancel");
+export async function cancelNotifications(ids: number[]){ 
+
     try{    
         await LocalNotifications.cancel({
             notifications: ids.map(id => ({ id }))
@@ -44,9 +44,10 @@ async function cancelNotifications(ids: number[]){
 
 // handles the calendar notifications
 export async function scheduleNotification(event: Event){
+
     // check if the the user resubmits the same event
     const ids = getIds();
-    let notifIds = [0];
+    let notifIds = [0]; 
     let flag = false;
     for (const id of ids){
         if (event.id === id.event.id){
@@ -54,6 +55,7 @@ export async function scheduleNotification(event: Event){
             flag = true;
         }
     }
+    // cancel the previous notifications if the user resubmits
     if (flag){
         cancelNotifications(notifIds);
         removeFromScheduledNotficiations(event.id);
