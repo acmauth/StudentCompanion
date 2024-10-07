@@ -8,7 +8,7 @@
 	import initializeNotifications from '$lib/-notifications/core';
 	import initializeRefresherService from '$src/lib/-keycloakRefresher/core';
 	import { userCredsFlag as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
-
+	import { handleChangedPermission } from '$lib/calendarNotifications/exactAlarmPermissionStore';
 
 	// Routes
 	let bottomNav = [
@@ -46,6 +46,9 @@
 		if ($webmailAuthenticated) {
 			await initializeNotifications();
 		}
+
+		// reschedule calendar notifications if the exact alarm permission changes
+		handleChangedPermission();
 	});
 
 </script>

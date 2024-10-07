@@ -6,7 +6,7 @@ export const scheduledNotifications = new CapacitorPersistedStore<any[]>([], 'sc
 
 // get the value of the store
 export function getIds():any[]{
-    let storedIds:any;
+    let storedIds:any[] = [];
     scheduledNotifications.subscribe(ids => {
         storedIds = [...ids]; // Create a shallow copy of the array
     });
@@ -22,5 +22,5 @@ export function addToScheduledNotifications(newIds: any){
 // Removing the ids of some notifications
 export function removeFromScheduledNotficiations(id: number){
     get(scheduledNotifications);
-    scheduledNotifications.update((items) => items.filter((item) => item.event.id !== id));//item.event.id !== id
+    scheduledNotifications.update((items) => items.filter((item) => item.event.id !== id));
 }
