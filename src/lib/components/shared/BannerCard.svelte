@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ad1 from "$lib/assets/Advert_dark.png";
 	import tifad from "$lib/assets/Advert_TIF.png";
+	import demoad from "$lib/assets/Advert_demo.png";
 	export let altText : string;
 	export let margin: string = "1.5";
 

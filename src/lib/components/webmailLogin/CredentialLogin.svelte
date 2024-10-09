@@ -8,13 +8,24 @@
     import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
     import { t } from "$lib/i18n";
 
+    export let loginModalOpen = false;
+
     const isProduction = process.env.NODE_ENV === 'production';
+    import { Keyboard } from "@capacitor/keyboard";
+
+    let modalCard: any;
+    Keyboard.addListener('keyboardWillShow', ev => {
+        modalCard.setCurrentBreakpoint(0.9);
+    });
+    Keyboard.addListener('keyboardWillHide', () => {
+        modalCard.setCurrentBreakpoint(0.5)
+    });
+
 
 
     let authenticating: boolean = false;
     let loginFailed: boolean = false;
     let loginIcon = checkmark;
-    export let openModalFlag;
 
     $: loginIcon = loginFailed ? reloadOutline : checkmark;
 
@@ -45,7 +56,7 @@
 
             autheticationFlag.set(true);
 
-            openModalFlag = false;
+            loginModalOpen = false;
             
             return true;
         }
@@ -97,52 +108,64 @@
     }
 </script>
 
+<ion-modal
+    is-open={loginModalOpen}
+    initial-breakpoint={0.5}
+    on:ionModalDidDismiss={() => {loginModalOpen = false;}}
+    mode="ios"
+    breakpoints={[0, 0.5, 0.6, 0.7, 0.9]}
+    bind:this={modalCard}>
 
-<ion-card style="margin-block: 1rem; margin-block-end: 1.7rem">
+    <ion-content>
+        <ion-card style="margin-block: 1rem; margin-block-end: 1.7rem">
 
-    <div style="padding: 5%; color:var(--ion-color-dark); padding-bottom:2%">
-        <div style="margin-bottom:5%; font-size:large; display:flex; justify-content:space-between; align-items:center;">
-            {$t("credential.experience")}
-            <div style="display:flex; align-self:end; justify-content: space-between;">
-                {#if authenticating}
-                <ion-spinner name="crescent" color="primary" style="align-self:center;"></ion-spinner>
-                {:else}
-                <ion-button shape="round" size="small" id="login" on:ionFocus={submit}> 
-                    <ion-icon slot="icon-only" id="checkmark" icon={loginIcon}></ion-icon>
-                </ion-button>
-                {/if}
+                <div style="padding: 5%; color:var(--ion-color-dark); padding-bottom:2%">
+                    <div style="margin-bottom:5%; font-size:large; display:flex; justify-content:space-between; align-items:center;">
+                        {$t("credential.experience")}
+                        <div style="display:flex; align-self:end; justify-content: space-between;">
+                            {#if authenticating}
+                            <ion-spinner name="crescent" color="primary" style="align-self:center;"></ion-spinner>
+                            {:else}
+                            <ion-button shape="round" size="small" id="login" on:ionFocus={submit}> 
+                                <ion-icon slot="icon-only" id="checkmark" icon={loginIcon}></ion-icon>
+                            </ion-button>
+                            {/if}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 2%">
+                        {$t("credential.save_account")}
+                        <ion-icon src={informationCircleOutline} on:click={showAlert} aria-hidden/>
+                    </div>
+                    
+                    <div style="display:flex; flex-direction:column; margin-top:0; padding-bottom:2%;">
+                        
+                        <ion-input
+                        label={$t("credential.academic_name")}
+                        label-placement="floating"
+                        id="username"
+                        type="text"
+                        contenteditable="true"
+                        spellcheck={false}
+                        clear-input={true}
+                        style="margin-bottom:0%; padding-bottom:0;"
+                        />
+                        
+                        <ion-input
+                        label={$t("credential.password")}
+                        label-placement="floating"
+                        id="password"
+                        type="password"
+                        contenteditable="true"
+                        style="margin-bottom:5px;"
+                        spellcheck={false}
+                        clear-input={true}
+                        />
+                </div>
             </div>
-        </div>
-        
-        <div style="margin-bottom: 2%">
-            {$t("credential.save_account")}
-            <ion-icon src={informationCircleOutline} on:click={showAlert} aria-hidden/>
-        </div>
-        
-        <div style="display:flex; flex-direction:column; margin-top:0; padding-bottom:2%;">
-            
-            <ion-input
-            label={$t("credential.academic_name")}
-            label-placement="floating"
-            id="username"
-            type="text"
-            contenteditable="true"
-            spellcheck={false}
-            clear-input={true}
-            style="margin-bottom:0%; padding-bottom:0;"
-            />
-            
-            <ion-input
-            label={$t("credential.password")}
-            label-placement="floating"
-            id="password"
-            type="password"
-            contenteditable="true"
-            style="margin-bottom:5px;"
-            spellcheck={false}
-            clear-input={true}
-            />
-    </div>
-</div>
 
-</ion-card>
+        </ion-card>
+
+
+    </ion-content>
+</ion-modal>
