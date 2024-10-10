@@ -17,6 +17,7 @@
   "devDependencies": {
     "@capacitor/cli": "^6.0.0",
     "@playwright/test": "^1.28.1",
+    "@svelte-put/qr": "^1.2.1",
     "@sveltejs/adapter-static": "^2.0.3",
     "@sveltejs/kit": "^1.20.4",
     "@types/dompurify": "^3.0.5",
@@ -40,6 +41,8 @@
     "@capacitor/browser": "^6.0.2",
     "@capacitor/clipboard": "^6.0.0",
     "@capacitor/core": "^6.0.0",
+    "@capacitor/keyboard": "^6.0.2",
+    "@capacitor/local-notifications": "^6.1.0",
     "@capacitor/network": "^6.0.0",
     "@capacitor/preferences": "^6.0.0",
     "@capacitor/push-notifications": "^6.0.0",

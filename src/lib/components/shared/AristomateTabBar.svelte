@@ -2,7 +2,7 @@
     // @ts-nocheck
     import { onMount } from "svelte";
     import { navigating, page } from "$app/stores";
-  
+    import { Keyboard } from '@capacitor/keyboard';
     import { goto } from "$app/navigation";
   
     export let ionTabsDidChange = () => {};
@@ -72,6 +72,15 @@
       
       tabBarLine.style.transform = `translateX(${finalPosition}px)`;
     }
+
+    // Keyboard listener to hide the tab bar line when the keyboard is open
+    Keyboard.addListener('keyboardWillShow', () => {
+      tabBarLine.style.display = "none";
+    });
+
+    Keyboard.addListener('keyboardWillHide', () => {
+      tabBarLine.style.display = "block";
+    });
 
   </script>
   

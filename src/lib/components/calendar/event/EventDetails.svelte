@@ -1,8 +1,7 @@
 <script lang="ts">
     import type {Event} from '$components/calendar/event/Event';
-    import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue} from '$components/calendar/event/Event';
+    import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue, getEventRepeatTypeCycleValue} from '$components/calendar/event/Event';
     import type { DatetimeChangeEventDetail } from '@ionic/core';
-    import { onMount } from 'svelte';
     import { t, getLocale} from "$lib/i18n";
 
     export let copyEvent: Event;
@@ -164,25 +163,35 @@
         {#if copyEvent.repeat != EventRepeatType.NEVER}
             <div style="display:flex; justify-self:space-between;">
                 <ion-item lines="none">
-                    <ion-label>Ανά</ion-label>
+                    <ion-label>{$t("event.notification.repeatPer")}</ion-label>
                     <ion-input
                         id="repeatInterval"
                         type="number"
                         placeholder="1"
+                        min="1"
+                        step="1"
+                        max="10"
                         value={copyEvent.repeatInterval ?? 1}
                         contenteditable="true"
                         style="width:   20%;"
-                        on:ionChange={(event)=>{copyEvent.repeatInterval = parseInt(String(event.detail.value));}}
+                        on:ionChange={(event)=>{
+                            let inputValue = parseInt(event.detail.value);
+                            if (inputValue < 1 || isNaN(inputValue)) {
+                                inputValue = 1;
+                            }
+                            copyEvent.repeatInterval = inputValue;
+                            event.target.value = inputValue;
+                        }}
                     />
                                 
                     <ion-label style="margin-inline:5px;">
-                        {getEventRepeatTypeCycleValue(copyEvent.repeat,'el')}
+                        {getEventRepeatTypeCycleValue(copyEvent.repeat, getLocale())}
                     </ion-label>
                 </ion-item>
             </div>
                 
             <ion-item>    
-                <ion-label>Μέχρι</ion-label>    
+                <ion-label>{$t("event.notification.repeatUntil")}</ion-label>    
                 
                 <ion-datetime-button style="width: fit-content;" datetime="until"></ion-datetime-button>
                 <ion-modal keep-contents-mounted={true}>
@@ -204,11 +213,21 @@
                     label-placement="floating"
                     id="notifyTime"
                     type="number"
+                    min="1"
+                    step="1"
+                    max="10"
                     value={copyEvent?.notifyTime || null}
                     contenteditable="true"
                     spellcheck={false}   
                     style="width: 50%;"
-                    on:ionChange={(event)=>{copyEvent.notifyTime = parseInt(String(event.detail.value));}}
+                    on:ionChange={(event)=>{
+                        let inputValue = parseInt(event.detail.value);
+                        if (inputValue < 1 || isNaN(inputValue)) {
+                            inputValue = 1;
+                        }
+                        copyEvent.notifyTime = inputValue;
+                        event.target.value = inputValue;
+                    }}
                 />
             {/if}    
         </ion-item>

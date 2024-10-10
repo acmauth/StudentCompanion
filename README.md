@@ -166,9 +166,4 @@ This project is licensed under the Attribution-NonCommercial-ShareAlike 4.0 Inte
 ---
 
 
-# Authentication and Data Flow explanation
-
-https://www.figma.com/board/i76ryDp8wAZVaX7OdCjq1q/Data-diagrams?node-id=0-1&t=x56mKbirsAnNkQtv-1
-
-
 
