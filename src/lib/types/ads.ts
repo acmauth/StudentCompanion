@@ -21,3 +21,5 @@ interface Advert {
 }
 
 type Advertisements = Advert[];
+
+export type { Advertisements, Advert, Filter, Content, department, semester, study_level };

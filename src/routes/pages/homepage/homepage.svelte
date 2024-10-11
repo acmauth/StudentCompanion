@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	import AppCard from '$shared/AppCard.svelte';
 	import AppletsSlides from './appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
@@ -10,27 +10,27 @@
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
-  import { qrStore } from '$lib/components/wallet/qrStore';
-  import type { qrItem } from '$lib/components/wallet/qrItem';
+	import { qrStore } from '$lib/components/wallet/qrStore';
+	import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/shared/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import { t } from "$lib/i18n";
+	import { t } from '$lib/i18n';
 	import Wallet from '$components/wallet/Wallet.svelte';
 
-
 	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
-	
+
 	let givenName = '';
 	let gender = '';
 	let numPassedSubjects = 0;
 	let numSubjects = 0;
 	let average = 0;
-	
+
 	let qrModalOpen = false;
-		
 
 	async function getInfo() {
-		let personalData = await neoUniversisGet('Students/me/');
+		let personalData = await neoUniversisGet(
+			'Students/me?$expand=studyProgram($expand=studyLevel), department'
+		);
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
 		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
@@ -66,8 +66,8 @@
 	function addQR() {
 		let qrCode = document.getElementById('qrcode-input') as HTMLIonInputElement;
 		if (!qrCode || qrCode.value === '') return;
-		
-		const newQR: qrItem = { data: String(qrCode.value), title: "Πάσο" };
+
+		const newQR: qrItem = { data: String(qrCode.value), title: 'Πάσο' };
 		$qrStore = $qrStore.concat(newQR);
 	}
 
@@ -77,7 +77,7 @@
 	$: {
 		if (shouldFocus) {
 			// Get the input field reference using the ref attribute
-			const inputField = document.getElementById('qrcode-input')  || null;
+			const inputField = document.getElementById('qrcode-input') || null;
 
 			// Check if the input field reference exists and then focus on it
 			if (inputField) {
@@ -88,80 +88,82 @@
 			shouldFocus = false;
 		}
 	}
-	
 </script>
 
+<ion-content class="" fullscreen>
+	{#await getInfo()}
+		<HomepageSkeleton />
+	{:then}
+		<div class="info-container">
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div class="Person-tag" on:click={() => goto('/pages/personalInfo')}>
+				{#if gender === 'Α'}
+					<img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
+				{:else}
+					<img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
+				{/if}
+				<div>
+					<h5 class="h5">{$t('homepage.greeting')}</h5>
+					<h5 class="h5"><b>{getVocativeCase(givenName)}!</b></h5>
+				</div>
+			</div>
 
-	<ion-content class="" fullscreen>
-		{#await getInfo()}
-			<HomepageSkeleton />
-		{:then}
-			<div class="info-container">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="Person-tag" on:click={() => goto('/pages/personalInfo')}>
-					{#if gender === 'Α'}
-						<img class="avatar ion-padding-vertical" alt="man" src={man} width="200rem" />
-					{:else}
-						<img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
-					{/if}
+			<div
+				class="student-id"
+				on:click={() => {
+					qrModalOpen = true;
+				}}
+				aria-hidden
+			>
+				<AppCard margin={false} shadow={true}>
+					<div class="wallet-icon">
+						<ion-icon class="id-icon" icon={wallet} />
+					</div>
+				</AppCard>
+			</div>
+
+			<Wallet bind:qrModalOpen />
+		</div>
+		<div class="card-container">
+			<AppCard colour="primary" margin={false} href="/pages/grades">
+				<div class="courses-passed">
+					<ion-card-title><b> {numPassedSubjects}/{numSubjects} </b></ion-card-title>
+					<ion-card-subtitle>{$t('homepage.passed')}</ion-card-subtitle>
+
+					<ion-progress-bar class="progress-courses" />
+				</div>
+			</AppCard>
+
+			<AppCard colour="primary" margin={false} href="/pages/grades">
+				<div class="avg-grade-grid">
+					<div class="avg-grade">
+						<ion-card-title> <b>{average} </b></ion-card-title>
+						<ion-card-subtitle>{$t('homepage.average')}</ion-card-subtitle>
+					</div>
 					<div>
-						<h5 class="h5">{$t("homepage.greeting")}</h5>
-						<h5 class="h5"><b>{getVocativeCase(givenName)}!</b></h5>
+						<ion-progress-bar class="progress-avg" />
 					</div>
 				</div>
-
-				<div class="student-id" on:click={() => {qrModalOpen = true;}} aria-hidden>
-					<AppCard margin={false} shadow={true} >
-						<div class="wallet-icon">
-							<ion-icon class="id-icon" icon={wallet} />
-						</div>
-					</AppCard>
-				</div>
-
-				<Wallet bind:qrModalOpen={qrModalOpen} />
-
-
-			</div>
-			<div class="card-container">
-				<AppCard colour="primary" margin={false} href="/pages/grades">
-					<div class="courses-passed">
-						<ion-card-title><b> {numPassedSubjects}/{numSubjects} </b></ion-card-title>
-						<ion-card-subtitle>{$t("homepage.passed")}</ion-card-subtitle>
-
-						<ion-progress-bar class="progress-courses" />
-					</div>
-				</AppCard>
-
-				<AppCard colour="primary" margin={false} href="/pages/grades">
-					<div class="avg-grade-grid">
-						<div class="avg-grade">
-							<ion-card-title> <b>{average} </b></ion-card-title>
-							<ion-card-subtitle>{$t("homepage.average")}</ion-card-subtitle>
-						</div>
-						<div>
-							<ion-progress-bar class="progress-avg" />
-						</div>
-					</div>
-				</AppCard>
-			</div>
-			<p class="info-text"><b>{$t("homepage.usefulInfo")}</b></p>
-			<AppletsSlides />
-			<Banner altText="Πες μας τη γνώμη σου" />
-			<div style="display:flex; justify-content:space-between; align-items: center; margin-inline-end:0.75rem;">
-				<p style="margin-top:0" class="info-text">
-					<b>{$t("homepage.recents")}</b>
-				</p>
-				<CredentialLoginButton />
-			</div>
-			<RecentItems />
-		{:catch error}
-		
-			<ErrorLandingCard errorMsg={$t("homepage.error")} />
-			<AppletsSlides />
-		{/await}
-	</ion-content>
-
+			</AppCard>
+		</div>
+		<p class="info-text"><b>{$t('homepage.usefulInfo')}</b></p>
+		<AppletsSlides />
+		<Banner altText="Πες μας τη γνώμη σου" />
+		<div
+			style="display:flex; justify-content:space-between; align-items: center; margin-inline-end:0.75rem;"
+		>
+			<p style="margin-top:0" class="info-text">
+				<b>{$t('homepage.recents')}</b>
+			</p>
+			<CredentialLoginButton />
+		</div>
+		<RecentItems />
+	{:catch error}
+		<ErrorLandingCard errorMsg={$t('homepage.error')} />
+		<AppletsSlides />
+	{/await}
+</ion-content>
 
 <style>
 	.avatar {
@@ -270,5 +272,4 @@
 		margin-bottom: 0;
 		font-size: 0.8rem;
 	}
-
 </style>

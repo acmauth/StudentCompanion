@@ -29,14 +29,11 @@
 	// Get personal details and department details
 
 	async function getPersonalInfo() {
-		let personalData = await neoUniversisGet('Students/me/', { lifetime: 86000 });
-		let studyProgram = await neoUniversisGet(
-			'Students/me?$expand=studyProgram($expand=studyLevel)',
-			{
-				lifetime: 86000
-			}
+		let personalData = await neoUniversisGet(
+			'Students/me?$expand=studyProgram($expand=studyLevel), department',
+			{ lifetime: 86000 }
 		);
-		let department = await neoUniversisGet('Students/me/department', { lifetime: 86000 });
+
 		let user = await neoUniversisGet('Users/me', { lifetime: 86000 });
 		aem = personalData.studentIdentifier;
 		apm = personalData.uniqueIdentifier;
@@ -48,9 +45,9 @@
 		familyName = personalData.person.familyName;
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
-		departmentName = department.abbreviation;
+		departmentName = personalData.department.abbreviation;
 		semester = personalData.semester;
-		study_level = studyProgram.studyProgram.studyLevel.name;
+		study_level = personalData.studyProgram.studyLevel.name;
 	}
 
 	// Log out
