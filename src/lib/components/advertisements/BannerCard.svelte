@@ -1,22 +1,17 @@
 <script lang="ts">
 	import ad1 from '$lib/assets/Advert_dark.png';
-	import demoad from '$lib/assets/Advert_demo.png';
-	export let altText: string;
 	export let margin: string = '1.5';
 	import { neoUniversisGet } from '$lib/dataService';
 	import { onMount } from 'svelte';
-	import type { Advertisements } from '$lib/types/ads';
+	import type { Advertisements, Advert } from '$lib/types/ads';
 	import { close } from "ionicons/icons";
 	import { isDeleted } from './dismissableStore';
 
 	const PROMO_CMS_URL = 'https://promotions.aristomate.gr';
+	const FALLBACK_IMAGE = ad1;
+	const FALLBACK_LINK = 'https://forms.gle/wTAch9wZPKwztc5EA';
 
 	let marginStr = `margin: ${margin}rem;`;
-
-	let matchingAd = null;
-	let imageUrl = ad1;
-	let adLink = 'https://forms.gle/wTAch9wZPKwztc5EA';
-	let adAltText = altText;
 
 	let departmentName: string = '';
 	let semester: string = '';
@@ -43,12 +38,9 @@
 		semester = studyProgram.semester;
 		study_level = studyProgram.studyProgram.studyLevel.alternateName;
 
-		findMatchingAd();
+		return findMatchingAd();
 	}
 
-	onMount(() => {
-		getPersonalInfo();
-	});
 
 	// Function to check if the department matches (handle negation '!')
 	const matchesDepartment = (adDepartments: string[], studentDepartment: string): boolean => {
@@ -67,27 +59,35 @@
 		return ads.filter((ad) => {
 			return (
 				matchesDepartment(
-					ad.filters.find((f) => f.name === 'departments').value,
+					(ad.filters.find((f) => f.name === 'departments')?.value as string[] || []),
 					studentDepartment
 				) &&
-				ad.filters.find((f) => f.name === 'semesters').value.includes(studentSemester) &&
-				ad.filters.find((f) => f.name === 'study_level').value.includes(studentStudyLevel)
+				(ad.filters.find((f) => f.name === 'semesters')?.value as (string | number)[] || []).includes(studentSemester) &&
+				(ad.filters.find((f) => f.name === 'study_level')?.value as string[] || []).includes(studentStudyLevel)
 			);
 		});
 	};
 
 	function findMatchingAd() {
-		matchingAd = getMatchingAd(ads, departmentName, parseInt(semester), study_level);
-		if (matchingAd) {
-			matchingAd = matchingAd[Math.floor(Math.random() * matchingAd.length)];
+		const matchingAds = getMatchingAd(ads, departmentName, parseInt(semester), study_level);
+		let matchingAd: Advert | undefined;
+		if (matchingAds) {
+			matchingAd = matchingAds[Math.floor(Math.random() * matchingAds.length)];
 		}
-		imageUrl = matchingAd ? PROMO_CMS_URL + matchingAd.content.image : ad1;
-		adLink = matchingAd ? PROMO_CMS_URL + matchingAd.content.link : 'https://forms.gle/wTAch9wZPKwztc5EA';
-		adAltText = matchingAd ? matchingAd.content.title : altText;
+		const imageUrl = matchingAd ? PROMO_CMS_URL + matchingAd.content.image : FALLBACK_IMAGE;
+		const adLink = matchingAd ? PROMO_CMS_URL + matchingAd.content.link : FALLBACK_LINK;
+		const adAltText = matchingAd ? matchingAd.content.title : "altText";
+		
+		return {imageUrl, adLink, adAltText};
 	}
 </script>
 
-{#await getPersonalInfo() then}
+{#await getPersonalInfo()}
+	<!-- <div style={marginStr} class="card-banner">
+		<a href="https://forms.gle/wTAch9wZPKwztc5EA" target="_blank"><img src={ad1} alt="Tell us your thoughts" /></a>
+		<ion-icon class="xmark" icon={ close } on:click={deleteBanner} aria-hidden></ion-icon>
+	</div> -->
+{:then {imageUrl, adLink, adAltText}}
 	{#if !$isDeleted}
 		<div style={marginStr} class="card-banner">
 			<a href={adLink} target="_blank"><img src={imageUrl} alt={adAltText} /></a>
