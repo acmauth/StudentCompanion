@@ -9,6 +9,8 @@
 	import { close } from "ionicons/icons";
 	import { isDeleted } from './dismissableStore';
 
+	const PROMO_CMS_URL = 'https://promotions.aristomate.gr';
+
 	let marginStr = `margin: ${margin}rem;`;
 
 	let matchingAd = null;
@@ -34,7 +36,7 @@
 		);
 
 		ads = (await fetch(
-			'https://raw.githubusercontent.com/acmauth/StudentCompanion/refs/heads/ads/ads.json'
+			PROMO_CMS_URL+'/promos'
 		).then((res) => res.json())) as Advertisements;
 
 		departmentName = studyProgram.department.name;
@@ -79,8 +81,8 @@
 		if (matchingAd) {
 			matchingAd = matchingAd[Math.floor(Math.random() * matchingAd.length)];
 		}
-		imageUrl = matchingAd ? matchingAd.content.image : ad1;
-		adLink = matchingAd ? matchingAd.content.link : 'https://forms.gle/wTAch9wZPKwztc5EA';
+		imageUrl = matchingAd ? PROMO_CMS_URL + matchingAd.content.image : ad1;
+		adLink = matchingAd ? PROMO_CMS_URL + matchingAd.content.link : 'https://forms.gle/wTAch9wZPKwztc5EA';
 		adAltText = matchingAd ? matchingAd.content.title : altText;
 	}
 </script>
@@ -89,7 +91,7 @@
 	{#if !$isDeleted}
 		<div style={marginStr} class="card-banner">
 			<a href={adLink} target="_blank"><img src={imageUrl} alt={adAltText} /></a>
-			<ion-icon class="xmark" icon={ close } on:click={deleteBanner}></ion-icon>
+			<ion-icon class="xmark" icon={ close } on:click={deleteBanner} aria-hidden></ion-icon>
 		</div>
 	{/if}
 {/await}
@@ -111,8 +113,8 @@
 		position: absolute;
 		top: 0;
 		right: 0;
-		color: white;
-		font-size: 35px;
-		opacity: 0.8;
+		color: black;
+		font-size: 1.5rem;
+		opacity: 0.3;
 	}
 </style>
