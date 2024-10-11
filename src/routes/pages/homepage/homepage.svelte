@@ -10,9 +10,9 @@
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
-	import { qrStore } from '$lib/components/wallet/qrStore';
-	import type { qrItem } from '$lib/components/wallet/qrItem';
-	import Banner from '$components/shared/BannerCard.svelte';
+  	import { qrStore } from '$lib/components/wallet/qrStore';
+  	import type { qrItem } from '$lib/components/wallet/qrItem';
+	import Banner from '$components/advertisements/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { t } from '$lib/i18n';
 	import Wallet from '$components/wallet/Wallet.svelte';

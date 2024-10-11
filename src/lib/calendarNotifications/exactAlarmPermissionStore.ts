@@ -25,9 +25,14 @@ function previousExactAlarmPermission():boolean{
 
 // checks if the exact alarm permission has changed from the previous session
 async function permissionIsTheSame():Promise<boolean>{
-    const currentPermission = await checkExactAlarmPermission();
-    const previousPermission = previousExactAlarmPermission();
-    return currentPermission == previousPermission;
+    try {
+        const currentPermission = await checkExactAlarmPermission();
+        const previousPermission = previousExactAlarmPermission();
+        return currentPermission == previousPermission;
+    }catch(ex){
+        console.log("check exact alarm permission doesn't work on web");
+    }
+    return true;
 }
 
 // reschedules every notification if the exact alarms permission has changed
