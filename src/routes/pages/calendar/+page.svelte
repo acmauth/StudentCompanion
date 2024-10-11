@@ -181,7 +181,7 @@
                     <ion-content>
                         <div style="padding-top:0.6rem;">
                             {#each eventList as eventItem}
-                                <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} bind:deleteModalOpen={deleteModalOpen} />
+                                <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} bind:deleteModalOpen={deleteModalOpen} bind:activeDate={activeDate} />
                             {/each}
                         </div>
                     </ion-content>
