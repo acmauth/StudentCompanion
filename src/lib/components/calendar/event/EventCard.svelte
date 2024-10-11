@@ -8,6 +8,7 @@
 	export let selectedEvent: Event | null;
 	export let modalOpen: boolean;
 	export let deleteModalOpen: boolean;
+	export let activeDate: Date;
 	
 	let isPastDate: boolean = false;
 	let isTest: boolean = false;
@@ -26,7 +27,14 @@
 	}
 
 	$: {
-		isPastDate = new Date().getTime() > new Date(new Date(eventItem.slot.end)).getTime();
+		isPastDate = false;
+		// Due to the fact that start/end slots of an event object refer to the date of their first instance (e.g. a weekly event), 
+		// an event must be marked as past iff either it the active date is previous than today or if it's today and the start time 
+		// of the event is past the current time.
+		if (new Date(activeDate).getDate() < new Date().getDate()
+			|| new Date(activeDate).getDate() == new Date().getDate() && new Date().getTime() >=  new Date(new Date(eventItem.slot.start).setDate(new Date().getDate())).getTime()) {
+			isPastDate = true;
+		}
 		isTest = eventItem.type == EventType.TEST;
 		isAssignment = eventItem.type == EventType.ASSIGNMENT;
 		isTask = eventItem.type == EventType.TASK;
