@@ -46,6 +46,11 @@
 	};
 
 	// Function to find the right ad based on the filters
+	// Filters are applied as follows:
+	// 1. If the filter is '*', it matches all, thus returning true
+	// 2. If the filter is an array of departments, it matches if the student's department is in the array
+	// 3. If the filter is an array of numbers, it matches if the student's semester is in the array
+	// 4. If the filter is an array of studyLevels (undergraduate,postgraduate,doctoral), it matches if the student's study level is in the array
 	const getMatchingAd = (
 		ads: Advertisements,
 		studentDepartment: string,
@@ -71,6 +76,8 @@
 		});
 	};
 
+	// Find matching add based on the department, semester and study level, if multiple ads are found, return a randomly selected one
+	// If no matching ads are found, returns the default promo image
 	function findMatchingAd() {
 		const matchingAds = getMatchingAd(ads, departmentName, parseInt(semester), study_level);
 		let matchingAd: Advert | undefined;
