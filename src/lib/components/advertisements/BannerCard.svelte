@@ -2,9 +2,8 @@
 	import ad1 from '$lib/assets/Advert_dark.png';
 	export let margin: string = '1.5';
 	import { neoUniversisGet } from '$lib/dataService';
-	import { onMount } from 'svelte';
 	import type { Advertisements, Advert } from '$lib/types/ads';
-	import { close } from "ionicons/icons";
+	import { close } from 'ionicons/icons';
 	import { isDeleted } from './dismissableStore';
 
 	const PROMO_CMS_URL = 'https://promotions.aristomate.gr';
@@ -18,7 +17,7 @@
 	let study_level: string = '';
 	let ads: Advertisements = [];
 
-	function deleteBanner(){
+	function deleteBanner() {
 		isDeleted.set(true);
 	}
 
@@ -30,9 +29,7 @@
 			}
 		);
 
-		ads = (await fetch(
-			PROMO_CMS_URL+'/promos'
-		).then((res) => res.json())) as Advertisements;
+		ads = (await fetch(PROMO_CMS_URL + '/promos').then((res) => res.json())) as Advertisements;
 
 		departmentName = studyProgram.department.name;
 		semester = studyProgram.semester;
@@ -40,7 +37,6 @@
 
 		return findMatchingAd();
 	}
-
 
 	// Function to check if the department matches (handle negation '!')
 	const matchesDepartment = (adDepartments: string[], studentDepartment: string): boolean => {
@@ -58,12 +54,19 @@
 	) => {
 		return ads.filter((ad) => {
 			return (
-				matchesDepartment(
-					(ad.filters.find((f) => f.name === 'departments')?.value as string[] || []),
-					studentDepartment
-				) &&
-				(ad.filters.find((f) => f.name === 'semesters')?.value as (string | number)[] || []).includes(studentSemester) &&
-				(ad.filters.find((f) => f.name === 'study_level')?.value as string[] || []).includes(studentStudyLevel)
+				(ad.filters.find((f) => f.name === 'departments')?.value.includes('*') ||
+					matchesDepartment(
+						(ad.filters.find((f) => f.name === 'departments')?.value as string[]) || [],
+						studentDepartment
+					)) &&
+				(ad.filters.find((f) => f.name === 'semesters')?.value.includes('*') ||
+					(
+						(ad.filters.find((f) => f.name === 'semesters')?.value as (string | number)[]) || []
+					).includes(studentSemester)) &&
+				(ad.filters.find((f) => f.name === 'study_level')?.value.includes('*') ||
+					((ad.filters.find((f) => f.name === 'study_level')?.value as string[]) || []).includes(
+						studentStudyLevel
+					))
 			);
 		});
 	};
@@ -76,9 +79,9 @@
 		}
 		const imageUrl = matchingAd ? PROMO_CMS_URL + matchingAd.content.image : FALLBACK_IMAGE;
 		const adLink = matchingAd ? PROMO_CMS_URL + matchingAd.content.link : FALLBACK_LINK;
-		const adAltText = matchingAd ? matchingAd.content.title : "altText";
-		
-		return {imageUrl, adLink, adAltText};
+		const adAltText = matchingAd ? matchingAd.content.title : 'altText';
+
+		return { imageUrl, adLink, adAltText };
 	}
 </script>
 
@@ -87,11 +90,11 @@
 		<a href="https://forms.gle/wTAch9wZPKwztc5EA" target="_blank"><img src={ad1} alt="Tell us your thoughts" /></a>
 		<ion-icon class="xmark" icon={ close } on:click={deleteBanner} aria-hidden></ion-icon>
 	</div> -->
-{:then {imageUrl, adLink, adAltText}}
+{:then { imageUrl, adLink, adAltText }}
 	{#if !$isDeleted}
 		<div style={marginStr} class="card-banner">
 			<a href={adLink} target="_blank"><img src={imageUrl} alt={adAltText} /></a>
-			<ion-icon class="xmark" icon={ close } on:click={deleteBanner} aria-hidden></ion-icon>
+			<ion-icon class="xmark" icon={close} on:click={deleteBanner} aria-hidden />
 		</div>
 	{/if}
 {/await}
