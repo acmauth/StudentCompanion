@@ -1,10 +1,20 @@
-<script>
+<script lang="ts">
     import CredentialLogin from "./CredentialLogin.svelte";
     import { keySharp } from 'ionicons/icons';
 	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
     import { t } from "$lib/i18n";
+    import { Keyboard } from "@capacitor/keyboard";
 
 	let loginModalOpen = false;
+    let modalCard: any;
+
+    Keyboard.addListener('keyboardWillShow', ev => {
+        modalCard.setCurrentBreakpoint(0.9);
+    });
+
+    Keyboard.addListener('keyboardWillHide', () => {
+        modalCard.setCurrentBreakpoint(0.5)
+    });
 </script>
 
 {#if $autheticationFlag == false}
@@ -14,14 +24,4 @@
     </ion-chip>
 {/if}
 
-<ion-modal
-    is-open={loginModalOpen }
-    initial-breakpoint={0.5}
-    on:ionModalDidDismiss={() => {loginModalOpen = false;}}
-    breakpoints={[0, 0.5]}
-    mode="ios"
-    >
-    <ion-content>
-        <CredentialLogin bind:openModalFlag={loginModalOpen} />
-    </ion-content>
-</ion-modal>
+<CredentialLogin bind:loginModalOpen={loginModalOpen} />

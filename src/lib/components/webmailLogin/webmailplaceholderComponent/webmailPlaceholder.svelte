@@ -22,33 +22,7 @@
     </ion-card>
 {/if}
 
-<ion-modal
-      is-open={inlineModalOpen}
-      initial-breakpoint={0.5}
-      {breakpoints}
-      on:ionModalDidDismiss={() => {inlineModalOpen = false;}}>
-      <ion-content class="ion-padding">
-        <!-- <div class="ion-margin-top">
-            <ion-label><b>Τα webmail και e-learning είναι σε αναβάθμιση</b></ion-label>
-
-          </div> -->
-          <!-- <ion-item-group>
-            <ion-item lines="none">
-                <ion-text>
-                    <h2>Τα webmail και e-learning είναι σε αναβάθμιση</h2>
-                </ion-text>
-            </ion-item>
-            <ion-item lines="none">
-                <ion-text>
-                    <p>Ενημερώνουμε την εφαρμογή ώστε να ενσωματώσουμε το σύστημα σύνδεσης του ΑΠΘ. Δυστυχώς αυτό σημαίνει ότι <b>προσωρινά</b> δεν θα είναι διαθέσιμα τα webmail και e-learning.</p>
-                    <img src={darkIcon} alt="Dark Icon" class="icon darkIcon" style="width: 50%; height:auto; left:50%"/>
-                    <img src={lightIcon} alt="Light Icon" class="icon lightIcon" style="width: 50%; height:auto; left:50%"/>            
-                </ion-text>
-            </ion-item>
-            </ion-item-group> -->
-            <CredentialLogin bind:openModalFlag={inlineModalOpen}/>
-      </ion-content>
-   </ion-modal>
+<CredentialLogin bind:loginModalOpen={inlineModalOpen} />
 
 <style>
 

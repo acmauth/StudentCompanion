@@ -2,20 +2,19 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
 import { get } from 'svelte/store';
 import { t, getLocale} from "$lib/i18n";
+import { handleChangedPermission } from './exactAlarmPermissionStore';
 
 
 /**
  * Function to check if the app has permission to post exact alerts
  * @returns A Promise<boolean> indicating if the permission is granted
  */
-async function checkExactAlarmPermision(): Promise<boolean> {
+export async function checkExactAlarmPermission(): Promise<boolean> {
     const exactAlarm = await LocalNotifications.checkExactNotificationSetting();
     
     if (exactAlarm.exact_alarm !== 'granted') {
-        console.log('Exact alarm permission is not granted.');
         return false;
-    }
-    
+    } 
     return true;
 }
 
@@ -30,6 +29,7 @@ async function requestExactAlarmPermission(){
       const changeStatus = await LocalNotifications.changeExactNotificationSetting();
       
       if (changeStatus.exact_alarm === 'granted'){
+        handleChangedPermission();
         return true;
       }
     }
@@ -63,6 +63,7 @@ async function requestNotificationPermission(): Promise<boolean> {
   }
 }
 
+// handles check and request permission, and prompts user to settings
 export async function handleNotificationPermission() {
   const hasPermission = await checkNotificationPermission();
   
@@ -70,10 +71,8 @@ export async function handleNotificationPermission() {
     const permissionGranted = await requestNotificationPermission();
     
     if (permissionGranted) {
-      console.log('Notification permission granted!');
       return true;
     } else {
-      console.log('Notification permission denied.');
       // Prompt user to go to settings
       const userConfirmed = confirm(get(t)("event.notification.permissionConfirmation"));
       
@@ -83,25 +82,22 @@ export async function handleNotificationPermission() {
       return false;
     }
   } else {
-    console.log('Already has notification permission.');
     return true;
   }
 }
 
-
+// checks permission, and if disabled prompts user to settings
 export async function handleExactAlarmPermission(){
-  const hasPermission = await checkExactAlarmPermision();
+  const hasPermission = await checkExactAlarmPermission();
 
   if (!hasPermission){
     const permissionGranted = await requestExactAlarmPermission();
 
     if (permissionGranted){
-      console.log('Exact Alert permission granted');
       return true;
     }
     return false;
   } else {
-    console.log('Already has notification permission.');
     return true;
   }
 }
