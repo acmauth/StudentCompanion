@@ -29,31 +29,31 @@
 
 	if ((hours == 8 && mins >= 30) || (hours > 8 && hours < 10)) {
 		message = $t('menu.morning_open');
-		now = 'Πρωινό';
-		next = 'Μεσημεριανό';
+		now = $t('menu.breakfast');
+		next = $t('menu.lunch');
 	} else if (hours >= 10 && hours < 12) {
 		message = $t('menu.morning_closed');
 		color = 'danger';
-		now = 'Μεσημεριανό';
-		next = 'Βραδινό';
+		now = $t('menu.lunch');
+		next = $t('menu.dinner');
 	} else if (hours >= 12 && hours < 16) {
 		message = $t('menu.midday_open');
-		now = 'Μεσημεριανό';
-		next = 'Βραδινό';
+		now = $t('menu.lunch');
+		next = $t('menu.dinner');
 	} else if (hours >= 16 && hours < 18) {
 		message = $t('menu.midday_closed');
 		color = 'danger';
-		now = 'Βραδινό';
+		now = $t('menu.dinner');
 		next = '';
 	} else if (hours >= 18 && hours < 21) {
 		message = $t('menu.evening_open');
-		now = 'Βραδινό';
+		now = $t('menu.dinner');
 		next = '';
 	} else {
 		message = $t('menu.evening_closed');
 		color = 'danger';
-		now = 'Πρωινό';
-		next = 'Μεσημεριανό';
+		now = $t('menu.breakfast');
+		next = $t('menu.lunch');
 
 		if (hours >= 21 && hours <= 23 && mins <= 59) title = $t('menu.tomorrowsMenu');
 		else title = $t('menu.todaysMenu');
@@ -67,46 +67,36 @@
 	}
 
 	async function getMenuData() {
-		if (!isProduction) {
-			const response = await fetch('/menu', { method: 'GET' });
-			if (response.ok) {
-				const jsonStr = await response.text(); // Get the JSON string
-				cafeteriaData = JSON.parse(jsonStr); // Parse the JSON string into an array
-			} else {
-				console.error('Error fetching cafeteria data:', response.statusText);
-			}
-		} else {
-			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
-		}
+		cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
+
 		const todayHTML = cafeteriaData[today];
 
 		// Regex for finding today's date
 		// Checks for both <h3> and <h4> headings and <p> tags
 		let dateRegex;
-
+		let regex;
+		let startString = now + '&nbsp;';
 		if (getLocale() == 'en') {
-			dateRegex =
-				/<(h[34]) class="kt-adv-heading54844_779bb9-8f wp-block-kadence-advancedheading" data-kb-block="kb-adv-heading54844_779bb9-8f"><strong><em>Date of Menu<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})\s*<\/\1><\/strong>|<p><strong><em>Date of Menu<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/strong><\/p>/;
+			dateRegex = /Date of Menu\s*<\/em>\s*&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})/s;
 		} else {
 			dateRegex =
 				/<(h[34]) class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})\s*<\/\1>|<p><strong><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/strong><\/p>/;
 		}
-		const startString = '<h2 class="wp-block-heading"><strong>' + now + '&nbsp;';
-
-		let regex;
 
 		if (next === '') {
 			regex = new RegExp(`(${startString})([^]*?)$`, 'si');
 		} else {
-			const endString = '<h2 class="wp-block-heading"><strong>' + next + '&nbsp;';
+			const endString = next + '&nbsp;';
 			regex = new RegExp(`(${startString})(.*?)(?=${endString})`, 'si');
 		}
-
 		const match = cafeteriaData[today].match(regex);
 		if (match && match[0]) todaydata = match[0].trim();
+		// console.log(todayHTML); // Check exact HTML content
+		console.log(dateRegex.exec(todayHTML)); // Test if regex finds a match
 
 		// Extract the date from today's menu
-		const matchDate = todayHTML.match(dateRegex);
+		let matchDate = todayHTML.match(dateRegex);
+		console.log(matchDate ? matchDate[1] : 'No match found');
 
 		if (matchDate) {
 			const dateRegexCapture = /(\d{2}\/\d{2}\/\d{4})/;
