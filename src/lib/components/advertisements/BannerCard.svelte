@@ -5,6 +5,7 @@
 	import type { Advertisements, Advert } from '$lib/types/ads';
 	import { close } from 'ionicons/icons';
 	import { isDeleted } from './dismissableStore';
+	import { Preferences } from '@capacitor/preferences';
 
 	const PROMO_CMS_URL = 'https://promotions.aristomate.gr';
 	const FALLBACK_IMAGE = ad1;
@@ -16,6 +17,10 @@
 	let semester: string = '';
 	let study_level: string = '';
 	let ads: Advertisements = [];
+
+	let imageUrl = '';
+	let adLink = '';
+	let adAltText = '';
 
 	function deleteBanner() {
 		isDeleted.set(true);
@@ -84,19 +89,50 @@
 		if (matchingAds) {
 			matchingAd = matchingAds[Math.floor(Math.random() * matchingAds.length)];
 		}
-		const imageUrl = matchingAd ? PROMO_CMS_URL + matchingAd.content.image : FALLBACK_IMAGE;
-		const adLink = matchingAd ? PROMO_CMS_URL + matchingAd.content.link : FALLBACK_LINK;
-		const adAltText = matchingAd ? matchingAd.content.title : 'altText';
+		imageUrl = matchingAd ? PROMO_CMS_URL + matchingAd.content.image : FALLBACK_IMAGE;
+		adLink = matchingAd ? PROMO_CMS_URL + matchingAd.content.link : FALLBACK_LINK;
+		adAltText = matchingAd ? matchingAd.content.title : 'altText';
+
+		// Store the ad data in storage
+		setAdData(imageUrl, adLink, adAltText);
 
 		return { imageUrl, adLink, adAltText };
+	}
+
+	async function setAdData(imageUrl: string, adLink: string, adAltText: string) {
+		await Preferences.set({
+			key: 'adData',
+			value: JSON.stringify({ imageUrl, adLink, adAltText }) // Storing ad data
+		});
+	}
+
+	async function getAdData(): Promise<{
+		imageUrl: string | null;
+		adLink: string | null;
+		adAltText: string | null;
+	}> {
+		const ret = await Preferences.get({ key: 'adData' });
+		if (ret.value) {
+			try {
+				imageUrl = JSON.parse(ret.value).imageUrl;
+				adLink = JSON.parse(ret.value).adLink;
+				adAltText = JSON.parse(ret.value).adAltText;
+				return { imageUrl, adLink, adAltText };
+			} catch (error) {
+				console.error('Failed to parse ad data from storage:', error);
+			}
+		}
+		return { imageUrl: null, adLink: null, adAltText: null }; // Return null values if no data is found or an error occurs
 	}
 </script>
 
 {#await getPersonalInfo()}
-	<!-- <div style={marginStr} class="card-banner">
-		<a href="https://forms.gle/wTAch9wZPKwztc5EA" target="_blank"><img src={ad1} alt="Tell us your thoughts" /></a>
-		<ion-icon class="xmark" icon={ close } on:click={deleteBanner} aria-hidden></ion-icon>
-	</div> -->
+	{#if !$isDeleted && getAdData() !== null}
+		<div style={marginStr} class="card-banner">
+			<a href={adLink} target="_blank"><img src={imageUrl} alt={adAltText} /></a>
+			<ion-icon class="xmark" icon={close} on:click={deleteBanner} aria-hidden />
+		</div>
+	{/if}
 {:then { imageUrl, adLink, adAltText }}
 	{#if !$isDeleted}
 		<div style={marginStr} class="card-banner">
