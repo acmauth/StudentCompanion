@@ -27,21 +27,40 @@ export function getVocativeCase (name: string): string {
 export function getVocativeCaseSingle (string: string): string {
     if (/(ας|άς)|(ης|ής)|(ΑΣ)|(ΗΣ)$/.test(string)) {
         return string.slice(0, -1);
-    } else if (/(ος|ός)|(ΟΣ)$/.test(string)) {
+    } else if (/(ος|ός|ων|ωρ)|(ΟΣ)$/.test(string)) {
         return maleInOS(string);
     } else {
         return string;
     }
 }
 
-function maleInOS(string: string): string {
-    if (/(γος|γός)|(άνος|ανος|ανός)|(τος|τός)|(ΓΟΣ)|(ΑΝΟΣ)|(ΤΟΣ)$/.test(string)) {
-        return string.slice(0, -1);
-    } else {
-        if (/ΟΣ$/.test(string)) {
-            return string.replace(/ΟΣ$/, 'Ε');
-        } else {
-            return string.replace(/(ός|ος)$/, 'ε');
-        }
+function maleInOS(name: string): string {
+    // Handle specific exceptions
+    if (/^(νίκος|μάρκος|έων|παύλος|αλέξανδρος)$/.test(name.toLowerCase())) {
+        return name.replace(/ος$/, 'ε');
     }
+
+    // General endings handling based on the mappings
+    if (/(ιος|μπος|λος|αος|νος|ων|ωρ)$/.test(name)) {
+        return name.replace(/(ιος|μπος|λος|αος|νος|ων)$/, function (ending) {
+            switch (ending) {
+                case 'ιος': return 'ιε';
+                case 'μπος': return 'μπε';
+                case 'λος': return 'λε';
+                case 'αος': return 'αε';
+                case 'νος': return 'νε';
+                case 'ων': return 'ωνα';
+                case 'ωρ': return 'ωρα';
+                default: return name; // Just in case something unexpected happens
+            }
+        });
+    }
+
+    // Fallback for other names
+    if (/ος$/.test(name)) {
+        return name.replace(/ος$/, 'ο');
+    }
+
+    return name;
 }
+

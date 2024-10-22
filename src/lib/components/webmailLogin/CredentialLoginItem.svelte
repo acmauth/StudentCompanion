@@ -18,17 +18,7 @@
     </ion-item>
 {/if}
 
-<ion-modal
-    is-open={loginModalOpen}
-    initial-breakpoint={0.5}
-    on:ionModalDidDismiss={() => {loginModalOpen = false;}}
-    breakpoints={[0, 0.5]}
-    mode="ios"
-    >
-    <ion-content>
-        <CredentialLogin bind:openModalFlag={loginModalOpen} />
-    </ion-content>
-</ion-modal>
+<CredentialLogin bind:loginModalOpen={loginModalOpen} />
 
 <style>
 	ion-icon {

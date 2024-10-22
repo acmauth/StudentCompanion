@@ -2,20 +2,21 @@ import { addToScheduledNotifications, getIds, removeFromScheduledNotficiations }
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { cutId, calcNotifyDate, calcNotifId } from './notificationFunctions';
-import { schedule, scheduleNotification } from './scheduleNotifications';
-import { LocalNotifications } from '@capacitor/local-notifications';
+import { schedule, cancelNotifications, scheduleNotification } from './scheduleNotifications';
 
 // removes from the store the notifications that are already send
 export function removePastNotifications(){
     let storedIds = getIds();
     const now = new Date();
-    
+
     for (const storedId of storedIds){
         if (storedId.event.repeat != EventRepeatType.NEVER){
-            if ( now > storedId.event.repeatUntil ){
+            const repeatUntil = new Date(storedId.event.repeatUntil);
+            if ( now > repeatUntil ){
                 removeFromScheduledNotficiations(storedId.event.id);
             }
         } else {
+            const lastNotification = new Date(storedId.lastNotification);
             if ( now > storedId.lastNotification ){
                 removeFromScheduledNotficiations(storedId.event.id);              
             }
@@ -29,17 +30,20 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
     if (event.repeatInterval) repeatInterval = event.repeatInterval;
     if (repeatInterval <= 0) repeatInterval = 1;
 
-    let notifDate = new Date();   
+    let notifDate = new Date();  
+    // repeats daily 
     if(event.repeat == EventRepeatType.DAILY) {
         notifDate = new Date(previousNotifDate);
         notifDate.setDate(previousNotifDate.getDate() + repeatInterval);    
         return notifDate;
 
+    // repeats weekly
     } else if (event.repeat == EventRepeatType.WEEKLY) {
         notifDate = new Date(previousNotifDate);
         notifDate.setDate(previousNotifDate.getDate() + (repeatInterval * 7));
         return notifDate;
 
+    // repeats monthly
     } else if (event.repeat == EventRepeatType.MONTHLY){        
         const isSameDayOfMonth = (date1: Date, date2: Date) => date1.getDate() === date2.getDate();
 
@@ -53,6 +57,7 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
         }
         return notifDate;
 
+    // repeats yearly
     } else if (event.repeat == EventRepeatType.YEARLY){
         const isSameDayOfYear = (date1: Date, date2: Date) => {
             return date1.getDate() === date2.getDate() && date1.getMonth() === date2.getMonth();
@@ -74,12 +79,10 @@ export async function scheduleRepeatedNotifications(event: Event){
 
     let notificationId = await calcNotifId(cutId(event.id));
     let notifyDate = calcNotifyDate(event);
-    let lastDate = new Date();
     let ids:number[] = [];
     
     while ( notifyDate < repeatUntil ){ 
         schedule(event, notifyDate, notificationId);
-        lastDate = new Date(notifyDate);
         notifyDate = nextNotifDate(event, notifyDate);
         ids.push(notificationId);
         notificationId++;
@@ -88,7 +91,7 @@ export async function scheduleRepeatedNotifications(event: Event){
     const storedIds = {
         event: event,
         notificationIds: ids,
-        lastNotification: lastDate
+        lastNotification: repeatUntil
     };
     addToScheduledNotifications(storedIds);
 }
