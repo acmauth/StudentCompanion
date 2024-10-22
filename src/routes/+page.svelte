@@ -6,13 +6,12 @@
 	import { neoUniversisGet } from '$lib/dataService';
 	import { loadPersistedStores } from './persistedStoreDeclarations';
 
-	
 	function delay(ms: number) {
- 	   return new Promise( resolve => setTimeout(resolve, ms) );
+		return new Promise((resolve) => setTimeout(resolve, ms));
 	}
 
-	async function preFlightCache(){
-		await neoUniversisGet('Students/me/');
+	async function preFlightCache() {
+		await neoUniversisGet('Students/me?$expand=studyProgram($expand=studyLevel), department');
 		await neoUniversisGet('students/me/courses?$top=-1');
 	}
 
@@ -24,17 +23,16 @@
 			await preFlightCache();
 			goto('pages/homepage');
 		} else {
-			goto('login');}
+			goto('login');
 		}
-	);
+	});
 </script>
-   
-<ion-grid class="ion-text-center center-grid">
-	<img src={Logo} alt="Aristomate logo" class="pop-up-image" style="width: 80%">
-	<br>
-    <ion-spinner name="dots" color="secondary" style="scale: 150%;"/>
-</ion-grid>
 
+<ion-grid class="ion-text-center center-grid">
+	<img src={Logo} alt="Aristomate logo" class="pop-up-image" style="width: 80%" />
+	<br />
+	<ion-spinner name="dots" color="secondary" style="scale: 150%;" />
+</ion-grid>
 
 <style>
 	ion-grid {
@@ -44,9 +42,8 @@
 			display: block !important;
 			width: 100%;
 		}
-    }
+	}
 	.pop-up-image {
 		transition: all ease-in-out 0.2s;
 	}
 </style>
-

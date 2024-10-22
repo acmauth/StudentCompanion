@@ -1,12 +1,16 @@
 import axios from 'axios';
 import cheerio from 'cheerio';
-
+import { t } from "$lib/i18n";
+import { get } from 'svelte/store';
 export async function getMenu() {
     let scrapedHTML: Array<string> = []; // Initialize the array
     try {
-        // data = ... 
+
         // getting the data from the cafeteria website
-        const response = await axios.get('https://www.auth.gr/weekly-menu/');
+        let menuLink = get(t)("menu.link");
+
+        const response = await axios.get(menuLink);
+
         const htmlContent = response.data;
         const $ = cheerio.load(htmlContent);
 

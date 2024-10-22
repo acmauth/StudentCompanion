@@ -1,16 +1,15 @@
 <script lang="ts">
 	import { setupIonicBase } from 'ionic-svelte';
-	import type { IonicConfig } from "@ionic/core";
+	import type { IonicConfig } from '@ionic/core';
 	import { nativeSettings } from '$lib/globalFunctions/nativeSettings';
 	import { Capacitor } from '@capacitor/core';
 	import { addNetworkListener } from '$lib/globalFunctions/offlineHandling';
-	import {checkAppMode} from '$lib/globalFunctions/darkMode';
+	import { checkAppMode } from '$lib/globalFunctions/darkMode';
 	/* Import all components - or do partial loading - see below */
 	import 'ionic-svelte/components/all';
-	
 
 	/* Call Ionic's setup routine, force mode to material for consistency */
-	setupIonicBase({mode: 'md'});
+	setupIonicBase({ mode: 'md' });
 
 	/* Check if running on mobile */
 	const isMobile = Capacitor.isNativePlatform() && Capacitor.getPlatform() !== 'web';
@@ -24,7 +23,6 @@
 
 	/* Theme variables */
 	import '../theme/variables.css';
-
 </script>
 
 <ion-app>

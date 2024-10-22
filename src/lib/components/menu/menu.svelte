@@ -5,11 +5,11 @@
 	import { getMenu } from '$lib/menuScraper/scraper';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from './menuSkeleton.svelte';
-	import { t, locale, locales} from "$lib/i18n";
+	import { t, locale, locales, getLocale } from '$lib/i18n';
 
 	let cafeteriaData: string | any[] = [];
 	let todaydata: string;
-	let title: string = $t("menu.todaysMenu");
+	let title: string = $t('menu.todaysMenu');
 
 	const date = new Date();
 	let today = date.getDay();
@@ -19,8 +19,6 @@
 		today = 6;
 	}
 
-	
-	
 	const hours = date.getHours();
 	const mins = date.getMinutes();
 	let message = '';
@@ -30,37 +28,35 @@
 	let menuDate = '';
 
 	if ((hours == 8 && mins >= 30) || (hours > 8 && hours < 10)) {
-		message = $t("menu.morning_open");
-		now = "Πρωινό";
-		next = "Μεσημεριανό";
+		message = $t('menu.morning_open');
+		now = $t('menu.breakfast');
+		next = $t('menu.lunch');
 	} else if (hours >= 10 && hours < 12) {
-		message = $t("menu.morning_closed");
+		message = $t('menu.morning_closed');
 		color = 'danger';
-		now = 'Μεσημεριανό';
-		next = 'Βραδινό';
+		now = $t('menu.lunch');
+		next = $t('menu.dinner');
 	} else if (hours >= 12 && hours < 16) {
-		message = $t("menu.midday_open");
-		now = "Μεσημεριανό";
-		next = "Βραδινό";
+		message = $t('menu.midday_open');
+		now = $t('menu.lunch');
+		next = $t('menu.dinner');
 	} else if (hours >= 16 && hours < 18) {
-		message = $t("menu.midday_closed");
+		message = $t('menu.midday_closed');
 		color = 'danger';
-		now = 'Βραδινό';
+		now = $t('menu.dinner');
 		next = '';
 	} else if (hours >= 18 && hours < 21) {
-		message = $t("menu.evening_open");
-		now = "Βραδινό";
-		next = "";
+		message = $t('menu.evening_open');
+		now = $t('menu.dinner');
+		next = '';
 	} else {
-		message = $t("menu.evening_closed");
+		message = $t('menu.evening_closed');
 		color = 'danger';
-		now = 'Πρωινό';
-		next = 'Μεσημεριανό';
+		now = $t('menu.breakfast');
+		next = $t('menu.lunch');
 
-		if (hours >= 21 && hours <= 23 && mins <= 59) 
-			title = $t("menu.tomorrowsMenu");
-		else
-			title = $t("menu.todaysMenu");
+		if (hours >= 21 && hours <= 23 && mins <= 59) title = $t('menu.tomorrowsMenu');
+		else title = $t('menu.todaysMenu');
 
 		today = (today + 1) % 7;
 		if (today) {
@@ -71,40 +67,36 @@
 	}
 
 	async function getMenuData() {
-		if (!isProduction) {
-			const response = await fetch('/menu', { method: 'GET' });
-			if (response.ok) {
-				const jsonStr = await response.text(); // Get the JSON string
-				cafeteriaData = JSON.parse(jsonStr); // Parse the JSON string into an array
-			} else {
-				console.error('Error fetching cafeteria data:', response.statusText);
-			}
-		} else {
-			cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
-		}
+		cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
+
 		const todayHTML = cafeteriaData[today];
 
 		// Regex for finding today's date
 		// Checks for both <h3> and <h4> headings and <p> tags
-		const dateRegex =
-			/<(h[34]) class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})\s*<\/\1>|<p><strong><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/strong><\/p>/;
-
-		const startString = '<h2 class="wp-block-heading"><strong>' + now + '&nbsp;';
-
+		let dateRegex;
 		let regex;
+		let startString = now + '&nbsp;';
+		if (getLocale() == 'en') {
+			dateRegex = /Date of Menu\s*<\/em>\s*&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})/s;
+		} else {
+			dateRegex =
+				/<(h[34]) class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})\s*<\/\1>|<p><strong><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/strong><\/p>/;
+		}
 
 		if (next === '') {
 			regex = new RegExp(`(${startString})([^]*?)$`, 'si');
 		} else {
-			const endString = '<h2 class="wp-block-heading"><strong>' + next + '&nbsp;';
+			const endString = next + '&nbsp;';
 			regex = new RegExp(`(${startString})(.*?)(?=${endString})`, 'si');
 		}
-
 		const match = cafeteriaData[today].match(regex);
 		if (match && match[0]) todaydata = match[0].trim();
+		// console.log(todayHTML); // Check exact HTML content
+		console.log(dateRegex.exec(todayHTML)); // Test if regex finds a match
 
 		// Extract the date from today's menu
-		const matchDate = todayHTML.match(dateRegex);
+		let matchDate = todayHTML.match(dateRegex);
+		console.log(matchDate ? matchDate[1] : 'No match found');
 
 		if (matchDate) {
 			const dateRegexCapture = /(\d{2}\/\d{2}\/\d{4})/;
@@ -123,15 +115,15 @@
 		}
 		// Check if the cafeteria is closed for vacation
 		else if (menuDate !== new Date().toLocaleDateString('en-GB')) {
-			message = $t("menu.closedForHolidays");
-			color = 'danger';	
+			message = $t('menu.closedForHolidays');
+			color = 'danger';
 		}
 		console.log(new Date().toLocaleDateString('en-GB'));
 	}
 </script>
 
 <IonPage>
-	<SubPageHeader title={$t("menu.title")} stackedNav />
+	<SubPageHeader title={$t('menu.title')} stackedNav />
 	<ion-content class="ion-padding">
 		{#await getMenuData()}
 			<MenuSkeleton />
@@ -155,48 +147,49 @@
 			&nbsp;
 
 			<h1 class="ion-padding">
-				<ion-icon icon={allIonicIcons.restaurantOutline} /> {$t("menu.week")}
+				<ion-icon icon={allIonicIcons.restaurantOutline} />
+				{$t('menu.week')}
 			</h1>
 			<ion-accordion-group expand="inset">
 				<ion-accordion value="first">
 					<ion-item slot="header" color="light">
-						<ion-label>{$t("menu.monday")}</ion-label>
+						<ion-label>{$t('menu.monday')}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[0]}</div>
 				</ion-accordion>
 				<ion-accordion value="second">
 					<ion-item slot="header" color="light">
-						<ion-label>{$t("menu.tuesday")}</ion-label>
+						<ion-label>{$t('menu.tuesday')}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[1]}</div>
 				</ion-accordion>
 				<ion-accordion value="third">
 					<ion-item slot="header" color="light">
-						<ion-label>{$t("menu.wednesday")}</ion-label>
+						<ion-label>{$t('menu.wednesday')}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[2]}</div>
 				</ion-accordion>
 				<ion-accordion value="fourth">
 					<ion-item slot="header" color="light">
-						<ion-label>{$t("menu.thursday")}</ion-label>
+						<ion-label>{$t('menu.thursday')}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[3]}</div>
 				</ion-accordion>
 				<ion-accordion value="fifth">
 					<ion-item slot="header" color="light">
-						<ion-label>{$t("menu.friday")}</ion-label>
+						<ion-label>{$t('menu.friday')}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[4]}</div>
 				</ion-accordion>
 				<ion-accordion value="sixth">
 					<ion-item slot="header" color="light">
-						<ion-label>{$t("menu.saturday")}</ion-label>
+						<ion-label>{$t('menu.saturday')}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[5]}</div>
 				</ion-accordion>
 				<ion-accordion value="seventh">
 					<ion-item slot="header" color="light">
-						<ion-label>{$t("menu.sunday")}</ion-label>
+						<ion-label>{$t('menu.sunday')}</ion-label>
 					</ion-item>
 					<div class="ion-padding" slot="content">{@html cafeteriaData[6]}</div>
 				</ion-accordion>

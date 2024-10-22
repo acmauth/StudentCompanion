@@ -10,15 +10,15 @@
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
-	import QRGenerator from '$lib/components/wallet/Wallet.svelte';
-	import { qrStore } from '$lib/components/wallet/qrStore';
-	import type { qrItem } from '$lib/components/wallet/qrItem';
-	import Banner from '$components/shared/BannerCard.svelte';
+  import { qrStore } from '$lib/components/wallet/qrStore';
+  import type { qrItem } from '$lib/components/wallet/qrItem';
+	import Banner from '$components/advertisements/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import { t, locale, locales } from '$lib/i18n';
-
+	import { t } from '$lib/i18n';
+	import Wallet from '$components/wallet/Wallet.svelte';
 	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
-	import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
+  import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
+
 
 	let givenName = '';
 	let gender = '';
@@ -29,7 +29,9 @@
 	let qrModalOpen = false;
 
 	async function getInfo() {
-		let personalData = await neoUniversisGet('Students/me/');
+		let personalData = await neoUniversisGet(
+			'Students/me?$expand=studyProgram($expand=studyLevel), department'
+		);
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
 		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
@@ -88,7 +90,9 @@
 		}
 	}
 
+
 	checkForUpdates();
+
 </script>
 
 <ion-content class="" fullscreen>
@@ -124,48 +128,9 @@
 				</AppCard>
 			</div>
 
-			<ion-modal
-				is-open={qrModalOpen}
-				initial-breakpoint={$qrStore.length > 0 ? 0.5 : 0.2}
-				on:ionModalDidDismiss={() => {
-					qrModalOpen = false;
-				}}
-				on:ionModalDidPresent={() => {
-					shouldFocus = true;
-				}}
-				breakpoints={[0, 0.1, 0.2, 0.3, 0.5]}
-			>
-				<ion-content>
-					<ion-grid>
-						{#if $qrStore.length == 0}
-							<ion-col style="display: flex; justify-content: center; margin: 30px;">
-								<ion-input id="qrcode-input" placeholder={$t('homepage.qrCode')} type="number" />
-								<ion-button
-									style="text-transform: none; --box-shadow: var(--shadow-sort-md);"
-									color="secondary"
-									on:ionFocus={addQR}>{$t('homepage.addQR')}</ion-button
-								>
-							</ion-col>
 
-							<!-- Uncomment if adding gym pass/id is implemented -->
+			<Wallet bind:qrModalOpen />
 
-							<!-- {:else if $qrStore.length == 1}
-								<ion-col>
-									<QRGenerator qr1={$qrStore[0]}/>
-								</ion-col>
-								<ion-col style="display: flex; justify-content: center;">
-									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary">QR</ion-button>
-								</ion-col> -->
-						{:else}
-							{#each $qrStore as item}
-								<ion-col>
-									<QRGenerator qr1={item} />
-								</ion-col>
-							{/each}
-						{/if}
-					</ion-grid>
-				</ion-content>
-			</ion-modal>
 		</div>
 		<div class="card-container">
 			<AppCard colour="primary" margin={false} href="/pages/grades">
@@ -196,7 +161,7 @@
 			style="display:flex; justify-content:space-between; align-items: center; margin-inline-end:0.75rem;"
 		>
 			<p style="margin-top:0" class="info-text">
-				<b>Πρόσφατα</b>
+				<b>{$t('homepage.recents')}</b>
 			</p>
 			<CredentialLoginButton />
 		</div>
@@ -315,9 +280,4 @@
 		font-size: 0.8rem;
 	}
 
-	ion-grid {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
 </style>
