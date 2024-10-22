@@ -10,14 +10,14 @@
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
-  	import { qrStore } from '$lib/components/wallet/qrStore';
-  	import type { qrItem } from '$lib/components/wallet/qrItem';
+	import { qrStore } from '$lib/components/wallet/qrStore';
+	import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/advertisements/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { t } from '$lib/i18n';
 	import Wallet from '$components/wallet/Wallet.svelte';
-
 	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
+	import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
 
 	let givenName = '';
 	let gender = '';
@@ -88,6 +88,8 @@
 			shouldFocus = false;
 		}
 	}
+
+	checkForUpdates();
 </script>
 
 <ion-content class="" fullscreen>

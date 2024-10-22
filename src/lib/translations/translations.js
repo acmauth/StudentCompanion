@@ -199,6 +199,15 @@ export default {
     "credential.save_account": "Αποθήκευσε τον ιδρυματικό σου λογαριασμό απευθείας στη συσκευή σου για να λαμβάνεις ειδοποιήσεις από το webmail και το eLearning!",
     "credential.academic_name": "Ιδρυματικό όνομα χρήστη",
     "credential.password": "Κωδικός πρόσβασης",
+    'update.UpdateHeader': 'Διαθέσιμη ενημέρωση',
+		'update.UpdateHeaderRequired': 'Απαιτείται ενημέρωση',
+		'update.UpdateAvailable':
+			'Υπάρχει διαθέσιμη ενημέρωση της εφαρμογής. Θέλεις να την κάνεις τώρα;',
+		'update.UpdateRequired': 'Απαιτείται ενημέρωση της εφαρμογής. Ευχαριστούμε για την κατανόηση!',
+		'update.UpdateLater': 'ΑΡΓΟΤΕΡΑ',
+		'update.UpdateNow': 'ΑΝΑΒΑΘΜΙΣΗ',
+		'update.updateButton': 'Αναβάθμιση',
+		'update.noUpdate': 'Δεν υπάρχει διαθέσιμη ενημέρωση'
   },
   en: {
     "menu.title": "Club menu",
@@ -398,11 +407,15 @@ export default {
     "credential.save_account": "Save your academic account directly to your device to receive webmail and eLearning notifications!",
     "credential.academic_name": "Academic username",
     "credential.password": "Password",
+    'update.UpdateHeader': 'Update Available',
+		'update.UpdateHeaderRequired': 'Update Required',
+		'update.UpdateAvailable':
+			'There is an update available for the application. Would you like to do it now?',
+		'update.UpdateRequired': 'App Update Required. Please update to the latest version.',
+		'update.UpdateLater': 'LATER',
+		'update.UpdateNow': 'UPDATE NOW',
+		'update.updateButton': 'Update',
+		'update.noUpdate': 'No update available'
   },
 };
-
-
-
-
-
 

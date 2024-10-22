@@ -56,6 +56,8 @@ dependencies {
     implementation 'commons-net:commons-net:3.10.0'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation 'androidx.work:work-runtime:2.7.0'
+    implementation "com.google.android.play:app-update:$androidPlayAppUpdateVersion"
+    implementation "com.google.android.gms:play-services-base:$androidPlayServicesBaseVersion"
 }
 
 apply from: 'capacitor.build.gradle'
