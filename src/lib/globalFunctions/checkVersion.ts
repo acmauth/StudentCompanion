@@ -32,7 +32,7 @@ const startFlexibleUpdate = async () => {
 const checkForUpdates = async () => {
 	try {
 		await fetch(
-			'https://raw.githubusercontent.com/acmauth/StudentCompanion/refs/heads/appVersion/version.json'
+			'https://raw.githubusercontent.com/acmauth/StudentCompanion/refs/heads/dev/version.json'
 		).then(async (response) => {
 			const data = await response.json();
 			handleUpdate(data);
