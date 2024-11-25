@@ -11,6 +11,7 @@
 	import * as allIonicIcons from 'ionicons/icons';
 	import CustomCourse from './customCourse.svelte';
 	import { icon } from 'leaflet';
+	import { next } from 'cheerio/lib/api/traversing.js';
 
 	export let flip;
 
@@ -30,9 +31,9 @@
 
 	let not_passed_all_courses = false;
 
-	let customCourses = [
-		{ id: 0, title: '', ects: '', grade: '' } // Initialize with the first empty course
-	];
+	let customCourses = [];
+
+	let nextId = 0; // Define a separate variable to track IDs
 
 	async function universis() {
 		not_passed_all_courses = await main(unpassed_courses, sums, degree_grade);
@@ -51,35 +52,15 @@
 	}
 
 	// Handle the input change for the custom courses
-	function handleInputChange(event: Event, field: 'title' | 'ects' | 'grade', id?: number) {
-		const value = (event.target as HTMLInputElement).value;
-
-		// If the 'id' is provided (i.e., for updating an existing course)
-		if (id !== undefined) {
-			// Find the course by its ID and update the corresponding field
-			const courseIndex = customCourses.findIndex((course) => course.id === id);
-			if (courseIndex !== -1) {
-				customCourses[courseIndex][field] = value; // Update the correct course field
-			}
-
-			// If all fields are filled in `customCourses`, add a new course
-			if (
-				customCourses[courseIndex].title &&
-				customCourses[courseIndex].ects &&
-				customCourses[courseIndex].grade
-			) {
-				// Generate a new ID for the new course
-				const newId = customCourses.length; // Create a unique ID based on the current length
-				// Push a new course with the generated ID and the input data
-				customCourses.push({ title: '', ects: '', grade: '', id: newId });
-			}
-		}
+	function addCourse() {
+		// Add new custom course and reassign as a new array
+		customCourses = [...customCourses, { id: nextId++, title: '', ects: '', grade: '' }];
 	}
 
-	const deleteCustomCourse = (event) => {
+	const deleteCustomCourse = (id) => {
 		// Get the ID of the course to be deleted
-		const id = Number(event.target.id); // Ensure the ID is a number
-		// Filter out the course with the given ID and assign the new array to `customCourses`
+		id = Number(id); // Ensure the ID is a number
+		// Filter out the course with the given ID
 		customCourses = customCourses.filter((course) => course.id !== id);
 	};
 </script>
@@ -92,6 +73,7 @@
 
 	{#await universis()}
 		<CoursesSkeleton />
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 	{:then}
 		{#if not_passed_all_courses}
 			{#each unpassed_courses as course}
@@ -117,28 +99,21 @@
 			{/each}
 		{/if}
 
+		<span class="line" />
+
 		{#each customCourses as course, index}
 			<div class="custom-courses-box">
 				<!-- Render new custom courses -->
-				<CustomCourse
-					{clickInput}
-					{gradeInput}
-					{handleInputChange}
-					{customCourses}
-					id={course.id}
-					{deleteCustomCourse}
-				/>
+				<CustomCourse {clickInput} {gradeInput} {course} {deleteCustomCourse} />
 			</div>
 		{/each}
 
-		<!-- <div class="ion-padding actions">
-			<ion-button class="ion-padding" size="small" fill="solid" shape="round">
-				<ion-icon icon={allIonicIcons.addOutline} slot="icon-only" />
-			</ion-button>
-			<ion-button class="ion-padding" color="danger" size="small" fill="solid" shape="round">
-				<ion-icon icon={allIonicIcons.trashBin} slot="icon-only" />
-			</ion-button>
-		</div> -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<div on:click={addCourse} class="ion-padding addCourse">
+			<ion-icon class="icons" icon={allIonicIcons.addCircle} />
+			<ion-text class="course-name ion-padding-end">Έξτρα μάθημα</ion-text>
+		</div>
 
 		<div class="columnFlex">
 			<AvGrades {degree_grade} />
@@ -173,6 +148,11 @@
 		margin-inline: 12%;
 	}
 
+	.icons {
+		width: 1.5rem;
+		height: 1.5rem;
+	}
+
 	.columnFlex {
 		display: flex;
 		flex-direction: column;
@@ -195,6 +175,19 @@
 	.custom-courses-box {
 		margin-bottom: 0.3m;
 		display: flex;
+		align-items: center;
+	}
+
+	.addCourse {
+		margin-top: 1em;
+		display: flex;
+		align-items: center;
+		border: 1px dashed var(--app-color-degree-placeholder);
+		border-radius: 5em;
+		margin-left: 2em;
+		margin-right: 2em;
+		height: 3em;
+		gap: 0.5rem;
 	}
 
 	.inputCustom {
@@ -214,10 +207,8 @@
 		color: var(--app-color-degree-placeholder);
 	}
 
-	.actions {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 1rem;
+	.line {
+		margin: 1.5em;
+		border: 0.01em dashed var(--app-color-degree-placeholder);
 	}
 </style>
