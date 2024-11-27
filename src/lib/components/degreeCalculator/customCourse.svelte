@@ -4,8 +4,10 @@
 	export let gradeInput;
 	export let course;
 	export let deleteCustomCourse;
+	import { t } from '$lib/i18n';
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div class="course-box">
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -17,9 +19,24 @@
 		icon={allIonicIcons.removeCircle}
 	/>
 
-	<ion-input class="course-name ion-padding-end" placeholder="Έξτρα μάθημα" value={course.title} />
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<ion-input
+		class="course-name ion-padding-end"
+		placeholder={$t('customCourse.title')}
+		value={course.title}
+		on:focus={() => (course.title = '')}
+		on:ionInput={(e) => (course.title = e.target.value)}
+	/>
 
-	<input class="ects" placeholder="Συντελεστής" inputmode={'numeric'} value={course.ects} />
+	<input
+		class="ects"
+		placeholder={$t('customCourse.coefficient')}
+		inputmode={'numeric'}
+		on:focus={() => (course.coefficient = '')}
+		on:click={clickInput}
+		bind:value={course.coefficient}
+		on:input={() => gradeInput(course)}
+	/>
 </div>
 
 <div class="input-box">
@@ -27,10 +44,12 @@
 		type="text"
 		inputmode="decimal"
 		class="inputCustom"
+		id={course.id}
+		on:focus={() => (course.grade = '')}
 		on:click={clickInput}
-		placeholder="5.00"
-		on:input={gradeInput}
 		bind:value={course.grade}
+		placeholder="5.00"
+		on:input={() => gradeInput(course)}
 	/>
 </div>
 

@@ -8,32 +8,53 @@ import { degreeGradeUpdate } from './degreeGradeUpdate.js';
  * @param { { based: {value: number, stringed: string}, simple: {value: number, stringed: string}; } } degree_grade
  */
 
-export function inputUpdate(unpassed_courses, sums, degree_grade){
-    let sums_guess = { based: {grade_sum:0, coefficient: sums.based.coefficient}, simple: {grade_sum: 0, passed: sums.simple.passed} };
+export function inputUpdate(unpassed_courses, sums, degree_grade, customCourses = null) {
+	let sums_guess = {
+		based: { grade_sum: 0, coefficient: sums.based.coefficient },
+		simple: { grade_sum: 0, passed: sums.simple.passed }
+	};
 
-    for (var course of unpassed_courses)
-    {
-        const input_element = document.getElementById(course.id);
-            if (input_element != null)
-                input_element.style.borderColor = "#ccc";
+	// Filter out custom courses from unpassed courses
+	if (customCourses !== null) {
+		// Add custom course grade to the sums
+		for (const customCourse of customCourses) {
+			const input_element = document.getElementById(customCourse.id);
+			if (input_element != null) input_element.style.borderColor = '#ccc';
 
-        if (numberCheck(course))
-            continue
-        
-        course = checkPrecision(course);
+			if (numberCheck(customCourse)) continue;
 
-        if (course.grade < 5 && input_element != null)
-        {
-            input_element.style.borderColor = "red";
-            continue;
-        }
-        
-        sums_guess.based.grade_sum += course.grade * course.coefficient;
-        sums_guess.based.coefficient += course.coefficient;
+			course = checkPrecision(customCourse);
 
-        sums_guess.simple.grade_sum += course.grade;
-        sums_guess.simple.passed++;
-    }
+			if (course.grade < 5 && input_element != null) {
+				input_element.style.borderColor = 'red';
+				continue;
+			}
 
-    degreeGradeUpdate(degree_grade, sums, sums_guess);
+			sums_guess.based.grade_sum += Number(course.grade) * Number(course.coefficient);
+			sums_guess.based.coefficient += Number(course.coefficient);
+			sums_guess.simple.grade_sum += Number(course.grade);
+			sums_guess.simple.passed++;
+		}
+	}
+	for (var course of unpassed_courses) {
+		const input_element = document.getElementById(course.id);
+		if (input_element != null) input_element.style.borderColor = '#ccc';
+
+		if (numberCheck(course)) continue;
+
+		course = checkPrecision(course);
+
+		if (course.grade < 5 && input_element != null) {
+			input_element.style.borderColor = 'red';
+			continue;
+		}
+
+		sums_guess.based.grade_sum += course.grade * course.coefficient;
+		sums_guess.based.coefficient += course.coefficient;
+
+		sums_guess.simple.grade_sum += course.grade;
+		sums_guess.simple.passed++;
+	}
+
+	degreeGradeUpdate(degree_grade, sums, sums_guess);
 }

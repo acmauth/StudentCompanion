@@ -42,19 +42,19 @@
 	/** @param { { target: { value: string; }; } } element */
 	function clickInput(element: { target: { value: string } }) {
 		element.target.value = '';
-		inputUpdate(unpassed_courses, sums, degree_grade);
+		inputUpdate(unpassed_courses, sums, degree_grade, customCourses);
 		degree_grade = degree_grade;
 	}
 
-	function gradeInput() {
-		inputUpdate(unpassed_courses, sums, degree_grade);
+	function gradeInput(customCourse = null) {
+		inputUpdate(unpassed_courses, sums, degree_grade, customCourses);
 		degree_grade = degree_grade;
 	}
 
 	// Handle the input change for the custom courses
 	function addCourse() {
 		// Add new custom course and reassign as a new array
-		customCourses = [...customCourses, { id: nextId++, title: '', ects: '', grade: '' }];
+		customCourses = [...customCourses, { id: nextId++, title: '', coefficient: '', grade: '' }];
 	}
 
 	const deleteCustomCourse = (id) => {
@@ -62,6 +62,8 @@
 		id = Number(id); // Ensure the ID is a number
 		// Filter out the course with the given ID
 		customCourses = customCourses.filter((course) => course.id !== id);
+		inputUpdate(unpassed_courses, sums, degree_grade, customCourses);
+		degree_grade = degree_grade;
 	};
 </script>
 
@@ -92,7 +94,7 @@
 							class="inputCustom"
 							on:click={clickInput}
 							placeholder="5.00"
-							on:input={gradeInput}
+							on:input={() => gradeInput()}
 						/>
 					</div>
 				</div>
@@ -112,7 +114,7 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div on:click={addCourse} class="ion-padding addCourse">
 			<ion-icon class="icons" icon={allIonicIcons.addCircle} />
-			<ion-text class="course-name ion-padding-end">Έξτρα μάθημα</ion-text>
+			<ion-text class="course-name ion-padding-end">{$t('customCourse.title')}</ion-text>
 		</div>
 
 		<div class="columnFlex">
