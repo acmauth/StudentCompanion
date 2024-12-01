@@ -1,5 +1,9 @@
 import type { Event } from '$lib/components/calendar/event/Event';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { getIds } from './notificationsStore';
+import { cancelNotifications } from './scheduleNotifications';
+import { removeFromScheduledNotficiations } from './notificationsStore';
+import { scheduleRepeatedNotifications } from './repeatedNotifications';
 
 // taking the id from the event and removing the first 4 digits, because on Android it's a 32-bit int
 export function cutId(id: number){
@@ -12,7 +16,7 @@ export function cutId(id: number){
 }
 
 // calculate the date that the notification should be send
-export function calcNotifyDate(event: Event){
+export function calcNotifDate(event: Event){
     let notifyDate: Date;
 
     if (event.notifyTime){
@@ -55,4 +59,27 @@ export async function calcNotifId(notificationId: number){
         console.error('Error fetching pending notifications', error);
         return notificationId;
     }
+}
+
+function cancelEventNotifications(event: Event){
+    const notifIds = getIds();
+    for (const notifid of notifIds){
+        if (!notifid.notificationids) continue;
+
+        if (notifid.event?.id !== event.id){
+            cancelNotifications(notifid.notificationids);
+            break;
+        }
+    }
+}
+
+// cancels all the notifications after the events are deleted
+export function deleteEventNotifications(event: Event){
+    cancelEventNotifications(event);
+    removeFromScheduledNotficiations(event.id);
+}
+
+// cancels a specific notification after the event is deleted
+export function deleteSingleEventNotification(event: Event){
+    scheduleRepeatedNotifications(event); // this
 }

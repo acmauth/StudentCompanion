@@ -12,9 +12,11 @@
     import { toastController } from 'ionic-svelte';
     import type { ToastOptions } from '@ionic/core';
     import { universisGet } from '$src/lib/dataService';
-    import { scheduleNotification } from '$src/lib/calendarNotifications/scheduleNotifications';
+    import { scheduleNotification, cancelNotifications } from '$src/lib/calendarNotifications/scheduleNotifications';
     import { handleNotificationPermission, handleExactAlarmPermission } from '$src/lib/calendarNotifications/runtimePermissions';
     import { removePastNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
+    import { deleteEventNotifications, deleteSingleEventNotification } from '$src/lib/calendarNotifications/notificationFunctions';
+    import { getIds } from '$src/lib/calendarNotifications/notificationsStore';
     import { t } from "$lib/i18n";
 
 
@@ -67,6 +69,7 @@
         }
         selectedEvent = null;
 
+        // schedule notifications, if they are enabled
         if (tmpEvent.notify){
             handleNotificationPermission();
             handleExactAlarmPermission();
@@ -116,6 +119,10 @@
             $EventStore = $EventStore.filter(x => x.id != event.id);
         }
         deleteModalOpen = false;
+        //delete the notifications if they are enabled
+        if (event.notify){
+            deleteEventNotifications(event);
+        }        
     }
 
     function addInactiveDateToEvent(event: Event | null) {
@@ -123,6 +130,12 @@
         const index = $EventStore.findIndex(x => x.id == event.id);
         $EventStore[index].inactiveDates = $EventStore[index].inactiveDates?.concat(activeDate.getTime()) ?? [activeDate.getTime()];
         deleteModalOpen = false;
+        
+        if (event.repeat != EventRepeatType.NEVER){
+            deleteSingleEventNotification(event);
+        } else {
+            deleteEventNotifications(event);
+        }
     }
 
     // remove this on production
