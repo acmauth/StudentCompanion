@@ -98,7 +98,7 @@
     </ion-item>
 </div>
 
-
+<!-- Modal which displays when clicked, showing the detailed contents of the notification -->
 <ion-modal
       is-open={inlineModalOpen}
       initial-breakpoint={0.5}
@@ -113,8 +113,8 @@
                             <h2>{notification.subject}</h2>
                         </ion-text>
                     </ion-item>
-                    <ion-item lines="none">
-                        <ion-chip outline color={notification.type == "universis" ? "tertiary" : notification.type == "webmail" ? "secondary" : "warning"}>
+                    <div class="context-chips ion-padding-horizontal">
+                        <ion-chip style="flex-shrink: 2;" outline color={notification.type == "universis" ? "tertiary" : notification.type == "webmail" ? "secondary" : "warning"}>
                             <ion-avatar>
                                 <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail"? mail : elearningLogo} />
                             </ion-avatar>
@@ -129,14 +129,12 @@
                             </ion-label>
                         </ion-chip>
                         {#if notification.url}
-                        <ion-item lines="none"> 
                             <ion-chip color="primary" on:click={()=>{window.location = notification.url}} aria-hidden>
                                 <ion-icon icon={open} ></ion-icon>
                                 <ion-label>{$t('notifications.open')}</ion-label>
                             </ion-chip>
-                        </ion-item>
                         {/if}
-                    </ion-item>
+                    </div>
                     <ion-item-divider>
                         <ion-label>{$t('notifications.description')} </ion-label>
                       </ion-item-divider>                    
@@ -172,6 +170,12 @@
 
         ion-chip {
             margin: 0rem !important;
+        }
+
+        .context-chips{
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
         }
 
         .top {
