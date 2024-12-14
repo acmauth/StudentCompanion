@@ -11,6 +11,7 @@ let totalGrades;
 let totalPassedGrades;
 let totalStudents;
 let gradesCount;
+let topPercent;
 
 /**
  * @param {any} courseCode
@@ -25,6 +26,7 @@ export async function statistics(courseCode) {
 	studentsFailed = 0;
 	totalGrades = 0;
 	totalPassedGrades = 0;
+	topPercent = false;
 	totalStudents = 0;
 	gradesCount = {
 		0: 0,
@@ -58,6 +60,8 @@ export async function statistics(courseCode) {
 
 	let statistic = await neoUniversisGet(`students/me/exams/${courseExam}/statistics?$top=-1&`,{lifetime: 600});
 
+	let passedGrades = [];
+
 	for (const exam of statistic) {
 		if (myGrade > exam.examGrade) {
 			studentsWorseThanMe += exam.total;
@@ -70,6 +74,7 @@ export async function statistics(courseCode) {
 		if (exam.examGrade >= 0.5) {
 			studentsPassed += exam.total;
 			totalPassedGrades += exam.total * exam.examGrade;
+			passedGrades.push(exam.examGrade);
 		} else {
 			studentsFailed += exam.total;
 		}
@@ -89,6 +94,15 @@ export async function statistics(courseCode) {
 	myGrade *= 10;
 	myGrade = Number.isInteger(myGrade) ? myGrade : Number((myGrade).toFixed(3)).toFixed(1);
 
+	if (passedGrades.length > 0) {
+		passedGrades.sort((a, b) => b - a);
+
+		const topPercentCount = Math.ceil(passedGrades.length * 0.1);
+		const topPercentGrades = passedGrades.slice(0, topPercentCount);
+
+		topPercent = topPercentGrades.includes(myGrade / 10); 
+	}
+
 	const stats = {
 		courseCode: courseCode,
 		myGrade: myGrade,
@@ -100,7 +114,8 @@ export async function statistics(courseCode) {
 		average: average * 10,
 		averagePassed: averagePassed * 10,
 		totalStudents: totalStudents.toString(),
-		gradesCount: gradesCount
+		gradesCount: gradesCount,
+		topPercent: topPercent
 	};
 
 	return stats;

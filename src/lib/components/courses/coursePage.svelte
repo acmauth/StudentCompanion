@@ -31,7 +31,8 @@
 		failedCount: 0,
 		averageGrade: 0,
 		averageGradePassed: 0,
-		gradesCount: {}
+		gradesCount: {},
+		top10Percent: false
 	};
 
 	export let id;
@@ -84,6 +85,7 @@
 		stats.averageGradePassed = result.averagePassed.toFixed(1);
 		stats.averageGrade = result.average.toFixed(1);
 		stats.gradesCount = result.gradesCount;
+		stats.top10Percent = result.topPercent;
 		}
 
 
