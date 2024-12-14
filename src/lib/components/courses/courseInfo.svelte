@@ -9,7 +9,7 @@
 	 */
 	export let course;
 	/**
-	 * @type {{ grade: number; totalStudents: any; studentsLikeMe: any; studentsBetterThanMe: any; studentsWorseThanMe: any; passedCount: any; failedCount: any; averageGrade: any; averageGradePassed: any; gradesCount: any; }}
+	 * @type {{ grade: number; totalStudents: any; studentsLikeMe: any; studentsBetterThanMe: any; studentsWorseThanMe: any; passedCount: any; failedCount: any; averageGrade: any; averageGradePassed: any; gradesCount: any; top10Percent: any;}}
 	 */
 	export let stats;
 
@@ -197,6 +197,11 @@
 			{#if stats.grade}
 			<canvas id="statChart" />
 			<ion-list>
+				{#if stats.top10Percent}
+					<centered-item lines ="full">
+						<ion-text slot="end">{$t("course.top10Percent")}</ion-text>
+					</centered-item>	
+				{/if}	
 				<ion-item lines ="full">
 					<ion-label>{$t("course.graded_students")}</ion-label>
 					<ion-text slot="end">{stats.totalStudents}</ion-text>
@@ -251,6 +256,12 @@
 
 	ion-text {
 		color: var(--app-color-primary-dark);
+	}
+
+	centered-item {
+    	justify-content: center;
+    	text-align: center;
+		display: flex;
 	}
 
 	.teachers {

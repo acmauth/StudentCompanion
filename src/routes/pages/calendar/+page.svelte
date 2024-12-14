@@ -69,7 +69,7 @@
 
         if (tmpEvent.notify){
             handleNotificationPermission();
-            handleExactAlarmPermission();
+            // handleExactAlarmPermission(); //not necessary with the USE_EXACT_ALARM permission
             removePastNotifications();
             scheduleNotification(tmpEvent); 
         }
