@@ -12,7 +12,7 @@
 	import CustomCourse from './customCourse.svelte';
 	import { icon } from 'leaflet';
 	import { next } from 'cheerio/lib/api/traversing.js';
-
+	import { fade } from 'svelte/transition';
 	export let flip;
 
 	let unpassed_courses: {
@@ -101,23 +101,21 @@
 			{/each}
 		{/if}
 
-		<span class="line" />
-
 		{#each customCourses as course, index}
-			<div class="custom-courses-box">
+			<div transition:fade class="custom-courses-box">
 				<!-- Render new custom courses -->
 				<CustomCourse {clickInput} {gradeInput} {course} {deleteCustomCourse} />
 			</div>
 		{/each}
 
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<div on:click={addCourse} class="ion-padding addCourse">
-			<ion-icon class="icons" icon={allIonicIcons.addCircle} />
-			<ion-text class="course-name ion-padding-end">{$t('customCourse.title')}</ion-text>
-		</div>
-
 		<div class="columnFlex">
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div on:click={addCourse} class="ion-padding addCourse">
+				<ion-icon class="icons" icon={allIonicIcons.addCircle} />
+				<ion-text class="course-name ion-padding-end">{$t('customCourse.title')}</ion-text>
+			</div>
+
 			<AvGrades {degree_grade} />
 
 			<Chip chipIcon={allIonicIcons.cellular} text={$t('progress.title')} {flip} />
@@ -181,13 +179,12 @@
 	}
 
 	.addCourse {
-		margin-top: 1em;
+		max-width: fit-content;
+		margin-top: 1.5em;
 		display: flex;
 		align-items: center;
 		border: 1px dashed var(--app-color-degree-placeholder);
 		border-radius: 5em;
-		margin-left: 2em;
-		margin-right: 2em;
 		height: 3em;
 		gap: 0.5rem;
 	}
@@ -207,10 +204,5 @@
 
 	::placeholder {
 		color: var(--app-color-degree-placeholder);
-	}
-
-	.line {
-		margin: 1.5em;
-		border: 0.01em dashed var(--app-color-degree-placeholder);
 	}
 </style>
