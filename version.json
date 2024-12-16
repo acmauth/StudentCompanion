@@ -3,15 +3,15 @@
 		"versions": [
 			{
 				"versionCode": 25,
-				"priority": 0
+				"priority": 1
 			},
 			{
 				"versionCode": 26,
-				"priority": 0
+				"priority": 5
 			},
 			{
 				"versionCode": 27,
-				"priority": 0
+				"priority": 1
 			}
 		]
 	},
@@ -19,11 +19,11 @@
 		"versions": [
 			{
 				"versionCode": 25,
-				"priority": 0
+				"priority": 1
 			},
 			{
 				"versionCode": 26,
-				"priority": 0
+				"priority": 5
 			}
 		]
 	}
