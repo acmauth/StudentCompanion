@@ -25,12 +25,15 @@
 		coefficient: number;
 	}[] = [];
 
+	// Define the degree_grade object to store the average grades for the custom courses
 	let degree_grade = { based: { value: 0, stringed: '' }, simple: { value: 0, stringed: '' } };
 
+	// Define the sums object to store the sum of the grades and coefficients for the custom courses
 	let sums = { based: { grade_sum: 0, coefficient: 0 }, simple: { grade_sum: 0, passed: 0 } };
 
 	let not_passed_all_courses = false;
 
+	// custom courses array
 	let customCourses = [];
 
 	let nextId = 0; // Define a separate variable to track IDs
@@ -69,7 +72,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<ion-card style="overflow-y: auto;" class="ion-padding-vertical">
+<ion-card class="ion-padding-vertical">
 	<ion-card-title>{$t('progress.average_prediction_full')}</ion-card-title>
 	<ion-card-subtitle>{$t('progress.average_prediction_desc')}</ion-card-subtitle>
 
@@ -77,37 +80,38 @@
 		<CoursesSkeleton />
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 	{:then}
-		{#if not_passed_all_courses}
-			{#each unpassed_courses as course}
-				<div class="courses-box">
-					<Course
-						course_title={course.title}
-						course_semester_id={course.semester_id}
-						course_semester_name={course.semester_name}
-					/>
-
-					<div class="input-box">
-						<input
-							type="text"
-							inputmode="decimal"
-							id={course.id}
-							class="inputCustom"
-							on:click={clickInput}
-							placeholder="5.00"
-							on:input={() => gradeInput()}
+		<div class="scrollable-content ion-padding-vertical">
+			{#if not_passed_all_courses}
+				{#each unpassed_courses as course}
+					<div class="courses-box">
+						<Course
+							course_title={course.title}
+							course_semester_id={course.semester_id}
+							course_semester_name={course.semester_name}
 						/>
+
+						<div class="input-box">
+							<input
+								type="text"
+								inputmode="decimal"
+								id={course.id}
+								class="inputCustom"
+								on:click={clickInput}
+								placeholder="5.00"
+								on:input={() => gradeInput()}
+							/>
+						</div>
 					</div>
+				{/each}
+			{/if}
+
+			{#each customCourses as course, index}
+				<div transition:fade class="custom-courses-box">
+					<!-- Render new custom courses -->
+					<CustomCourse {clickInput} {gradeInput} {course} {deleteCustomCourse} />
 				</div>
 			{/each}
-		{/if}
-
-		{#each customCourses as course, index}
-			<div transition:fade class="custom-courses-box">
-				<!-- Render new custom courses -->
-				<CustomCourse {clickInput} {gradeInput} {course} {deleteCustomCourse} />
-			</div>
-		{/each}
-
+		</div>
 		<div class="columnFlex">
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -126,7 +130,7 @@
 <style>
 	ion-card {
 		max-height: 80vh; /* Limit the height to 80% of the viewport height */
-		overflow-y: auto;
+		/* overflow-y: auto; */
 		display: flex;
 		flex-direction: column;
 	}
@@ -146,6 +150,11 @@
 		margin-top: 0.3rem;
 		margin-bottom: 2.5rem;
 		margin-inline: 12%;
+	}
+
+	.scrollable-content {
+		height: 100%;
+		overflow-y: auto;
 	}
 
 	.icons {
