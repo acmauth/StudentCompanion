@@ -1,7 +1,6 @@
 import { menu } from 'ionicons/icons';
 
 export default {
-=======
   el: {
     "menu.title": "Μενού Λέσχης",
     "menu.week": "Το Μενού της Εβδομάδας",
