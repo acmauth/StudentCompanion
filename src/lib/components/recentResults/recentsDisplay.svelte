@@ -38,9 +38,10 @@
     // restore the most recently deleted card when undo button is pressed
     function restoreDeletedCard(){
         removeFromDismissedItems(recentlyDismissedItem);
-        for (const recentItem of allRecentItems){
+        for (const recentItem of allRecentItems){ //allRecentItems include the deleted ones
             if (recentlyDismissedItem === recentItem.id){
                 recentItems = [...recentItems, recentItem];
+                //geting the deleted card to its previous position
                 let temp = [];     
                 for (const item of allRecentItems){
                     if (recentItems.includes(item)){
