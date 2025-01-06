@@ -48,8 +48,8 @@
 		}
 
 		// reschedule calendar notifications if the exact alarm permission changes
-		// handleChangedPermission(); //not needed with USE_EXACT_ALARM permission
-	});
+		handleChangedPermission(); 
+		});
 
 </script>
 
