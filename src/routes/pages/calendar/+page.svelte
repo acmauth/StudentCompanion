@@ -78,7 +78,13 @@
     }    
 
     function recreatePrototype() {
-        let activeDateCurrentTime = new Date (  new Date ( (new Date(activeDate.getTime())).setHours(new Date().getHours()) ).setMinutes((new Date()).getMinutes())  );
+        // Create a new prototype event
+
+        // Set the activeDateCurrentTime to the current time, but with the date of the activeDate
+        const CurrentTime = new Date();
+        const activeDateCurrentTime = new Date(activeDate.getTime());
+        activeDateCurrentTime.setHours(CurrentTime.getHours(), CurrentTime.getMinutes());
+        
         prototype = {
             id: new Date().getTime(),
             title: "",
