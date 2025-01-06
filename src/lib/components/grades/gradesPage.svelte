@@ -7,7 +7,7 @@ import Flipper from "$components/shared/Flipper.svelte";
 import Grades from '$lib/components/grades/grades.svelte';
 import 'js-circle-progress'
 import Chips from '$lib/components/grades/chips.svelte';
-import Card from '$components/degreeCalculator/card.svelte';
+import DegreeCalculatorCard from '$components/degreeCalculator/card.svelte';
 import Stats from '$lib/components/grades/statsCard.svelte';
 import 'js-circle-progress'
 import { neoUniversisGet } from '$lib/dataService';
@@ -172,7 +172,7 @@ import { t } from "$lib/i18n";
 	  {#if !searchQuery.length}
 		  <Flipper reactToHeight bind:flipped={$flipped}>
 			  <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
-			  <Card flip={flip} slot="back"/>
+			  <DegreeCalculatorCard flip={flip} slot="back"/>
 		  </Flipper>
 	  {/if}
 		  

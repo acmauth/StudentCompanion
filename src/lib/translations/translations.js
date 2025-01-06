@@ -1,4 +1,4 @@
-import { menu } from "ionicons/icons";
+import { menu } from 'ionicons/icons';
 
 export default {
   el: {
@@ -208,7 +208,9 @@ export default {
 		'update.UpdateLater': 'ΑΡΓΟΤΕΡΑ',
 		'update.UpdateNow': 'ΑΝΑΒΑΘΜΙΣΗ',
 		'update.updateButton': 'Αναβάθμιση',
-		'update.noUpdate': 'Δεν υπάρχει διαθέσιμη ενημέρωση'
+    'update.noUpdate': 'Δεν υπάρχει διαθέσιμη ενημέρωση',
+    'customCourse.title': 'Έξτρα μάθημα',
+		'customCourse.coefficient': 'Συντελεστής'
   },
   en: {
     "menu.title": "Club menu",
@@ -417,7 +419,8 @@ export default {
 		'update.UpdateLater': 'LATER',
 		'update.UpdateNow': 'UPDATE NOW',
 		'update.updateButton': 'Update',
-		'update.noUpdate': 'No update available'
-  },
+		'update.noUpdate': 'No update available',
+		'customCourse.title': 'Extra course',
+		'customCourse.coefficient': 'Coefficient'
+	}
 };
-
