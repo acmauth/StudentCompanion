@@ -78,17 +78,24 @@
     }    
 
     function recreatePrototype() {
+        // Create a new prototype event
+
+        // Set the activeDateCurrentTime to the current time, but with the date of the activeDate
+        const CurrentTime = new Date();
+        const activeDateCurrentTime = new Date(activeDate.getTime());
+        activeDateCurrentTime.setHours(CurrentTime.getHours(), CurrentTime.getMinutes());
+        
         prototype = {
             id: new Date().getTime(),
             title: "",
             slot: {
-                start: new Date(),
-                end: new Date(new Date().getTime() + 3600000)
+                start: activeDateCurrentTime,
+                end: new Date (activeDateCurrentTime.getTime() + 3600000),
             },
             type: EventType.TASK,
             description: "",
             repeat: EventRepeatType.NEVER,
-            repeatUntil: new Date(new Date().getTime() + 3600000),
+            repeatUntil: new Date (activeDateCurrentTime.getTime() + 3600000),
             repeatInterval: 1,
             notify: false,
             notifyTime: 1
@@ -216,7 +223,7 @@
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
-            <EventDetails bind:copyEvent={tmpEvent} />
+            <EventDetails bind:copyEvent={tmpEvent} activeDate={activeDate} />
         </ion-modal>
 
         <ion-alert
