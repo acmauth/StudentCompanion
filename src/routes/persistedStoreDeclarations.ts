@@ -1,11 +1,11 @@
+import type CapacitorPersistedStore from "$lib/storage/capacitorPersistedStore";
 import { toggles } from "./pages/notifications/notificationToggles";
 import { dismissedItems } from "$components/recentResults/dismissedItems";
 import { EventStore } from "$components/calendar/event/EventStore";
 import { qrStore } from "$components/wallet/qrStore";
-import { userCreds, userTokens } from "$stores/credentials.store";
+import { userCreds, userTokens, useAlternativeLogin } from "$stores/credentials.store";
 import { scheduledNotifications } from "$lib/calendarNotifications/notificationsStore";
 import { keyCloakStore } from "$stores/keycloak.store";
-import type CapacitorPersistedStore from "$lib/storage/capacitorPersistedStore";
 import { userCredsFlag } from "$components/webmailLogin/userCredsFlagStore";
 
 const persistedStores: CapacitorPersistedStore<any>[] = [
@@ -17,7 +17,8 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
     qrStore,
     userTokens,
     userCredsFlag,
-    keyCloakStore
+    keyCloakStore,
+    useAlternativeLogin
     // Add new stores here
 ];
 
