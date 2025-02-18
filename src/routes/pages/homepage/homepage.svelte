@@ -152,9 +152,7 @@
 		<p class="info-text"><b>{$t('homepage.usefulInfo')}</b></p>
 		<AppletsSlides />
 		<Banner altText="Πες μας τη γνώμη σου" />
-		<div
-			style="display:flex; justify-content:space-between; align-items: center; margin-inline-end:0.75rem;"
-		>
+		<div style="display:flex; justify-content:space-between; align-items: center; margin-inline-end:0.75rem;">
 			<p style="margin-top:0" class="info-text">
 				<b>{$t('homepage.recents')}</b>
 			</p>
