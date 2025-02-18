@@ -2,16 +2,16 @@
 	"android": {
 		"versions": [
 			{
-				"versionCode": 27,
-				"priority": 0
-			},
-			{
 				"versionCode": 28,
 				"priority": 0
 			},
 			{
 				"versionCode": 29,
 				"priority": 2
+			},
+			{
+				"versionCode": 30,
+				"priority": 4
 			}
 		]
 	},
