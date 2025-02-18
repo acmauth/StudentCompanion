@@ -62,19 +62,20 @@ export async function getLoginStatus() : Promise<boolean> {
             return true;
         }
         else {
-            await reauthenticate();
-            _userTokens = get(userTokens);
-            const response = await fetch(url, {
-                headers: {
-                    Authorization: `Bearer ${_userTokens.universis.token}`,
-                },
-            });
-            if (response.status >= 500 || response.status === 200) {
-                return true;
+            for(let i = 0; i < 3; i++){
+                await reauthenticate();
+                _userTokens = get(userTokens);
+                const response = await fetch(url, {
+                    headers: {
+                        Authorization: `Bearer ${_userTokens.universis.token}`,
+                    },
+                });
+                if (response.status >= 500 || response.status === 200) {
+                    return true;
+                }
+                await new Promise(r => setTimeout(r, 1000)); 
             }
-            else {
-                return false;
-            }
+            return false;
         }
     }
     catch (e) {
