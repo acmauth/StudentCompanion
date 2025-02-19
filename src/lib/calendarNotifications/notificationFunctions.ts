@@ -62,11 +62,11 @@ export async function calcNotifId(notificationId: number){
 }
 
 function cancelEventNotifications(event: Event){
-    const notifIds = getIds();
-    for (const notifid of notifIds){
-        if (!notifid.notificationIds) continue;
-        if (notifid.event?.id === event.id){
-            cancelNotifications(notifid.notificationIds);
+    const events = getIds();
+    for (const anEvent of events){
+        if (!anEvent.notificationIds) continue;
+        if (anEvent.event?.id === event.id){
+            cancelNotifications(anEvent.notificationIds);
             break;
         }
     }

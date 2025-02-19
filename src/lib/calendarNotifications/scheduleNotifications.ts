@@ -10,7 +10,6 @@ import { get } from 'svelte/store';
 
 // schedules a notification at a specific date
 export async function schedule(event: Event, notifyDate: Date, id: number){
-
     try{        
         await LocalNotifications.schedule({notifications: [{
             title: event.title,
@@ -32,7 +31,6 @@ export async function schedule(event: Event, notifyDate: Date, id: number){
 
 //cancels certain scheduled notifications
 export async function cancelNotifications(ids: number[]){ 
-
     try{    
         await LocalNotifications.cancel({
             notifications: ids.map(id => ({ id }))

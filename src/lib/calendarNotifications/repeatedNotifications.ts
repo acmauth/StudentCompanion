@@ -28,7 +28,6 @@ export function removePastNotifications(){
 // checking if the date1:Date and date2:milliscs are in the same day, month and year 
 function isSameDay(date1: Date, millisecs: number){
     const date2 = new Date(millisecs);
-    console.log(date1.getMonth()+"/"+date1.getDate()+"-"+date2.getMonth()+"/"+date2.getDate());
     return (
         date1.getFullYear() === date2.getFullYear() &&
         date1.getMonth() === date2.getMonth() &&
@@ -41,7 +40,6 @@ function isInactiveDate(notifDate: Date, eventId: number){
     const events = getEvents();
     const index = events.findIndex(x => x.id == eventId);
     const inactiveDates = events[index].inactiveDates; 
-    console.log(inactiveDates?.length);
     for (const inactiveDate of inactiveDates || []){
         if (isSameDay(notifDate, inactiveDate)){
             return true;
@@ -106,7 +104,6 @@ export async function scheduleRepeatedNotifications(event: Event){
     let ids:number[] = [];
     
     while ( notifyDate < repeatUntil ){ 
-        console.log(isInactive);
         if (!isInactive){
             schedule(event, notifyDate, notificationId);
             ids.push(notificationId);
