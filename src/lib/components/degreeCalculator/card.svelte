@@ -13,6 +13,7 @@
 	import { icon } from 'leaflet';
 	import { next } from 'cheerio/lib/api/traversing.js';
 	import { fade } from 'svelte/transition';
+	import { courseAdded } from './courseStore.ts';
 	export let flip;
 
 	let unpassed_courses: {
@@ -58,6 +59,7 @@
 	function addCourse() {
 		// Add new custom course and reassign as a new array
 		customCourses = [...customCourses, { id: nextId++, title: '', coefficient: '', grade: '' }];
+		courseAdded.update((n) => n + 1);
 	}
 
 	const deleteCustomCourse = (id) => {
@@ -80,59 +82,79 @@
 		<CoursesSkeleton />
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 	{:then}
-		<div class="scrollable-content ion-padding-vertical">
-			{#if not_passed_all_courses}
-				{#each unpassed_courses as course}
-					<div class="courses-box">
-						<Course
-							course_title={course.title}
-							course_semester_id={course.semester_id}
-							course_semester_name={course.semester_name}
-						/>
-
-						<div class="input-box">
-							<input
-								type="text"
-								inputmode="decimal"
-								id={course.id}
-								class="inputCustom"
-								on:click={clickInput}
-								placeholder="5.00"
-								on:input={() => gradeInput()}
+		<div class="container">
+			<div class="scrollable-content ion-padding-vertical">
+				{#if not_passed_all_courses}
+					{#each unpassed_courses as course}
+						<div class="courses-box">
+							<Course
+								course_title={course.title}
+								course_semester_id={course.semester_id}
+								course_semester_name={course.semester_name}
 							/>
+
+							<div class="input-box">
+								<input
+									type="text"
+									inputmode="decimal"
+									id={course.id}
+									class="inputCustom"
+									on:click={clickInput}
+									placeholder="5.00"
+									on:input={() => gradeInput()}
+								/>
+							</div>
 						</div>
+					{/each}
+				{/if}
+
+				{#each customCourses as course, index}
+					<div transition:fade class="custom-courses-box">
+						<!-- Render new custom courses -->
+						<CustomCourse {clickInput} {gradeInput} {course} {deleteCustomCourse} />
 					</div>
 				{/each}
-			{/if}
-
-			{#each customCourses as course, index}
-				<div transition:fade class="custom-courses-box">
-					<!-- Render new custom courses -->
-					<CustomCourse {clickInput} {gradeInput} {course} {deleteCustomCourse} />
-				</div>
-			{/each}
-		</div>
-		<div class="columnFlex">
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div on:click={addCourse} class="ion-padding addCourse">
-				<ion-icon class="icons" icon={allIonicIcons.addCircle} />
-				<ion-text class="course-name ion-padding-end">{$t('customCourse.title')}</ion-text>
 			</div>
 
-			<AvGrades {degree_grade} />
+			<div class="columnFlex">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div on:click={addCourse} class="ion-padding addCourse">
+					<ion-icon class="icons" icon={allIonicIcons.addCircle} />
+					<ion-text class="course-name ion-padding-end">{$t('customCourse.title')}</ion-text>
+				</div>
 
-			<Chip chipIcon={allIonicIcons.cellular} text={$t('progress.title')} {flip} />
+				<AvGrades {degree_grade} />
+
+				<Chip chipIcon={allIonicIcons.cellular} text={$t('progress.title')} {flip} />
+			</div>
 		</div>
 	{/await}
 </ion-card>
 
 <style>
-	ion-card {
-		max-height: 80vh; /* Limit the height to 80% of the viewport height */
-		/* overflow-y: auto; */
+	.container {
 		display: flex;
 		flex-direction: column;
+		max-height: 90vh; /* Ensure the container takes full viewport height */
+	}
+
+	.scrollable-content {
+		flex-grow: 1; /* Take up the remaining space */
+		overflow-y: auto; /* Enable scrolling */
+		padding: 10px;
+		max-height: 35vh; /* Fill the available height */
+	}
+
+	.columnFlex {
+		flex-shrink: 0; /* Prevent this section from shrinking */
+	}
+
+	ion-card {
+		display: flex;
+		flex-direction: column;
+		z-index: 1;
+		overflow: hidden; /* Prevent card from overflowing */
 	}
 
 	ion-card-title {
@@ -150,11 +172,6 @@
 		margin-top: 0.3rem;
 		margin-bottom: 2.5rem;
 		margin-inline: 12%;
-	}
-
-	.scrollable-content {
-		height: 100%;
-		overflow-y: auto;
 	}
 
 	.icons {
