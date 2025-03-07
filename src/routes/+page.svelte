@@ -23,7 +23,7 @@
 			await preFlightCache();
 			goto('pages/homepage');
 		} else {
-			goto('login');
+			goto('login?token_expiry=true');
 		}
 	});
 </script>

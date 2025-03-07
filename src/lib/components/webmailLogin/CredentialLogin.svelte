@@ -4,7 +4,7 @@
     import sisAuthenticator from "$lib/-universis/authenticator-deprecated/core";
     import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
-	import { userCreds } from '$stores/credentials.store';
+	import { userCreds, useAlternativeLogin } from '$stores/credentials.store';
     import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
     import { t } from "$lib/i18n";
 
@@ -53,6 +53,8 @@
                 username: username,
                 password: password
             });
+
+            useAlternativeLogin.set(true);
 
             autheticationFlag.set(true);
 

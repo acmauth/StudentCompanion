@@ -4,6 +4,7 @@
     import Vector1 from "$lib/components/loginService/Vector(1).svg"
     import Logo from "$lib/assets/Logo_head.png";
 	import Keycloakthings from "$src/routes/login/core";
+    import { helpCircle } from 'ionicons/icons';
     import { page } from '$app/stores';
     import { App } from '@capacitor/app';
 	import { onMount } from 'svelte';
@@ -15,6 +16,10 @@
 
     let invalidData = false;
     let isVisible = false;
+
+    let token_expiry = $page.url.searchParams.get('token_expiry');
+
+    let inlineModalOpen = false;
 
     onMount(async () => {
         await App.addListener('appUrlOpen', function (event) {
@@ -52,6 +57,51 @@
         <div class="academiclogin" style="display:flex; flex-direction:row; align-items: center; justify-content: center; gap: 4px;">
             <ion-text>Καλώς ήρθες στο Aristomate!</ion-text>
         </div>
+        
+        {#if token_expiry}
+            <div style="display: flex; flex-direction:row; align-items:center" on:click={() => {inlineModalOpen = true}} aria-hidden>
+                <ion-label style="color: var(--ion-color-primary)">Γιατί με πετάει</ion-label> <ion-icon src={helpCircle} style="width: 2rem; height: 2rem; color: var(--ion-color-primary)" alt="Why am I getting kicked"/>
+            </div>
+
+            <ion-modal
+                is-open={inlineModalOpen}
+                initial-breakpoint={0.5}
+                breakpoints = {[0.5, 0.8]}
+                handle-behavior="cycle">
+                <ion-content>
+                    <div class="mainContainer">
+                        <ion-item-group>
+                            <ion-item lines="none">
+                                <ion-text>
+                                    <h2>Γιατί με πετάει κάθε μέρα;</h2>
+                                </ion-text>
+                            </ion-item>
+                            <ion-item-divider>
+                                <!-- <ion-label>Κάτι κάτι </ion-label> -->
+                            </ion-item-divider>                    
+                            <ion-accordion-group  expand="inset">
+                                <ion-accordion value="first">
+                                    <ion-item slot="header" color="light">
+                                    <ion-label>Απλή απάντηση</ion-label>
+                                    </ion-item>
+                                    <div class="ion-padding" slot="content">
+                                        Αυτή τη στιγμή, όταν συνδέεσαι στην εφαρμογή, το ΑΠΘ μας δίνει πρόσβαση για έως και 7 ώρες. Αυτό είναι αρκετό για χρήση σε ιστοσελίδες, αλλά δεν βολεύει για εφαρμογές στο κινητό, όπως η δική μας. Έχουμε ήδη ενημερώσει το ΑΠΘ για το πρόβλημα και περιμένουμε να μας δώσουν μια λύση.
+                                    </div>
+                                </ion-accordion>
+                                <ion-accordion value="second">
+                                    <ion-item slot="header" color="light">
+                                    <ion-label>Τεχνική απάντηση</ion-label>
+                                    </ion-item>
+                                    <div class="ion-padding" slot="content">Η εφαρμογή χρησιμοποιεί το πρωτόκολλο OAuth για να συνδεθείς στα συστήματα του ΑΠΘ (εκτός του webmail) χωρίς να βλέπουμε ποτέ τους κωδικούς σου (αυτό είναι πιο ασφαλές). Όταν συνδέεσαι, σε κατευθύνουμε σε μια σελίδα του ΑΠΘ, και αφού ολοκληρωθεί η σύνδεση, λαμβάνουμε έναν προσωρινό κωδικό (refresh token) για να βλέπει η εφαρμογή πρόσβαση τις πληροφορίες που δείχνει. Ο κωδικός αυτός λήγει μετά από 7 ώρες.<br>
+                                        Αυτό είναι σχεδιασμένο με βάση τη χρήση των συστημάτων του ΑΠΘ σε ιστοσελίδες, όπου 7 ώρες είναι αρκετές. Όμως σε εφαρμογές, οι χρήστες περιμένουν να παραμένουν συνδεδεμένοι για πολύ περισσότερο. Δυστυχώς, το σύστημα αυτό διαχειρίζεται το Κέντρο Ηλεκτρονικής Διακυβέρνησης του ΑΠΘ, οπότε δεν μπορούμε να το αλλάξουμε εμείς. Έχουμε αναφέρει την ανάγκη για μεγαλύτερη διάρκεια, και το ΑΠΘ μας έχει ενημερώσει ότι εξετάζουν λύσεις, αλλά απαιτείται χρόνος για να γίνουν οι απαραίτητες αλλαγές.
+                                    </div>
+                                </ion-accordion>
+                            </ion-accordion-group>
+                        </ion-item-group>
+                    </div>
+                </ion-content>
+            </ion-modal>
+        {/if}
 
 
         {#if invalidData}

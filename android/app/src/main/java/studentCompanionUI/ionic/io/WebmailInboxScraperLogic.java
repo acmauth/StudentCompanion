@@ -90,7 +90,7 @@ public class WebmailInboxScraperLogic {
        boolean isEncoded = txt.contains("=\\?UTF-8");
 
        for(String source : txt.split(" ")) {
-           Pattern p = Pattern.compile("=\\?UTF-8\\?B\\?(.*?)\\?=");
+           Pattern p = Pattern.compile("=\\?(?i:utf-8)\\?B\\?(.*?)\\?=");
            Matcher m = p.matcher(source);
            if (!m.matches()) {
                out.append(" ").append(source);

@@ -1,4 +1,4 @@
-import { userCreds, userTokens } from "$stores/credentials.store";
+import { userCreds, userTokens, useAlternativeLogin } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import reauthenticate from "../-universis/authenticator-deprecated/reauthenticate.js";
 import { Network } from '@capacitor/network';
@@ -14,22 +14,27 @@ export function invalidateAuth(){
 }
 
 export async function judgeAuth() {
-    // Give a judgement on wether the user should be directed to the login page or not
-    // If the user is logged in, we return true
-    // If the user is not logged in, we return false
-    // If the user if offline, we return true, unless they don't have a token, in which case we return false
-
+    /*
+    Bool    - Give a judgement on wether the user should be directed to the login page or not
+    true:   - The user is logged in
+            - The user is offline and has a token
+    false:  - The user is not logged in
+            - The user is offline and does not have a token
+    */
     const onLineStatus = (await Network.getStatus()).connected;
-    // const _userCreds: any = get(userCreds);
-    
-    // if (!_userCreds.password || !_userCreds.username) return false; // If we don't have any credentials, we're not logged in
-    // if (!onLineStatus) return true;                                 // If we're offline, there is no way to check if we're logged in, so we assume we are and use cached data
-    // return await getLoginStatus();
-    const keyCloakStoreValue = get(keyCloakStore);
-    if (!keyCloakStoreValue.token) return false;
-    if (getRefreshLife()) return true;
-    return false
 
+    if (!get(useAlternativeLogin)){
+        /* Use Auth SSO (keycloack) or credentials for login (alternative? */
+        const keyCloakStoreValue = get(keyCloakStore);
+        if (!keyCloakStoreValue.token) return false;
+        if (getRefreshLife()) return true;
+        return false
+    } else {
+        const userCredsValue = get(userCreds);
+        if (!userCredsValue.username || !userCredsValue.password) return false;  // If we don't have any credentials, we're not logged in
+        if (!onLineStatus) return true;                                          // If we're offline, there is no way to check if we're logged in, so we assume we are and use cached data
+        return await getLoginStatus();
+    };
 }
 
 
@@ -57,19 +62,20 @@ export async function getLoginStatus() : Promise<boolean> {
             return true;
         }
         else {
-            await reauthenticate();
-            _userTokens = get(userTokens);
-            const response = await fetch(url, {
-                headers: {
-                    Authorization: `Bearer ${_userTokens.universis.token}`,
-                },
-            });
-            if (response.status >= 500 || response.status === 200) {
-                return true;
+            for(let i = 0; i < 3; i++){
+                await reauthenticate();
+                _userTokens = get(userTokens);
+                const response = await fetch(url, {
+                    headers: {
+                        Authorization: `Bearer ${_userTokens.universis.token}`,
+                    },
+                });
+                if (response.status >= 500 || response.status === 200) {
+                    return true;
+                }
+                await new Promise(r => setTimeout(r, 1000)); 
             }
-            else {
-                return false;
-            }
+            return false;
         }
     }
     catch (e) {
