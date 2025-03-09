@@ -1,7 +1,7 @@
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { cutId, calcNotifyDate, calcNotifId } from './notificationFunctions';
+import { cutId, calcNotifDate, calcNotifId } from './notificationFunctions';
 import { scheduleRepeatedNotifications,} from './repeatedNotifications';
 import { getIds, addToScheduledNotifications, removeFromScheduledNotficiations } from "./notificationsStore";
 import { getEventTypeValue } from '$lib/components/calendar/event/Event';
@@ -42,19 +42,30 @@ export async function cancelNotifications(ids: number[]){
     }
 }
 
-// handles the calendar notifications
-export async function scheduleNotification(event: Event){
-
+function isResubmitted(event: Event){
     // check if the the user resubmits the same event
     const ids = getIds();
-    let notifIds = [0]; 
-    let flag = false;
     for (const id of ids){
         if (event.id === id.event.id){
-            notifIds = [...id.notificationIds];
-            flag = true;
+            return {
+                flag: true,
+                notifIds: id.notificationIds
+            };
         }
     }
+    return {
+        flag: false,
+        notifIds: []
+    };
+}
+
+
+// handles the calendar notifications
+export async function scheduleNotification(event: Event){
+    const resubmitted = isResubmitted(event);
+    const notifIds = resubmitted.notifIds;
+    const flag = resubmitted.flag;
+    
     // cancel the previous notifications if the user resubmits
     if (flag){
         cancelNotifications(notifIds);
@@ -67,7 +78,7 @@ export async function scheduleNotification(event: Event){
 
     } else {
         const notificationId = await calcNotifId(cutId(event.id));
-        const notifyDate = calcNotifyDate(event);
+        const notifyDate = calcNotifDate(event);
         const storedIds = {
             event: event,
             notificationIds: [ notificationId ],

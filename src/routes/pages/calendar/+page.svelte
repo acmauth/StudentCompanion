@@ -12,9 +12,11 @@
     import { toastController } from 'ionic-svelte';
     import type { ToastOptions } from '@ionic/core';
     import { universisGet } from '$src/lib/dataService';
-    import { scheduleNotification } from '$src/lib/calendarNotifications/scheduleNotifications';
+    import { scheduleNotification, cancelNotifications } from '$src/lib/calendarNotifications/scheduleNotifications';
     import { handleNotificationPermission, handleExactAlarmPermission } from '$src/lib/calendarNotifications/runtimePermissions';
     import { removePastNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
+    import { deleteEventNotifications, deleteSingleEventNotification } from '$src/lib/calendarNotifications/notificationFunctions';
+    import { getIds } from '$src/lib/calendarNotifications/notificationsStore';
     import { t } from "$lib/i18n";
 
 
@@ -67,9 +69,10 @@
         }
         selectedEvent = null;
 
+        // schedule notifications, if they are enabled
         if (tmpEvent.notify){
             handleNotificationPermission();
-            // handleExactAlarmPermission(); //not necessary with the USE_EXACT_ALARM permission
+            handleExactAlarmPermission(); 
             removePastNotifications();
             scheduleNotification(tmpEvent); 
         }
@@ -78,17 +81,24 @@
     }    
 
     function recreatePrototype() {
+        // Create a new prototype event
+
+        // Set the activeDateCurrentTime to the current time, but with the date of the activeDate
+        const CurrentTime = new Date();
+        const activeDateCurrentTime = new Date(activeDate.getTime());
+        activeDateCurrentTime.setHours(CurrentTime.getHours(), CurrentTime.getMinutes());
+        
         prototype = {
             id: new Date().getTime(),
             title: "",
             slot: {
-                start: new Date(),
-                end: new Date(new Date().getTime() + 3600000)
+                start: activeDateCurrentTime,
+                end: new Date (activeDateCurrentTime.getTime() + 3600000),
             },
             type: EventType.TASK,
             description: "",
             repeat: EventRepeatType.NEVER,
-            repeatUntil: new Date(new Date().getTime() + 3600000),
+            repeatUntil: new Date (activeDateCurrentTime.getTime() + 3600000),
             repeatInterval: 1,
             notify: false,
             notifyTime: 1
@@ -116,6 +126,10 @@
             $EventStore = $EventStore.filter(x => x.id != event.id);
         }
         deleteModalOpen = false;
+        //delete the notifications if they are enabled
+        if (event.notify){
+            deleteEventNotifications(event);
+        }        
     }
 
     function addInactiveDateToEvent(event: Event | null) {
@@ -123,6 +137,12 @@
         const index = $EventStore.findIndex(x => x.id == event.id);
         $EventStore[index].inactiveDates = $EventStore[index].inactiveDates?.concat(activeDate.getTime()) ?? [activeDate.getTime()];
         deleteModalOpen = false;
+        
+        if (event.repeat != EventRepeatType.NEVER){
+            deleteSingleEventNotification(event);
+        } else {
+            deleteEventNotifications(event);
+        }
     }
 
     // remove this on production
@@ -216,7 +236,7 @@
                     </ion-button>
                 </ion-buttons>
             </ion-toolbar>
-            <EventDetails bind:copyEvent={tmpEvent} />
+            <EventDetails bind:copyEvent={tmpEvent} activeDate={activeDate} />
         </ion-modal>
 
         <ion-alert

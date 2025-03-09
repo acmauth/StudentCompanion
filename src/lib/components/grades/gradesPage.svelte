@@ -1,22 +1,24 @@
 <script lang="ts">
-	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import { Capacitor } from '@capacitor/core';
-	import GradesSkeleton from './gradesSkeleton.svelte';
-	import Flipper from '$components/shared/Flipper.svelte';
-	import Grades from '$lib/components/grades/grades.svelte';
-	import 'js-circle-progress';
-	import Chips from '$lib/components/grades/chips.svelte';
-	import Card from '$components/degreeCalculator/card.svelte';
-	import Stats from '$lib/components/grades/statsCard.svelte';
-	import 'js-circle-progress';
-	import { neoUniversisGet } from '$lib/dataService';
-	import { coursesPerSemester } from '$lib/functions/coursePerSemester/coursesPerSemester';
-	import { flipped } from './flipstore';
-	import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
-	import { writable } from 'svelte/store';
-	import Fuse from 'fuse.js';
-	import { onMount } from 'svelte';
-	import { t } from '$lib/i18n';
+  import ErrorLandingCard from "$components/errorLanding/ErrorLandingCard.svelte";
+  import { Capacitor } from "@capacitor/core";
+  import GradesSkeleton from "./gradesSkeleton.svelte";
+  import Flipper from "$components/shared/Flipper.svelte";
+  import Grades from '$lib/components/grades/grades.svelte';
+  import 'js-circle-progress'
+  import Chips from '$lib/components/grades/chips.svelte';
+  import DegreeCalculatorCard from '$components/degreeCalculator/card.svelte';
+  import Stats from '$lib/components/grades/statsCard.svelte';
+  import 'js-circle-progress'
+  import { neoUniversisGet } from '$lib/dataService';
+  import {coursesPerSemester} from '$lib/functions/coursePerSemester/coursesPerSemester';
+  import { flipped } from "./flipstore"; 
+  import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
+  import { writable } from 'svelte/store';
+  import Fuse from 'fuse.js';
+  import { onMount } from 'svelte';
+  import { t } from "$lib/i18n";
+
+	
 
 	// Fix for flipper covering content
 	onMount(async () => {
@@ -148,36 +150,47 @@
 				<Chips {coursesBySemester} {semesterId} />
 			{/if}
 		</ion-toolbar>
-	</ion-header>
 
-	{#await gatherData()}
-		<ion-progress-bar type="indeterminate" />
-		<GradesSkeleton />
-	{:then}
-		<!-- Show content after loading is completed -->
+	  </ion-header>
 
-		{#if !searchQuery.length}
-			<Flipper reactToHeight bind:flipped={$flipped}>
-				<Stats {flip} {searchQuery} {subjects} {passedSubjects} {subjectsJSON} slot="front" />
-				<Card {flip} slot="back" />
-			</Flipper>
-		{/if}
-
-		<Grades {semesterId} {searchQuery} {filteredSubjects} />
-	{:catch error}
-		<ErrorLandingCard errorMsg={error.message} />
-	{/await}
-</ion-content>
-
-<style>
-	ion-header {
-		position: sticky;
-		top: 0;
-		z-index: 1;
-	}
-
-	ion-content {
-		--padding-end: 0.6rem;
-		--padding-start: 0.6rem;
-	}
-</style>
+	  {#await gatherData()}
+		  <ion-progress-bar type="indeterminate"/>
+		  <GradesSkeleton/>
+	  {:then}
+	  <!-- Show content after loading is completed -->
+  
+	  {#if !searchQuery.length}
+		  <Flipper reactToHeight bind:flipped={$flipped}>
+			  <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
+			  <DegreeCalculatorCard flip={flip} slot="back"/>
+		  </Flipper>
+	  {/if}
+		  
+		  
+		  
+		  <Grades semesterId = {semesterId} searchQuery = {searchQuery} filteredSubjects = {filteredSubjects} />
+  
+		  {:catch error}
+				  <ErrorLandingCard errorMsg={error.message} />
+	  {/await}
+  </ion-content>
+  
+  
+  <style>
+  
+	  ion-header {
+		  position: sticky;
+		  top: 0;
+		  z-index: 1;
+	  }
+  
+	  ion-content {
+	  --padding-end: 0.6rem;
+	  --padding-start: 0.6rem;
+  }
+  
+  
+  
+  
+  
+  </style>

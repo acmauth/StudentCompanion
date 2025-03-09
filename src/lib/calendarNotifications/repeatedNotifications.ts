@@ -1,8 +1,9 @@
 import { addToScheduledNotifications, getIds, removeFromScheduledNotficiations } from "./notificationsStore";
 import type { Event } from '$lib/components/calendar/event/Event';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
-import { cutId, calcNotifyDate, calcNotifId } from './notificationFunctions';
-import { schedule, cancelNotifications, scheduleNotification } from './scheduleNotifications';
+import { cutId, calcNotifDate, calcNotifId } from './notificationFunctions';
+import { schedule } from './scheduleNotifications';
+import { getEvents } from '$lib/components/calendar/event/EventStore';
 
 // removes from the store the notifications that are already send
 export function removePastNotifications(){
@@ -17,15 +18,45 @@ export function removePastNotifications(){
             }
         } else {
             const lastNotification = new Date(storedId.lastNotification);
-            if ( now > storedId.lastNotification ){
+            if ( now > calcNotifDate(storedId.event) ){
                 removeFromScheduledNotficiations(storedId.event.id);              
             }
         }
     }
 }
 
+// checking if the date1:Date and date2:milliscs are in the same day, month and year 
+function isSameDay(date1: Date, millisecs: number){
+    const date2 = new Date(millisecs);
+
+    return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate()
+      );
+}
+
+// checking if a certain date is deleted for an event
+function isInactiveDate(notifDate: Date, eventId: number){
+    const events = getEvents();
+    const index = events.findIndex(x => x.id == eventId);
+    const inactiveDates = events[index].inactiveDates; 
+
+    for (const inactiveDate of inactiveDates || []){
+        if (isSameDay(notifDate, inactiveDate)){
+            return true;
+        }
+    }
+    return false;
+}
+
+type options = {
+    date: Date,
+    isInactive: boolean
+};
+
 // calculates the next date of a notification from a repeated event
-function nextNotifDate(event: Event, previousNotifDate: Date){
+function nextNotifDate(event: Event, previousNotifDate: Date) :options {
     let repeatInterval = 0;
     if (event.repeatInterval) repeatInterval = event.repeatInterval;
     if (repeatInterval <= 0) repeatInterval = 1;
@@ -35,13 +66,11 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
     if(event.repeat == EventRepeatType.DAILY) {
         notifDate = new Date(previousNotifDate);
         notifDate.setDate(previousNotifDate.getDate() + repeatInterval);    
-        return notifDate;
 
     // repeats weekly
     } else if (event.repeat == EventRepeatType.WEEKLY) {
         notifDate = new Date(previousNotifDate);
         notifDate.setDate(previousNotifDate.getDate() + (repeatInterval * 7));
-        return notifDate;
 
     // repeats monthly
     } else if (event.repeat == EventRepeatType.MONTHLY){        
@@ -55,7 +84,6 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
             notifDate = new Date(previousNotifDate);
             notifDate.setMonth(previousNotifDate.getMonth() + (repeatInterval * i));
         }
-        return notifDate;
 
     // repeats yearly
     } else if (event.repeat == EventRepeatType.YEARLY){
@@ -66,10 +94,13 @@ function nextNotifDate(event: Event, previousNotifDate: Date){
         while (!isSameDayOfYear(previousNotifDate, notifDate)){
             notifDate.setFullYear(notifDate.getFullYear() + repeatInterval);
         }
-        return notifDate;
 
     }
-    return new Date();
+
+    return {
+        date: notifDate,
+        isInactive: isInactiveDate(notifDate, event.id)
+    };
 }
 
 // scheduling as many notifications inside the "daysToSchedule" threshold
@@ -78,20 +109,23 @@ export async function scheduleRepeatedNotifications(event: Event){
     if (event.repeatUntil) repeatUntil = new Date(event.repeatUntil);
 
     let notificationId = await calcNotifId(cutId(event.id));
-    let notifyDate = calcNotifyDate(event);
+    let notifyDate = calcNotifDate(event);
+    let isInactive = isInactiveDate(notifyDate, event.id);
     let ids:number[] = [];
     
     while ( notifyDate < repeatUntil ){ 
-        schedule(event, notifyDate, notificationId);
-        notifyDate = nextNotifDate(event, notifyDate);
-        ids.push(notificationId);
-        notificationId++;
+        if (!isInactive){
+            schedule(event, notifyDate, notificationId);
+            ids.push(notificationId);
+            notificationId++;
+        }
+        notifyDate = nextNotifDate(event, notifyDate).date;
+        isInactive = isInactiveDate(notifyDate, event.id);
     }
 
     const storedIds = {
         event: event,
-        notificationIds: ids,
-        lastNotification: repeatUntil
+        notificationIds: ids
     };
     addToScheduledNotifications(storedIds);
 }

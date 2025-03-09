@@ -37,3 +37,5 @@ export const userTokens = new CapacitorPersistedStore({
         token: ""
     }
 }, 'userTokens')
+
+export const useAlternativeLogin = new CapacitorPersistedStore(false, 'useAlternativeLogin')
