@@ -13,7 +13,8 @@
 	import { icon } from 'leaflet';
 	import { next } from 'cheerio/lib/api/traversing.js';
 	import { fade } from 'svelte/transition';
-	import { courseAdded } from './courseStore.ts';
+	import { courseAdded, customCourses } from './courseStore.ts';
+	import { get } from 'svelte/store';
 	export let flip;
 
 	let unpassed_courses: {
@@ -34,9 +35,6 @@
 
 	let not_passed_all_courses = false;
 
-	// custom courses array
-	let customCourses = [];
-
 	let nextId = 0; // Define a separate variable to track IDs
 
 	async function universis() {
@@ -46,28 +44,28 @@
 	/** @param { { target: { value: string; }; } } element */
 	function clickInput(element: { target: { value: string } }) {
 		element.target.value = '';
-		inputUpdate(unpassed_courses, sums, degree_grade, customCourses);
+		inputUpdate(unpassed_courses, sums, degree_grade, $customCourses);
 		degree_grade = degree_grade;
 	}
 
 	function gradeInput(customCourse = null) {
-		inputUpdate(unpassed_courses, sums, degree_grade, customCourses);
+		inputUpdate(unpassed_courses, sums, degree_grade, $customCourses);
 		degree_grade = degree_grade;
 	}
 
 	// Handle the input change for the custom courses
 	function addCourse() {
 		// Add new custom course and reassign as a new array
-		customCourses = [...customCourses, { id: nextId++, title: '', coefficient: '', grade: '' }];
+		customCourses.update((courses) => [
+			...courses,
+			{ id: nextId++, title: '', coefficient: '', grade: '' }
+		]);
 		courseAdded.update((n) => n + 1);
 	}
 
 	const deleteCustomCourse = (id) => {
-		// Get the ID of the course to be deleted
-		id = Number(id); // Ensure the ID is a number
-		// Filter out the course with the given ID
-		customCourses = customCourses.filter((course) => course.id !== id);
-		inputUpdate(unpassed_courses, sums, degree_grade, customCourses);
+		customCourses.update((courses) => courses.filter((course) => course.id !== Number(id)));
+		inputUpdate(unpassed_courses, sums, degree_grade, get(customCourses));
 		degree_grade = degree_grade;
 	};
 </script>
@@ -108,7 +106,7 @@
 					{/each}
 				{/if}
 
-				{#each customCourses as course, index}
+				{#each $customCourses as course, index}
 					<div transition:fade class="custom-courses-box">
 						<!-- Render new custom courses -->
 						<CustomCourse {clickInput} {gradeInput} {course} {deleteCustomCourse} />
