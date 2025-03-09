@@ -49,6 +49,16 @@
 	}
 
 	function gradeInput(customCourse = null) {
+		$customCourses.forEach((course) => {
+			if (course.coefficient) {
+				// Ensure it's a number and within range
+				course.coefficient = course.coefficient
+					.toString()
+					.replace(/\D/g, '') // Remove non-numeric characters
+					.slice(0, 2); // Limit to 2 digits
+			}
+		});
+
 		inputUpdate(unpassed_courses, sums, degree_grade, $customCourses);
 		degree_grade = degree_grade;
 	}

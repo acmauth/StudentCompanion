@@ -38,6 +38,7 @@
 		on:click={clickInput}
 		bind:value={course.coefficient}
 		on:input={() => gradeInput(course)}
+		maxlength="2"
 	/>
 </div>
 
