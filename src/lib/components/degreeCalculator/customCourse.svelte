@@ -21,6 +21,7 @@
 
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<ion-input
+		id={`course-title-${course.id}`}
 		class="course-name ion-padding-end"
 		placeholder={$t('customCourse.title')}
 		value={course.title}
@@ -29,6 +30,7 @@
 	/>
 
 	<input
+		id={`ects-${course.id}`}
 		class="ects"
 		placeholder={$t('customCourse.coefficient')}
 		inputmode={'numeric'}
@@ -36,15 +38,17 @@
 		on:click={clickInput}
 		bind:value={course.coefficient}
 		on:input={() => gradeInput(course)}
+		maxlength="2"
 	/>
 </div>
 
 <div class="input-box">
 	<input
+		id={course.id}
 		type="text"
 		inputmode="decimal"
 		class="inputCustom"
-		id={course.id}
+		name="grade"
 		on:focus={() => (course.grade = '')}
 		on:click={clickInput}
 		bind:value={course.grade}
