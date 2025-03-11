@@ -119,7 +119,6 @@
     }
 
     function removeEvent(event: Event | null) {
-        console.log(event);
         if(event === null) return;
         const index = $EventStore.findIndex(x => x.id == event.id);
         if(index != -1) {
@@ -174,7 +173,6 @@
                 }
             }).filter(event => event !== null) // Filter out null values
         );
-        console.log($EventStore);
     });
 
 </script>

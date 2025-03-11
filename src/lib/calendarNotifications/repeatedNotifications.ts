@@ -28,7 +28,6 @@ export function removePastNotifications(){
 // checking if the date1:Date and date2:milliscs are in the same day, month and year 
 function isSameDay(date1: Date, millisecs: number){
     const date2 = new Date(millisecs);
-
     return (
         date1.getFullYear() === date2.getFullYear() &&
         date1.getMonth() === date2.getMonth() &&
@@ -41,7 +40,6 @@ function isInactiveDate(notifDate: Date, eventId: number){
     const events = getEvents();
     const index = events.findIndex(x => x.id == eventId);
     const inactiveDates = events[index].inactiveDates; 
-
     for (const inactiveDate of inactiveDates || []){
         if (isSameDay(notifDate, inactiveDate)){
             return true;
@@ -50,13 +48,8 @@ function isInactiveDate(notifDate: Date, eventId: number){
     return false;
 }
 
-type options = {
-    date: Date,
-    isInactive: boolean
-};
-
 // calculates the next date of a notification from a repeated event
-function nextNotifDate(event: Event, previousNotifDate: Date) :options {
+function nextNotifDate(event: Event, previousNotifDate: Date) {
     let repeatInterval = 0;
     if (event.repeatInterval) repeatInterval = event.repeatInterval;
     if (repeatInterval <= 0) repeatInterval = 1;
@@ -97,10 +90,7 @@ function nextNotifDate(event: Event, previousNotifDate: Date) :options {
 
     }
 
-    return {
-        date: notifDate,
-        isInactive: isInactiveDate(notifDate, event.id)
-    };
+    return notifDate;
 }
 
 // scheduling as many notifications inside the "daysToSchedule" threshold
@@ -119,7 +109,7 @@ export async function scheduleRepeatedNotifications(event: Event){
             ids.push(notificationId);
             notificationId++;
         }
-        notifyDate = nextNotifDate(event, notifyDate).date;
+        notifyDate = nextNotifDate(event, notifyDate);
         isInactive = isInactiveDate(notifyDate, event.id);
     }
 

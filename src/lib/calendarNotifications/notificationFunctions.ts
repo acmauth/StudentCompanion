@@ -3,7 +3,7 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { getIds } from './notificationsStore';
 import { cancelNotifications } from './scheduleNotifications';
 import { removeFromScheduledNotficiations } from './notificationsStore';
-import { scheduleRepeatedNotifications } from './repeatedNotifications';
+import { scheduleNotification } from './scheduleNotifications';
 
 // taking the id from the event and removing the first 4 digits, because on Android it's a 32-bit int
 export function cutId(id: number){
@@ -62,12 +62,11 @@ export async function calcNotifId(notificationId: number){
 }
 
 function cancelEventNotifications(event: Event){
-    const notifIds = getIds();
-    for (const notifid of notifIds){
-        if (!notifid.notificationids) continue;
-
-        if (notifid.event?.id !== event.id){
-            cancelNotifications(notifid.notificationids);
+    const events = getIds();
+    for (const anEvent of events){
+        if (!anEvent.notificationIds) continue;
+        if (anEvent.event?.id === event.id){
+            cancelNotifications(anEvent.notificationIds);
             break;
         }
     }
@@ -79,7 +78,7 @@ export function deleteEventNotifications(event: Event){
     removeFromScheduledNotficiations(event.id);
 }
 
-// cancels a specific notification after the event is deleted
+
 export function deleteSingleEventNotification(event: Event){
-    scheduleRepeatedNotifications(event); // this
+    scheduleNotification(event);
 }
