@@ -12,6 +12,10 @@
 			{
 				"versionCode": 30,
 				"priority": 4
+			},
+			{
+				"versionCode": 31,
+				"priority": 3
 			}
 		]
 	},
