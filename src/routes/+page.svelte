@@ -5,6 +5,7 @@
 	import Logo from '$lib/assets/Logo_full.png';
 	import { neoUniversisGet } from '$lib/dataService';
 	import { loadPersistedStores } from './persistedStoreDeclarations';
+	import { App } from '@capacitor/app';
 
 	function delay(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
@@ -17,7 +18,15 @@
 
 	// Handling the redirect to the homepage
 	onMount(async () => {
-		await loadPersistedStores();
+		App.addListener('appUrlOpen', (data) => {
+			console.log('App opened with URL:', data.url);
+
+			// Use URL to navigate inside Svelte
+			const url = new URL(data.url);
+			if (url.pathname === '/pages/homepage') {
+				goto('pages/homepage');
+			}
+		});
 		// await delay(1000);
 		if (await judgeAuth()) {
 			await preFlightCache();
