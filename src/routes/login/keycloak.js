@@ -72,12 +72,14 @@ function Keycloak (config) {
     var logWarn = createLogger(console.warn);
 
     kc.init = function (initOptions) {
+        console.log("KEYCLOAK_A");
         kc.authenticated = false;
 
         callbackStorage = createCallbackStorage();
         var adapters = ['default', 'cordova', 'cordova-native', 'capacitor', 'capacitor-native', 'capacitor-browser'];
 
         if (initOptions && adapters.indexOf(initOptions.adapter) > -1) {
+            console.log("KEYCLOAK_B");
             adapter = loadAdapter(initOptions.adapter);
         } else if (initOptions && typeof initOptions.adapter === "object") {
             adapter = initOptions.adapter;
@@ -90,6 +92,7 @@ function Keycloak (config) {
         }
 
         if (initOptions) {
+            console.log("KEYCLOAK_C");
             if (typeof initOptions.useNonce !== 'undefined') {
                 useNonce = initOptions.useNonce;
             }
@@ -171,6 +174,7 @@ function Keycloak (config) {
             } else {
                 kc.messageReceiveTimeout = 10000;
             }
+            console.log("KEYCLOAK_D");
         }
 
         if (!kc.responseMode) {
@@ -184,9 +188,12 @@ function Keycloak (config) {
         var promise = createPromise();
 
         var initPromise = createPromise();
+        console.log("KEYCLOAK_E");
         initPromise.promise.then(function() {
             kc.onReady && kc.onReady(kc.authenticated);
             promise.setSuccess(kc.authenticated);
+            console.log("KEYCLOAK_F");
+            console.log(kc.authenticated)
         }).catch(function(error) {
             promise.setError(error);
         });
@@ -207,6 +214,7 @@ function Keycloak (config) {
             };
 
             var checkSsoSilently = function() {
+                console.log("KEYCLOAK_AA");
                 var ifrm = document.createElement("iframe");
                 var src = kc.createLoginUrl({prompt: 'none', redirectUri: kc.silentCheckSsoRedirectUri});
                 ifrm.setAttribute("src", src);
@@ -232,6 +240,7 @@ function Keycloak (config) {
             var options = {};
             switch (initOptions.onLoad) {
                 case 'check-sso':
+                    console.log("KEYCLOAK_BA");
                     if (loginIframe.enable) {
                         setupCheckLoginIframe().then(function() {
                             checkLoginIframe().then(function (unchanged) {
@@ -257,6 +266,7 @@ function Keycloak (config) {
         }
 
         function processInit() {
+            console.log("KEYCLOAK_CA");
             var callback = parseCallback(window.location.href);
 
             if (callback) {
