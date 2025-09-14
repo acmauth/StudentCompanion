@@ -160,7 +160,9 @@
 	</ion-card-header>
 	<ion-card-content>
 		{#if !subjects}
-			Loading...
+			<ion-text>
+				{$t('progress.no_courses_found')}
+			</ion-text>
 		{:else}
 			<circle-progress max={subjects} value={passedSubjects} />
 		{/if}
