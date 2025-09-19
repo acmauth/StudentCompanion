@@ -18,6 +18,7 @@
 
 	// Handling the redirect to the homepage
 	onMount(async () => {
+		await loadPersistedStores();
 		App.addListener('appUrlOpen', (data) => {
 			console.log('App opened with URL:', data.url);
 
