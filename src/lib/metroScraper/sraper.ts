@@ -20,7 +20,7 @@ export async function getMetroInfo() {
         //     scrapedHTML[idx] = $(el).html() ?? '';
         // });
         let scrapedHTML = metroInfo.text().trim();
-        console.log(scrapedHTML);
+        // console.log(scrapedHTML);
         return scrapedHTML;
 
     } catch (error) {

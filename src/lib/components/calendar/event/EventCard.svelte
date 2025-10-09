@@ -44,8 +44,8 @@
 </script>
 
 
-<div use:longpress on:longpress={handleHold}>
-	<ion-card class="eventCard" on:click={handleClick} aria-hidden href="">
+<div use:longpress on:longpress={handleHold} on:click={handleClick} aria-hidden>
+	<ion-card class="eventCard" aria-hidden href="">
 		<div class="eventCardContents">
 
 			<div class="eventMainInformation">

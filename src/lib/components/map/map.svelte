@@ -14,6 +14,8 @@
 	import bus from '$lib/assets/bus.png';
 	import coordinates from '$lib/components/map/coordinates.json';
 	import Fuse from 'fuse.js';
+    import osethLogo from '$lib/assets/oseth.svg';
+    import campusSafetyLogo from '$lib/assets/campus-safety.png';
 	import { t, locale, locales, getLocale } from '$lib/i18n';
 
 	let points = coordinates;
@@ -25,20 +27,82 @@
 	let metroInfo = '';
 	let lang = getLocale();
 
+	function handleTransportAppClick() {
+		const androidPackageName = "com.amco.city.thessaloniki";
+		const iosAppStoreUrl = "https://apps.apple.com/gr/app/oseth-bus/id6748433667";
+		const fallbackUrl = "https://telematics.oasth.gr/en/#main";
+
+		const ua = navigator.userAgent || navigator.vendor || window.opera;
+		const isAndroid = /android/i.test(ua);
+		const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+		if (isAndroid) {
+			try {
+				// Try opening the Android app
+				window.location.href = `intent://#Intent;scheme=package;package=${androidPackageName};end`;
+
+				// If it fails (not installed), go to the telematics site
+				setTimeout(() => {
+					window.location.href = fallbackUrl;
+				}, 1000);
+			} catch (err) {
+				console.error("Could not open app, redirecting to web link.", err);
+				window.location.href = fallbackUrl;
+			}
+		// } else if (isIOS) {
+		// 	// Redirect to App Store
+		// 	window.location.href = iosAppStoreUrl;
+		} else {
+			// Non-mobile devices always go to telematics URL
+			window.location.href = fallbackUrl;
+		}
+	}
+
+	function handleCampusSafetyClick() {
+		const packageName = "gr.auth.android.incidentmanager";
+		const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageName}&hl=el`;
+		const appStoreUrl = "https://apps.apple.com/"; // Add actual App Store URL if available
+
+		const ua = navigator.userAgent || navigator.vendor || window.opera;
+		const isAndroid = /android/i.test(ua);
+		const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+		if (isAndroid) {
+			try {
+				// Try opening the Android app
+				window.location.href = `intent://#Intent;scheme=package;package=${packageName};end`;
+
+				// If it fails (not installed), go to Play Store
+				setTimeout(() => {
+					window.location.href = playStoreUrl;
+				}, 1000);
+			} catch (err) {
+				console.error("Could not open app, redirecting to Play Store.", err);
+				window.location.href = playStoreUrl;
+			}
+		// } else if (isIOS) {
+		// 	// Redirect iOS users to App Store
+		// 	window.location.href = appStoreUrl;
+		} else {
+			// For other platforms, go to Play Store
+			window.location.href = playStoreUrl;
+		}
+	}
+
 	onMount(async () => {
 		if (browser) {
 			const leaflet = await import('leaflet');
 
 			if (document.body.classList.contains('dark')) {
-				map = leaflet.map(mapElement).setView([40.63182425082954, 22.959049527401312], 15);
-				leaflet
+				map = leaflet.map(mapElement, { zoomControl: false }).setView([40.63182425082954, 22.959049527401312], 15);
+                leaflet
 					.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 						attribution:
 							'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 					})
 					.addTo(map);
 			} else {
-				map = leaflet.map(mapElement).setView([40.63182425082954, 22.959049527401312], 15);
+				map = leaflet.map(mapElement, { zoomControl: false }).setView([40.63182425082954, 22.959049527401312], 15);
 				leaflet
 					.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 						attribution:
@@ -186,14 +250,40 @@
 	<SubPageHeader title={$t('maps.title')} stackedNav />
 	<div class="search-container">
 		<input type="text" placeholder="Search..." on:input={handleSearch} class="search-input" />
-	</div>
-
-	<ion-chip class="metro-info">
-		<ion-icon icon={allIonicIcons.subway} />
-		<ion-label> {metroInfo} </ion-label>
-	</ion-chip>
-
+    </div>
+    
 	<div bind:this={mapElement} class="map-container" />
+
+
+    <div class="footer-section">
+        <div class="marquee-container">
+            <div class="marquee-text">
+                <strong>Metro:</strong> {metroInfo}
+            </div>
+        </div>
+
+        <div class="button-container">
+            <div style="width:0.5rem; align-self:stretch; background-color:grey; margin:0.18rem;"></div>
+
+            <ion-card 
+                on:click={handleTransportAppClick} 
+                class="button-card" 
+                aria-label="OASTH Transport Services"
+            >
+                <img src={osethLogo} alt="OSETH services" class="button-image"/>
+            </ion-card>
+            
+            <ion-card 
+                on:click={handleCampusSafetyClick} 
+                class="button-card" 
+                style="background-color: #3F4953;" 
+                aria-label="Campus Safety App"
+            >
+                <img src={campusSafetyLogo} alt="Campus safety information" class="button-image"/>
+            </ion-card>
+        </div>
+    </div>
+
 </ion-page>
 
 <style>
@@ -216,32 +306,6 @@
 		max-width: 300px;
 	}
 
-	.metro-info {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		position: absolute;
-		top: 120px;
-		left: 50%;
-		transform: translateX(-50%);
-		font-size: 14px;
-		z-index: 1000;
-		color: white;
-		background-color: var(--app-color-metro-info);
-		border-radius: 100px;
-		box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-		padding: 15px;
-		width: 80%;
-		max-width: 300px;
-	}
-
-	.metro-info ion-icon {
-		color: white;
-		font-size: 30px;
-		padding-left: 8px;
-		margin-right: 8px;
-	}
-
 	.search-input {
 		flex: 1;
 		border: none;
@@ -257,4 +321,71 @@
 		position: relative;
 		height: calc(100vh);
 	}
+
+    .footer-section {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: fit-content;
+        background-color: var(--ion-color-light);
+        display: flex;
+        align-items: center;
+        z-index: 1000;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .marquee-container {
+        width: 70%;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .marquee-text {
+        display: inline-block;
+        width: auto;
+        color: var(--ion-color-dark);
+        font-size: 1rem;
+        padding-block: 0.5rem;
+        animation: marquee 15s linear infinite;
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(50%);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+    .button-container {
+        width: 30%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 0.3rem;
+        align-items: center;
+        padding: 0.3rem;
+    }
+
+    .button-card {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        border-color: grey;
+        border-width: 0.1rem;
+        border-style: solid;
+    }
+
+    .button-image {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        aspect-ratio: 1;
+    }
 </style>
