@@ -101,6 +101,8 @@
   /* Maps */
   --app-color-map-input: white;
   --app-color-map-input-text: rgba(81, 81, 81, 1);
+  --app-color-metro-info: #241f87;
+  --app-color-bus-info: #ae0a22;
 
   /* Notifications Text Dark */
   --app-color-notification: #5c3753;
@@ -194,7 +196,7 @@
     /* --color: inherit !important; */
   }
 
-  .alert-wrapper.sc-ion-alert-ios{
+  .alert-wrapper.sc-ion-alert-ios {
     --border-radius: 1rem;
   }
 

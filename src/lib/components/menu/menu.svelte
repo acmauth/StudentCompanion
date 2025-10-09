@@ -11,6 +11,7 @@
 	let todaydata: string;
 	let title: string = $t('menu.todaysMenu');
 
+	// Determine today's index (0 for Monday, 6 for Sunday)
 	const date = new Date();
 	let today = date.getDay();
 	if (today) {
@@ -21,12 +22,13 @@
 
 	const hours = date.getHours();
 	const mins = date.getMinutes();
-	let message = '';
-	let now = '';
-	let next = '';
+	let message = ''; // Cafeteria status message
+	let now = ''; // Current meal
+	let next = ''; // Next meal
 	let color = 'success';
 	let menuDate = '';
 
+	// Determine cafeteria status based on current time
 	if ((hours == 8 && mins >= 30) || (hours > 8 && hours < 10)) {
 		message = $t('menu.morning_open');
 		now = $t('menu.breakfast');
@@ -55,9 +57,11 @@
 		now = $t('menu.breakfast');
 		next = $t('menu.lunch');
 
+		// After 9 PM, show tomorrow's menu
 		if (hours >= 21 && hours <= 23 && mins <= 59) title = $t('menu.tomorrowsMenu');
 		else title = $t('menu.todaysMenu');
 
+		// Adjust 'today' index for tomorrow
 		today = (today + 1) % 7;
 		if (today) {
 			today -= 1;
@@ -66,6 +70,7 @@
 		}
 	}
 
+	// Fetch and process menu data
 	async function getMenuData() {
 		cafeteriaData = (await getMenu()) as string[] | 'Error while scraping data';
 
