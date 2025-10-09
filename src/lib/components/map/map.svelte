@@ -26,6 +26,7 @@
 	let searchQuery = '';
 	let metroInfo = '';
 	let lang = getLocale();
+	let isDarkMode = false;
 
 	function handleTransportAppClick() {
 		const androidPackageName = "com.amco.city.thessaloniki";
@@ -91,6 +92,7 @@
 
 	onMount(async () => {
 		if (browser) {
+			isDarkMode = document.body.classList.contains('dark');
 			const leaflet = await import('leaflet');
 
 			if (document.body.classList.contains('dark')) {
@@ -257,8 +259,13 @@
 
     <div class="footer-section">
         <div class="marquee-container">
-            <div class="marquee-text">
-                <strong>Metro:</strong> {metroInfo}
+            <div class="marquee-text" class:dark={isDarkMode}>
+                
+                {#if isDarkMode}
+                    Metro: {metroInfo.normalize("NFD").replace(/[\u0300-\u036f]/g, "")}
+                {:else}
+                    <strong>Metro:</strong> {metroInfo}
+                {/if}
             </div>
         </div>
 
@@ -269,6 +276,7 @@
                 on:click={handleTransportAppClick} 
                 class="button-card" 
                 aria-label="OASTH Transport Services"
+                aria-hidden
             >
                 <img src={osethLogo} alt="OSETH services" class="button-image"/>
             </ion-card>
@@ -278,6 +286,7 @@
                 class="button-card" 
                 style="background-color: #3F4953;" 
                 aria-label="Campus Safety App"
+                aria-hidden
             >
                 <img src={campusSafetyLogo} alt="Campus safety information" class="button-image"/>
             </ion-card>
@@ -288,6 +297,7 @@
 
 <style>
 	@import 'leaflet/dist/leaflet.css';
+	@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 	.search-container {
 		display: flex;
@@ -340,15 +350,53 @@
         width: 70%;
         overflow: hidden;
         white-space: nowrap;
+        position: relative;
+    }
+    
+    .marquee-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
     }
 
     .marquee-text {
         display: inline-block;
         width: auto;
-        color: var(--ion-color-dark);
-        font-size: 1rem;
-        padding-block: 0.5rem;
+        padding-block: 0.8rem;
+        padding-inline: 0.8rem;
         animation: marquee 15s linear infinite;
+        position: relative;
+        z-index: 2;
+        font-size: 0.9rem;
+        color: var(--ion-text-color, #000);
+    }
+
+    .marquee-text.dark {
+        color: #ff8c00;
+        font-family: 'Press Start 2P', monospace;
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        text-shadow: 
+            0 0 10px rgba(255, 140, 0, 0.8),
+            0 0 20px rgba(255, 140, 0, 0.4),
+            0 0 30px rgba(255, 140, 0, 0.2);
+        text-transform: uppercase;
+    }
+    
+    .marquee-text strong {
+        color: var(--ion-text-color, #000);
+    }
+
+    .marquee-text.dark strong {
+        color: #ffa500;
+        letter-spacing: 0.1em;
+        text-shadow: 
+            0 0 10px rgba(255, 165, 0, 1),
+            0 0 20px rgba(255, 165, 0, 0.6);
     }
 
     @keyframes marquee {
@@ -377,6 +425,7 @@
         justify-content: center;
         margin: 0;
         padding: 0;
+        background-color: white;
         border-color: grey;
         border-width: 0.1rem;
         border-style: solid;
