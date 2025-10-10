@@ -78,53 +78,25 @@
 
 			<ion-modal
 				is-open={inlineModalOpen}
-				initial-breakpoint={0.5}
-				breakpoints={[0.5, 0.8]}
+				initial-breakpoint={0.4}
+				breakpoints={[0.4, 0.8]}
 				handle-behavior="cycle"
 			>
 				<ion-content>
-					<div class="mainContainer">
+					<div style="overflow-x: hidden;">
 						<ion-item-group>
-							<ion-item lines="none">
-								<ion-text>
-									<h2>Γιατί με πετάει κάθε μέρα;</h2>
+							<ion-item class="modal-item">
+								<ion-text class="centered-text">
+									<h3>Γιατί με πετάει κάθε μέρα;</h3>
 								</ion-text>
 							</ion-item>
-							<ion-item-divider>
-								<!-- <ion-label>Κάτι κάτι </ion-label> -->
-							</ion-item-divider>
-							<ion-accordion-group expand="inset">
-								<ion-accordion value="first">
-									<ion-item slot="header" color="light">
-										<ion-label>Απλή απάντηση</ion-label>
-									</ion-item>
-									<div class="ion-padding" slot="content">
-										Αυτή τη στιγμή, όταν συνδέεσαι στην εφαρμογή, το ΑΠΘ μας δίνει πρόσβαση για έως
-										και 7 ώρες. Αυτό είναι αρκετό για χρήση σε ιστοσελίδες, αλλά δεν βολεύει για
-										εφαρμογές στο κινητό, όπως η δική μας. Έχουμε ήδη ενημερώσει το ΑΠΘ για το
-										πρόβλημα και περιμένουμε να μας δώσουν μια λύση.
-									</div>
-								</ion-accordion>
-								<ion-accordion value="second">
-									<ion-item slot="header" color="light">
-										<ion-label>Τεχνική απάντηση</ion-label>
-									</ion-item>
-									<div class="ion-padding" slot="content">
-										Η εφαρμογή χρησιμοποιεί το πρωτόκολλο OAuth για να συνδεθείς στα συστήματα του
-										ΑΠΘ (εκτός του webmail) χωρίς να βλέπουμε ποτέ τους κωδικούς σου (αυτό είναι πιο
-										ασφαλές). Όταν συνδέεσαι, σε κατευθύνουμε σε μια σελίδα του ΑΠΘ, και αφού
-										ολοκληρωθεί η σύνδεση, λαμβάνουμε έναν προσωρινό κωδικό (refresh token) για να
-										βλέπει η εφαρμογή πρόσβαση τις πληροφορίες που δείχνει. Ο κωδικός αυτός λήγει
-										μετά από 7 ώρες.<br />
-										Αυτό είναι σχεδιασμένο με βάση τη χρήση των συστημάτων του ΑΠΘ σε ιστοσελίδες, όπου
-										7 ώρες είναι αρκετές. Όμως σε εφαρμογές, οι χρήστες περιμένουν να παραμένουν συνδεδεμένοι
-										για πολύ περισσότερο. Δυστυχώς, το σύστημα αυτό διαχειρίζεται το Κέντρο Ηλεκτρονικής
-										Διακυβέρνησης του ΑΠΘ, οπότε δεν μπορούμε να το αλλάξουμε εμείς. Έχουμε αναφέρει
-										την ανάγκη για μεγαλύτερη διάρκεια, και το ΑΠΘ μας έχει ενημερώσει ότι εξετάζουν
-										λύσεις, αλλά απαιτείται χρόνος για να γίνουν οι απαραίτητες αλλαγές.
-									</div>
-								</ion-accordion>
-							</ion-accordion-group>
+
+							<ion-item lines="none" class="modal-item">
+								<div class="ion-padding">
+									Λίγη ακόμη υπομονή! Η εφαρμογή θέτει σε πρώτη προτεραιότητα την διασφάλιση του
+									απορρήτου των δεδομένων σου. Εργαζόμαστε πάνω σε αυτό.
+								</div>
+							</ion-item>
 						</ion-item-group>
 					</div>
 				</ion-content>
@@ -202,5 +174,19 @@
 	p.loginP {
 		color: white;
 		margin: 0;
+	}
+
+	.centered-text {
+		text-align: center;
+		margin: 1rem;
+		width: 100%;
+	}
+
+	.modal-item {
+		--padding-start: 16px;
+		--padding-end: 16px;
+		max-width: 100%;
+		width: 100%;
+		box-sizing: border-box;
 	}
 </style>
