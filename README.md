@@ -12,9 +12,14 @@
 
 Aristomate is an open-source mobile app and study companion developed by ACM AUTh, a team of students from the Aristotle University School of Informatics. The app aims to enhance the academic experience and daily life of students by providing a range of features directly on their mobile devices.
 
+Powered by the [Aristotle University of Thessaloniki](https://auth.gr/en).
+
 ---
 
-Το Aristomate είναι μια εφαρμογή ανοιχτού κώδικα για κινητά και σύντροφος μελέτης, που αναπτύχθηκε από την ACM AUTh, μια ομάδα φοιτητών της Σχολής Πληροφορικής του Αριστοτελείου Πανεπιστημίου. Η εφαρμογή στοχεύει στη βελτίωση της ακαδημαϊκής εμπειρίας και της καθημερινής ζωής των φοιτητών, παρέχοντας μια σειρά από δυνατότητες απευθείας στις κινητές συσκευές τους.
+Το Aristomate είναι μια εφαρμογή ανοιχτού κώδικα για κινητά και σύντροφος μελέτης, που αναπτύχθηκε από την ACM AUTh, μια ομάδα φοιτητών του Τμήματος Πληροφορικής του Αριστοτελείου Πανεπιστημίου. Η εφαρμογή στοχεύει στη βελτίωση της ακαδημαϊκής εμπειρίας και της καθημερινής ζωής των φοιτητών, παρέχοντας μια σειρά από δυνατότητες απευθείας στις κινητές συσκευές τους.
+
+Με την υποστήριξη του [ΑΠΘ](https://auth.gr).
+
 
 ## Features
 
