@@ -81,8 +81,9 @@
 		let dateRegex;
 		let regex;
 		let startString = now + '&nbsp;';
+		if (getLocale() == 'en' && now === $t('menu.breakfast')) startString = now + ' '; // English version uses space instead of &nbsp;
 		if (getLocale() == 'en') {
-			dateRegex = /Date of Menu\s*<\/em>\s*&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})/s;
+			dateRegex = /<em>Date of Menu<\/em>.*?:\s*(\d{1,2}\/\d{1,2}\/\d{4})/i;
 		} else {
 			dateRegex =
 				/<(h[34]) class="wp-block-heading"><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})\s*<\/\1>|<p><strong><em>Πρόγραμμα Συσσιτίου<\/em>&nbsp;:\s*(\d{2}\/\d{2}\/\d{4})<\/strong><\/p>/;
@@ -95,6 +96,8 @@
 			regex = new RegExp(`(${startString})(.*?)(?=${endString})`, 'si');
 		}
 		const match = cafeteriaData[today].match(regex);
+
+		console.log(match);
 		if (match && match[0]) todaydata = match[0].trim();
 		// console.log(todayHTML); // Check exact HTML content
 		console.log(dateRegex.exec(todayHTML)); // Test if regex finds a match
@@ -110,7 +113,7 @@
 			if (dateMatch) {
 				menuDate = dateMatch[1];
 			}
-			console.log(menuDate);
+			console.log(menuDate, 'extracted date');
 		}
 
 		// Validate menuDate format (should be DD/MM/YYYY)

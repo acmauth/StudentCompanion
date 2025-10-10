@@ -14,7 +14,7 @@ export async function getMenu() {
         const htmlContent = response.data;
         const $ = cheerio.load(htmlContent);
 
-        const dailyMenus = $('.kt-accordion-panel-inner');
+        const dailyMenus = $('.e-n-accordion-item').children().next();
         dailyMenus.each(function (idx, el) {
             scrapedHTML[idx] = $(el).html() ?? '';
         });
