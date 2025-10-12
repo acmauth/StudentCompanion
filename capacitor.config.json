@@ -21,5 +21,8 @@
 		  "server": {
 			"hostname": "localhost",
 			"androidScheme": "https"
-		  }
+		  },
+		  "android": {
+			"adjustMarginsForEdgeToEdge": "force"
+		}
 	}
