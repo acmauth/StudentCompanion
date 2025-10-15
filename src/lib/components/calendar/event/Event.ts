@@ -15,7 +15,7 @@ export interface Event {
     id: number;
     title: string;
     slot: EventTimeSlot;
-    location?: string ;
+    location?: string;
     description: string;
     professor?: string,
     type: EventType;
@@ -89,34 +89,34 @@ interface EventCheckFormatResult {
     description: string | undefined
 }
 
-export function EventCheckFormat(event: Event | undefined, lang: string = "el" ): EventCheckFormatResult {
+export function EventCheckFormat(event: Event | undefined, lang: string = "el"): EventCheckFormatResult {
     let error: boolean = false;
-    let descriptions: string [] = [];
+    let descriptions: string[] = [];
 
-    if (event==undefined || event.title.length == 0) {
+    if (event == undefined || event.title.length == 0) {
         error = true;
-        if(lang == "el")
+        if (lang == "el")
             descriptions.push("πρέπει να βάλεις έναν τίτλο")
         else
             descriptions.push("you should put a title")
     }
 
-    if (event!==undefined && new Date(event.slot.start).getTime() > new Date(event.slot.end).getTime()) {
+    if (event !== undefined && new Date(event.slot.start).getTime() > new Date(event.slot.end).getTime()) {
         error = true;
-        if(lang == "el")
+        if (lang == "el")
             descriptions.push("η λήξη πρέπει να είναι μετά την έναρξη")
         else
             descriptions.push("end should be after the start.")
     }
-    
+
     let description: string | undefined;
     if (error)
-        if(lang == "el")
+        if (lang == "el")
             description = "Θυμίσου ότι " + descriptions.join(" και ") + "!";
         else
-            description = "Rember that " + descriptions.join(" and ") + "!";
+            description = "Remember that " + descriptions.join(" and ") + "!";
 
-    return {error, description};
+    return { error, description };
 }
 
 // export function createEventTimeSlotList(event: EventFlat): EventTimeSlot[] {

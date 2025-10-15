@@ -1,7 +1,16 @@
 import { universisGet, elearningGet, webmailInboxRequest } from "$lib/dataService"
 import { Network } from '@capacitor/network';
-import Dexie from "dexie";
+import Dexie, {Table} from "dexie";
 const isProduction = process.env.NODE_ENV === 'production';
+
+interface CachedDataRecord {
+    key: string;
+    value: string;
+}
+
+interface CachedDataDB extends Dexie {
+    cachedData: Table<CachedDataRecord>;
+}
 
 type cachedItem = {
     key: string;
@@ -66,7 +75,7 @@ function cacheItem(key: string, value: any, lifetime: number = 180) {
         life: lifetime
     };
     try {
-        var db = new Dexie("cachedData");
+        var db = new Dexie("cachedData") as CachedDataDB;
         db.version(1).stores({
             cachedData: 'key,value'
         });
@@ -83,7 +92,7 @@ function cacheItem(key: string, value: any, lifetime: number = 180) {
 
 async function getFromCache(key: string): Promise<cachedItem> {
 
-    var db = new Dexie("cachedData");
+    var db = new Dexie("cachedData") as CachedDataDB;
     db.version(1).stores({
         cachedData: 'key,value'
     });
