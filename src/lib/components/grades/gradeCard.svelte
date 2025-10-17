@@ -16,7 +16,7 @@
 		childrenOpen[index] = !childrenOpen[index];
 	}
 
-	export function navigateToCourse(course: { childCourses: string | any[]; id: any }) {
+	export function navigateToCourse(course: { childCourses: string | any[]; id: any; course: any }) {
 		if (!(course.childCourses && course.childCourses.length > 0))
 			navController.push(Course, { id: course.course });
 	}
