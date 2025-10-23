@@ -1,0 +1,16 @@
+node_modules
+dist
+.git
+Dockerfile
+.dockerignore
+.gitignore
+android
+.vscode
+ios
+.idea
+*.log
+.svelte-kit
+build
+pnpm-lock.yaml
+vite.config.ts.*
+.github

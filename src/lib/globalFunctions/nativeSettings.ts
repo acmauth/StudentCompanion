@@ -29,9 +29,8 @@ export function nativeSettings() {
     else {
         // StatusBar.setStyle({style: Style.Light});
         StatusBar.setStyle({style: Style.Dark});
-        // NavigationBar.setNavigationBarColor({ color: '#FCFCFC', darkButtons: true });
-        NavigationBar.setNavigationBarColor({ color: '#FF0000', darkButtons: true });
-        console.log("[XKCD] Set nav bar to light");
+        NavigationBar.setNavigationBarColor({ color: '#FCFCFC', darkButtons: true });
+        // NavigationBar.setNavigationBarColor({ color: '#FF0000', darkButtons: true });
     }
 
 
