@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
-  import OIDCClient from '$lib/authentication/OIDCClient';
-  import { Capacitor } from '@capacitor/core';
-  import { App } from '@capacitor/app';
-  import { handleLogin, handleCallback, handleLogout } from './login';
-  import Config from "$src/app.config"
-  import { helpCircle } from 'ionicons/icons';
-  import Vector from '$lib/components/loginService/Vector.svg';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import OIDCClient from '$lib/authentication/OIDCClient';
+	import { Capacitor } from '@capacitor/core';
+	import { App } from '@capacitor/app';
+	import { handleLogin, handleCallback, handleLogout } from './login';
+	import Config from "$src/app.config"
+	import { helpCircle } from 'ionicons/icons';
+	import Vector from '$lib/components/loginService/Vector.svg';
 	import Vector1 from '$lib/components/loginService/Vector(1).svg';
 	import Logo from '$lib/assets/Logo_head.png';
 
@@ -40,7 +40,7 @@
     }
 
     // Handle callback from deep link (mobile)
-    if (isMobile) {
+    if (Config.isMobile) {
       App.addListener('appUrlOpen', async (event) => {
         if (event.url.includes('authsso/callback')) {
           await handleCallback(event.url, loading);
