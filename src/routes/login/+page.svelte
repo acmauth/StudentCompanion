@@ -1,147 +1,153 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import Vector from '$lib/components/loginService/Vector.svg';
+  import { onMount } from 'svelte';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+  import OIDCClient from '$lib/authentication/OIDCClient';
+  import { Capacitor } from '@capacitor/core';
+  import { App } from '@capacitor/app';
+  import { handleLogin, handleCallback, handleLogout } from './login';
+  import Config from "$src/app.config"
+  import { helpCircle } from 'ionicons/icons';
+  import Vector from '$lib/components/loginService/Vector.svg';
 	import Vector1 from '$lib/components/loginService/Vector(1).svg';
 	import Logo from '$lib/assets/Logo_head.png';
-	import Keycloakthings from '$src/routes/login/core';
-	import { helpCircle } from 'ionicons/icons';
-	import { page } from '$app/stores';
-	import { App } from '@capacitor/app';
-	import { onMount } from 'svelte';
 
-	const isProduction = process.env.NODE_ENV === 'production';
+  // Initialize OIDC client
+  const authClient = new OIDCClient(Config.auth);
 
-	console.log('LOGIN PAGE');
-	$: console.log($page.url.href);
+  let loading = false;
+  let error = '';
+  let userInfo: any = null;
+  let isAuthenticated = false;
 
-	let invalidData = false;
-	let isVisible = false;
+  onMount(async () => {
+    // Check if already authenticated
+    isAuthenticated = authClient.isAuthenticated();
+    
+    if (isAuthenticated) {
+      try {
+        userInfo = await authClient.getUserInfo();
+      } catch (err) {
+        console.error('Failed to get user info:', err);
+        error = 'Session expired';
+        isAuthenticated = false;
+      }
+    }
 
-	let token_expiry = $page.url.searchParams.get('token_expiry');
+    // Handle callback from OAuth server (web)
+    if ($page.url.searchParams.has('code') || $page.url.searchParams.has('error')) {
+      await handleCallback($page.url.href, loading);
+    }
 
-	let inlineModalOpen = false;
+    // Handle callback from deep link (mobile)
+    if (isMobile) {
+      App.addListener('appUrlOpen', async (event) => {
+        if (event.url.includes('authsso/callback')) {
+          await handleCallback(event.url, loading);
+        }
+      });
+    }
+  });
 
-	onMount(async () => {
-		await App.addListener('appUrlOpen', function (event) {
-			// slug = /tabs/tabs2
-			const slug = event.url.split('#')[1];
-			console.log(event.url);
-			console.log(slug);
-
-			goto(`authenticate#${slug}`);
-
-			// We only push to the route if there is a slug present
-			// if (slug) {
-			// 	goto(slug);
-			// }
-		});
-
-		console.log('LOGIN PAGE');
-	});
 </script>
 
+
 <ion-content fullscreen>
-	<div style="position: relative; width: 100%; height: 40%; ">
-		<img src={Vector} alt="Vector" style="position: absolute; width: 110%; height:70%" />
-		<img src={Vector1} alt="Overlay Icon" style="width: 110%; height:85%" />
+	<!-- Hero Section -->
+	<div class="hero-container">
+		<img src={Vector} alt="Vector" class="hero-bg" />
+		<img src={Vector1} alt="Overlay Icon" class="hero-overlay" />
 	</div>
 
-	<div
-		style="display: flex; flex-direction: column; align-items: center; margin-top: -40px; justify-content: top; padding-right:20px; padding-left:20px;"
-	>
-		<img src={Logo} alt="Aristomate logo" style="width: 30%; margin-bottom: 25px;" />
-		<!-- <ion-text style="color: var(--ion-color-primary)">
-			Καλώς ήρθες στο Aristomate!
-		</ion-text> -->
-		<div
-			class="academiclogin"
-			style="display:flex; flex-direction:row; align-items: center; justify-content: center; gap: 4px;"
-		>
+	<!-- Main Content -->
+	<div class="main-content">
+		<img src={Logo} alt="Aristomate logo" class="logo" />
+		
+		<div class="academiclogin">
 			<ion-text>Καλώς ήρθες στο Aristomate!</ion-text>
 		</div>
 
-		{#if token_expiry}
-			<div
-				style="display: flex; flex-direction:row; align-items:center"
-				on:click={() => {
-					inlineModalOpen = true;
-				}}
-				aria-hidden
-			>
-				<ion-label style="color: var(--ion-color-primary)">Γιατί με πετάει</ion-label>
-				<ion-icon
-					src={helpCircle}
-					style="width: 2rem; height: 2rem; color: var(--ion-color-primary)"
-					alt="Why am I getting kicked"
-				/>
-			</div>
+		
 
-			<ion-modal
-				is-open={inlineModalOpen}
-				initial-breakpoint={0.4}
-				breakpoints={[0.4, 0.8]}
-				handle-behavior="cycle"
-			>
-				<ion-content>
-					<div style="overflow-x: hidden;">
-						<ion-item-group>
-							<ion-item class="modal-item">
-								<ion-text class="centered-text">
-									<h3>Γιατί με πετάει κάθε μέρα;</h3>
-								</ion-text>
-							</ion-item>
-
-							<ion-item lines="none" class="modal-item">
-								<div class="ion-padding">
-									Λίγη ακόμη υπομονή! Η εφαρμογή θέτει σε πρώτη προτεραιότητα την διασφάλιση του
-									απορρήτου των δεδομένων σου. Εργαζόμαστε πάνω σε αυτό.
-								</div>
-							</ion-item>
-						</ion-item-group>
-					</div>
-				</ion-content>
-			</ion-modal>
-		{/if}
-
-		{#if invalidData}
-			<ion-label class="error">Λανθασμένα στοιχεία σύνδεσης</ion-label>
-		{/if}
-		{#if isVisible}
+		<!-- Loading Overlay -->
+		{#if loading}
 			<div class="loading-panel">
 				<ion-spinner class="loginSpinner" />
 				<p class="loginP">Περιμένετε...</p>
 			</div>
 		{/if}
 
-		<ion-button
-			aria-hidden
-			class="custom"
-			on:click={() => Keycloakthings.login({ scope: 'students:read' })}
-			style="margin-top:2rem;">Σύνδεση ΑΠΘ</ion-button
-		>
+    {#if error}
+      <div class="error">
+        <strong>Error:</strong> {error}
+      </div>
+    {/if}
+
+		<!-- Login Button -->
+		<ion-button class="custom" on:click={handleLogin} aria-hidden>
+			Σύνδεση ΑΠΘ
+		</ion-button>
+
+		<!-- Footer -->
 		<div class="footer">
-			<ion-title size="small" color="primary" style="padding-bottom: 15px; font-size: small;"
-				>Powered by <br /><strong>Aristotle University of Thessaloniki</strong>.</ion-title
-			>
+			<ion-title size="small" color="primary">
+				Powered by<br />
+				<strong>Aristotle University of Thessaloniki</strong>.
+			</ion-title>
 		</div>
 	</div>
 </ion-content>
 
 <style>
-	.footer {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		padding-top: 35px;
+	.hero-container {
+		position: relative;
+		width: 100%;
+		height: 40%;
+	}
+
+	.hero-bg {
 		position: absolute;
-		bottom: 0;
+		width: 110%;
+		height: 70%;
+	}
+
+	.hero-overlay {
+		width: 110%;
+		height: 85%;
+	}
+
+	.main-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: top;
+		margin-top: -40px;
+		padding: 0 20px;
+	}
+
+	.logo {
+		width: 30%;
+		margin-bottom: 25px;
 	}
 
 	.academiclogin {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 4px;
 		color: #98bdd6;
 		margin-bottom: 10px;
-		/* font-weight: bold; */
+	}
+
+	.help-link {
+		display: flex;
+		align-items: center;
+	}
+
+	.help-icon {
+		width: 2rem;
+		height: 2rem;
+		color: var(--ion-color-primary);
 	}
 
 	ion-button.custom {
@@ -151,6 +157,7 @@
 		--box-shadow: var(--shadow-sort-md);
 		width: 60%;
 		height: 3rem;
+		margin-top: 2rem;
 	}
 
 	.loading-panel {
@@ -174,6 +181,21 @@
 	p.loginP {
 		color: white;
 		margin: 0;
+	}
+
+	.footer {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		padding-top: 35px;
+		position: absolute;
+		bottom: 0;
+	}
+
+	.footer ion-title {
+		padding-bottom: 15px;
+		font-size: small;
 	}
 
 	.centered-text {
