@@ -51,7 +51,6 @@
 		moveTabBarLine(currentTabName);
 		setTimeout(() => {
 			moveTabBarLine(currentTabName);
-			console.log('Tab bar line positioned for tab:', currentTabName);
 		}, 500);
 	});
 
