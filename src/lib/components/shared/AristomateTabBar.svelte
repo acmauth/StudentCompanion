@@ -51,7 +51,7 @@
 		moveTabBarLine(currentTabName);
 		setTimeout(() => {
 			moveTabBarLine(currentTabName);
-		}, 5);
+		}, 500);
 	});
 
 	const tabBarClick = async (selectedTab) => {

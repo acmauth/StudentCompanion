@@ -1,42 +1,46 @@
 import { get } from "svelte/store";
-import { keyCloakStore, getToken, refreshToken, getValidity, getRefreshEligibility, logout } from "$stores/keycloak.store.js";
+import OIDCClient from "$src/lib/authentication/OIDCClient.js";
 import { tries, increment, reset } from "../stores/reAuthTries.store.js";
-import { userCreds, userTokens, useAlternativeLogin } from "$stores/credentials.store";
+import { userTokens, useAlternativeLogin } from "$stores/credentials.store";
 import reauthenticate from "../authenticator-deprecated/reauthenticate.js";
-import KeycloakClient from "$src/routes/login/core.js";
+import { Capacitor } from "@capacitor/core";
+import Config from "$src/app.config";
 
 // This is a wrapper for the Universis API.
 // It's a simple GET request with a token in the header.
 export const apiRequest = async (endpoint: string): Promise<Object> => {
     
     if (!get(useAlternativeLogin)) {
-        return await keyClockApiRequest(endpoint);
+        return await oidcApiRequest(endpoint);
     } else {
       return await alternativeLoginApiRequest(endpoint);
     }
     
 };
 
-async function keyClockApiRequest(endpoint: string): Promise<Object> {
+async function oidcApiRequest(endpoint: string): Promise<Object> {
     /*
-      This function is a wrapper for the login, using the keycloak credential API.
+      This function is a wrapper for the login, using the OIDC credential API.
     */
+      const isMobile = Capacitor.isNativePlatform();
+      const authClient = new OIDCClient(Config.auth);
 
-    if (!getValidity()) {
+
+    if (authClient.isExpired()) {
       // If the token is not valid, we try to get a new one
-      if (getRefreshEligibility()) {
+      if (authClient.isRefreshable()) {
         // If the refresh token is still valid, we try to get a new token
-        await refreshToken();
+        await authClient.refreshToken();
       } else {
         // If the refresh token is not valid, we redirect the user to the login page
-        logout();
+        await authClient.logout();
       }
     }
   
-    const token = get(keyCloakStore).token;
+    const token = await authClient.getAccessToken();
     
     // We get the token from the store
-    const url = `https://universis-api.it.auth.gr/api/${endpoint}`;
+    const url = `${Config.universis.api}/${endpoint}`;
     const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -50,14 +54,14 @@ async function keyClockApiRequest(endpoint: string): Promise<Object> {
 
 async function alternativeLoginApiRequest(endpoint: string): Promise<Object> {
     /*
-      This function is a wrapper for the login, using the keycloak credential API.
+      This function is a wrapper for the login, using the OIDC credential API.
     */
 
         
       let _userTokens: any = get(userTokens);
     
       // We get the token from the store
-      const url = `https://universis-api.it.auth.gr/api/${endpoint}`;
+      const url = `${Config.universis.api}/${endpoint}`;
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${_userTokens.universis.token}`,

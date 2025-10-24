@@ -5,7 +5,7 @@ import { EventStore } from "$components/calendar/event/EventStore";
 import { qrStore } from "$components/wallet/qrStore";
 import { userCreds, userTokens, useAlternativeLogin } from "$stores/credentials.store";
 import { scheduledNotifications } from "$lib/calendarNotifications/notificationsStore";
-import { keyCloakStore } from "$stores/keycloak.store";
+import { loginStore } from "$src/lib/authentication/loginStore";
 import { userCredsFlag } from "$components/webmailLogin/userCredsFlagStore";
 
 const persistedStores: CapacitorPersistedStore<any>[] = [
@@ -17,7 +17,7 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
     qrStore,
     userTokens,
     userCredsFlag,
-    keyCloakStore,
+    loginStore,
     useAlternativeLogin
     // Add new stores here
 ];

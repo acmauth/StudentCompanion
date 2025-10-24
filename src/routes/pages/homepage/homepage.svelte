@@ -160,7 +160,7 @@
 		</div>
 		<RecentItems />
 	{:catch error}
-		<ErrorLandingCard errorMsg={$t('homepage.error')} />
+		<ErrorLandingCard errorMsg={error} />
 		<AppletsSlides />
 	{/await}
 </ion-content>
