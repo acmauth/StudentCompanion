@@ -104,9 +104,8 @@ class OIDCClient {
 
   // Store credentials in loginStore
   setItemInStore(key: keyof LoginTokens, value: string) {
-    loginStore.update(store => {
-      store[key] = value;
-      return store;
+    loginStore.update((store) => {
+      return { ...store, [key]: value}
     }
     );
   }
@@ -117,9 +116,8 @@ class OIDCClient {
   }
 
   removeItemFromStore(key: keyof LoginTokens) {
-    loginStore.update(store => {
-      store[key] = "";
-      return store;
+    loginStore.update((store) => {
+      return { ...store, [key]: "" };
     });
   }
 
@@ -351,7 +349,7 @@ class OIDCClient {
       };
       showToast();
 
-      goto("/login?")
+      goto("/login?token_expired=true");
     }
   }
 
@@ -376,6 +374,7 @@ class OIDCClient {
   // Check if user is authenticated
   isAuthenticated() {
     return !!this.getItemFromStore('access_token');
+    
   }
 
   // Make authenticated API request
