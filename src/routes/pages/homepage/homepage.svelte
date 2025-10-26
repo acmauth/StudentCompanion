@@ -154,6 +154,11 @@
 		</div>
 		<p class="info-text"><b>{$t('homepage.usefulInfo')}</b></p>
 		<AppletsSlides />
+		<!-- <CredentialLogin bind:loginModalOpen={loginModalOpen} /> -->
+		<Banner altText="Πες μας τη γνώμη σου" />
+		<p class="info-text">
+			<b>{$t('homepage.recents')}</b>
+		</p>
 		{#if $autheticationFlag == false}
 			<div class="webmail-button-container">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -164,11 +169,6 @@
 				</div>
 			</div>
 		{/if}
-		<!-- <CredentialLogin bind:loginModalOpen={loginModalOpen} /> -->
-		<Banner altText="Πες μας τη γνώμη σου" />
-		<p class="info-text">
-			<b>{$t('homepage.recents')}</b>
-		</p>
 		<RecentItems />
 	{:catch error}
 		<ErrorLandingCard errorMsg={error} />
