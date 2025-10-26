@@ -187,7 +187,7 @@
 					{/if}
 				</div>
 
-				<h1 class="ion-padding">
+				<h1 class="ion-padding" style="margin-top:0.1rem;">
 					<ion-icon icon={allIonicIcons.restaurantOutline} />
 					{title}
 				</h1>
@@ -368,6 +368,7 @@
 	:global(.formatted-menu .menu-item) {
 		font-size: 1rem;
 		margin-bottom: 0.5rem;
+		margin-top: 0.5rem;
 		line-height: 1.5;
 		padding-left: 0.5rem;
 	}
