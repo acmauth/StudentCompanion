@@ -134,10 +134,16 @@
 		height: 100%;
 		overflow: hidden;
 		z-index: 0;
-		background: radial-gradient(circle at 30% 30%, #1e3c72, #0a0e17 80%);
+		/* Light theme: black and navy-blue */
+		background: linear-gradient(to bottom, #0a0e17, #1e3c72 80%);
 		background-blend-mode: overlay;
 		filter: brightness(1.05) saturate(1.2);
 		animation: gradientMove 20s ease-in-out infinite alternate;
+	}
+
+	:global(body.dark) .gradient-background {
+		/* Dark theme: black and navy-blue */
+		background: linear-gradient(to bottom, #0a0e17, #1e3c72 80%);
 	}
 
 	/* Animated dark “blob” layers */
