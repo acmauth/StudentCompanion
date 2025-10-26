@@ -315,7 +315,7 @@ class OIDCClient {
 
   // Logout
   async logout() {
-    const idToken = this.getItemFromStore('id_token');
+    // const idToken = this.getItemFromStore('id_token');
     
     // Clear stored tokens
     this.removeItemFromStore('access_token');
@@ -324,22 +324,22 @@ class OIDCClient {
     this.removeItemFromStore('expires_at');
 
     // Perform server-side logout
-    if (false && idToken && this.config.logoutUrl) {
-      const params = new URLSearchParams({
-        id_token_hint: idToken,
-        post_logout_redirect_uri: this.config.redirectUri
-      });
+    // if (false && idToken && this.config.logoutUrl) {
+    //   const params = new URLSearchParams({
+    //     id_token_hint: idToken,
+    //     post_logout_redirect_uri: this.config.redirectUri
+    //   });
 
-      const logoutUrl = `${this.config.logoutUrl}?${params.toString()}`;
+    //   const logoutUrl = `${this.config.logoutUrl}?${params.toString()}`;
 
-      // if (this.config.isMobile) {
-      //   const { Browser } = await import('@capacitor/browser');
-      //   await Browser.open({ url: logoutUrl });
-      // } else {
-      //   window.location.href = logoutUrl;
-      // }
+    //   // if (this.config.isMobile) {
+    //   //   const { Browser } = await import('@capacitor/browser');
+    //   //   await Browser.open({ url: logoutUrl });
+    //   // } else {
+    //   //   window.location.href = logoutUrl;
+    //   // }
       
-    }
+    // }
     const showToast = async () => {
         const toast = await toastController.create({
            color: 'danger',

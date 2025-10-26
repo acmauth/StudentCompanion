@@ -22,7 +22,6 @@ async function oidcApiRequest(endpoint: string): Promise<Object> {
     /*
       This function is a wrapper for the login, using the OIDC credential API.
     */
-      const isMobile = Capacitor.isNativePlatform();
       const authClient = new OIDCClient(Config.auth);
 
 

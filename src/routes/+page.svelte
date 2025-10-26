@@ -19,15 +19,6 @@
 	// Handling the redirect to the homepage
 	onMount(async () => {
 		await loadPersistedStores();
-		App.addListener('appUrlOpen', (data) => {
-			console.log('App opened with URL:', data.url);
-
-			// Use URL to navigate inside Svelte
-			const url = new URL(data.url);
-			if (url.pathname === '/pages/homepage') {
-				goto('pages/homepage');
-			}
-		});
 		// await delay(1000);
 		if (await judgeAuth()) {
 			await preFlightCache();
