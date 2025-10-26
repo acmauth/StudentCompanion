@@ -1,28 +1,32 @@
 import axios from 'axios';
-import cheerio from 'cheerio';
-import { t } from "$lib/i18n";
-import { get } from 'svelte/store';
+import { getLocale } from '$lib/i18n';
+import { getMenuFromCache, saveMenuToCache, isCacheValid } from './menuCache';
+
 export async function getMenu() {
-    let scrapedHTML: Array<string> = []; // Initialize the array
     try {
-
-        // getting the data from the cafeteria website
-        let menuLink = get(t)("menu.link");
-
-        const response = await axios.get(menuLink);
-
-        const htmlContent = response.data;
-        const $ = cheerio.load(htmlContent);
-
-        const dailyMenus = $('.e-n-accordion-item').children().next();
-        dailyMenus.each(function (idx, el) {
-            scrapedHTML[idx] = $(el).html() ?? '';
-        });
-
-        return scrapedHTML;
+        const locale = getLocale();
+        const apiUrl = `https://api.aristomate.gr/menu?locale=${locale}`;
+        
+        const response = await axios.get(apiUrl, { timeout: 5000 });
+        const menuData = response.data.menu;
+        
+        // Save to cache for future use
+        if (menuData && Array.isArray(menuData)) {
+            await saveMenuToCache(menuData);
+        }
+        
+        return menuData;
 
     } catch (error) {
-        console.error('Error while scraping data:', error);
-        return "Error while scraping data";
+        console.error('Error while fetching menu data:', error);
+        
+        // Try to get cached data as fallback
+        const cachedMenu = await getMenuFromCache();
+        if (cachedMenu) {
+            console.log('Using cached menu data');
+            return cachedMenu;
+        }
+        
+        return "Error while fetching menu data";
     }
 }
