@@ -8,7 +8,6 @@
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from '$lib/components/menu/menuSkeleton.svelte';
 	import { t} from '$lib/i18n';
-	import { formatMenuText, processMenuData } from '$lib/components/menu/menuUtils';
 
 	register();
 
@@ -83,21 +82,27 @@
 
 	// Fetch and process menu data
 	async function getMenuData() {
-		const menuData = await getMenu();
-		
+		const menuAPIresponse = await getMenu();
+		const menuData = menuAPIresponse.days;
+		const isClubOpen = menuAPIresponse.club_open;
+
+		if (isClubOpen != undefined && !isClubOpen) {
+			message = $t('menu.closedForHolidays');
+			color = 'danger';
+		}
+
+
 		if (typeof menuData === 'string') {
 			throw new Error(menuData);
 		}
-		
-		const processed = processMenuData(menuData as string[], today, message, color, $t);
-		cafeteriaData = processed.cafeteriaData;
-		breakfastData = processed.breakfastData;
-		lunchData = processed.lunchData;
-		dinnerData = processed.dinnerData;
-		menuDate = processed.menuDate;
-		if (processed.message) message = processed.message;
-		if (processed.color) color = processed.color;
-		
+
+		// menuData is an array of day objects (Monday=0, Sunday=6)
+		cafeteriaData = menuData.map(day => day.full);
+		breakfastData = menuData[today]?.breakfast || '';
+		lunchData = menuData[today]?.lunch || '';
+		dinnerData = menuData[today]?.dinner || '';
+		menuDate = '';
+
 		showingCachedData = false;
 		dataLoaded = true;
 	}
@@ -105,16 +110,14 @@
 	// Load cached data immediately on mount
 	async function loadCachedData() {
 		const cachedMenu = await getMenuFromCache();
+		
 		if (cachedMenu && cachedMenu.length > 0) {
-			const processed = processMenuData(cachedMenu, today, message, color, $t);
-			cafeteriaData = processed.cafeteriaData;
-			breakfastData = processed.breakfastData;
-			lunchData = processed.lunchData;
-			dinnerData = processed.dinnerData;
-			menuDate = processed.menuDate;
-			if (processed.message) message = processed.message;
-			if (processed.color) color = processed.color;
-			
+			cafeteriaData = cachedMenu.map(day => day.full);
+			breakfastData = cachedMenu[today]?.breakfast || '';
+			lunchData = cachedMenu[today]?.lunch || '';
+			dinnerData = cachedMenu[today]?.dinner || '';
+			menuDate = '';
+
 			showingCachedData = true;
 			dataLoaded = true;
 			return true;
@@ -203,21 +206,19 @@
 							<!-- Breakfast Slide -->
 							<swiper-slide>
 								<div class="meal-slide">
-									<div class="formatted-menu">{@html formatMenuText(breakfastData, false)}</div>
+									<div class="formatted-menu">{@html breakfastData}</div>
 								</div>
 							</swiper-slide>
-							
 							<!-- Lunch Slide -->
 							<swiper-slide>
 								<div class="meal-slide">
-									<div class="formatted-menu">{@html formatMenuText(lunchData, false)}</div>
+									<div class="formatted-menu">{@html lunchData}</div>
 								</div>
 							</swiper-slide>
-							
 							<!-- Dinner Slide -->
 							<swiper-slide>
 								<div class="meal-slide">
-									<div class="formatted-menu">{@html formatMenuText(dinnerData, false)}</div>
+									<div class="formatted-menu">{@html dinnerData}</div>
 								</div>
 							</swiper-slide>
 						</swiper-container>
@@ -235,43 +236,43 @@
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.monday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html formatMenuText(cafeteriaData[0])}</div>
+						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[0]}</div>
 					</ion-accordion>
 					<ion-accordion value="second">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.tuesday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html formatMenuText(cafeteriaData[1])}</div>
+						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[1]}</div>
 					</ion-accordion>
 					<ion-accordion value="third">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.wednesday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html formatMenuText(cafeteriaData[2])}</div>
+						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[2]}</div>
 					</ion-accordion>
 					<ion-accordion value="fourth">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.thursday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html formatMenuText(cafeteriaData[3])}</div>
+						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[3]}</div>
 					</ion-accordion>
 					<ion-accordion value="fifth">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.friday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html formatMenuText(cafeteriaData[4])}</div>
+						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[4]}</div>
 					</ion-accordion>
 					<ion-accordion value="sixth">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.saturday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html formatMenuText(cafeteriaData[5])}</div>
+						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[5]}</div>
 					</ion-accordion>
 					<ion-accordion value="seventh">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.sunday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html formatMenuText(cafeteriaData[6])}</div>
+						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[6]}</div>
 					</ion-accordion>
 				</ion-accordion-group>
 			{/if}
@@ -287,9 +288,29 @@
 	}
 
 	:global(.meal-slide) {
-		padding: 16px;
+		/* padding: 1.25rem 1.5rem; */
 		height: auto;
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 600px;
+		margin: 0.7rem 0.7rem;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		border-radius: 12px;
 	}
+
+	:global(.formatted-menu) {
+		width: 100%;
+		max-width: 100%;
+		min-width: 0;
+		box-sizing: border-box;
+		overflow-x: auto;
+		padding: 0.25rem 0.5rem 0.5rem 0.5rem;
+		margin: 0;
+	}
+
 
 	:global(.meal-title) {
 		font-size: 1.3rem;
@@ -311,77 +332,24 @@
 
 	:global(swiper-container) {
 		width: 100%;
+		max-width: 600px;
+		margin: 0 auto;
 		height: auto;
+		min-width: 0;
+		box-sizing: border-box;
 	}
 
 	:global(swiper-slide) {
 		display: flex;
-		align-items: flex-start;
+		align-items: stretch;
 		justify-content: center;
 		height: auto;
+		width: 100% !important;
+		min-width: 0;
+		box-sizing: border-box;
 	}
 
 	:global(.swiper-pagination-bullet) {
 		background: var(--ion-color-primary);
 	}
-
-	:global(.formatted-menu .menu-date) {
-		font-size: 1rem;
-		color: var(--ion-color-secondary);
-		font-weight: 500;
-		text-align: center;
-		margin: 0;
-	}
-
-	:global(.formatted-menu .meal-header) {
-		font-size: 1.5rem;
-		font-weight: bold;
-		color: var(--ion-color-primary);
-		margin-top: 1.5rem;
-		margin-bottom: 0.5rem;
-		border-bottom: 2px solid var(--ion-color-primary);
-		padding-bottom: 0.25rem;
-	}
-
-	:global(.formatted-menu .meal-time) {
-		font-size: 0.9rem;
-		color: var(--ion-color-medium);
-		font-style: italic;
-		margin-bottom: 1rem;
-	}
-
-	:global(.formatted-menu .category-header) {
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: var(--ion-color-secondary);
-		margin-top: 1rem;
-		margin-bottom: 0.5rem;
-		text-transform: uppercase;
-	}
-
-	:global(.formatted-menu .selection-note) {
-		font-size: 0.9rem;
-		color: var(--ion-color-medium);
-		margin-bottom: 0.25rem;
-	}
-
-	:global(.formatted-menu .menu-item) {
-		font-size: 1rem;
-		margin-bottom: 0.5rem;
-		margin-top: 0.5rem;
-		line-height: 1.5;
-		padding-left: 0.5rem;
-	}
-
-	:global(.formatted-menu .breakfast-content) {
-		font-size: 0.95rem;
-		line-height: 1.6;
-		margin-bottom: 0.5rem;
-		padding-left: 0.5rem;
-	}
-
-	:global(.formatted-menu h2:first-child) {
-		margin-top: 0;
-	}
-
 </style>

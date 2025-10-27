@@ -1,4 +1,6 @@
 import { Capacitor } from "@capacitor/core";
+import { getLocale } from '$lib/i18n';
+
 const isMobile = Capacitor.isNativePlatform();
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -19,6 +21,9 @@ const appConfig = {
     },
     universis: {
         api: 'https://universis-api.it.auth.gr/api'
+    },
+    menu: {
+        api: `https://api.aristomate.gr/menu?locale=${getLocale()}`
     }
 }
 
