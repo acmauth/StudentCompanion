@@ -324,7 +324,7 @@ class OIDCClient {
     this.removeItemFromStore('expires_at');
 
     // Perform server-side logout
-    if (idToken && this.config.logoutUrl) {
+    if (false && idToken && this.config.logoutUrl) {
       const params = new URLSearchParams({
         id_token_hint: idToken,
         post_logout_redirect_uri: this.config.redirectUri
@@ -338,7 +338,9 @@ class OIDCClient {
       // } else {
       //   window.location.href = logoutUrl;
       // }
-      const showToast = async () => {
+      
+    }
+    const showToast = async () => {
         const toast = await toastController.create({
            color: 'danger',
            duration: 4000,
@@ -350,7 +352,6 @@ class OIDCClient {
       showToast();
 
       goto("/login?token_expired=true");
-    }
   }
 
   isExpired() {
