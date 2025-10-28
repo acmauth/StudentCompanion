@@ -22,9 +22,11 @@
 		// await delay(1000);
 		if (await judgeAuth()) {
 			await preFlightCache();
-			goto('pages/homepage');
+			console.log("[src/routes/+page.svelte] Navigating to homepage");
+			goto('/pages/homepage'); // FIXME: This gets called after a call to login, resulting in -> /login and then /pages/homepage
 		} else {
-			goto('login?token_expiry=true');
+			console.log("[src/routes/+page.svelte] Navigating to login");
+			goto('/login?token_expiry=true');
 		}
 	});
 </script>

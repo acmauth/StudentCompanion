@@ -53,6 +53,7 @@
 	// Log out
 	function logOut() {
 		invalidateAuth();
+		console.log("[src/routes/pages/personalInfo/+page.svelte] Navigating to login");
 		goto('/login');
 	}
 </script>

@@ -25,6 +25,7 @@ export async function handleCallback(url: string, loading: boolean) {
       isAuthenticated = true;
       
       // Clean URL and redirect
+      console.log("[src/login/login.ts] Navigating to homepage");
       goto('/pages/homepage', { replaceState: true });
     } catch (err) {
       console.error('Login failed:', err);
@@ -56,6 +57,7 @@ export async function handleLogout() {
       await authClient.logout();
       userInfo = null;
       isAuthenticated = false;
+      console.log("[src/routes/login/login.ts] Navigating to login");
       goto('/login', { replaceState: true });
     } catch (err) {
       console.error('Logout failed:', err);

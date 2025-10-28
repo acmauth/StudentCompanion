@@ -350,6 +350,7 @@ class OIDCClient {
         toast.present();
       };
       showToast();
+      console.log("[OIDCClient] Redirecting to login due to token expiration");
 
       goto("/login?token_expired=true");
   }
@@ -374,7 +375,11 @@ class OIDCClient {
 
   // Check if user is authenticated
   isAuthenticated() {
-    return !!this.getItemFromStore('access_token');
+    const refreshToken = this.getItemFromStore('refresh_token');
+    if (!refreshToken) {
+      return false;
+    }
+    return this.isRefreshable();
     
   }
 
