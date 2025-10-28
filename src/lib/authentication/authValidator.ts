@@ -29,7 +29,7 @@ export async function judgeAuth() {
     const onLineStatus = (await Network.getStatus()).connected;
 
     if (!get(useAlternativeLogin)){
-        return authClient.isRefreshable() || authClient.isAuthenticated();
+        return authClient.isAuthenticated();
     } else {
         const userCredsValue = get(userCreds);
         if (!userCredsValue.username || !userCredsValue.password) return false;  // If we don't have any credentials, we're not logged in
