@@ -1,7 +1,6 @@
 <script>
     import darkIcon from "./icon_dark.png";
     import lightIcon from "./icon_light.png";
-    import CredentialLogin from "../credentialLogin.svelte";
 	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
 	import { showLoginAlert } from "../credentialLogin";
 
