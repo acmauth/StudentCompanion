@@ -1,6 +1,8 @@
+
 import axios from 'axios';
 import { getMenuFromCache, saveMenuToCache} from './menuCache';
 import Config from "$src/app.config";
+import DOMPurify from 'dompurify';
 
 export async function getMenu() {
     try {
@@ -8,11 +10,12 @@ export async function getMenu() {
 
         const response = await axios.get(apiUrl, { timeout: 5000 });
 
-        const days = response.data?.menu?.days;
+        let days = response.data?.menu?.days;
         const club_open = response.data?.club_open;
 
-        // Save to cache for future use
+        // Sanitize HTML in days array and cache
         if (days && Array.isArray(days)) {
+            days = days.map(day => typeof day === 'string' ? DOMPurify.sanitize(day, { SANITIZE_NAMED_PROPS: true }) : day);
             await saveMenuToCache(days);
         }
 
