@@ -17,27 +17,8 @@
   let loading = false;
   let error = '';
   let userInfo: any = null;
-  let isAuthenticated = false;
-  let pageLoaded = false;
 
   onMount(async () => {
-    // Delay to prevent layout shift
-    setTimeout(() => {
-      pageLoaded = true;
-    }, 100);
-
-    // Check if already authenticated
-    isAuthenticated = authClient.isAuthenticated();
-    
-    if (isAuthenticated) {
-      try {
-        userInfo = await authClient.getUserInfo();
-      } catch (err) {
-        console.error('Failed to get user info:', err);
-        error = 'Session expired';
-        isAuthenticated = false;
-      }
-    }
 
     // Handle callback from OAuth server (web)
     if ($page.url.searchParams.has('code') || $page.url.searchParams.has('error')) {
@@ -48,6 +29,7 @@
     if (Config.isMobile) {
       App.addListener('appUrlOpen', async (event) => {
         if (event.url.includes('authsso/callback')) {
+		  console.log('[routes/login] Handling deep link callback:', event.url);
           await handleCallback(event.url, loading);
         }
       });
