@@ -16,8 +16,10 @@
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { t } from '$lib/i18n';
 	import Wallet from '$components/wallet/Wallet.svelte';
-	import CredentialLoginButton from '$components/webmailLogin/CredentialLoginButton.svelte';
 	import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
+	import { keySharp } from 'ionicons/icons';
+	import { userCredsFlag as autheticationFlag } from '$components/webmailLogin/userCredsFlagStore';
+	import { showLoginAlert } from "$components/webmailLogin/credentialLogin"
 
 	let givenName = '';
 	let gender = '';
@@ -26,6 +28,7 @@
 	let average = 0;
 
 	let qrModalOpen = false;
+	let loginModalOpen = false;
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet(
@@ -151,13 +154,21 @@
 		</div>
 		<p class="info-text"><b>{$t('homepage.usefulInfo')}</b></p>
 		<AppletsSlides />
+		<!-- <CredentialLogin bind:loginModalOpen={loginModalOpen} /> -->
 		<Banner altText="Πες μας τη γνώμη σου" />
-		<div style="display:flex; justify-content:space-between; align-items: center; margin-inline-end:0.75rem;">
-			<p style="margin-top:0" class="info-text">
-				<b>{$t('homepage.recents')}</b>
-			</p>
-			<CredentialLoginButton />
-		</div>
+		<p class="info-text">
+			<b>{$t('homepage.recents')}</b>
+		</p>
+		{#if $autheticationFlag == false}
+			<div class="webmail-button-container">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div class="webmail-button" on:click={showLoginAlert}>
+					<ion-icon icon={keySharp} />
+					<span>{$t('settings.webmail')}</span>
+				</div>
+			</div>
+		{/if}
 		<RecentItems />
 	{:catch error}
 		<ErrorLandingCard errorMsg={error} />
@@ -269,7 +280,40 @@
 	.info-text {
 		margin-left: 1.5rem;
 		margin-top: 2rem;
-		margin-bottom: 0;
+		margin-bottom: 1.5rem;
 		font-size: 0.8rem;
+	}
+
+	.webmail-button-container {
+		margin-left: 1.5rem;
+		margin-right: 1.5rem;
+		margin-top: 0;
+		margin-bottom: 1.5rem;
+	}
+
+	.webmail-button {
+		background: var(--app-color-primary);
+		border-radius: 1rem;
+		padding: 1rem 1.25rem;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		cursor: pointer;
+		width: 100%;
+		box-shadow: var(--shadow-md);
+	}
+
+	.webmail-button:active {
+		transform: scale(0.98);
+	}
+
+	.webmail-button ion-icon {
+		font-size: 1.5rem;
+		color: var(--app-color-primary-dark);
+	}
+
+	.webmail-button span {
+		font-size: 1rem;
+		color: var(--app-color-primary-dark);
 	}
 </style>

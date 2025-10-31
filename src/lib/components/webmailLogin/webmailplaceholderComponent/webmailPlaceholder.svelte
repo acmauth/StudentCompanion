@@ -1,8 +1,8 @@
 <script>
     import darkIcon from "./icon_dark.png";
     import lightIcon from "./icon_light.png";
-    import CredentialLogin from "../CredentialLogin.svelte";
 	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
+	import { showLoginAlert } from "../credentialLogin";
 
     let inlineModalOpen = false;
     let breakpoints = [0, 0.5, 1];
@@ -10,7 +10,7 @@
 </script>
 
 {#if !$autheticationFlag}
-    <ion-card href="" aria-hidden on:click ={() => {inlineModalOpen = true}}>
+    <ion-card href="" aria-hidden on:click ={showLoginAlert}>
         <div class="mainContents">
             <img src={darkIcon} alt="Dark Icon" class="icon darkIcon"/>
             <img src={lightIcon} alt="Light Icon" class="icon lightIcon"/>
@@ -21,8 +21,6 @@
         </div>
     </ion-card>
 {/if}
-
-<CredentialLogin bind:loginModalOpen={inlineModalOpen} />
 
 <style>
 

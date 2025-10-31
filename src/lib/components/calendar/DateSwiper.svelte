@@ -146,7 +146,7 @@
   }
   swiper-slide {
     text-align: center;
-    width: auto;
+    width: 5rem !important;
     box-shadow: 0;
   }
 
