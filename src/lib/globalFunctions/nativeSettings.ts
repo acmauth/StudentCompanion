@@ -1,11 +1,10 @@
 import { App as capacitorApp } from '@capacitor/app';
-import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
-// import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
-import { NavigationBar, NavigationBarColor} from "@capgo/capacitor-navigation-bar";
 import { navController } from '$components/shared/StackedNav';
+import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
-export function nativeSettings() {
+export async function nativeSettings() {
     /* Capacitor back button handling */
     capacitorApp.addListener('backButton', ({canGoBack}) => {
         if(!canGoBack){
@@ -19,27 +18,44 @@ export function nativeSettings() {
         }
     });
 
+    await enableEdgeToEdge();
 
-    // Set the status bar to match the app's color scheme
+    // Set the background color to match the app's color scheme
     if (document.body.classList.contains('dark')) {
-        StatusBar.setStyle({style: Style.Dark});
-        // NavigationBar.setColor({ color: '#1F1F1F', darkButtons: false });
-        NavigationBar.setNavigationBarColor({color: '#1F1F1F', darkButtons: false});
+        await setBackgroundColorDark();
     }
     else {
-        // StatusBar.setStyle({style: Style.Light});
-        StatusBar.setStyle({style: Style.Dark});
-        NavigationBar.setNavigationBarColor({ color: '#FCFCFC', darkButtons: true });
-        // NavigationBar.setNavigationBarColor({ color: '#FF0000', darkButtons: true });
+        await setBackgroundColorLight();
     }
 
-
-    if (Capacitor.getPlatform() === 'android') {
-        if (document.body.classList.contains('dark')) {
-            StatusBar.setBackgroundColor({color: '#111111'});
-        }
-        else {
-            StatusBar.setBackgroundColor({color: '#FCFCFC'});
-        }
-    }
 }
+
+const enableEdgeToEdge = async () => {
+  await EdgeToEdge.enable();
+};
+
+const disable = async () => {
+  await EdgeToEdge.disable();
+};
+
+const getInsets = async () => {
+  const result = await EdgeToEdge.getInsets();
+  console.log('Insets:', result);
+};
+
+const setBackgroundColorLight = async () => {
+  await EdgeToEdge.setBackgroundColor({ color: '#ffffff' });
+  await StatusBar.setStyle({ style: Style.Light });
+};
+const setBackgroundColorDark = async () => {
+  await EdgeToEdge.setBackgroundColor({ color: '#1f1f1f' });
+  await StatusBar.setStyle({ style: Style.Dark });
+};
+
+export const EdgeToEdgeFunctions = {
+  enableEdgeToEdge,
+  disable,
+  getInsets,
+  setBackgroundColorLight,
+  setBackgroundColorDark
+};

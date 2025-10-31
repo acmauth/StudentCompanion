@@ -16,13 +16,16 @@
 			},
 			"LocalNotifications": {
 				"iconColor": "#0081ff"
-			  }
+			},
+			"Keyboard": {
+				"resizeOnFullScreen": false
+			},
+			"EdgeToEdge": {
+				"backgroundColor": "#ffffff"
+			}
 		  },
 		  "server": {
 			"hostname": "localhost",
 			"androidScheme": "https"
-		  },
-		  "android": {
-			"adjustMarginsForEdgeToEdge": "force"
-		}
+		  }
 	}
