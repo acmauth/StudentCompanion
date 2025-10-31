@@ -162,6 +162,13 @@ class OIDCClient {
 
   // Handle callback after redirect
   async handleCallback(callbackUrl: string) {
+
+    if (this.config.isMobile) {
+      // Close the in-app browser
+      const { Browser } = await import('@capacitor/browser');
+      await Browser.close();
+    }
+
     const url = new URL(callbackUrl);
     const params = new URLSearchParams(url.search);
     
