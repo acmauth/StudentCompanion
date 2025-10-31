@@ -32,6 +32,8 @@ export async function nativeSettings() {
 
 const enableEdgeToEdge = async () => {
   await EdgeToEdge.enable();
+  await StatusBar.show();
+  await StatusBar.setOverlaysWebView({ overlay: true });
 };
 
 const disable = async () => {
@@ -46,10 +48,12 @@ const getInsets = async () => {
 const setBackgroundColorLight = async () => {
   await EdgeToEdge.setBackgroundColor({ color: '#ffffff' });
   await StatusBar.setStyle({ style: Style.Light });
+  await StatusBar.setBackgroundColor({ color: '#ffffff' });
 };
 const setBackgroundColorDark = async () => {
   await EdgeToEdge.setBackgroundColor({ color: '#1f1f1f' });
   await StatusBar.setStyle({ style: Style.Dark });
+  await StatusBar.setBackgroundColor({ color: '#121212' });
 };
 
 export const EdgeToEdgeFunctions = {
