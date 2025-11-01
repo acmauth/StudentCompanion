@@ -1,4 +1,4 @@
-import { nativeSettings } from "./nativeSettings";
+import { nativeSettings, EdgeToEdgeFunctions } from "./nativeSettings";
 
 // Check if dark mode is enabled and set it if it is
 export async function checkAppMode() {
@@ -16,5 +16,10 @@ export async function checkAppMode() {
 export function toggleDarkTheme() {
     const isDark = document.body.classList.toggle('dark');
     localStorage.setItem('darkMode', isDark.toString());
-    nativeSettings();
+    // nativeSettings();
+    if (isDark) {
+        EdgeToEdgeFunctions.setBackgroundColorDark();
+    } else {
+        EdgeToEdgeFunctions.setBackgroundColorLight();
+    }
 }
