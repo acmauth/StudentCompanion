@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { add, calendarClearOutline, close, checkmark } from 'ionicons/icons';
+    import { add, calendarClearOutline, close, checkmark, trash } from 'ionicons/icons';
     import { Capacitor } from '@capacitor/core';
     import { onMount } from 'svelte';
     import DateSwiper from '$lib/components/calendar/DateSwiper.svelte';
@@ -125,6 +125,8 @@
             $EventStore = $EventStore.filter(x => x.id != event.id);
         }
         deleteModalOpen = false;
+        if (modalOpen)
+            modalOpen = false;
         //delete the notifications if they are enabled
         if (event.notify){
             deleteEventNotifications(event);
@@ -144,12 +146,50 @@
         }
     }
 
+    // Swipe detection variables
+    let touchstartX = 0;
+    let touchstartY = 0;
+    let touchendX = 0;
+    let touchendY = 0;
+
+    function handleContainerGesture() {
+        const swipeThreshold = 50; // Minimum distance for a swipe
+        const deltaX = touchendX - touchstartX;
+        const deltaY = touchendY - touchstartY;
+        
+        // Check if horizontal swipe is more significant than vertical swipe
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+            if (deltaX > 0) {
+                // Swiped right - go to previous day
+                activeDate = new Date(activeDate.getTime() - 86400000); // Subtract 1 day in milliseconds
+                console.log('Swiped right - Previous day:', activeDate);
+            } else {
+                // Swiped left - go to next day
+                activeDate = new Date(activeDate.getTime() + 86400000); // Add 1 day in milliseconds
+                console.log('Swiped left - Next day:', activeDate);
+            }
+        }
+    }
+
     // remove this on production
     // window.addEventListener("contextmenu", function(e) { e.preventDefault(); });
     
     // To clear the EventStore, uncomment the line below
     // $EventStore = [];
     onMount(async() => {
+        const contentContainer = document.getElementById("swipe");
+
+        contentContainer.addEventListener('touchstart', function (event) {
+            touchstartX = event.changedTouches[0].screenX;
+            touchstartY = event.changedTouches[0].screenY;
+        }, false);
+
+        contentContainer.addEventListener('touchend', function (event) {
+            touchendX = event.changedTouches[0].screenX;
+            touchendY = event.changedTouches[0].screenY;
+            handleContainerGesture();
+        }, false);
+
         let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
         $EventStore = $EventStore.concat(
             fetchedExams.map((exam) => {
@@ -192,8 +232,7 @@
     <DateSwiper bind:activeDate={activeDate}/>
     
     <ion-content scroll-y={true}>
-
-        <div style="height:100%;">
+        <div id="swipe" style="height:100%;">
             {#if eventList.length > 0}
                 <div class="container">
                     <ion-content>
@@ -223,6 +262,9 @@
         >
             <ion-toolbar>
                 <ion-buttons slot="end">
+                    <ion-button id="delete" on:click={removeEvent(tmpEvent)} aria-hidden>
+                        <ion-icon slot="icon-only" icon={trash}/>
+                    </ion-button>
                     <ion-button id="sumbit" on:click={sumbit} aria-hidden>
                         <ion-icon slot="icon-only" icon={checkmark}/>
                     </ion-button>

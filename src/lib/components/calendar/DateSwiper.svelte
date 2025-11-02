@@ -11,6 +11,33 @@
     let weeks: Date[] = [];
     let swiperActiveIndex: number;
     export let activeDate: Date;
+    let swiperEl: any;
+
+    // Watch for external changes to activeDate and update swiper
+    $: if (swiperEl && activeDate) {
+        updateSwiperToDate(activeDate);
+    }
+
+    function updateSwiperToDate(date: Date) {
+        if (!swiperEl) return;
+        
+        const targetDate = new Date(date);
+        targetDate.setHours(0, 0, 0, 0);
+        
+        // Find if the date exists in current weeks
+        let dateIndex = weeks.findIndex((d) => d.getTime() === targetDate.getTime());
+        
+        if (dateIndex === -1) {
+            // Date not in current weeks, rebuild weeks around the new date
+            weeks = getPreviousWeekDates(targetDate).concat(getWeekDates(targetDate)).concat(getNextWeekDates(targetDate));
+            dateIndex = weeks.findIndex((d) => d.getTime() === targetDate.getTime());
+        }
+        
+        if (dateIndex !== -1 && dateIndex !== swiperActiveIndex) {
+            swiperEl.swiper.slideTo(dateIndex, 300, false);
+            swiperActiveIndex = dateIndex;
+        }
+    }
 
 
     function getWeekDates(inputDate: Date): Date[] {
@@ -57,7 +84,7 @@
 
         weeks = previousWeek.concat(currentWeek).concat(nextWeek);
 
-        const swiperEl = document.querySelector('swiper-container');
+        swiperEl = document.querySelector('swiper-container');
         // Set the active index to today's date
         swiperEl?.swiper.slideTo(weeks.findIndex((date) => { return date.getTime() === new Date(today).getTime();}), 0, false);
         swiperActiveIndex = swiperEl?.swiper.activeIndex || 11;
