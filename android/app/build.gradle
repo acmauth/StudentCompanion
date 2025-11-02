@@ -10,7 +10,7 @@ android {
         applicationId "app.aristomate.gr"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 35
-        versionCode 34
+        versionCode 36
         versionName '1.9.0 Pumpkin'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
