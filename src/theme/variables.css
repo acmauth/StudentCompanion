@@ -142,6 +142,8 @@
   --app-color-degree-chip: rgba(236, 242, 252, 1);
   --app-color-degree-chip-text: var(--app-color-primary-dark);
 
+  --webmail-button-background: var(--ion-color-light);
+
 
 
   --app-color-blue: #a6c4fb;
@@ -365,7 +367,7 @@ body.dark {
   --app-color-degree-chip: var(--progress-background-variation);
   --app-color-degree-chip-text: var(--progress-color);
 
-
+  --webmail-button-background: var(--app-color-primary);
 
 }
 
