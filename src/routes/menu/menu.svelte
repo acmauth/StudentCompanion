@@ -91,10 +91,10 @@
 			color = 'danger';
 		}
 
-
 		if (typeof menuData === 'string') {
 			throw new Error(menuData);
 		}
+
 
 		// menuData is an array of day objects (Monday=0, Sunday=6)
 		cafeteriaData = menuData.map(day => day.full);
@@ -103,8 +103,11 @@
 		dinnerData = menuData[today]?.dinner || '';
 		menuDate = '';
 
-		showingCachedData = false;
-		dataLoaded = true;
+		// if it's undefined then cached data is returned
+		if (isClubOpen != undefined) {
+			showingCachedData = false;
+			dataLoaded = true;
+		}
 	}
 
 	// Load cached data immediately on mount
