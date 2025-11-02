@@ -12,6 +12,7 @@
     let swiperActiveIndex: number;
     export let activeDate: Date;
     let swiperEl: any;
+    let isProgrammaticUpdate = false;
 
     // Watch for external changes to activeDate and update swiper
     $: if (swiperEl && activeDate) {
@@ -26,16 +27,35 @@
         
         // Find if the date exists in current weeks
         let dateIndex = weeks.findIndex((d) => d.getTime() === targetDate.getTime());
+        let weeksWereRebuilt = false;
         
         if (dateIndex === -1) {
             // Date not in current weeks, rebuild weeks around the new date
             weeks = getPreviousWeekDates(targetDate).concat(getWeekDates(targetDate)).concat(getNextWeekDates(targetDate));
             dateIndex = weeks.findIndex((d) => d.getTime() === targetDate.getTime());
+            weeksWereRebuilt = true;
+        } else if (dateIndex <= 10 || dateIndex >= weeks.length - 10) {
+            // Date exists but we're near the edge - expand the weeks proactively
+            const currentWeeks = [...weeks];
+            weeks = getPreviousWeekDates(weeks[dateIndex]).concat(getWeekDates(weeks[dateIndex])).concat(getNextWeekDates(weeks[dateIndex]));
+            // Find the new index after expansion
+            dateIndex = weeks.findIndex((d) => d.getTime() === targetDate.getTime());
+            weeksWereRebuilt = true;
         }
         
         if (dateIndex !== -1 && dateIndex !== swiperActiveIndex) {
-            swiperEl.swiper.slideTo(dateIndex, 300, false);
+            // Set flag to prevent event handler from overwriting our update
+            isProgrammaticUpdate = true;
+            // Update the active index first to trigger reactivity
             swiperActiveIndex = dateIndex;
+            // Use instant slide (0ms) if weeks were rebuilt to avoid visual glitch
+            // Use smooth transition (300ms) for normal date changes
+            const slideSpeed = weeksWereRebuilt ? 0 : 300;
+            swiperEl.swiper.slideTo(dateIndex, slideSpeed, false);
+            // Reset flag after a short delay
+            setTimeout(() => {
+                isProgrammaticUpdate = false;
+            }, 350);
         }
     }
 
@@ -92,6 +112,9 @@
 
 
         swiperEl.addEventListener('swiperslidechange', (event) => {
+          // Skip this event if it was triggered by our programmatic update
+          if (isProgrammaticUpdate) return;
+          
           const activeIndex = swiperEl?.swiper.activeIndex || 11;
           swiperActiveIndex = activeIndex;
           activeDate = weeks[swiperActiveIndex];
@@ -99,9 +122,9 @@
           const currentWeeks = [...weeks];
           const currentIndexDate = new Date(weeks[activeIndex]);
           
-          // Update the weeks list with the new weeks based on the active index; if the active index is between 8 and 15, the current week is the active week.
-          // So, there is no need to update the weeks list. Otherwise, the active week is the previous or the next week.
-          if (activeIndex <= 8 || activeIndex >= 15) {
+          // Update the weeks list more proactively - trigger when getting close to edges (10 from start or end)
+          // This prevents users from seeing empty space
+          if (activeIndex <= 10 || activeIndex >= weeks.length - 10) {
               weeks = getPreviousWeekDates(weeks[activeIndex]).concat(getWeekDates(weeks[activeIndex])).concat(getNextWeekDates(weeks[activeIndex]));
           
               // If the weeks list is updated, it means that the user has changed the week. So the current selected date has a new position in the list.
