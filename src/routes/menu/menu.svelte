@@ -106,8 +106,8 @@
 		// if it's undefined then cached data is returned
 		if (isClubOpen != undefined) {
 			showingCachedData = false;
-			dataLoaded = true;
 		}
+		dataLoaded = true;
 	}
 
 	// Load cached data immediately on mount
