@@ -23,7 +23,7 @@ export async function getMetroInfo() {
         // let scrapedHTML = metroInfo.text().trim();
         // console.log(scrapedHTML);
 
-        const apiUrl = Config.menu.api;
+        const apiUrl = Config.metro.api;
         const response = await axios.get(apiUrl, { timeout: 5000 });
         return response.data;
 
