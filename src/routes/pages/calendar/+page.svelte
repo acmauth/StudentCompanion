@@ -1,343 +1,332 @@
+<!-- Svelte 4 Calendar Example Component -->
 <script lang="ts">
-    import { add, calendarClearOutline, close, checkmark, trash } from 'ionicons/icons';
-    import { Capacitor } from '@capacitor/core';
     import { onMount } from 'svelte';
-    import DateSwiper from '$lib/components/calendar/DateSwiper.svelte';
+    import { add } from 'ionicons/icons';
     import { EventStore } from '$lib/components/calendar/event/EventStore';
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
-    import EventDetails from '$lib/components/calendar/event/EventDetails.svelte';
-    import type { Event } from '$lib/components/calendar/event/Event';
-    import { EventRepeatType, EventType, EventCheckFormat } from '$lib/components/calendar/event/Event';
+    import EventModal from '$lib/components/calendar/event/EventModal.svelte';
+    import CalendarGrid from '$lib/components/calendar/CalendarGrid.svelte';
     import { isCurrentDay } from '$lib/components/calendar/CalendarFunctions';
-    import { toastController } from 'ionic-svelte';
-    import type { ToastOptions } from '@ionic/core';
-    import { universisGet } from '$src/lib/dataService';
-    import { scheduleNotification, cancelNotifications } from '$src/lib/calendarNotifications/scheduleNotifications';
+    import type { Event } from '$lib/components/calendar/event/Event';
+    import { EventRepeatType, EventType } from '$lib/components/calendar/event/Event';
+    import { scheduleNotification } from '$src/lib/calendarNotifications/scheduleNotifications';
     import { handleNotificationPermission, handleExactAlarmPermission } from '$src/lib/calendarNotifications/runtimePermissions';
     import { removePastNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
     import { deleteEventNotifications, deleteSingleEventNotification } from '$src/lib/calendarNotifications/notificationFunctions';
-    import { getIds } from '$src/lib/calendarNotifications/notificationsStore';
-    import { t } from "$lib/i18n";
+    import { t } from '$lib/i18n';
+    import { buildCalendarWeeks, type DayObject, type SelectedDay, getNextMonth, getPreviousMonth } from '$lib/components/calendar/calendarUtils';
 
+    let currentDate = new Date();
+    let month = currentDate.getMonth();
+    let year = currentDate.getFullYear();
 
-    let activeDate: Date;
-    let eventList: Event[];
+    let weeks: DayObject[][] = [];
+    let selectedDay: SelectedDay | null = null;
+    let activeDate = new Date();
+    let eventList: Event[] = [];
+
+    // Event creation and editing
     let selectedEvent: Event | null = null;
-    let prototype: Event = {
-        id: new Date().getTime(),
-        title: "",
-        slot: {
-            start: new Date(),
-            end: new Date(new Date().getTime() + 3600000)
-        },
-        type: EventType.TASK,
-        description: "",
-        repeat: EventRepeatType.NEVER,
-        repeatUntil: new Date(new Date().getTime() + 3600000),
-        repeatInterval: 1,
-        notify: false,
-        notifyTime: 1
-    };
-    let tmpEvent: Event = prototype;
     let modalOpen: boolean = false;
     let deleteModalOpen: boolean = false;
 
-    $: eventList = $EventStore.filter(item => isCurrentDay(item, activeDate)).sort((a, b) => new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1);
-    
-    function sumbit() {
-        const formatCheck = EventCheckFormat(tmpEvent);
-        if(formatCheck.error) {
-            showToast({
-                    color: 'danger',
-                    duration: 3000,
-                    message: formatCheck.description,
-                    mode: 'ios',
-                    translucent: true,
-                    layout: 'stacked',
-                    positionAnchor: "bottom",
-                    cssClass: 'custom-toast'
-                });
-            return;
-        }            
+    $: eventList = $EventStore
+        .filter((item) => isCurrentDay(item, activeDate))
+        .sort((a, b) =>
+            new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1
+        );
 
-        const index = $EventStore.findIndex(x => x.id == tmpEvent.id);
+    function buildCalendar() {
+        weeks = buildCalendarWeeks(month, year, $EventStore);
+    }
 
-        if(index != -1 && tmpEvent !== undefined) {
-            $EventStore[index] = tmpEvent;
-        } else if (tmpEvent !== undefined) {
-            $EventStore = $EventStore.concat(tmpEvent);
+    function nextMonth() {
+        const next = getNextMonth(month, year);
+        month = next.month;
+        year = next.year;
+        buildCalendar();
+    }
+
+    function previousMonth() {
+        const prev = getPreviousMonth(month, year);
+        month = prev.month;
+        year = prev.year;
+        buildCalendar();
+    }
+
+    function selectDay(dayObj: DayObject) {
+        if (dayObj) {
+            if (!dayObj.isCurrentMonth) {
+                // Navigate to the appropriate month
+                if (dayObj.day > 15) {
+                    previousMonth();
+                } else {
+                    nextMonth();
+                }
+                setTimeout(() => {
+                    selectedDay = { day: dayObj.day, month, year };
+                    activeDate = new Date(year, month, dayObj.day);
+                }, 0);
+            } else {
+                selectedDay = { day: dayObj.day, month, year };
+                activeDate = new Date(year, month, dayObj.day);
+            }
         }
-        selectedEvent = null;
+    }
 
-        // schedule notifications, if they are enabled
-        if (tmpEvent.notify){
-            handleNotificationPermission();
-            handleExactAlarmPermission(); 
-            removePastNotifications();
-            scheduleNotification(tmpEvent); 
-        }
-        recreatePrototype();
-        modalOpen = false;
-    }    
-
-    function recreatePrototype() {
-        // Create a new prototype event
-
-        // Set the activeDateCurrentTime to the current time, but with the date of the activeDate
-        const CurrentTime = new Date();
+    function createPrototypeEvent(): Event {
+        const currentTime = new Date();
         const activeDateCurrentTime = new Date(activeDate.getTime());
-        activeDateCurrentTime.setHours(CurrentTime.getHours(), CurrentTime.getMinutes());
+        activeDateCurrentTime.setHours(currentTime.getHours(), currentTime.getMinutes());
         
-        prototype = {
+        return {
             id: new Date().getTime(),
             title: "",
             slot: {
                 start: activeDateCurrentTime,
-                end: new Date (activeDateCurrentTime.getTime() + 3600000),
+                end: new Date(activeDateCurrentTime.getTime() + 3600000),
             },
             type: EventType.TASK,
             description: "",
             repeat: EventRepeatType.NEVER,
-            repeatUntil: new Date (activeDateCurrentTime.getTime() + 3600000),
+            repeatUntil: new Date(activeDateCurrentTime.getTime() + 3600000),
             repeatInterval: 1,
             notify: false,
             notifyTime: 1
         };
-        tmpEvent = prototype;
     }
 
-	async function showToast(toast: ToastOptions){
-		const toast_ = await toastController.create(toast);
-		toast_.present();
-	}
+    function handleEventSubmit(event: Event) {
+        const index = $EventStore.findIndex(x => x.id === event.id);
 
-    function setupModal() {
-        if(selectedEvent !== null) {
-            tmpEvent = JSON.parse(JSON.stringify(selectedEvent));
+        if (index !== -1) {
+            $EventStore[index] = event;
+            $EventStore = $EventStore;
+        } else {
+            $EventStore = $EventStore.concat(event);
         }
+        
+        buildCalendar();
+
+        if (event.notify) {
+            handleNotificationPermission();
+            handleExactAlarmPermission(); 
+            removePastNotifications();
+            scheduleNotification(event); 
+        }
+        
+        selectedEvent = null;
+        modalOpen = false;
+    }
+
+    function handleEventDelete(event: Event) {
+        const index = $EventStore.findIndex(x => x.id === event.id);
+        if (index !== -1) {
+            $EventStore = $EventStore.filter(x => x.id !== event.id);
+        }
+        buildCalendar();
+        
+        if (event.notify) {
+            deleteEventNotifications(event);
+        }
+        
+        modalOpen = false;
+    }
+
+    function handleModalClose() {
+        selectedEvent = null;
+        modalOpen = false;
+    }
+
+    function openNewEventModal() {
+        selectedEvent = createPrototypeEvent();
         modalOpen = true;
     }
 
-    function removeEvent(event: Event | null) {
-        if(event === null) return;
-        const index = $EventStore.findIndex(x => x.id == event.id);
-        if(index != -1) {
-            $EventStore = $EventStore.filter(x => x.id != event.id);
-        }
-        deleteModalOpen = false;
-        if (modalOpen)
-            modalOpen = false;
-        //delete the notifications if they are enabled
-        if (event.notify){
-            deleteEventNotifications(event);
-        }        
+    function openEditEventModal(event: Event) {
+        selectedEvent = event;
+        modalOpen = true;
     }
 
     function addInactiveDateToEvent(event: Event | null) {
-        if(event === null) return;
-        const index = $EventStore.findIndex(x => x.id == event.id);
+        if (event === null) return;
+        const index = $EventStore.findIndex(x => x.id === event.id);
         $EventStore[index].inactiveDates = $EventStore[index].inactiveDates?.concat(activeDate.getTime()) ?? [activeDate.getTime()];
+        $EventStore = $EventStore;
+        buildCalendar();
         deleteModalOpen = false;
         
-        if (event.repeat != EventRepeatType.NEVER){
+        if (event.repeat !== EventRepeatType.NEVER) {
             deleteSingleEventNotification(event);
         } else {
             deleteEventNotifications(event);
         }
     }
 
-    // Swipe detection variables
-    let touchstartX = 0;
-    let touchstartY = 0;
-    let touchendX = 0;
-    let touchendY = 0;
-
-    function handleContainerGesture() {
-        const swipeThreshold = 50; // Minimum distance for a swipe
-        const deltaX = touchendX - touchstartX;
-        const deltaY = touchendY - touchstartY;
-        
-        // Check if horizontal swipe is more significant than vertical swipe
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
-            if (deltaX > 0) {
-                // Swiped right - go to previous day
-                activeDate = new Date(activeDate.getTime() - 86400000); // Subtract 1 day in milliseconds
-                console.log('Swiped right - Previous day:', activeDate);
-            } else {
-                // Swiped left - go to next day
-                activeDate = new Date(activeDate.getTime() + 86400000); // Add 1 day in milliseconds
-                console.log('Swiped left - Next day:', activeDate);
-            }
-        }
-    }
-
-    // remove this on production
-    // window.addEventListener("contextmenu", function(e) { e.preventDefault(); });
-    
-    // To clear the EventStore, uncomment the line below
-    // $EventStore = [];
-    onMount(async() => {
-        const contentContainer = document.getElementById("swipe");
-
-        contentContainer.addEventListener('touchstart', function (event) {
-            touchstartX = event.changedTouches[0].screenX;
-            touchstartY = event.changedTouches[0].screenY;
-        }, false);
-
-        contentContainer.addEventListener('touchend', function (event) {
-            touchendX = event.changedTouches[0].screenX;
-            touchendY = event.changedTouches[0].screenY;
-            handleContainerGesture();
-        }, false);
-
-        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
-        $EventStore = $EventStore.concat(
-            fetchedExams.map((exam) => {
-                const existingIndex = $EventStore.findIndex(x => x.id == exam.id);
-                if (existingIndex == -1) {
-                    return {
-                        id: exam.id,
-                        title: exam.description,
-                        description: exam.courseExam.course + ' - ' + exam.location.description,
-                        type: EventType.TEST,
-                        repeat: EventRepeatType.NEVER,
-                        notify: false,
-                        location: exam.location.description,
-                        slot: {
-                            start: new Date(exam.startDate),
-                            end: new Date(exam.endDate)
-                        }
-                    };
-                } else {
-                    return null; // Return null if the exam already exists in $EventStore
-                }
-            }).filter(event => event !== null) // Filter out null values
-        );
+    onMount(() => {
+        buildCalendar();
     });
-
 </script>
 
+
 <ion-tab tab="calendar">
-    <ion-header collapse="condense" mode="ios">
-        <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-        <ion-title class="ion-padding-vertical" size="large" style="padding-top:0; padding-bottom:0;">{$t('schedule.title')}</ion-title>
-        <ion-buttons slot="secondary">
-            <ion-button on:click={() => {modalOpen=true; selectedEvent=null; recreatePrototype();}} aria-hidden>
-            <ion-icon slot="icon-only" icon={add}></ion-icon>  
-            </ion-button>
-        </ion-buttons>
-        </ion-toolbar>
-    </ion-header>
 
-    <DateSwiper bind:activeDate={activeDate}/>
+    <div class="container">
+        <CalendarGrid
+        {weeks}
+        {month}
+        {year}
+        {selectedDay}
+        onPreviousMonth={previousMonth}
+        onNextMonth={nextMonth}
+        onSelectDay={selectDay}
+        />
+
+        <!-- Events Section -->
+    <div class="events-section">
+        <h3 style="align-self:center;">
+            {activeDate.toLocaleDateString(undefined, {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })}
+        </h3>
+        {#if eventList.length > 0}
+        <div class="events-list">
+                {#each eventList as eventItem}
+                <EventCard
+                        {eventItem}
+                        bind:selectedEvent
+                        bind:modalOpen
+                        bind:deleteModalOpen
+                        bind:activeDate
+                        />
+                {/each}
+            </div>
+        {:else}
+            <p class="no-events">
+                {$t('schedule.no_events_day')}
+            </p>
+        {/if}
+    </div>
+
+    <!-- FAB Button for adding new event -->
+    <ion-fab vertical="bottom" horizontal="end">
+        <ion-fab-button on:click={openNewEventModal}>
+            <ion-icon icon={add}></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+
+    <!-- Event Creation/Edit Modal -->
+    {#if selectedEvent}
+        <EventModal
+            bind:isOpen={modalOpen}
+            event={selectedEvent}
+            onSubmit={handleEventSubmit}
+            onDelete={handleEventDelete}
+            onClose={handleModalClose}
+        />
+    {/if}
     
-    <ion-content scroll-y={true}>
-        <div id="swipe" style="height:100%;">
-            {#if eventList.length > 0}
-                <div class="container">
-                    <ion-content>
-                        <div style="padding-top:0.6rem;">
-                            {#each eventList as eventItem}
-                                <EventCard eventItem={eventItem} bind:selectedEvent={selectedEvent} bind:modalOpen={modalOpen} bind:deleteModalOpen={deleteModalOpen} bind:activeDate={activeDate} />
-                            {/each}
-                        </div>
-                    </ion-content>
-                </div>
-            {:else}
-                <div class="container no-events">
-                    <ion-icon icon={calendarClearOutline} size="large" style="padding: 15px"></ion-icon>
-                    <ion-label>{$t('schedule.no_event')}</ion-label>
-                </div>
-            {/if}
-
-        </div>
-
-        <ion-modal 
-            is-open={modalOpen} 
-            initial-breakpoint={selectedEvent? 0.95 : 1} 
-            breakpoints={[0, 0.95, 1]} 
-            on:ionBreakpointDidChange={(event)=>{modalOpen = event.detail.breakpoint!=0; if(!modalOpen) selectedEvent=null;}}
-            on:ionModalDidDismiss={()=>{modalOpen=false; selectedEvent=null; recreatePrototype();}}
-            on:ionModalWillPresent={setupModal}    
-        >
-            <ion-toolbar>
-                <ion-buttons slot="end">
-                    <ion-button id="delete" on:click={removeEvent(tmpEvent)} aria-hidden>
-                        <ion-icon slot="icon-only" icon={trash}/>
-                    </ion-button>
-                    <ion-button id="sumbit" on:click={sumbit} aria-hidden>
-                        <ion-icon slot="icon-only" icon={checkmark}/>
-                    </ion-button>
-                </ion-buttons>
-                <ion-title class="ion-text-center">{selectedEvent?.title? selectedEvent.title : $t('event.title')}</ion-title>
-                <ion-buttons slot="start">
-                    <ion-button id="cancel" on:click={()=>{modalOpen=false; selectedEvent=null; recreatePrototype();}} aria-hidden>
-                        <ion-icon slot="icon-only" icon={close}/>
-                    </ion-button>
-                </ion-buttons>
-            </ion-toolbar>
-            <EventDetails bind:copyEvent={tmpEvent} activeDate={activeDate} />
-        </ion-modal>
-
-        <ion-alert
-            is-open={deleteModalOpen}
-            header={$t('event.delete')}
-            buttons={[
-                {
-                  text: $t('event.deleteThis'),
-                  role: 'destructive',
-                  handler: () => {
+    <!-- Delete Event Alert -->
+    <ion-alert
+        is-open={deleteModalOpen}
+        header={$t('event.delete')}
+        buttons={[
+            {
+                text: $t('event.deleteThis'),
+                role: 'destructive',
+                handler: () => {
                     addInactiveDateToEvent(selectedEvent);
-                  }
-                },
-                {
-                  text: $t('event.deleteAll'),
-                  role: 'destructive',
-                  handler: () => {
-                    removeEvent(selectedEvent);
-                  }
-                },
-                {
-                  text: $t('event.cancel'),
-                  role: 'cancel',                
-                  handler: () => {
+                }
+            },
+            {
+                text: $t('event.deleteAll'),
+                role: 'destructive',
+                handler: () => {
+                    if (selectedEvent) {
+                        handleEventDelete(selectedEvent);
+                        deleteModalOpen = false;
+                    }
+                }
+            },
+            {
+                text: $t('event.cancel'),
+                role: 'cancel',
+                handler: () => {
                     deleteModalOpen = false;
                     selectedEvent = null;
-                  }
                 }
-              ]}
-            mode="ios">
-        </ion-alert>
-
-    </ion-content>
+            }
+        ]}
+        mode="ios">
+    </ion-alert>
+</div>
 </ion-tab>
 
 <style>
-
-    alert-button-role-cancel {
-        color: var(--ion-color-primary) !important;
-    }
-
     .container {
-        display: flex;
-        flex:1;
+        width: 100%;
         height: 100%;
-        flex-direction: column; 
-        overflow-y: auto;
-        align-items: space-around;
-    }
-
-    .no-events {
         display: flex;
+        flex-direction: column;
+    }
+    .events-section {
+        flex: 1;
+        margin: 0;
+        padding: 1.25rem 0 0 0;
+        display: flex;
+        flex-direction: column;
+        background: var(--ion-color-light);
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        min-height: 0;
+    }
+    .events-section h3 {
+        color: var(--ion-color-dark);
+        margin: 0 0 1rem 0;
+        padding: 0 1.25rem;
+        font-size: 1rem;
+        font-weight: 600;
+        flex-shrink: 0;
+        letter-spacing: 0.01em;
+    }
+    .events-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        overflow-y: auto;
+        flex: 1;
+        padding: 0 1.25rem 1.25rem 1.25rem;
+    }
+    .no-events {
         text-align: center;
-        justify-content: center;
-        align-items: center; 
-        padding-bottom: 150px;
-        padding-inline: 30px;
+        color: var(--ion-color-medium);
+        padding: 2rem 1.25rem;
+        font-size: 0.9rem;
     }
-
-    ion-button {
-        text-transform: none;
+    ion-fab {
+        margin-bottom: 1rem;
+        margin-right: 1rem;
     }
-    
+    ion-fab-button {
+        --background: var(--ion-color-primary);
+        --color: white;
+        --border-radius: 16px;
+        --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 56px;
+        height: 56px;
+    }
+    ion-fab-button:hover {
+        --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
+        transform: scale(1.05);
+    }
+    ion-fab-button::part(native) {
+        border-radius: 16px;
+    }
+    ion-fab-button ion-icon {
+        font-size: 28px;
+    }
 </style>
