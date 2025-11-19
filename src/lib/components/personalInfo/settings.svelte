@@ -192,24 +192,10 @@
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 
-		<ion-item button href="/login/guide">
-			<ion-icon size="small" icon={allIonicIcons.helpCircle} />
-			<ion-label class="ion-padding-start">{$t('settings.guide')}</ion-label>
-			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-		</ion-item>
-
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<ion-item button on:click={updateButton}>
 			<ion-icon size="small" icon={allIonicIcons.syncCircle} />
 			<ion-label class="ion-padding-start">{$t('update.updateButton')}</ion-label>
-			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
-		</ion-item>
-
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<ion-item button on:click={sentAnalytics}>
-			<ion-icon size="small" icon={allIonicIcons.paperPlane} />
-			<ion-label class="ion-padding-start">{$t('settings.analytics')}</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 
