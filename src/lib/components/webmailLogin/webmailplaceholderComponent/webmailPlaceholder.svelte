@@ -10,7 +10,7 @@
 
 </script>
 
-{#if !$autheticationFlag && Config.isAndroid}
+{#if !$autheticationFlag && (Config.isAndroid || Config.isDevelopment)}
     <ion-card href="" aria-hidden on:click ={showLoginAlert}>
         <div class="mainContents">
             <img src={darkIcon} alt="Dark Icon" class="icon darkIcon"/>

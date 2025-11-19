@@ -157,7 +157,7 @@
 		<AppletsSlides />
 
 		
-		{#if $autheticationFlag == false && Config.isAndroid}
+		{#if $autheticationFlag == false && (Config.isAndroid || Config.isDevelopment)}
 			<div class="webmail-button-container">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
