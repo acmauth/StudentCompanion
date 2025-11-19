@@ -20,6 +20,7 @@
 	import { keySharp } from 'ionicons/icons';
 	import { userCredsFlag as autheticationFlag } from '$components/webmailLogin/userCredsFlagStore';
 	import { showLoginAlert } from "$components/webmailLogin/credentialLogin"
+	import Config from "$src/app.config";
 
 	let givenName = '';
 	let gender = '';
@@ -156,7 +157,7 @@
 		<AppletsSlides />
 
 		
-		{#if $autheticationFlag == false}
+		{#if $autheticationFlag == false && Config.isAndroid}
 			<div class="webmail-button-container">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
