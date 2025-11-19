@@ -7,6 +7,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const appConfig = {
     isMobile: isMobile,
     isProduction: isProduction,
+    isDevelopment: !isProduction,
     isIOS: Capacitor.getPlatform() === 'ios',
     isWeb: !isMobile,
     isAndroid: Capacitor.getPlatform() === 'android',
