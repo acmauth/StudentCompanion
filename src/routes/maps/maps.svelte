@@ -125,11 +125,7 @@
 			const startDate = new Date('2025-11-10');
 			const endDate = new Date('2025-12-10');
 
-			if (currentDate >= startDate && currentDate <= endDate) {
-				metroInfo = 'Προσωρινή διακοπή επιβατικών διαδρομών λόγω δοκιμών επέκτασης Καλαμαριάς μεταξύ 10 Νοεμβρίου και 10 Δεκεμβρίου';
-			} else {
 			metroInfo = await getMetroInfo();
-			}
 		}
 	});
 
