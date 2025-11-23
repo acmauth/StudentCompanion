@@ -25,7 +25,8 @@ export async function getMetroInfo() {
 
         const apiUrl = Config.metro.api;
         const response = await axios.get(apiUrl, { timeout: 5000 });
-        return response.data;
+
+        return response.data.metro.metro_state;
 
     } catch (error) {
         console.error('Error while scraping data:', error);
