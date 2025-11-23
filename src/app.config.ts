@@ -7,6 +7,10 @@ const isProduction = process.env.NODE_ENV === 'production';
 const appConfig = {
     isMobile: isMobile,
     isProduction: isProduction,
+    isDevelopment: !isProduction,
+    isIOS: Capacitor.getPlatform() === 'ios',
+    isWeb: !isMobile,
+    isAndroid: Capacitor.getPlatform() === 'android',
     auth: {
         authUrl: 'https://oauth2.it.auth.gr/auth',
         userInfoUrl: 'https://universis-api.it.auth.gr/api/students/me/grades?$filter=courseExam/year%20eq%202002',
