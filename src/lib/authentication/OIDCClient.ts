@@ -371,23 +371,14 @@ class OIDCClient {
   }
 
   isRefreshable() {
+    // With offline access scope, refresh token can't expire
     const refreshToken = this.getItemFromStore('refresh_token');
-    if(refreshToken){
-        const decodedToken = jwtDecode(refreshToken);
-        const now = Date.now() / 1000;
-        return (decodedToken.exp as number) > now;
-    }
-    return false;
+    return !!refreshToken;
   }
 
   // Check if user is authenticated
   isAuthenticated() {
-    const refreshToken = this.getItemFromStore('refresh_token');
-    if (!refreshToken) {
-      return false;
-    }
-    return this.isRefreshable();
-    
+    return this.isRefreshable();    
   }
 
   // Make authenticated API request
