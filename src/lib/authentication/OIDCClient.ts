@@ -381,6 +381,7 @@ class OIDCClient {
 
   // Check if user is authenticated
   isAuthenticated() {
+    console.log("[OIDCClient] isRefreshable:", this.isRefreshable());
     return this.isRefreshable();    
   }
 
