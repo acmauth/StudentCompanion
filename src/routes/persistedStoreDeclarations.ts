@@ -25,5 +25,5 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
 
 export async function loadPersistedStores() {
     console.log('Loading persisted stores');
-    persistedStores.forEach(async (store) => { await store.loadFromStorage();console.log(store); console.log(get(store))});
+    persistedStores.forEach(async (store) => { await store.loadFromStorage();});
 }
