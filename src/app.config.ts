@@ -28,9 +28,6 @@ const appConfig = {
     },
     menu: {
         api: `https://api.aristomate.gr/menu?locale=${getLocale()}`
-    },
-    metro: {
-        api: `https://api.aristomate.gr/metro?locale=${getLocale()}`
     }
 }
 
