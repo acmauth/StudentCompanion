@@ -119,12 +119,6 @@
 
 			renderMarkers();
 
-			// Fetch metro information
-			// Check if current date is between 10 November 2025 and 10 December 2025
-			const currentDate = new Date();
-			const startDate = new Date('2025-11-10');
-			const endDate = new Date('2025-12-10');
-
 			metroInfo = await getMetroInfo();
 		}
 	});

@@ -24,6 +24,7 @@ export default {
 		"menu.saturday": "Σάββατο",
 		"menu.sunday": "Κυριακή",
 		"metro.link": "https://www.thessmetro.gr",
+		"metro.error": "Τα δεδομένα του μετρό δεν είναι διαθέσιμα αυτή τη στιγμή",
 		"menu.closedForHolidays": 'Λέσχη κλειστή λόγω διακοπών',
 		"menu.showingCachedData": "Εμφάνιση αποθηκευμένων δεδομένων",
 		"about.title": "Σχετικά με εμάς",
@@ -91,7 +92,7 @@ export default {
 		"login.safetyConfirmation": "Πάντα!",
 		"login.safetyConfirmationMessage": "Τα στοιχεία σύνδεσής σου μένουν μόνο μεταξύ της συσκευής σου και του ΑΠΘ. Η ομάδα του Aristomate δεν θα έχει ποτέ πρόσβαση σε αυτά.",
 		"option.ok": "OK",
-				"login.welcome": "Καλώς ήρθες στο<br>Aristomate",
+		"login.welcome": "Καλώς ήρθες στο<br>Aristomate",
 		"login.subtitle": "Η πύλη σου στον ακαδημαϊκό κόσμο",
 		"login.poweredBy": "Με την υποστήριξη του",
 		"login.university": "Αριστοτελείου Πανεπιστημίου Θεσσαλονίκης",
@@ -248,6 +249,7 @@ export default {
 		'menu.closedForHolidays': 'Club closed due to holidays',
 		'menu.showingCachedData': 'Showing cached data',
 		'metro.link': 'https://www.thessmetro.gr/en',
+		'metro.error': 'Metro data is not available at the moment',
 		'about.title': 'About us',
 		'about.who_are_we': 'Who are we',
 		'about.who_are_we_text_1':
@@ -322,7 +324,7 @@ export default {
 		'login.safetyConfirmationMessage':
 			'Your login credentials remain strictly between your device and AUTH. The Aristomate team will never have access to them.',
 		'option.ok': 'OK',
-				"login.welcome": "Welcome to<br>Aristomate",
+		"login.welcome": "Welcome to<br>Aristomate",
 		"login.subtitle": "Your gateway to the academic world",
 		"login.poweredBy": "Powered by",
 		"login.university": "Aristotle University of Thessaloniki",
