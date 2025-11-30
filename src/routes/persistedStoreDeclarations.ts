@@ -7,6 +7,7 @@ import { userCreds, userTokens, useAlternativeLogin } from "$stores/credentials.
 import { scheduledNotifications } from "$lib/calendarNotifications/notificationsStore";
 import { loginStore } from "$src/lib/authentication/loginStore";
 import { userCredsFlag } from "$components/webmailLogin/userCredsFlagStore";
+import { get } from "svelte/store";
 
 const persistedStores: CapacitorPersistedStore<any>[] = [
     toggles,
@@ -24,5 +25,5 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
 
 export async function loadPersistedStores() {
     console.log('Loading persisted stores');
-    persistedStores.forEach(async (store) => await store.loadFromStorage());
+    persistedStores.forEach(async (store) => { await store.loadFromStorage();});
 }

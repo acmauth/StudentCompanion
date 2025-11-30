@@ -1,5 +1,5 @@
 import { Preferences } from '@capacitor/preferences';
-import type { Writable } from 'svelte/store';
+import { get, type Writable } from 'svelte/store';
 // import { writable, type Writable } from 'svelte/store';
 import { persisted } from 'svelte-persisted-store';
 import type { GetResult } from '@capacitor/preferences';
@@ -69,6 +69,7 @@ class CapacitorPersistedStore<T> {
      * @param value - The new value of the store.
      */
     public set(value: T) {
+        Preferences.set({ key: this.key, value: JSON.stringify(value) });
         this.store.set(value);
     }
 
@@ -78,6 +79,8 @@ class CapacitorPersistedStore<T> {
      */
     public update(updater: (value: T) => T) {
         this.store.update(updater);
+        const newValue = get(this.store);
+        Preferences.set({ key: this.key, value: JSON.stringify(newValue) });
     }
 }
 
