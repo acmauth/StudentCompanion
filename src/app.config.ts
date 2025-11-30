@@ -21,7 +21,8 @@ const appConfig = {
         scope: 'students:read',
         isMobile: isMobile,
         // Use proxy for web
-        tokenUrl: isMobile ? undefined : 'https://applink.aristomate.gr/api/auth/token'
+        tokenUrl: isMobile ? undefined : 'https://applink.aristomate.gr/api/auth/token',
+        isProduction: isProduction
     },
     universis: {
         api: 'https://universis-api.it.auth.gr/api'

@@ -22,6 +22,7 @@ type OIDCClientConfig = {
   isMobile?: boolean ;         // Whether running in a mobile environment
   // Optional: custom storage (defaults to sessionStorage/localStorage)
   storage?: Storage;
+  isProduction: boolean;
 };
 
 class OIDCClient {
@@ -39,7 +40,8 @@ class OIDCClient {
       // Capacitor-specific
       isMobile: config.isMobile || false,
       // Optional: custom storage (defaults to sessionStorage/localStorage)
-      storage: config.storage || window.sessionStorage
+      storage: config.storage || window.sessionStorage,
+      isProduction: config.isProduction,
     };
     
     // Build URLs with realm if provided
@@ -123,7 +125,8 @@ class OIDCClient {
 
   // Build authorization URL
   async buildAuthUrl() {
-    const state = this.generateRandomString();
+    // const state = this.generateRandomString();
+    const state = encodeURIComponent(btoa(`{"production":${this.config.isProduction}}`));
     const codeVerifier = this.generateRandomString();
     const codeChallenge = await this.generateCodeChallenge(codeVerifier);
 
