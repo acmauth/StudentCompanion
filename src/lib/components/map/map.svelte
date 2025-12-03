@@ -1,7 +1,7 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import { browser } from '$app/environment';
-	import { getMetroInfo } from '$lib/metroScraper/sraper';
+	import { getMetroInfo } from '$lib/metroScraper/scraper';
 	import * as allIonicIcons from 'ionicons/icons';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import gym from '$lib/assets/gym.png';
@@ -14,8 +14,8 @@
 	import bus from '$lib/assets/bus.png';
 	import coordinates from '$lib/components/map/coordinates.json';
 	import Fuse from 'fuse.js';
-    import osethLogo from '$lib/assets/oseth.svg';
-    import campusSafetyLogo from '$lib/assets/campus-safety.png';
+	import osethLogo from '$lib/assets/oseth.svg';
+	import campusSafetyLogo from '$lib/assets/campus-safety.png';
 	import { t, locale, locales, getLocale } from '$lib/i18n';
 
 	let points = coordinates;
@@ -29,9 +29,9 @@
 	let isDarkMode = false;
 
 	function handleTransportAppClick() {
-		const androidPackageName = "com.amco.city.thessaloniki";
-		const iosAppStoreUrl = "https://apps.apple.com/gr/app/oseth-bus/id6748433667";
-		const fallbackUrl = "https://telematics.oasth.gr/en/#main";
+		const androidPackageName = 'com.amco.city.thessaloniki';
+		const iosAppStoreUrl = 'https://apps.apple.com/gr/app/oseth-bus/id6748433667';
+		const fallbackUrl = 'https://telematics.oasth.gr/en/#main';
 
 		const ua = navigator.userAgent || navigator.vendor || window.opera;
 		const isAndroid = /android/i.test(ua);
@@ -47,12 +47,12 @@
 					window.location.href = fallbackUrl;
 				}, 1000);
 			} catch (err) {
-				console.error("Could not open app, redirecting to web link.", err);
+				console.error('Could not open app, redirecting to web link.', err);
 				window.location.href = fallbackUrl;
 			}
-		// } else if (isIOS) {
-		// 	// Redirect to App Store
-		// 	window.location.href = iosAppStoreUrl;
+			// } else if (isIOS) {
+			// 	// Redirect to App Store
+			// 	window.location.href = iosAppStoreUrl;
 		} else {
 			// Non-mobile devices always go to telematics URL
 			window.location.href = fallbackUrl;
@@ -60,9 +60,9 @@
 	}
 
 	function handleCampusSafetyClick() {
-		const packageName = "gr.auth.android.incidentmanager";
+		const packageName = 'gr.auth.android.incidentmanager';
 		const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageName}&hl=el`;
-		const appStoreUrl = "https://apps.apple.com/"; // Add actual App Store URL if available
+		const appStoreUrl = 'https://apps.apple.com/'; // Add actual App Store URL if available
 
 		const ua = navigator.userAgent || navigator.vendor || window.opera;
 		const isAndroid = /android/i.test(ua);
@@ -78,12 +78,12 @@
 					window.location.href = playStoreUrl;
 				}, 1000);
 			} catch (err) {
-				console.error("Could not open app, redirecting to Play Store.", err);
+				console.error('Could not open app, redirecting to Play Store.', err);
 				window.location.href = playStoreUrl;
 			}
-		// } else if (isIOS) {
-		// 	// Redirect iOS users to App Store
-		// 	window.location.href = appStoreUrl;
+			// } else if (isIOS) {
+			// 	// Redirect iOS users to App Store
+			// 	window.location.href = appStoreUrl;
 		} else {
 			// For other platforms, go to Play Store
 			window.location.href = playStoreUrl;
@@ -96,15 +96,19 @@
 			const leaflet = await import('leaflet');
 
 			if (document.body.classList.contains('dark')) {
-				map = leaflet.map(mapElement, { zoomControl: false }).setView([40.63182425082954, 22.959049527401312], 15);
-                leaflet
+				map = leaflet
+					.map(mapElement, { zoomControl: false })
+					.setView([40.63182425082954, 22.959049527401312], 15);
+				leaflet
 					.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
 						attribution:
 							'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 					})
 					.addTo(map);
 			} else {
-				map = leaflet.map(mapElement, { zoomControl: false }).setView([40.63182425082954, 22.959049527401312], 15);
+				map = leaflet
+					.map(mapElement, { zoomControl: false })
+					.setView([40.63182425082954, 22.959049527401312], 15);
 				leaflet
 					.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 						attribution:
@@ -252,47 +256,44 @@
 	<SubPageHeader title={$t('maps.title')} stackedNav />
 	<div class="search-container">
 		<input type="text" placeholder="Search..." on:input={handleSearch} class="search-input" />
-    </div>
-    
+	</div>
+
 	<div bind:this={mapElement} class="map-container" />
 
+	<div class="footer-section">
+		<div class="marquee-container">
+			<div class="marquee-text" class:dark={isDarkMode}>
+				{#if isDarkMode}
+					Metro: {metroInfo.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
+				{:else}
+					<strong>Metro:</strong> {metroInfo}
+				{/if}
+			</div>
+		</div>
 
-    <div class="footer-section">
-        <div class="marquee-container">
-            <div class="marquee-text" class:dark={isDarkMode}>
-                
-                {#if isDarkMode}
-                    Metro: {metroInfo.normalize("NFD").replace(/[\u0300-\u036f]/g, "")}
-                {:else}
-                    <strong>Metro:</strong> {metroInfo}
-                {/if}
-            </div>
-        </div>
+		<div class="button-container">
+			<div style="width:0.5rem; align-self:stretch; background-color:grey; margin:0.18rem;" />
 
-        <div class="button-container">
-            <div style="width:0.5rem; align-self:stretch; background-color:grey; margin:0.18rem;"></div>
+			<ion-card
+				on:click={handleTransportAppClick}
+				class="button-card"
+				aria-label="OASTH Transport Services"
+				aria-hidden
+			>
+				<img src={osethLogo} alt="OSETH services" class="button-image" />
+			</ion-card>
 
-            <ion-card 
-                on:click={handleTransportAppClick} 
-                class="button-card" 
-                aria-label="OASTH Transport Services"
-                aria-hidden
-            >
-                <img src={osethLogo} alt="OSETH services" class="button-image"/>
-            </ion-card>
-            
-            <ion-card 
-                on:click={handleCampusSafetyClick} 
-                class="button-card" 
-                style="background-color: #3F4953;" 
-                aria-label="Campus Safety App"
-                aria-hidden
-            >
-                <img src={campusSafetyLogo} alt="Campus safety information" class="button-image"/>
-            </ion-card>
-        </div>
-    </div>
-
+			<ion-card
+				on:click={handleCampusSafetyClick}
+				class="button-card"
+				style="background-color: #3F4953;"
+				aria-label="Campus Safety App"
+				aria-hidden
+			>
+				<img src={campusSafetyLogo} alt="Campus safety information" class="button-image" />
+			</ion-card>
+		</div>
+	</div>
 </ion-page>
 
 <style>
@@ -332,109 +333,105 @@
 		height: calc(100vh);
 	}
 
-    .footer-section {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        height: fit-content;
-        background-color: var(--ion-color-light);
-        display: flex;
-        align-items: center;
-        z-index: 1000;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
+	.footer-section {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		width: 100%;
+		height: fit-content;
+		background-color: var(--ion-color-light);
+		display: flex;
+		align-items: center;
+		z-index: 1000;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
 
-    .marquee-container {
-        width: 70%;
-        overflow: hidden;
-        white-space: nowrap;
-        position: relative;
-    }
-    
-    .marquee-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1;
-    }
+	.marquee-container {
+		width: 70%;
+		overflow: hidden;
+		white-space: nowrap;
+		position: relative;
+	}
 
-    .marquee-text {
-        display: inline-block;
-        width: auto;
-        padding-block: 0.8rem;
-        padding-inline: 0.8rem;
-        animation: marquee 15s linear infinite;
-        position: relative;
-        z-index: 2;
-        font-size: 0.9rem;
-        color: var(--ion-text-color, #000);
-    }
+	.marquee-container::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 1;
+	}
 
-    .marquee-text.dark {
-        color: #ff8c00;
-        font-family: 'Press Start 2P', monospace;
-        font-weight: 400;
-        letter-spacing: 0.1em;
-        text-shadow: 
-            0 0 10px rgba(255, 140, 0, 0.8),
-            0 0 20px rgba(255, 140, 0, 0.4),
-            0 0 30px rgba(255, 140, 0, 0.2);
-        text-transform: uppercase;
-    }
-    
-    .marquee-text strong {
-        color: var(--ion-text-color, #000);
-    }
+	.marquee-text {
+		display: inline-block;
+		width: auto;
+		padding-block: 0.8rem;
+		padding-inline: 0.8rem;
+		animation: marquee 15s linear infinite;
+		position: relative;
+		z-index: 2;
+		font-size: 0.9rem;
+		color: var(--ion-text-color, #000);
+	}
 
-    .marquee-text.dark strong {
-        color: #ffa500;
-        letter-spacing: 0.1em;
-        text-shadow: 
-            0 0 10px rgba(255, 165, 0, 1),
-            0 0 20px rgba(255, 165, 0, 0.6);
-    }
+	.marquee-text.dark {
+		color: #ff8c00;
+		font-family: 'Press Start 2P', monospace;
+		font-weight: 400;
+		letter-spacing: 0.1em;
+		text-shadow: 0 0 10px rgba(255, 140, 0, 0.8), 0 0 20px rgba(255, 140, 0, 0.4),
+			0 0 30px rgba(255, 140, 0, 0.2);
+		text-transform: uppercase;
+	}
 
-    @keyframes marquee {
-        0% {
-            transform: translateX(50%);
-        }
-        100% {
-            transform: translateX(-100%);
-        }
-    }
-    .button-container {
-        width: 30%;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        gap: 0.3rem;
-        align-items: center;
-        padding: 0.3rem;
-    }
+	.marquee-text strong {
+		color: var(--ion-text-color, #000);
+	}
 
-    .button-card {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0;
-        padding: 0;
-        background-color: white;
-        border-color: grey;
-        border-width: 0.1rem;
-        border-style: solid;
-    }
+	.marquee-text.dark strong {
+		color: #ffa500;
+		letter-spacing: 0.1em;
+		text-shadow: 0 0 10px rgba(255, 165, 0, 1), 0 0 20px rgba(255, 165, 0, 0.6);
+	}
 
-    .button-image {
-        width: 100%;
-        height: 100%;
-        object-fit: fill;
-        aspect-ratio: 1;
-    }
+	@keyframes marquee {
+		0% {
+			transform: translateX(50%);
+		}
+		100% {
+			transform: translateX(-100%);
+		}
+	}
+	.button-container {
+		width: 30%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		gap: 0.3rem;
+		align-items: center;
+		padding: 0.3rem;
+	}
+
+	.button-card {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin: 0;
+		padding: 0;
+		background-color: white;
+		border-color: grey;
+		border-width: 0.1rem;
+		border-style: solid;
+	}
+
+	.button-image {
+		width: 100%;
+		height: 100%;
+		object-fit: fill;
+		aspect-ratio: 1;
+	}
 </style>
