@@ -30,18 +30,18 @@
 
 <div class="calendar">
     <div class="header">
-        <button on:click={onPreviousMonth} aria-label="Previous month">
+        <ion-card href="" on:click={onPreviousMonth} aria-label="Previous month" class="navButton" aria-hidden="true">
             <ion-icon icon={chevronBackOutline} />
-        </button>
+        </ion-card>
         <div class="month-title">
             {new Date(year, month).toLocaleDateString(undefined, {
                 month: 'long',
                 year: 'numeric'
             })}
         </div>
-        <button on:click={onNextMonth} aria-label="Next month">
+        <ion-card href="" on:click={onNextMonth} aria-label="Next month" class="navButton" aria-hidden="true">
             <ion-icon icon={chevronForwardOutline} />
-        </button>
+        </ion-card>
     </div>
 
     <div class="grid">
@@ -74,6 +74,16 @@
 </div>
 
 <style>
+    .navButton {
+        background: transparent;
+        border: none;
+        color: inherit;
+        border-radius: 1px;
+        box-shadow: none;
+        margin: 0;
+        padding: 1rem;
+    }
+
     .calendar {
         width: 100%;
         padding: 1rem 1rem 0.5rem 1rem;
@@ -99,25 +109,7 @@
     .header .month-title:hover {
         background: var(--ion-color-light);
     }
-    .header button {
-        background: transparent;
-        border: none;
-        color: inherit;
-        padding: 0.25rem;
-        width: 2rem;
-        height: 2rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-    }
-    .header button:hover {
-        background: rgba(255, 255, 255, 0.04);
-        cursor: pointer;
-    }
-    .header button:focus {
-        outline: 2px solid rgba(0, 0, 0, 0.2);
-    }
+
     .header ion-icon {
         font-size: 1.15rem;
         color: var(--ion-color-dark);
