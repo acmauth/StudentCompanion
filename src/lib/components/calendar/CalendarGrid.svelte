@@ -14,9 +14,9 @@
 
     const weekdayNames = getWeekdayNames();
 
-    function isSelectedDay(dayObj: DayObject) {
+    $: isSelectedDay = (dayObj: DayObject) => {
         return checkIsSelectedDay(dayObj, selectedDay, month, year);
-    }
+    };
 
     function isToday(dayObj: DayObject) {
         return checkIsToday(dayObj, month, year);

@@ -164,6 +164,8 @@
     }
 
     onMount(() => {
+        // Initialize selectedDay to today
+        selectedDay = { day: currentDate.getDate(), month: currentDate.getMonth(), year: currentDate.getFullYear() };
         buildCalendar();
     });
 </script>
