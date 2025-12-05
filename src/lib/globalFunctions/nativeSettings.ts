@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 import { navController } from '$components/shared/StackedNav';
 // import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { SafeArea } from 'capacitor-plugin-safe-area';
 
 export async function nativeSettings() {
     /* Capacitor back button handling */
@@ -18,14 +19,22 @@ export async function nativeSettings() {
         }
     });
 
+    SafeArea.getSafeAreaInsets().then((data) => {
+    const { insets } = data;
+    document.body.style.setProperty('--ion-safe-area-top', `${insets.top}px`);
+    document.body.style.setProperty('--ion-safe-area-right', `${insets.right}px`);
+    document.body.style.setProperty('--ion-safe-area-bottom', `${insets.bottom}px`);
+    document.body.style.setProperty('--ion-safe-area-left', `${insets.left}px`);
+    });
+
     
 
     // Set the background color to match the app's color scheme
     if (document.body.classList.contains('dark')) {
-        await setBackgroundColorDark();
+        await StatusBar.setStyle({ style: Style.Dark });
     }
     else {
-        await setBackgroundColorLight();
+        await StatusBar.setStyle({ style: Style.Light });
     }
 
 }

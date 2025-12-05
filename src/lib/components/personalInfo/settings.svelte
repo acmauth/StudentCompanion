@@ -156,7 +156,7 @@
 				id="themeToggle"
 				class="ion-padding-start"
 				checked={localStorage.getItem('darkMode') === 'true'}
-				on:ionChange={toggleDarkTheme}
+				on:ionChange={async () => await toggleDarkTheme()}
 			>
 				Dark Mode
 			</ion-toggle>
