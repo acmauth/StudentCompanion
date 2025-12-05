@@ -1,7 +1,7 @@
 import { App as capacitorApp } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
 import { navController } from '$components/shared/StackedNav';
-import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
+// import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
 import { StatusBar, Style } from '@capacitor/status-bar';
 
 export async function nativeSettings() {
@@ -18,7 +18,7 @@ export async function nativeSettings() {
         }
     });
 
-    await enableEdgeToEdge();
+    
 
     // Set the background color to match the app's color scheme
     if (document.body.classList.contains('dark')) {
@@ -30,36 +30,36 @@ export async function nativeSettings() {
 
 }
 
-const enableEdgeToEdge = async () => {
-  await EdgeToEdge.enable();
-  await StatusBar.show();
-  await StatusBar.setOverlaysWebView({ overlay: true });
-};
+// const enableEdgeToEdge = async () => {
+//   await EdgeToEdge.enable();
+//   await StatusBar.show();
+//   await StatusBar.setOverlaysWebView({ overlay: true });
+// };
 
-const disable = async () => {
-  await EdgeToEdge.disable();
-};
+// const disable = async () => {
+//   await EdgeToEdge.disable();
+// };
 
-const getInsets = async () => {
-  const result = await EdgeToEdge.getInsets();
-  console.log('Insets:', result);
-};
+// const getInsets = async () => {
+//   const result = await EdgeToEdge.getInsets();
+//   console.log('Insets:', result);
+// };
 
-const setBackgroundColorLight = async () => {
-  await EdgeToEdge.setBackgroundColor({ color: '#ffffff' });
-  await StatusBar.setStyle({ style: Style.Light });
-  await StatusBar.setBackgroundColor({ color: '#ffffff' });
-};
-const setBackgroundColorDark = async () => {
-  await EdgeToEdge.setBackgroundColor({ color: '#1f1f1f' });
-  await StatusBar.setStyle({ style: Style.Dark });
-  await StatusBar.setBackgroundColor({ color: '#121212' });
-};
+// const setBackgroundColorLight = async () => {
+//   await EdgeToEdge.setBackgroundColor({ color: '#ffffff' });
+//   await StatusBar.setStyle({ style: Style.Light });
+//   await StatusBar.setBackgroundColor({ color: '#ffffff' });
+// };
+// const setBackgroundColorDark = async () => {
+//   await EdgeToEdge.setBackgroundColor({ color: '#1f1f1f' });
+//   await StatusBar.setStyle({ style: Style.Dark });
+//   await StatusBar.setBackgroundColor({ color: '#121212' });
+// };
 
-export const EdgeToEdgeFunctions = {
-  enableEdgeToEdge,
-  disable,
-  getInsets,
-  setBackgroundColorLight,
-  setBackgroundColorDark
-};
+// export const EdgeToEdgeFunctions = {
+//   enableEdgeToEdge,
+//   disable,
+//   getInsets,
+//   setBackgroundColorLight,
+//   setBackgroundColorDark
+// };

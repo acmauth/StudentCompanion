@@ -1,11 +1,12 @@
-import { nativeSettings, EdgeToEdgeFunctions } from "./nativeSettings";
+import { nativeSettings } from "./nativeSettings";
 
 // Check if dark mode is enabled and set it if it is
 export async function checkAppMode() {
     let darkMode = localStorage.getItem('darkMode');
+    console.log("Dark mode from localStorage:", darkMode);
     if (darkMode === null) { // Setting default dark mode | Fixes the toggle being ticked wrongly
-        localStorage.setItem('darkMode', 'false');
-        darkMode = "false";
+        localStorage.setItem('darkMode', 'true');
+        darkMode = "true";
     }
     const isDark = darkMode === "true";
     document.body.classList.toggle('dark', isDark);
@@ -17,9 +18,9 @@ export function toggleDarkTheme() {
     const isDark = document.body.classList.toggle('dark');
     localStorage.setItem('darkMode', isDark.toString());
     // nativeSettings();
-    if (isDark) {
-        EdgeToEdgeFunctions.setBackgroundColorDark();
-    } else {
-        EdgeToEdgeFunctions.setBackgroundColorLight();
-    }
+    // if (isDark) {
+    //     EdgeToEdgeFunctions.setBackgroundColorDark();
+    // } else {
+    //     EdgeToEdgeFunctions.setBackgroundColorLight();
+    // }
 }
