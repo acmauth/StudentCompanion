@@ -6,8 +6,9 @@
   import github from "$lib/assets/github.svg";
   import linkedin from "$lib/assets/linkedin.svg";
   import facebook from "$lib/assets/facebook.svg";
-  import contributors from "$lib/components/about/contributors.json";
+  import contributors from "$lib/components/personalInfo/contributors.json";
   import { t, locale, locales} from "$lib/i18n";
+  import SubPageHeader from '$shared/subPageHeader.svelte';
 
   const teamMembers = writable([]);
   
@@ -26,6 +27,8 @@
 
 </script>
 
+
+<SubPageHeader title={$t("about.title")} stackedNav/>
 <ion-content class="ion-padding">
 <div>
 <!-- About Us Card -->

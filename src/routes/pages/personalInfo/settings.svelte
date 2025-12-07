@@ -1,17 +1,20 @@
 <script lang="ts">
-	import type { ToastOptions } from '@ionic/core';
-	import * as allIonicIcons from 'ionicons/icons';
-	import { toastController } from 'ionic-svelte';
+	import Modal, { getModal } from '$components/language/Modal.svelte';
+	import { navController } from '$components/shared/StackedNav';
+	import CredentialLoginItem from '$components/webmailLogin/CredentialLoginItem.svelte';
 	import cog_solid from '$customIcons/cog-solid.svg';
 	import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
-	import { Capacitor } from '@capacitor/core';
-	import Dexie from 'dexie';
-	import { onMount } from 'svelte';
 	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
-	import CredentialLoginItem from '$components/webmailLogin/CredentialLoginItem.svelte';
-	import Modal, { getModal } from '$components/language/Modal.svelte';
 	import { t } from '$lib/i18n';
+	import { Capacitor } from '@capacitor/core';
 	import { AppUpdate, AppUpdateAvailability } from '@capawesome/capacitor-app-update';
+	import type { ToastOptions } from '@ionic/core';
+	import Dexie from 'dexie';
+	import { toastController } from 'ionic-svelte';
+	import * as allIonicIcons from 'ionicons/icons';
+	import { onMount } from 'svelte';
+	import About from './about.svelte';
+	import Faq from './faq.svelte';
 
 	/**
 	 * @type {any}
@@ -180,13 +183,13 @@
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 
-		<ion-item button href="/about">
+		<ion-item button href=""  on:click={() => {navController.push(About)}} aria-hidden>
 			<ion-icon size="small" icon={allIonicIcons.people} />
 			<ion-label class="ion-padding-start">{$t('settings.about')}</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
 
-		<ion-item button href="/faq">
+		<ion-item button href="" on:click={() => {navController.push(Faq)}} aria-hidden>
 			<ion-icon size="small" icon={allIonicIcons.helpCircle} />
 			<ion-label class="ion-padding-start">FAQ</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
