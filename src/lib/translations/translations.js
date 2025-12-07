@@ -30,8 +30,7 @@ export default {
 		"about.title": "Σχετικά με εμάς",
 		"about.who_are_we": "Ποιοι είμαστε",
 		"about.who_are_we_text_1": "Γεια χαρά! Χαιρόμαστε πολύ που χρησιμοποιείς το Aristomate, την εφαρμογή που φτιάχτηκε από φοιτητές για φοιτητές!",
-		"about.who_are_we_text_2": "Οκτώ φοιτητές από την ομάδα της ",
-		"about.who_are_we_text_3": "διαπιστώσαμε ότι στο χάος της καθημερινότητας ενός φοιτητή, ένας 'ψηφιακός φίλος' που συγκεντρώνει την ακαδημαϊκή του εμπειρία σε ένα και μοναδικό σημείο είναι χρήσιμος για την επιβίωσή του.",
+		"about.who_are_we_text_2": "Οκτώ φοιτητές από την ομάδα της <a href='https://auth.acm.org'> ACM AUTh</a> διαπιστώσαμε ότι στο χάος της καθημερινότητας ενός φοιτητή, ένας 'ψηφιακός φίλος' που συγκεντρώνει την ακαδημαϊκή του εμπειρία σε ένα και μοναδικό σημείο είναι χρήσιμος για την επιβίωσή του.",
 		"about.meet_team": "Γνώρισε την ομάδα μας",
 		"about.maintainers": "Συντηρητές",
 		"about.contributors": "Συνεισφέροντες",
@@ -255,9 +254,7 @@ export default {
 		'about.who_are_we': 'Who are we',
 		'about.who_are_we_text_1':
 			'Hello! We are very happy that you are using Aristomate, an app made by students for students!',
-		'about.who_are_we_text_2': 'Eight students from the team',
-		'about.who_are_we_text_3':
-			"have realized that in the chaos of a student's daily life, a 'digital friend' that consolidates the academic experience into a single point is useful for their survival.",
+		'about.who_are_we_text_2': 'Eight students from the <a href="https://auth.acm.org"> ACM AUTh</a> team have realized that in the chaos of a student\'s daily life, a \'digital friend\' that consolidates the academic experience into a single point is useful for their survival.',
 		'about.meet_team': 'Meet our team',
 		'about.maintainers': 'Maintainers',
 		'about.contributors': 'Contributors',

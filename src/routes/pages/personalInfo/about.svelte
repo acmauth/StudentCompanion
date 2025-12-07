@@ -63,8 +63,8 @@
     <div class="section">
       <h2 class="section-title">{$t("about.who_are_we")}</h2>
       <p style="font-size: 14px;">{$t("about.who_are_we_text_1")} <br> <br>
-        {$t("about.who_are_we_text_2")} <a href="https://auth.acm.org/">ACM AUTh</a> {$t("about.who_are_we_text_3")} 
-        </p>
+        {@html $t("about.who_are_we_text_2")} 
+      </p>
     </div>          
 
     <!-- Meet the Team -->
