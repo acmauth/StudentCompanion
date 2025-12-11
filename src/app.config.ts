@@ -28,7 +28,7 @@ const appConfig = {
         api: 'https://universis-api.it.auth.gr/api'
     },
     menu: {
-        api: `https://api.aristomate.auth.gr/menu?locale=${getLocale()}`
+        apiBase: "https://api.aristomate.auth.gr/menu"
     }
 }
 
