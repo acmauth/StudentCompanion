@@ -166,7 +166,7 @@ $ npx cap sync
 
 ## License
 
-This project is licensed under the Attribution-NonCommercial-ShareAlike 4.0 International License. See the [LICENSE](LICENSE) file for details.
+All rights reserved by the copyright owner(s)
 
 ---
 
