@@ -5,7 +5,7 @@
 
 
 	/**
-	 * @type {{ title: any; code: any; courseType: any; teacher: string; ects: any; semester: any; season: any; weeklyHours: any; period: any; }}
+	 * @type {{ title: any; code: any; courseType: any; teacher: string; syllabus: string; eudoxus: string; ects: any; semester: any; season: any; weeklyHours: any; period: any; }}
 	 */
 	export let course;
 	/**
@@ -180,6 +180,25 @@
 						{/each}
 					</ion-accordion>
 				</ion-accordion-group>
+
+				<ion-accordion-group class="accordion" expand="compact">
+					<ion-accordion value="first">
+						<ion-item slot="header" color="white">
+							<ion-label>{$t("course.syllabus")}</ion-label>
+						</ion-item>
+							<h3 slot="content">{course.syllabus}</h3>
+					</ion-accordion>
+				</ion-accordion-group>
+
+				<ion-accordion-group class="accordion" expand="compact">
+					<ion-accordion value="first">
+						<ion-item slot="header" color="white">
+							<ion-label>{$t("course.eudoxus")}</ion-label>
+						</ion-item>
+							<h3 slot="content">{course.eudoxus}</h3>
+					</ion-accordion>
+				</ion-accordion-group>
+
 			</ion-list>
 		</ion-card-content>
 	</ion-card>

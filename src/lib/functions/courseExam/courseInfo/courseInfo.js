@@ -13,6 +13,8 @@
  * @type {{ familyName: any; givenName: any; }[]}
  */
     let courseInstructors;
+    let syllabus;
+    let eudoxus;
     let weeklyHours;
 
     
@@ -22,13 +24,14 @@
 		export async function courseInformation(courseID) {
 
             let courseInfo = decodeURIComponent(courseID);
-
             courses = [];
 			registrations = [];
 			courseTitle = "";
 			semester = "";
 			ects = 0;
 			courseInstructors = [];
+            syllabus = "";
+            eudoxus = "";
     		weeklyHours = 0;
             courseType = "";
             period = "";
@@ -40,6 +43,7 @@
 
         // Getting an array with courses
         courses = (await neoUniversisGet("students/me/courses?$top=-1",{lifetime: 600})).value;
+        console.log(courses)
 
         // Getting an array with user's registered courses and information about them
         registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false",{lifetime: 600})).value;
@@ -60,7 +64,16 @@
                 
                 season = course.lastRegistrationPeriod.name;
                 
-                
+                let newCourseObject = await fetch(`https://courses.auth.gr/services/course-catalogue/v1p1/qa/CourseOutlines/${course.id}?$top=1&$skip=0&$count=false`)
+                let newCourseData;
+                if(newCourseObject.ok) {
+                    newCourseData = await newCourseObject.json()
+                } else {
+                    newCourseData = null
+                    alert("bad request")
+                } 
+                syllabus = newCourseData.content
+                eudoxus = newCourseData.eudoxus
                
             }
         }
@@ -94,6 +107,8 @@
 			"semester": semester,
 			"ects": ects,
 			"courseInstructors": courseInstructors,
+            "syllabus": syllabus,
+            "eudoxus": eudoxus,
 			"weeklyHours": weeklyHours,
             "courseType": courseType,
             "period": period,
