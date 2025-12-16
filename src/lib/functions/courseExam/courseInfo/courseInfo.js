@@ -81,9 +81,9 @@
                                     newCourseData = await newCourseObject.json()
                                     syllabus = newCourseData.content
                                     eudoxus = newCourseData.eudoxus
-
-                                    console.log(syllabus)
-                                    console.log(eudoxus)
+                                    //debug
+                                    //console.log(syllabus)
+                                    //console.log(eudoxus)
                                 } else {
                                     newCourseData = null
                                     alert("bad request")

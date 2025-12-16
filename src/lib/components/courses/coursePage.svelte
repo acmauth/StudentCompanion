@@ -13,6 +13,8 @@
 		code: '',
 		ects: 0,
 		teacher: '',
+		syllabus: '',
+		eudoxus: '',
 		grade: '',
 		semester: '',
 		weeklyHours: 0,
@@ -64,7 +66,14 @@
 		course.weeklyHours = result.weeklyHours;
 		course.courseType = result.courseType;
 		course.season = result.season;
-
+		if(result.syllabus){
+			course.syllabus = result.syllabus;
+			console.log(course.syllabus)
+		}
+		if(result.eudoxus) {
+			course.eudoxus = result.eudoxus
+			console.log(course.eudoxus)
+		}
 		if (result.period) {
 			course.period = result.period;
 		}

@@ -172,7 +172,7 @@
 
 				<ion-accordion-group class="accordion" expand="compact">
 					<ion-accordion value="first">
-						<ion-item slot="header" color="white">
+						<ion-item slot="header" color="white" lines ="full">
 							<ion-label>{$t("course.professors")}</ion-label>
 						</ion-item>
 						{#each course.teacher.split(', ') as teacher}
@@ -180,24 +180,26 @@
 						{/each}
 					</ion-accordion>
 				</ion-accordion-group>
-
-				<ion-accordion-group class="accordion" expand="compact">
-					<ion-accordion value="first">
-						<ion-item slot="header" color="white">
-							<!-- <ion-label>{$t("course.syllabus")}</ion-label> -->
-						</ion-item>
-							<h3 slot="content">{course.syllabus}</h3>
-					</ion-accordion>
-				</ion-accordion-group>
-
-				<ion-accordion-group class="accordion" expand="compact">
-					<ion-accordion value="first">
-						<ion-item slot="header" color="white">
-							<!-- <ion-label>{$t("course.eudoxus")}</ion-label> -->
-						</ion-item>
-							<h3 slot="content">{course.eudoxus}</h3>
-					</ion-accordion>
-				</ion-accordion-group>
+				{#if course.syllabus}
+					<ion-accordion-group class="accordion" expand="compact">
+						<ion-accordion value="first">
+							<ion-item slot="header" color="white">
+								<ion-label>Ύλη:</ion-label>
+							</ion-item>
+								<h3 slot="content">{course.syllabus}</h3>
+						</ion-accordion>
+					</ion-accordion-group>
+				{/if}
+				{#if course.eudoxus}
+					<ion-accordion-group class="accordion" expand="compact">
+						<ion-accordion value="first">
+							<ion-item slot="header" color="white">
+								<ion-label>Συγγράματα:</ion-label>
+							</ion-item>
+								<h3 slot="content">{course.eudoxus}</h3>
+						</ion-accordion>
+					</ion-accordion-group>
+				{/if}
 
 			</ion-list>
 		</ion-card-content>
