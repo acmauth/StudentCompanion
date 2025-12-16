@@ -29,14 +29,26 @@ async function oidcApiRequest(endpoint: string): Promise<Object> {
       // If the token is not valid, we try to get a new one
       if (authClient.isRefreshable()) {
         // If the refresh token is still valid, we try to get a new token
-        await authClient.refreshToken();
+        try {
+          await authClient.refreshToken();
+        } catch (error) {
+          // If the refresh fails, we logout the user
+          await authClient.logout();
+        }
       } else {
         // If the refresh token is not valid, we redirect the user to the login page
         await authClient.logout();
       }
     }
-  
-    const token = await authClient.getAccessToken();
+    
+    let token: string = "";
+    try {
+      // If we reach this point, the token is valid
+      token = await authClient.getAccessToken();
+    } catch (error) {
+      // If there was an error refreshing the token, we logout the user
+      await authClient.logout();
+    }
     
     // We get the token from the store
     const url = `${Config.universis.api}/${endpoint}`;
