@@ -43,13 +43,17 @@
 
         // Getting an array with courses
         courses = (await neoUniversisGet("students/me/courses?$top=-1",{lifetime: 600})).value;
-        console.log(courses)
 
         // Getting an array with user's registered courses and information about them
         registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false",{lifetime: 600})).value;
 
 
+        console.log(registrations)
         // Finding the course and storing informations about it in variables
+
+        
+        
+
         
         for (const course of courses) {
             if (course.course === courseInfo){
@@ -63,18 +67,33 @@
                 }
                 
                 season = course.lastRegistrationPeriod.name;
-                
-                let newCourseObject = await fetch(`https://courses.auth.gr/services/course-catalogue/v1p1/qa/CourseOutlines/${course.id}?$top=1&$skip=0&$count=false`)
-                let newCourseData;
-                if(newCourseObject.ok) {
-                    newCourseData = await newCourseObject.json()
-                } else {
-                    newCourseData = null
-                    alert("bad request")
-                } 
-                syllabus = newCourseData.content
-                eudoxus = newCourseData.eudoxus
-               
+                try{
+                    for(const sem of registrations){
+                        for(const semClass of sem.classes){
+                            //debug
+                            // console.log(semClass.courseClass.course.id)
+                            // console.log(courseInfo)
+                            if(semClass.courseClass.course.id == courseInfo){
+                                semClass.identifier
+                                let newCourseObject = await fetch(`https://courses.auth.gr/services/course-catalogue/v1p1/qa/CourseOutlines/${semClass.courseClass.identifier}?$top=1&$skip=0&$count=false`)
+                                let newCourseData;
+                                if(newCourseObject.ok) {
+                                    newCourseData = await newCourseObject.json()
+                                    syllabus = newCourseData.content
+                                    eudoxus = newCourseData.eudoxus
+
+                                    console.log(syllabus)
+                                    console.log(eudoxus)
+                                } else {
+                                    newCourseData = null
+                                    alert("bad request")
+                                } 
+                            }
+                        }
+                    }
+                } catch(e){
+                    console.log(e)
+                }
             }
         }
 

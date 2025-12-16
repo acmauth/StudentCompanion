@@ -184,7 +184,7 @@
 				<ion-accordion-group class="accordion" expand="compact">
 					<ion-accordion value="first">
 						<ion-item slot="header" color="white">
-							<ion-label>{$t("course.syllabus")}</ion-label>
+							<!-- <ion-label>{$t("course.syllabus")}</ion-label> -->
 						</ion-item>
 							<h3 slot="content">{course.syllabus}</h3>
 					</ion-accordion>
@@ -193,7 +193,7 @@
 				<ion-accordion-group class="accordion" expand="compact">
 					<ion-accordion value="first">
 						<ion-item slot="header" color="white">
-							<ion-label>{$t("course.eudoxus")}</ion-label>
+							<!-- <ion-label>{$t("course.eudoxus")}</ion-label> -->
 						</ion-item>
 							<h3 slot="content">{course.eudoxus}</h3>
 					</ion-accordion>
