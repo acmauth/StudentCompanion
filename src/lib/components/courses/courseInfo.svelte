@@ -186,7 +186,7 @@
 							<ion-item slot="header" color="white">
 								<ion-label>{$t("course.syllabus")}</ion-label>
 							</ion-item>
-								<p slot="content" style="white-space: pre-line;">{course.syllabus}</p>
+								<p slot="content" style="white-space: pre-line;">{@html course.syllabus}</p>
 						</ion-accordion>
 					</ion-accordion-group>
 				{/if}
@@ -196,7 +196,7 @@
 							<ion-item slot="header" color="white">
 								<ion-label>{$t("course.eudoxus")}</ion-label>
 							</ion-item>
-								<p slot="content" style="white-space: pre-line;">{course.eudoxus}</p>
+								<p slot="content" style="white-space: pre-line;">{@html course.eudoxus}</p>
 						</ion-accordion>
 					</ion-accordion-group>
 				{/if}
