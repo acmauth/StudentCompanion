@@ -20,6 +20,8 @@
 	export let semester: String;
 	semester = `${semester}ο Εξάμηνο`;
 	export let study_level: String;
+	export let deptSecretaryEmail: String;
+	export let academicId: String;
 
 	// Function to show toast
 	async function showToast(toast: ToastOptions) {
@@ -85,6 +87,14 @@
 			</ion-item>
 		{/if}
 
+		{#if academicId}
+			<ion-item button="true" on:click={writeToClipboard(academicId)}>
+				<ion-icon size="small" icon={allIonicIcons.idCard} />
+
+				<ion-label class="ion-padding-start">{academicId}</ion-label>
+			</ion-item>
+		{/if}
+
 		{#if birthDate}
 			<ion-item button="true" on:click={writeToClipboard(birthDate)}>
 				<ion-icon size="small" icon={allIonicIcons.calendar} />
@@ -98,6 +108,14 @@
 				<ion-icon size="small" icon={allIonicIcons.mail} />
 
 				<ion-label class="ion-padding-start">{email}</ion-label>
+			</ion-item>
+		{/if}
+
+		{#if deptSecretaryEmail}
+			<ion-item button="true" on:click={writeToClipboard(deptSecretaryEmail)}>
+				<ion-icon size="small" icon={allIonicIcons.mail} />
+
+				<ion-label class="ion-padding-start">{deptSecretaryEmail}</ion-label>
 			</ion-item>
 		{/if}
 

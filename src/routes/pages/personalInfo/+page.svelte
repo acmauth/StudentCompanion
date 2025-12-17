@@ -25,6 +25,8 @@
 	let departmentName: String = '';
 	let semester: String = '';
 	let study_level: String = '';
+	let deptSecretaryEmail: String = '';
+	let academicId: String = '';
 
 	// Get personal details and department details
 
@@ -35,6 +37,8 @@
 		);
 
 		let user = await neoUniversisGet('Users/me', { lifetime: 86000 });
+		console.log(user)
+		console.log(personalData)
 		aem = personalData.studentIdentifier;
 		apm = personalData.uniqueIdentifier;
 		inscriptionYear = personalData.inscriptionYear.name;
@@ -48,6 +52,8 @@
 		departmentName = personalData.department.abbreviation;
 		semester = personalData.semester;
 		study_level = personalData.studyProgram.studyLevel.name;
+		deptSecretaryEmail = personalData.department.email;
+		academicId = personalData.academicId;
 	}
 
 	// Log out
@@ -88,6 +94,8 @@
 				{departmentName}
 				{semester}
 				{study_level}
+				{deptSecretaryEmail}
+				{academicId}
 			/>
 		{:catch error}
 			<ErrorLandingCard errorMsg={error.message} />
