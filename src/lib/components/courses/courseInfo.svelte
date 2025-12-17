@@ -156,7 +156,7 @@
 				<ion-item lines ="full">
 					<ion-label>{$t("course.semester")}</ion-label>
 					{#if course.semester <= 24}
-					<ion-text slot="end">{course.semester}ο</ion-text>
+					<ion-text slot="end">{course.semester}</ion-text>
 					{:else}
 					<ion-text slot="end">{course.season}</ion-text>
 					{/if}
@@ -192,7 +192,7 @@
 				{/if}
 				{#if course.eudoxus}
 					<ion-accordion-group class="accordion" expand="compact">
-						<ion-accordion value="first">p 
+						<ion-accordion value="first">
 							<ion-item slot="header" color="white">
 								<ion-label>{$t("course.eudoxus")}</ion-label>
 							</ion-item>

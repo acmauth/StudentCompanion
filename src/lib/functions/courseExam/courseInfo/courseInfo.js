@@ -1,5 +1,8 @@
 
-   	import { neoUniversisGet } from "$lib/dataService" 
+   	import { neoUniversisGet } from "$lib/dataService"
+    import { locale } from "$src/lib/i18n"; 
+    import { localize } from "../../localize";
+    import { get } from 'svelte/store'
 
     let courses;
     let registrations;
@@ -42,7 +45,7 @@
      
 
         // Getting an array with courses
-        courses = (await neoUniversisGet("students/me/courses?$top=-1",{lifetime: 600})).value;
+        courses = (await neoUniversisGet("students/me/courses?$expand=gradePeriod($expand=locale),courseType($expand=locale)&$top=-1",{lifetime: 600})).value;
 
         // Getting an array with user's registered courses and information about them
         registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false",{lifetime: 600})).value;
@@ -50,20 +53,21 @@
 
         console.log(registrations)
         // Finding the course and storing informations about it in variables
-
+        console.log(get(locale))
         
         
 
-        
+        console.log(courses)
         for (const course of courses) {
             if (course.course === courseInfo){
-                courseTitle = course.courseTitle;
+                //! Course name not localized in courses
+                // courseTitle = localize(course, "courseTitle", get(locale)); 
                 semester = course.semester.id;
                 ects = course.ects;
                 weeklyHours = course.hours;
-                courseType = course.courseType.abbreviation;
+                courseType = localize(course.courseType, "abbreviation", get(locale));
                 if (course.gradePeriodDescription != null) {
-                    period = `${course.gradePeriodDescription} ${course.gradeYear.name}`;
+                    period = `${course.gradePeriodDescription} ${localize(course.gradeYear, "name", get(locale))}`;
                 }
                 
                 season = course.lastRegistrationPeriod.name;
@@ -74,13 +78,15 @@
                             // console.log(semClass.courseClass.course.id)
                             // console.log(courseInfo)
                             if(semClass.courseClass.course.id == courseInfo){
+                                courseTitle = localize(semClass.courseClass.course, "name", get(locale))
                                 semClass.identifier
                                 let newCourseObject = await fetch(`https://courses.auth.gr/services/course-catalogue/v1p1/qa/CourseOutlines/${semClass.courseClass.identifier}?$top=1&$skip=0&$count=false`)
                                 let newCourseData;
                                 if(newCourseObject.ok) {
                                     newCourseData = await newCourseObject.json()
-                                    syllabus = newCourseData.content
-                                    eudoxus = newCourseData.eudoxus
+                                    console.log(newCourseData)
+                                    syllabus = localize(newCourseData, "content", get(locale))
+                                    eudoxus = localize(newCourseData, "eudoxus", get(locale))
                                     //debug
                                     //console.log(syllabus)
                                     //console.log(eudoxus)
@@ -105,7 +111,7 @@
             for (const classes of semester.classes){
                 if (classes.course === courseInfo){
                     for (const instructor of classes.courseClass.instructors){
-                        courseInstructors.push({familyName: instructor.instructor.familyName, givenName: instructor.instructor.givenName});
+                        courseInstructors.push({familyName: localize(instructor.instructor, "familyName", get(locale)), givenName: localize(instructor.instructor, "givenName", get(locale))});
                     }
                     flag = true;
                 }
