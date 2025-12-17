@@ -86,7 +86,7 @@
 		stats.grade = result.myGrade;
 		stats.studentsLikeMe = result.studentsLikeMe;
 		stats.studentsBetterThanMe = result.studentsBetterThanMe;
-		stats.studentsWorseThanMe = result.studentsWorseThlocaleanMe;
+		stats.studentsWorseThanMe = result.studentsWorseThanMe;
 		stats.passedCount = result.studentsPassed;
 		stats.failedCount = result.studentsFailed;
 		stats.totalStudents = result.totalStudents;

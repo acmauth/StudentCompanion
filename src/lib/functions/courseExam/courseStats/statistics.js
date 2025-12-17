@@ -118,6 +118,7 @@ export async function statistics(courseCode) {
 		topPercent: topPercent
 	};
 
+	console.log(studentsWorseThanMe)
 	return stats;
     }
     catch (error) {
