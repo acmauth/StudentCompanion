@@ -186,17 +186,17 @@
 							<ion-item slot="header" color="white">
 								<ion-label>{$t("course.syllabus")}</ion-label>
 							</ion-item>
-								<h3 slot="content">{course.syllabus}</h3>
+								<p slot="content" style="white-space: pre-line;">{course.syllabus}</p>
 						</ion-accordion>
 					</ion-accordion-group>
 				{/if}
 				{#if course.eudoxus}
 					<ion-accordion-group class="accordion" expand="compact">
-						<ion-accordion value="first">
+						<ion-accordion value="first">p 
 							<ion-item slot="header" color="white">
 								<ion-label>{$t("course.eudoxus")}</ion-label>
 							</ion-item>
-								<h3 slot="content">{course.eudoxus}</h3>
+								<p slot="content" style="white-space: pre-line;">{course.eudoxus}</p>
 						</ion-accordion>
 					</ion-accordion-group>
 				{/if}
