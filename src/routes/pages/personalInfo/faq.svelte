@@ -1,5 +1,6 @@
 <script lang="ts"> 
-import { t, locale, locales} from "$lib/i18n";
+    import { t, locale, locales} from "$lib/i18n";
+	import SubPageHeader from '$shared/subPageHeader.svelte';
 
 
     const faqs = [
@@ -14,6 +15,8 @@ import { t, locale, locales} from "$lib/i18n";
 
 </script>
 
+
+<SubPageHeader title="FAQ" stackedNav/>
 <ion-content class="ion-padding">
     <ion-accordion-group expand="inset">
         {#each faqs as faq, i}

@@ -85,6 +85,7 @@
 </script>
 
 <ion-tabs
+	style="padding-top: var(--ion-safe-area-top);"
 	on:ionTabsDidChange={ionTabsDidChange}
 	on:ionTabsWillChange={ionTabsWillChange}
 	bind:this={ionTabBarElement}
@@ -152,7 +153,7 @@
 		border-radius: 2rem;
 		position: absolute;
 		transition: 0.4s ease-in-out;
-		bottom: 10px;
+		bottom: calc(var(--ion-safe-area-bottom) + 10px);
 		/* z-index: 1000; */
 		left: 0;
 		width: 1rem;

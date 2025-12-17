@@ -32,14 +32,14 @@
 
 <ion-tab tab="notifications">
     <ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
-            <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+            <ion-toolbar mode="md">
               <ion-title>{$t('notifications.title')}</ion-title>
             </ion-toolbar>
     </ion-header>
 
     <ion-content fullscreen={true}>
         <ion-header collapse="condense" mode="ios">
-            <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+            <ion-toolbar mode="md">
                 <ion-title size="large">{$t('notifications.title')}</ion-title>
                 {#if Capacitor.isNativePlatform()}
                     <ion-chip slot="end" style="background-color: transparent;">

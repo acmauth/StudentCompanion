@@ -117,6 +117,7 @@
 	}
 
 	.language-switcher ion-button {
+		padding-top: var(--ion-safe-area-top);
 		--color: white;
 		--padding-start: 8px;
 		--padding-end: 8px;

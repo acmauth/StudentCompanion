@@ -135,7 +135,7 @@
 <!-- Show skeleton while loading -->
 <ion-content fullscreen={true}>
 	<ion-header collapse="condense" mode="ios">
-		<ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md' : undefined}>
+		<ion-toolbar mode='md'>
 			<ion-title class="ion-padding-vertical" size="large">{$t('progress.title')}</ion-title>
 
 			<ion-searchbar
