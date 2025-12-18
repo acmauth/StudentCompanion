@@ -7,48 +7,57 @@
 	import type { ToastOptions } from '@ionic/core';
 	import {locale} from '$lib/i18n'
 	import {get} from 'svelte/store'
+	import {localize} from '$lib/functions/localize'
 
-	export let gender: String;
-	console.log(get(locale))
-	if(get(locale) == "el"){
-		gender = gender == 'Α' ? 'Άντρας' : 'Γυναίκα';
-		console.log(gender)
-	}
-	else {
-		console.log(gender.charCodeAt(0))
-		gender = gender.charCodeAt(0) == 65 || gender.charCodeAt(0) == 913 ? "Male" : "Female";
-		console.log(gender)
-	}
-	export let username: String;
-	export let familyName: String;
-	export let givenName: String;
-	export let aem: String;
-	export let apm: String;
-	export let schoolGraduated: String;
-	export let birthDate: String;
-	export let email: String;
-	export let departmentName: String;
-	export let semester: String;
-	if(get(locale) == "el")semester = `${semester}ο Εξάμηνο`;
-	else{
-		switch(String(semester)){
-			case "1":
-				semester = `${semester}st Semester`
-				break;
-			case "2":
-				semester = `${semester}nd Semester`
-				break;
-			case "3":
-				semester = `${semester}rd Semester`
-				break;
-			default:
-				semester = `${semester}th Semester`
-				break;
+	export let personalData: any;
+
+
+	$: currentLocale = $locale;
+
+	$: aem = personalData.studentIdentifier;
+	$: apm = personalData.uniqueIdentifier;
+	$: username = null;
+	$: inscriptionYear = personalData.inscriptionYear.name;
+	$: schoolGraduated = personalData.schoolGraduated;
+	$: birthDate = personalData.person.birthDate.slice(0, 10);
+	$: email = personalData.person.email;
+	//let username = user.name;
+	$: familyName = localize(personalData.person, "familyName", currentLocale); 
+	$: givenName = localize(personalData.person, "givenName", currentLocale); 
+	$: gender = (() => {
+		const g = personalData?.person?.gender;
+		if (!g) return '';
+
+		const isMale = g === 'Α' || g.charCodeAt(0) === 913;
+
+		if (currentLocale === 'el') {
+			return isMale ? 'Άντρας' : 'Γυναίκα';
 		}
-	}
-	export let study_level: String;
-	export let deptSecretaryEmail: String;
-	export let academicId: String;
+
+		return isMale ? 'Male' : 'Female';
+	})();
+
+		//console.log(gender)
+	$: departmentName = localize(personalData.studyProgram.department, "name", currentLocale); 
+	$: semester = (() => {
+		const s = personalData?.semester;
+		if (!s) return '';
+
+		if (currentLocale === 'el') {
+			return `${s}ο Εξάμηνο`;
+		}
+
+		const suffix =
+			s === 1 ? 'st' :
+			s === 2 ? 'nd' :
+			s === 3 ? 'rd' : 'th';
+
+		return `${s}${suffix} Semester`;
+	})();
+		//console.log(semester)
+	$: study_level = localize(personalData.studyProgram.studyLevel, "name", currentLocale); 
+	$: deptSecretaryEmail = personalData.department.email;
+	$: academicId = personalData.academicId;
 
 	// Function to show toast
 	async function showToast(toast: ToastOptions) {
@@ -91,7 +100,7 @@
 <ion-card>
 	<ion-card-content>
 		{#if username}
-			<ion-item id="copyMessage" button="true" on:click={writeToClipboard(username)}>
+			<ion-item id="copyMessage" button={true} on:click={() => writeToClipboard(username)}>
 				<ion-icon size="small" icon={allIonicIcons.person} />
 
 				<ion-label class="ion-padding-start">{username}</ion-label>
@@ -99,7 +108,7 @@
 		{/if}
 
 		{#if schoolGraduated}
-			<ion-item button="true" on:click={writeToClipboard(schoolGraduated)}>
+			<ion-item button={true} on:click={() => writeToClipboard(schoolGraduated)}>
 				<ion-icon size="small" icon={allIonicIcons.school} />
 
 				<ion-label class="ion-padding-start">{schoolGraduated}</ion-label>
@@ -107,7 +116,7 @@
 		{/if}
 
 		{#if apm}
-			<ion-item button="true" on:click={writeToClipboard(apm)}>
+			<ion-item button={true} on:click={() => writeToClipboard(apm)}>
 				<ion-icon size="small" icon={allIonicIcons.idCard} />
 
 				<ion-label class="ion-padding-start">{apm}</ion-label>
@@ -115,7 +124,7 @@
 		{/if}
 
 		{#if academicId}
-			<ion-item button="true" on:click={writeToClipboard(academicId)}>
+			<ion-item button={true} on:click={() => writeToClipboard(academicId)}>
 				<ion-icon size="small" icon={allIonicIcons.idCard} />
 
 				<ion-label class="ion-padding-start">{academicId}</ion-label>
@@ -123,7 +132,7 @@
 		{/if}
 
 		{#if birthDate}
-			<ion-item button="true" on:click={writeToClipboard(birthDate)}>
+			<ion-item button={true} on:click={() => writeToClipboard(birthDate)}>
 				<ion-icon size="small" icon={allIonicIcons.calendar} />
 
 				<ion-label class="ion-padding-start">{birthDate}</ion-label>
@@ -131,7 +140,7 @@
 		{/if}
 
 		{#if email}
-			<ion-item button="true" on:click={writeToClipboard(email)}>
+			<ion-item button={true} on:click={() => writeToClipboard(email)}>
 				<ion-icon size="small" icon={allIonicIcons.mail} />
 
 				<ion-label class="ion-padding-start">{email}</ion-label>
@@ -139,7 +148,7 @@
 		{/if}
 
 		{#if deptSecretaryEmail}
-			<ion-item button="true" on:click={writeToClipboard(deptSecretaryEmail)}>
+			<ion-item button={true} on:click={() => writeToClipboard(deptSecretaryEmail)}>
 				<ion-icon size="small" icon={allIonicIcons.mail} />
 
 				<ion-label class="ion-padding-start">{deptSecretaryEmail}</ion-label>
@@ -147,14 +156,14 @@
 		{/if}
 
 		{#if gender}
-			<ion-item button="true" on:click={writeToClipboard(gender)}>
+			<ion-item button={true} on:click={() => writeToClipboard(gender)}>
 				<ion-icon size="small" icon={allIonicIcons.maleFemale} />
 				<ion-label class="ion-padding-start">{gender}</ion-label>
 			</ion-item>
 		{/if}
 
 		{#if departmentName}
-			<ion-item button="true" on:click={writeToClipboard(departmentName)}>
+			<ion-item button={true} on:click={() => writeToClipboard(departmentName)}>
 				<ion-icon size="small" icon={allIonicIcons.location} />
 
 				<ion-label class="ion-padding-start">{departmentName}</ion-label>
@@ -162,7 +171,7 @@
 		{/if}
 
 		{#if semester}
-			<ion-item button="true" on:click={writeToClipboard(semester)}>
+			<ion-item button={true} on:click={() => writeToClipboard(semester)}>
 				<ion-icon size="small" icon={allIonicIcons.analytics} />
 
 				<ion-label class="ion-padding-start">{semester}</ion-label>
@@ -170,7 +179,7 @@
 		{/if}
 
 		{#if study_level}
-			<ion-item button="true" on:click={writeToClipboard(study_level)} lines="none">
+			<ion-item button={true} on:click={() => writeToClipboard(study_level)} lines="none">
 				<ion-icon size="small" icon={allIonicIcons.book} />
 
 				<ion-label class="ion-padding-start">{study_level}</ion-label>

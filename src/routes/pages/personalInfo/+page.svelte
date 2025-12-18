@@ -32,15 +32,17 @@
 
 	// Get personal details and department details
 
+	let personalData: any;
+
 	async function getPersonalInfo() {
-		let personalData = await neoUniversisGet(
+		personalData = await neoUniversisGet(
 			'Students/me?$expand=studyProgram($expand=studyLevel($expand=locale),department($expand=locale)),person($expand=locale)',
 			{ lifetime: 86000 }
 		);
 
 		let user = await neoUniversisGet('Users/me', { lifetime: 86000 });
 		console.log(user) //Access denied
-		console.log(personalData)
+
 		aem = personalData.studentIdentifier;
 		apm = personalData.uniqueIdentifier;
 		inscriptionYear = personalData.inscriptionYear.name;
@@ -50,11 +52,11 @@
 		username = user.name;
 		familyName = localize(personalData.person, "familyName", get(locale)); 
 		givenName = localize(personalData.person, "givenName", get(locale)); 
-		gender = personalData.person.gender; //!
-		console.log(gender)
+		gender = personalData.person.gender; 
+		//console.log(gender)
 		departmentName = localize(personalData.studyProgram.department, "name", get(locale)); 
-		semester = personalData.semester; //!
-		console.log(semester)
+		semester = personalData.semester; 
+		//console.log(semester)
 		study_level = localize(personalData.studyProgram.studyLevel, "name", get(locale)); 
 		deptSecretaryEmail = personalData.department.email;
 		academicId = personalData.academicId;
@@ -86,20 +88,7 @@
 			<PersonSkeleton />
 		{:then}
 			<InfoItem
-				{gender}
-				{aem}
-				{apm}
-				{schoolGraduated}
-				{birthDate}
-				{email}
-				{familyName}
-				{givenName}
-				{username}
-				{departmentName}
-				{semester}
-				{study_level}
-				{deptSecretaryEmail}
-				{academicId}
+				{personalData}
 			/>
 		{:catch error}
 			<ErrorLandingCard errorMsg={error.message} />
