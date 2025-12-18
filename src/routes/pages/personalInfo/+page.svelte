@@ -9,58 +9,25 @@
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { userCredsFlag } from '$components/webmailLogin/userCredsFlagStore';
 	import { t, locale, locales } from '$lib/i18n';
-	import {get} from 'svelte/store'
-	import { localize } from '$src/lib/functions/localize';
-
+	import {onMount} from 'svelte'
 	// Keep personal info
-
-	let aem: String = '';
-	let apm: String = '';
-	let inscriptionYear: String = '';
-	let schoolGraduated: String = '';
-	let birthDate: String = '';
-	let email: String = '';
-	let familyName: String = '';
-	let givenName: String = '';
-	let username: String = '';
-	let gender: String = '';
-	let departmentName: String = '';
-	let semester: String = '';
-	let study_level: String = '';
-	let deptSecretaryEmail: String = '';
-	let academicId: String = '';
-
 	// Get personal details and department details
+	let personalData: any = null;
+	let loading = true;
+    let error: any = null;
 
-	let personalData: any;
-
-	async function getPersonalInfo() {
-		personalData = await neoUniversisGet(
-			'Students/me?$expand=studyProgram($expand=studyLevel($expand=locale),department($expand=locale)),person($expand=locale)',
-			{ lifetime: 86000 }
-		);
-
-		let user = await neoUniversisGet('Users/me', { lifetime: 86000 });
-		console.log(user) //Access denied
-
-		aem = personalData.studentIdentifier;
-		apm = personalData.uniqueIdentifier;
-		inscriptionYear = personalData.inscriptionYear.name;
-		schoolGraduated = personalData.schoolGraduated;
-		birthDate = personalData.person.birthDate.slice(0, 10);
-		email = personalData.person.email;
-		username = user.name;
-		familyName = localize(personalData.person, "familyName", get(locale)); 
-		givenName = localize(personalData.person, "givenName", get(locale)); 
-		gender = personalData.person.gender; 
-		//console.log(gender)
-		departmentName = localize(personalData.studyProgram.department, "name", get(locale)); 
-		semester = personalData.semester; 
-		//console.log(semester)
-		study_level = localize(personalData.studyProgram.studyLevel, "name", get(locale)); 
-		deptSecretaryEmail = personalData.department.email;
-		academicId = personalData.academicId;
-	}
+    onMount(async () => {
+        try {
+            personalData = await neoUniversisGet(
+                'Students/me?$expand=studyProgram($expand=studyLevel($expand=locale),department($expand=locale)),person($expand=locale)',
+                { lifetime: 86000 }
+            );
+        } catch (err) {
+            error = err;
+        } finally {
+            loading = false;
+        }
+    });
 
 	// Log out
 	function logOut() {
@@ -84,15 +51,15 @@
 			</ion-toolbar>
 		</ion-header>
 
-		{#await getPersonalInfo()}
+		{#if loading}
 			<PersonSkeleton />
-		{:then}
+		{:else if error}
+			<ErrorLandingCard errorMsg={error.message} />
+		{:else}
 			<InfoItem
 				{personalData}
 			/>
-		{:catch error}
-			<ErrorLandingCard errorMsg={error.message} />
-		{/await}
+		{/if}
 		<Settings {logOut} />
 	</ion-content>
 </ion-tab>

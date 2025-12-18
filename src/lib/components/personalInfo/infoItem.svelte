@@ -14,16 +14,16 @@
 
 	$: currentLocale = $locale;
 
-	$: aem = personalData.studentIdentifier;
-	$: apm = personalData.uniqueIdentifier;
+	$: aem = personalData?.studentIdentifier;
+	$: apm = personalData?.uniqueIdentifier;
 	$: username = null;
-	$: inscriptionYear = personalData.inscriptionYear.name;
-	$: schoolGraduated = personalData.schoolGraduated;
-	$: birthDate = personalData.person.birthDate.slice(0, 10);
-	$: email = personalData.person.email;
+	$: inscriptionYear = personalData?.inscriptionYear.name;
+	$: schoolGraduated = personalData?.schoolGraduated;
+	$: birthDate = personalData?.person.birthDate.slice(0, 10);
+	$: email = personalData?.person.email;
 	//let username = user.name;
-	$: familyName = localize(personalData.person, "familyName", currentLocale); 
-	$: givenName = localize(personalData.person, "givenName", currentLocale); 
+	$: familyName = localize(personalData?.person, "familyName", currentLocale); 
+	$: givenName = localize(personalData?.person, "givenName", currentLocale); 
 	$: gender = (() => {
 		const g = personalData?.person?.gender;
 		if (!g) return '';
@@ -38,7 +38,7 @@
 	})();
 
 		//console.log(gender)
-	$: departmentName = localize(personalData.studyProgram.department, "name", currentLocale); 
+	$: departmentName = localize(personalData?.studyProgram.department, "name", currentLocale); 
 	$: semester = (() => {
 		const s = personalData?.semester;
 		if (!s) return '';
@@ -86,7 +86,7 @@
 
 <ion-card class="ion-padding">
 	<ion-card-header class="ion-text-center info">
-		{#if gender === 'Άντρας' || 'Male'}
+		{#if gender === 'Άντρας' || gender === 'Male'}
 			<img class="avatar ion-padding-vertical" alt="man" src={man} width="60px" />
 		{:else}
 			<img class="avatar ion-padding-vertical" alt="woman" src={woman} width="60px" />
