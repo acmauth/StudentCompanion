@@ -163,7 +163,13 @@
 				</ion-item>
 				<ion-item lines ="full">
 					<ion-label>{$t("course.period")}</ion-label>
-					<ion-text slot="end">{course.season}</ion-text>
+					<ion-text slot="end">
+						{#if course.season == "ΧΕΙΜ"}
+							{$t("course.winter_period")}
+						{:else if course.season == "ΕΑΡ"}
+							{$t("course.summer_period")}
+						{/if}
+					</ion-text>
 				</ion-item>
 				<ion-item lines ="full">
 					<ion-label>{$t("course.weekly_hours")}</ion-label>

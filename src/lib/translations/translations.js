@@ -201,6 +201,8 @@ export default {
 		"course.no_stats": "Δεν υπάρχουν στατιστικά για την εξεταστική ακόμη",
 		"course.dist": "Κατανομή Βαθμολογίας",
 		"course.title": "Πληροφορίες",
+		'course.winter_period': 'ΧΕΙΜ',
+		'course.summer_period': 'ΕΑΡ',
 		"credential.header": "Είναι ασφαλή τα στοιχεία μου;",
 		"credential.subheader": "Πάντα!",
 		'credential.title': 'Σύνδεση Webmail',
@@ -448,6 +450,8 @@ export default {
 		'course.no_stats': 'No statistics for the exam period yet',
 		'course.dist': 'Grade distribution',
 		'course.title': 'Information',
+		'course.winter_period': 'WIN',
+		'course.summer_period': 'SUM',
 		'credential.header': 'Is my data safe?',
 		'credential.subheader': 'Always!',
 		'credential.message':

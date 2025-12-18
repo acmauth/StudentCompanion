@@ -26,7 +26,7 @@ export async function coursesPerSemester(subjectsJSON: course[] | null | undefin
 		return 0;
 	});
 
-	
+	console.log(subjects)
 	
 	// Group the courses by semester. If the current course has a parent property, it will be grouped with the parent course by adding a childCourses property to the parent course, otherwise it will be grouped by itself
 	

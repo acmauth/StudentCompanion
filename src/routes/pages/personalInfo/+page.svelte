@@ -9,6 +9,8 @@
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { userCredsFlag } from '$components/webmailLogin/userCredsFlagStore';
 	import { t, locale, locales } from '$lib/i18n';
+	import {get} from 'svelte/store'
+	import { localize } from '$src/lib/functions/localize';
 
 	// Keep personal info
 
@@ -32,12 +34,12 @@
 
 	async function getPersonalInfo() {
 		let personalData = await neoUniversisGet(
-			'Students/me?$expand=studyProgram($expand=studyLevel), department',
+			'Students/me?$expand=studyProgram($expand=studyLevel($expand=locale),department($expand=locale)),person($expand=locale)',
 			{ lifetime: 86000 }
 		);
 
 		let user = await neoUniversisGet('Users/me', { lifetime: 86000 });
-		console.log(user)
+		console.log(user) //Access denied
 		console.log(personalData)
 		aem = personalData.studentIdentifier;
 		apm = personalData.uniqueIdentifier;
@@ -46,12 +48,14 @@
 		birthDate = personalData.person.birthDate.slice(0, 10);
 		email = personalData.person.email;
 		username = user.name;
-		familyName = personalData.person.familyName;
-		givenName = personalData.person.givenName;
-		gender = personalData.person.gender;
-		departmentName = personalData.department.abbreviation;
-		semester = personalData.semester;
-		study_level = personalData.studyProgram.studyLevel.name;
+		familyName = localize(personalData.person, "familyName", get(locale)); 
+		givenName = localize(personalData.person, "givenName", get(locale)); 
+		gender = personalData.person.gender; //!
+		console.log(gender)
+		departmentName = localize(personalData.studyProgram.department, "name", get(locale)); 
+		semester = personalData.semester; //!
+		console.log(semester)
+		study_level = localize(personalData.studyProgram.studyLevel, "name", get(locale)); 
 		deptSecretaryEmail = personalData.department.email;
 		academicId = personalData.academicId;
 	}

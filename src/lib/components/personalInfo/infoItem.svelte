@@ -5,9 +5,20 @@
 	import { Clipboard } from '@capacitor/clipboard';
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
+	import {locale} from '$lib/i18n'
+	import {get} from 'svelte/store'
 
 	export let gender: String;
-	gender = gender === 'Α' ? 'Άντρας' : 'Γυναίκα';
+	console.log(get(locale))
+	if(get(locale) == "el"){
+		gender = gender == 'Α' ? 'Άντρας' : 'Γυναίκα';
+		console.log(gender)
+	}
+	else {
+		console.log(gender.charCodeAt(0))
+		gender = gender.charCodeAt(0) == 65 || gender.charCodeAt(0) == 913 ? "Male" : "Female";
+		console.log(gender)
+	}
 	export let username: String;
 	export let familyName: String;
 	export let givenName: String;
@@ -18,7 +29,23 @@
 	export let email: String;
 	export let departmentName: String;
 	export let semester: String;
-	semester = `${semester}ο Εξάμηνο`;
+	if(get(locale) == "el")semester = `${semester}ο Εξάμηνο`;
+	else{
+		switch(String(semester)){
+			case "1":
+				semester = `${semester}st Semester`
+				break;
+			case "2":
+				semester = `${semester}nd Semester`
+				break;
+			case "3":
+				semester = `${semester}rd Semester`
+				break;
+			default:
+				semester = `${semester}th Semester`
+				break;
+		}
+	}
 	export let study_level: String;
 	export let deptSecretaryEmail: String;
 	export let academicId: String;
@@ -50,7 +77,7 @@
 
 <ion-card class="ion-padding">
 	<ion-card-header class="ion-text-center info">
-		{#if gender === 'Άντρας'}
+		{#if gender === 'Άντρας' || 'Male'}
 			<img class="avatar ion-padding-vertical" alt="man" src={man} width="60px" />
 		{:else}
 			<img class="avatar ion-padding-vertical" alt="woman" src={woman} width="60px" />
@@ -122,7 +149,6 @@
 		{#if gender}
 			<ion-item button="true" on:click={writeToClipboard(gender)}>
 				<ion-icon size="small" icon={allIonicIcons.maleFemale} />
-
 				<ion-label class="ion-padding-start">{gender}</ion-label>
 			</ion-item>
 		{/if}
