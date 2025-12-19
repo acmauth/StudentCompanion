@@ -8,7 +8,9 @@
 	import Course from '$components/courses/coursePage.svelte';
 	import { navController } from '$components/shared/StackedNav';
 	import { getSemester } from '$components/courses/getSemester';
-	import { t, getLocale } from '$lib/i18n';
+	import { t, getLocale, locale } from '$lib/i18n';
+	import { get } from 'svelte/store';
+	import { localize } from '$src/lib/functions/localize';
 
 	let childrenOpen: boolean[] = [];
 
@@ -18,7 +20,7 @@
 
 	export function navigateToCourse(course: { childCourses: string | any[]; id: any }) {
 		if (!(course.childCourses && course.childCourses.length > 0))
-			navController.push(Course, { id: course.course });
+			navController.push(Course, { id: course.id });
 	}
 </script>
 
@@ -51,7 +53,7 @@
 					<ion-item on:click={() => navigateToCourse(course)} lines="none" class="ion-no-padding">
 						<div class="containerFlex">
 							<div class="titlesFlex">
-								<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
+								<ion-label class="ion-text-wrap courseTitle">{localize(course, "courseTitle" ,get(locale))}</ion-label>
 
 								{#if course.examPeriod !== null}
 									<ion-label class="examPeriod">

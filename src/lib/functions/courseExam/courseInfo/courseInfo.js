@@ -45,7 +45,7 @@
      
 
         // Getting an array with courses
-        courses = (await neoUniversisGet("students/me/courses?$expand=gradePeriod($expand=locale),courseType($expand=locale)&$top=-1",{lifetime: 600})).value;
+        courses = (await neoUniversisGet("students/me/courses?$expand=gradePeriod($expand=locale),courseType($expand=locale),course($expand=locale)&$top=-1",{lifetime: 600})).value;
 
         // Getting an array with user's registered courses and information about them
         registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false",{lifetime: 600})).value;
@@ -53,11 +53,6 @@
 
         console.log(registrations)
         // Finding the course and storing informations about it in variables
-        console.log(get(locale))
-        
-        
-
-        console.log(courses)
         for (const course of courses) {
             if (course.course === courseInfo){
                 //! Course name not localized in courses

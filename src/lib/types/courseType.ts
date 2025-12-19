@@ -164,3 +164,9 @@ export type course = {
     "studyProgramSpecialty": "string",
     "childCourses"?: course[]
   }
+
+  export type localized_course = course & {
+  locale?: {
+    inLanguage: 'el' | 'en';
+    courseTitle?: string;
+  }}

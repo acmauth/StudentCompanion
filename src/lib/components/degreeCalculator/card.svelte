@@ -15,16 +15,19 @@
 	import { fade } from 'svelte/transition';
 	import { courseAdded, customCourses } from './courseStore.ts';
 	import { get } from 'svelte/store';
+	import { localize } from '$src/lib/functions/localize.js';
+	import {locale} from "$lib/i18n.js"
 	export let flip;
 
 	let unpassed_courses: {
-		title: string;
+		name: string;
 		id: string;
 		semester_id: number;
 		semester_name: string;
 		grade: number;
 		input_grade: string;
 		coefficient: number;
+		locale: any;
 	}[] = [];
 
 	// Define the degree_grade object to store the average grades for the custom courses
@@ -96,7 +99,7 @@
 					{#each unpassed_courses as course}
 						<div class="courses-box">
 							<Course
-								course_title={course.title}
+								course_title={localize(course, "name", get(locale))}
 								course_semester_id={course.semester_id}
 								course_semester_name={course.semester_name}
 							/>
