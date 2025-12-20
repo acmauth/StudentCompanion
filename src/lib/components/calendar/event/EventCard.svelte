@@ -49,12 +49,14 @@
 		<div class="eventCardContents">
 
 			<div class="eventMainInformation">
-				<div class="eventTypeDot" style="margin-inline-end: 0.5rem; padding-top: 0.2rem;">
+				<div class="eventTypeDot">
 					<ion-icon icon={ellipse} class="dummy {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null}"/>
 				</div>
 				<div class="eventContent">
 					<ion-label class="eventHeader {isPastDate? 'pastDate' : null}">{eventItem.title}</ion-label>
-					<ion-label class="eventSubheader {isPastDate? 'pastDate' : null}">{eventItem.description}</ion-label>
+					{#if eventItem.description}
+						<ion-label class="eventSubheader {isPastDate? 'pastDate' : null}">{eventItem.description}</ion-label>
+					{/if}
 				</div>
 			</div>
 			
@@ -65,10 +67,9 @@
 				<div>
 					{#if eventItem.slot.end && new Date(eventItem.slot.end).getTime() != new Date(eventItem.slot.start).getTime()}
 						{#if new Date(eventItem.slot.end).getDay() - new Date(eventItem.slot.start).getDay() != 0}
-							&nbsp-*
+							&nbsp;-*
 						{:else}
-							<!-- &nbsp-&nbsp{new Date(eventItem.slot.end).getHours() + ':' + String(new Date(eventItem.slot.end).getMinutes()).padStart(2, '0')} -->
-							&nbsp-&nbsp{new Date(eventItem.slot.end).toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit', hour12: false })}
+							&nbsp;-&nbsp;{new Date(eventItem.slot.end).toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit', hour12: false })}
 						{/if}
 					{/if}
 				</div>
@@ -80,7 +81,7 @@
 
 <style>
 	.pastDate {
-        opacity: 0.4;
+        opacity: 0.5;
     }
 	
 	.task {color: var(--ion-color-tertiary);}
@@ -90,53 +91,81 @@
 
 	/* Card contents */
 	.eventCard{
-		border-radius: 0.3rem !important;
-		margin-inline: 0;
-		margin-block: 8px;
-		padding-block: 5px;
-		padding-inline-start: 20px;
-		padding-inline-end: 10px;
-		border:none;
-		box-shadow:none !important;
+		border-radius: 12px !important;
+		margin: 0;
+		padding: 0.75rem 1rem;
+		border: none;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+		background: var(--ion-color-step-50, #ffffff);
+		transition: all 0.2s ease;
+	}
+
+	.eventCard:hover {
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12) !important;
+		transform: translateY(-1px);
 	}
 
 	.eventCardContents {
-		display:flex;
-		flex-direction:row;
-		justify-content:space-between;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		gap: 0.75rem;
 	}
 
 	.eventMainInformation {
-		width: 80%;
-		display:flex;
-		flex-direction:row;
-		justify-content:start;
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.65rem;
+		min-width: 0;
+	}
+
+	.eventTypeDot {
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+	}
+
+	.eventTypeDot ion-icon {
+		font-size: 0.65rem;
 	}
 
 	.eventContent {
-		display:flex;
-		flex-direction:column;
-		justify-content: space-between;
-		width:100%;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		min-width: 0;
+		flex: 1;
 	}
 
 	.timeslot {
-		font-size:x-small; 
-		padding-block:5px;
-		margin-inline-end:10px;
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: var(--ion-color-medium);
 		display: flex;
-		flex-direction:row;
-		text-wrap:nowrap;
+		flex-direction: row;
+		white-space: nowrap;
+		flex-shrink: 0;
+		letter-spacing: 0.01em;
 	}
 
 	.eventHeader {
-		font-size: medium;
-		max-width: fit-content;
+		font-size: 0.9rem;
+		font-weight: 500;
+		color: var(--ion-color-dark);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.eventSubheader {
-		font-size: x-small;
-		color: #8f8c8c;
+		font-size: 0.8rem;
+		color: var(--ion-color-medium);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 </style>

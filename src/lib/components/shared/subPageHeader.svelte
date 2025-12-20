@@ -21,7 +21,7 @@
 </script>
 
 <ion-header collapse="condense" mode="ios" class="mildShadow">
-    <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
+    <ion-toolbar mode="md">
     <div class="headerContent ion-padding-horizontal">
         {#if genericHeader}
             <ion-icon class="backIcon" aria-hidden/>

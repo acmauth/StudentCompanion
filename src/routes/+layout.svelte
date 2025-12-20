@@ -23,6 +23,7 @@
 
 	/* Theme variables */
 	import '../theme/variables.css';
+	import { onMount } from 'svelte';
 </script>
 
 <ion-app>

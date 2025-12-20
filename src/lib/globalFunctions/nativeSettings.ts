@@ -1,11 +1,11 @@
 import { App as capacitorApp } from '@capacitor/app';
-import { StatusBar, Style } from '@capacitor/status-bar';
 import { Capacitor } from '@capacitor/core';
-// import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
-import { NavigationBar, NavigationBarColor} from "@capgo/capacitor-navigation-bar";
 import { navController } from '$components/shared/StackedNav';
+// import { EdgeToEdge } from '@capawesome/capacitor-android-edge-to-edge-support';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { SafeArea } from 'capacitor-plugin-safe-area';
 
-export function nativeSettings() {
+export async function nativeSettings() {
     /* Capacitor back button handling */
     capacitorApp.addListener('backButton', ({canGoBack}) => {
         if(!canGoBack){
@@ -19,28 +19,56 @@ export function nativeSettings() {
         }
     });
 
+    SafeArea.getSafeAreaInsets().then((data) => {
+    const { insets } = data;
+    document.body.style.setProperty('--ion-safe-area-top', `${insets.top}px`);
+    document.body.style.setProperty('--ion-safe-area-right', `${insets.right}px`);
+    document.body.style.setProperty('--ion-safe-area-bottom', `${insets.bottom}px`);
+    document.body.style.setProperty('--ion-safe-area-left', `${insets.left}px`);
+    });
 
-    // Set the status bar to match the app's color scheme
+    
+
+    // Set the background color to match the app's color scheme
     if (document.body.classList.contains('dark')) {
-        StatusBar.setStyle({style: Style.Dark});
-        // NavigationBar.setColor({ color: '#1F1F1F', darkButtons: false });
-        NavigationBar.setNavigationBarColor({color: '#1F1F1F', darkButtons: false});
+        await StatusBar.setStyle({ style: Style.Dark });
     }
     else {
-        // StatusBar.setStyle({style: Style.Light});
-        StatusBar.setStyle({style: Style.Dark});
-        // NavigationBar.setNavigationBarColor({ color: '#FCFCFC', darkButtons: true });
-        NavigationBar.setNavigationBarColor({ color: '#FF0000', darkButtons: true });
-        console.log("[XKCD] Set nav bar to light");
+        await StatusBar.setStyle({ style: Style.Light });
     }
 
-
-    if (Capacitor.getPlatform() === 'android') {
-        if (document.body.classList.contains('dark')) {
-            StatusBar.setBackgroundColor({color: '#111111'});
-        }
-        else {
-            StatusBar.setBackgroundColor({color: '#FCFCFC'});
-        }
-    }
 }
+
+// const enableEdgeToEdge = async () => {
+//   await EdgeToEdge.enable();
+//   await StatusBar.show();
+//   await StatusBar.setOverlaysWebView({ overlay: true });
+// };
+
+// const disable = async () => {
+//   await EdgeToEdge.disable();
+// };
+
+// const getInsets = async () => {
+//   const result = await EdgeToEdge.getInsets();
+//   console.log('Insets:', result);
+// };
+
+// const setBackgroundColorLight = async () => {
+//   await EdgeToEdge.setBackgroundColor({ color: '#ffffff' });
+//   await StatusBar.setStyle({ style: Style.Light });
+//   await StatusBar.setBackgroundColor({ color: '#ffffff' });
+// };
+// const setBackgroundColorDark = async () => {
+//   await EdgeToEdge.setBackgroundColor({ color: '#1f1f1f' });
+//   await StatusBar.setStyle({ style: Style.Dark });
+//   await StatusBar.setBackgroundColor({ color: '#121212' });
+// };
+
+// export const EdgeToEdgeFunctions = {
+//   enableEdgeToEdge,
+//   disable,
+//   getInsets,
+//   setBackgroundColorLight,
+//   setBackgroundColorDark
+// };

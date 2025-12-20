@@ -6,5 +6,8 @@ export default defineConfig({
 	plugins: [sveltekit(), nodePolyfills()],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
+	},
+	server: {
+                allowedHosts: ['localhost', '127.0.0.1', '0.0.0.0', '.aristomate.gr', 'aristomate.auth.gr']
+        }
 });

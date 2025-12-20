@@ -4,7 +4,12 @@ import reauthenticate from "../-universis/authenticator-deprecated/reauthenticat
 import { Network } from '@capacitor/network';
 import { Preferences } from "@capacitor/preferences";
 import Dexie from "dexie";
-import { keyCloakStore, getValidity, getRefreshLife } from '$stores/keycloak.store';
+import OIDCClient from "./OIDCClient.js";
+import { Capacitor } from "@capacitor/core";
+import Config from "$src/app.config";
+
+const isMobile = Capacitor.isNativePlatform();
+const authClient = new OIDCClient(Config.auth);
 
 // Do we wanna log out? Let's clear our path
 export function invalidateAuth(){
@@ -24,11 +29,7 @@ export async function judgeAuth() {
     const onLineStatus = (await Network.getStatus()).connected;
 
     if (!get(useAlternativeLogin)){
-        /* Use Auth SSO (keycloack) or credentials for login (alternative? */
-        const keyCloakStoreValue = get(keyCloakStore);
-        if (!keyCloakStoreValue.token) return false;
-        if (getRefreshLife()) return true;
-        return false
+        return authClient.isAuthenticated();
     } else {
         const userCredsValue = get(userCreds);
         if (!userCredsValue.username || !userCredsValue.password) return false;  // If we don't have any credentials, we're not logged in
@@ -51,7 +52,7 @@ export async function getLoginStatus() : Promise<boolean> {
         let _userTokens: any = get(userTokens);
     
         // We get the token from the store
-        const url = `https://universis-api.it.auth.gr/api/users/me`;
+        const url = `${Config.universis.api}/users/me`;
         const response = await fetch(url, {
         headers: {
             Authorization: `Bearer ${_userTokens.universis.token}`,

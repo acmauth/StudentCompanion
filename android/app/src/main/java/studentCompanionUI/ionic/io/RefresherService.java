@@ -30,11 +30,11 @@ public class RefresherService extends Worker {
 
         try {
             JSONObject tokens = this.getCredentials();
-            String refreshToken = tokens.getString("refreshToken");
+            String refreshToken = tokens.getString("refresh_token");
 
             var newTokens = this.refreshToken(refreshToken);
             if (newTokens.getBoolean("success")) {
-                this.updateStoredTokens(newTokens.getString("accessToken"), newTokens.getString("refreshToken"));
+                this.updateStoredTokens(newTokens.getString("access_token"), newTokens.getString("refresh_token"));
             }
             
         } catch (JSONException e) {
@@ -51,7 +51,7 @@ public class RefresherService extends Worker {
      * @throws JSONException
      */
     private JSONObject getCredentials() throws JSONException {
-        var credentials = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("keycloakStore","");
+        var credentials = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("loginStore","");
         return new JSONObject(credentials);
     }
 
@@ -88,7 +88,7 @@ public class RefresherService extends Worker {
                 String accessToken = jsonResponse.getString("access_token");
                 String refreshToken = jsonResponse.getString("refresh_token");
 
-                return new JSONObject().put("accessToken", accessToken).put("refreshToken", refreshToken).put("success", true);
+                return new JSONObject().put("access_token", accessToken).put("refresh_token", refreshToken).put("success", true);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,11 +106,11 @@ public class RefresherService extends Worker {
     private void updateStoredTokens(String accessToken, String refreshToken) throws JSONException {
 
         var oldTokens = this.getCredentials();
-        oldTokens.put("accessToken", accessToken);
-        oldTokens.put("refreshToken", refreshToken);
+        oldTokens.put("access_token", accessToken);
+        oldTokens.put("refresh_token", refreshToken);
 
         SharedPreferences.Editor editor = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).edit();
-        editor.putString("keycloakStore",oldTokens.toString());
+        editor.putString("loginStore",oldTokens.toString());
         editor.apply();
 
     }

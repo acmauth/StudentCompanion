@@ -145,6 +145,7 @@
 					hour-cycle="h23"
 					on:ionChange={(event) => UpdateStartTime(event)}
 					value={templateStartTime}
+					max="2500-12-31T23:59"
 				/>
 			</ion-modal>
 		</ion-item>
@@ -160,6 +161,7 @@
 					hour-cycle="h23"
 					on:ionChange={(event) => UpdateEndTime(event)}
 					value={templateEndTime}
+					max="2500-12-31T23:59"
 				/>
 			</ion-modal>
 		</ion-item>
@@ -175,7 +177,9 @@
 				label-placement="floating"
 			>
 				{#each Object.values(EventType) as type}
-					<ion-select-option value={type}>{getEventTypeValue(type, getLocale())}</ion-select-option>
+					<ion-select-option value={type}
+						>{getEventTypeValue(type, getLocale())}</ion-select-option
+					>
 				{/each}
 			</ion-select>
 		</ion-item>
