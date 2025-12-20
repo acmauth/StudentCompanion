@@ -14,13 +14,15 @@
 	import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/advertisements/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import { t } from '$lib/i18n';
+	import { locale, t } from '$lib/i18n';
 	import Wallet from '$components/wallet/Wallet.svelte';
 	import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
 	import { keySharp } from 'ionicons/icons';
 	import { userCredsFlag as autheticationFlag } from '$components/webmailLogin/userCredsFlagStore';
 	import { showLoginAlert } from "$components/webmailLogin/credentialLogin"
 	import Config from "$src/app.config";
+	import { get } from 'svelte/store';
+	import { localize } from '$src/lib/functions/localize';
 
 	let givenName = '';
 	let gender = '';
@@ -33,12 +35,21 @@
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet(
-			'Students/me?$expand=studyProgram($expand=studyLevel), department'
+			'Students/me?$expand=studyProgram($expand=studyLevel), department, person($expand=locale)'
 		);
-		givenName = personalData.person.givenName;
+		givenName = localize(personalData.person, "givenName", get(locale));
 		gender = personalData.person.gender;
 		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
-
+		let	registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false",{lifetime: 600})).value;
+		for(const course of subjects){
+			for(const sem of registrations){
+                for(const semClass of sem.classes){
+					if(semClass.courseClass.course.id == course.course){
+						course["locale"] = {inLanguage: semClass.courseClass.course.locale.inLanguage, courseTitle: semClass.courseClass.course.locale.name}
+					}
+				}
+			}
+		}
 		let passedSubjects = subjects.filter(
 			(/** @type {{ grade: number; }} */ course: { grade: number }) => course.grade * 10 >= 5
 		);

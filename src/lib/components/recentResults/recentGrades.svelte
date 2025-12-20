@@ -1,7 +1,9 @@
 <script>
 	import { navController } from "$components/shared/StackedNav";
   import Course from "$components/courses/coursePage.svelte";
-
+  import { localize } from "$src/lib/functions/localize";
+  import { get } from "svelte/store";
+	import { locale } from "$src/lib/i18n";
   /**
    * @type any
    */
@@ -25,7 +27,7 @@
   <ion-item lines="none" class="ion-no-padding">
     <div class="containerFlex">
       <div class="titlesFlex">
-        <ion-label class="ion-text-wrap courseTitle">{subject.course.name}</ion-label>
+        <ion-label class="ion-text-wrap courseTitle">{localize(subject.course, "name", get(locale))}</ion-label>
         <ion-label class="subjectID">{subject.course.id}</ion-label>
       </div>
       {#if subject.examGrade * 10 >= 5}
