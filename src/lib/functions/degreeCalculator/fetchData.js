@@ -30,13 +30,13 @@ export async function fetchData(unpassed_courses, sums)
             continue;
         }
             not_passed_all_courses = true;
-            console.log(course.course)
+            //console.log(course.course)
             for(const reg of registrations){
                 for(const semClass of reg.classes){
                     //debug
                     if(semClass.courseClass.course.id == course.course){
-                    console.log(semClass.courseClass.course.id)
-                            unpassed_courses.push({ name: course.courseTitle, id: course.id, semester_id: course.semester.id, semester_name: course.semester.name, grade: course.grade, input_grade: "", coefficient: course.coefficient, locale: semClass.courseClass.course.locale}); 
+                        //console.log(semClass.courseClass.course.id)
+                        unpassed_courses.push({ name: course.courseTitle, id: course.id, semester_id: course.semester.id, semester_name: course.semester.name, grade: course.grade, input_grade: "", coefficient: course.coefficient, locale: semClass.courseClass.course.locale}); 
                     }
                 }
             }    

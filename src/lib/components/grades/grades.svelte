@@ -9,10 +9,9 @@
   
 
 	{#each $filteredSubjects as semester}
-
-	 {#if semester.courses.length > 0}
-        <Card semesterAverage={semester.average} semesterId={semester.semesterId} filteredSubjects={semester.courses} semesterName={semester.courses[0].semester.name} />
-    {/if}
+	 	{#if semester.courses.length > 0}
+        	<Card semesterAverage={semester.average} semesterId={semester.semesterId} filteredSubjects={semester.courses} semesterName={semester.courses[0].semester.name} />
+    	{/if}
 	{/each}
 
   

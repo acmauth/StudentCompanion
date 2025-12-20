@@ -56,7 +56,7 @@
 	})();
 		//console.log(semester)
 	$: study_level = localize(personalData.studyProgram.studyLevel, "name", currentLocale); 
-	$: deptSecretaryEmail = personalData.department.email;
+	$: deptSecretaryEmail = personalData?.studyProgram.department.email;
 	$: academicId = personalData.academicId;
 
 	// Function to show toast

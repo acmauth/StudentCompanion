@@ -58,7 +58,14 @@
 								{#if course.examPeriod !== null}
 									<ion-label class="examPeriod">
 										{#if course.examPeriod && course.gradeYear}
-											{course.examPeriod.name} {course.gradeYear.name}
+											{#if course.examPeriod.name == "ΦΕΒΡΟΥΑΡΙΟΣ"}
+												{$t("course.exam_winter_period")}
+											{:else if course.examPeriod.name == "ΙΟΥΝΙΟΣ"}
+												{$t("course.exam_summer_period")}
+											{:else if course.examPeriod.name == "ΣΕΠΤΕΜΒΡΙΟΣ"}
+												{$t("course.exam_autumn_period")}
+											{/if}
+											{course.gradeYear.name}
 										{:else}
 											{$t('progress.declared')}
 										{/if}
@@ -84,12 +91,19 @@
 					<ion-item lines="none" class="ion-no-padding">
 						<div class="containerFlex">
 							<div class="titlesFlex">
-								<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
+								<ion-label class="ion-text-wrap courseTitle">{localize(course, "courseTitle", get(locale))}</ion-label>
 
 								{#if course.examPeriod !== null}
 									<ion-label class="examPeriod">
 										{#if course.examPeriod && course.gradeYear}
-											{course.examPeriod.name} {course.gradeYear.name}
+											{#if course.examPeriod.name == "ΦΕΒΡΟΥΑΡΙΟΣ"}
+												{$t("course.exam_winter_period")}
+											{:else if course.examPeriod.name == "ΙΟΥΝΙΟΣ"}
+												{$t("course.exam_summer_period")}
+											{:else if course.examPeriod.name == "ΣΕΠΤΕΜΒΡΙΟΣ"}
+												{$t("course.exam_autumn_period")}
+											{/if}
+											{course.gradeYear.name}
 										{:else}
 											{$t('progress.declared')}
 										{/if}
@@ -123,12 +137,19 @@
 								<div class="containerFlex">
 									<div class="titlesFlex">
 										<ion-label class="ion-text-wrap courseTitle"
-											>{childCourse.courseTitle}</ion-label
+											>{localize(childCourse, "courseTitle", get(locale))}</ion-label
 										>
 										{#if childCourse.examPeriod !== null}
 											<ion-label class="examPeriod">
 												{#if childCourse.examPeriod && childCourse.gradeYear}
-													{childCourse.examPeriod.name} {childCourse.gradeYear.name}
+													{#if childCourse.examPeriod.name == "ΦΕΒΡΟΥΑΡΙΟΣ"}
+														{$t("course.exam_winter_period")}
+													{:else if childCourse.examPeriod.name == "ΙΟΥΝΙΟΣ"}
+														{$t("course.exam_summer_period")}
+													{:else if childCourse.examPeriod.name == "ΣΕΠΤΕΜΒΡΙΟΣ"}
+														{$t("course.exam_autumn_period")}
+													{/if}
+													{childCourse.gradeYear.name}
 												{:else}
 													{$t('progress.declared')}
 												{/if}
