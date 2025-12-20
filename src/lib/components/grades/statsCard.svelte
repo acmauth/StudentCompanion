@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import Chart from 'chart.js/auto';
 	import { afterUpdate, onMount } from 'svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
@@ -22,13 +22,9 @@
 	export let flip;
 
 	/**
-	 * @type {null | undefined}
+	 * @type {any}
 	 */
-	export let subjectsJSON;
-
-	/**
-	 * @type {Chart<"line", number[], string>}
-	 */
+	export let subjectsJSON: any;
 
 	let primaryColor;
 	let gradeFill;
@@ -50,24 +46,28 @@
 	}
 
 	/**
-	 * @type {Chart<"line", never[], never>}
+			.trim();
+	}
+
+	/**
+	 * @type {Chart<"line", number[], number>}
 	 */
-	let chart;
+	let chart: any;
 	let gradesObject = {
 		average: 0,
 		weightedAverage: 0,
-		grades: [],
+		grades: 0,
 		ects: 0,
-		averagesPerSemester: [],
-		semester: []
+		averagesPerSemester: {},
+		semester: [] as number[]
 	};
 
 	/**
 	 * @param {any} subjectsJSON
 	 */
-	async function processAverages(subjectsJSON) {
+	async function processAverages(subjectsJSON: any) {
 		try {
-			const result = await averages(subjectsJSON);
+			const result: any = await averages(subjectsJSON);
 			gradesObject.average = result.avg;
 			gradesObject.weightedAverage = result.weighted_avg;
 			gradesObject.grades = result.grades;
@@ -77,15 +77,12 @@
 		}
 	}
 
-	/**
-	 * @param {null | undefined} subjectsJSON
-	 */
-	async function processAveragesPerSemester(subjectsJSON) {
+	async function processAveragesPerSemester(subjectsJSON: any) {
 		try {
 			const result = await averagesPerSemester(subjectsJSON);
 			gradesObject.averagesPerSemester = result;
 
-			for (let i = 1; i <= result.length + 1; i++) {
+			for (let i = 1; i <= Number(result.length) + 1; i++) {
 				gradesObject.semester[i - 1] = i;
 			}
 		} catch (error) {
@@ -106,8 +103,9 @@
 		if (chart) {
 			chart.destroy();
 		}
-		if (!searchQuery.length) {
-			chart = new Chart(document.getElementById('gradeChart'), {
+		const gradeChartEl = document.getElementById('gradeChart') as HTMLCanvasElement;
+		if (!searchQuery.length && gradeChartEl) {
+			chart = new Chart(gradeChartEl, {
 				type: 'line',
 				data: {
 					labels: gradesObject.semester,
@@ -191,7 +189,11 @@
 
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<Chip chipIcon={allIonicIcons.calculator} text={$t('progress.average_prediction')} {flip} />
+			<Chip
+				chipIcon={allIonicIcons.calculator}
+				text={$t('progress.average_prediction')}
+				{flip}
+			/>
 		</ion-list>
 	</ion-card-content>
 </ion-card>

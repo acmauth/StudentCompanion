@@ -1,24 +1,23 @@
 <script lang="ts">
-  import ErrorLandingCard from "$components/errorLanding/ErrorLandingCard.svelte";
-  import { Capacitor } from "@capacitor/core";
-  import GradesSkeleton from "./gradesSkeleton.svelte";
-  import Flipper from "$components/shared/Flipper.svelte";
-  import Grades from '$lib/components/grades/grades.svelte';
-  import 'js-circle-progress'
-  import Chips from '$lib/components/grades/chips.svelte';
-  import DegreeCalculatorCard from '$components/degreeCalculator/card.svelte';
-  import Stats from '$lib/components/grades/statsCard.svelte';
-  import 'js-circle-progress'
-  import { neoUniversisGet } from '$lib/dataService';
-  import {coursesPerSemester} from '$lib/functions/coursePerSemester/coursesPerSemester';
-  import { flipped } from "./flipstore"; 
-  import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
-  import { writable } from 'svelte/store';
-  import Fuse from 'fuse.js';
-  import { onMount } from 'svelte';
-  import { t } from "$lib/i18n";
-
-	
+	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
+	import { Capacitor } from '@capacitor/core';
+	import GradesSkeleton from './gradesSkeleton.svelte';
+	import Flipper from '$components/shared/Flipper.svelte';
+	import Grades from '$lib/components/grades/grades.svelte';
+	import 'js-circle-progress';
+	import Chips from '$lib/components/grades/chips.svelte';
+	import DegreeCalculatorCard from '$components/degreeCalculator/card.svelte';
+	import Stats from '$lib/components/grades/statsCard.svelte';
+	import 'js-circle-progress';
+	import { neoUniversisGet } from '$lib/dataService';
+	import { coursesPerSemester } from '$lib/functions/coursePerSemester/coursesPerSemester';
+	import { flipped } from './flipstore';
+	import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
+	import { writable } from 'svelte/store';
+	import Fuse from 'fuse.js';
+	import { onMount } from 'svelte';
+	import { t } from '$lib/i18n';
+	import { course } from '$types/courseType';
 
 	// Fix for flipper covering content
 	onMount(async () => {
@@ -30,8 +29,8 @@
 		$flipped = false;
 	});
 
-	let courseBySemester = writable([]);
-	let filteredSubjects = writable([]);
+	let courseBySemester = writable();
+	let filteredSubjects = writable();
 
 	const fuseOptions = {
 		keys: ['course', 'courseTitle'],
@@ -40,8 +39,8 @@
 
 	// Variables regarding grades and subjects
 	let searchQuery = '';
-	let subjects = 0;
-	let passedSubjects = 0;
+	let subjects: any = 0;
+	let passedSubjects: any = 0;
 	let coursesBySemester = {};
 	let subjectsJSON: number | null | undefined;
 
@@ -51,12 +50,12 @@
 	let semesterId: any;
 
 	/**
-	 * @param {{ target: { value: string; }; }} event
+	 * @param {CustomEvent} event
 	 */
 
 	// Search
-	function handleChange(event: { target: { value: string } }) {
-		searchQuery = event.target.value;
+	function handleChange(event: CustomEvent) {
+		searchQuery = event.detail.value ?? '';
 	}
 
 	// Flipper toggle
@@ -66,14 +65,14 @@
 
 	async function getSubjects(subjectsJSON: any) {
 		coursesBySemester = await coursesPerSemester(subjectsJSON);
-		// @ts-ignore
-		passedSubjects = subjects
-			.filter((/** @type {{ grade: number; }} */ course) => course.grade * 10 >= 5)
-			.filter(/** @type {{parentCourse: string;}} */ (course) => course.parentCourse === null);
 
-		// @ts-ignore
+		passedSubjects = subjects
+
+			.filter((/** @type {{ grade: number; }} */ course: course) => course.grade * 10 >= 5)
+			.filter((course: { parentCourse: string | null }) => course.parentCourse === null);
+
 		subjects = subjects.length;
-		// @ts-ignore
+
 		passedSubjects = passedSubjects.length;
 	}
 
@@ -90,7 +89,7 @@
 			};
 		});
 
-		semesters.sort((a, b) => a.semesterId - b.semesterId);
+		semesters.sort((a, b) => Number(a.semesterId) - Number(b.semesterId));
 
 		courseBySemester.set(semesters);
 
@@ -109,15 +108,18 @@
 	// Filter the results based on the searchQuery
 
 	$: {
-		const courses = $courseBySemester;
+		const courses: any = $courseBySemester;
 		if (searchQuery.length === 0) {
 			filteredSubjects.set(courses);
 		} else {
-			const subjects = courses.reduce((acc, curr) => acc.concat(curr.courses), []);
-			const fuse = new Fuse(subjects, fuseOptions);
+			const subjects = courses.reduce(
+				(acc: string | any[], curr: { courses: any }) => acc.concat(curr.courses),
+				[]
+			);
+			const fuse = new Fuse<course>(subjects, fuseOptions);
 			const searchResults = fuse.search(searchQuery);
 
-			const filtered = courses.map((semester) => {
+			const filtered = courses.map((semester: { courses: any[] }) => {
 				return {
 					...semester,
 					courses: searchResults
@@ -135,7 +137,7 @@
 <!-- Show skeleton while loading -->
 <ion-content fullscreen={true}>
 	<ion-header collapse="condense" mode="ios">
-		<ion-toolbar mode='md'>
+		<ion-toolbar mode="md">
 			<ion-title class="ion-padding-vertical" size="large">{$t('progress.title')}</ion-title>
 
 			<ion-searchbar
@@ -150,47 +152,43 @@
 				<Chips {coursesBySemester} {semesterId} />
 			{/if}
 		</ion-toolbar>
+	</ion-header>
 
-	  </ion-header>
+	{#await gatherData()}
+		<ion-progress-bar type="indeterminate" />
+		<GradesSkeleton />
+	{:then}
+		<!-- Show content after loading is completed -->
 
-	  {#await gatherData()}
-		  <ion-progress-bar type="indeterminate"/>
-		  <GradesSkeleton/>
-	  {:then}
-	  <!-- Show content after loading is completed -->
-  
-	  {#if !searchQuery.length}
-		  <Flipper reactToHeight bind:flipped={$flipped}>
-			  <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
-			  <DegreeCalculatorCard flip={flip} slot="back"/>
-		  </Flipper>
-	  {/if}
-		  
-		  
-		  
-		  <Grades semesterId = {semesterId} searchQuery = {searchQuery} filteredSubjects = {filteredSubjects} />
-  
-		  {:catch error}
-				  <ErrorLandingCard errorMsg={error.message} />
-	  {/await}
-  </ion-content>
-  
-  
-  <style>
-  
-	  ion-header {
-		  position: sticky;
-		  top: 0;
-		  z-index: 1;
-	  }
-  
-	  ion-content {
-	  --padding-end: 0.6rem;
-	  --padding-start: 0.6rem;
-  }
-  
-  
-  
-  
-  
-  </style>
+		{#if !searchQuery.length}
+			<Flipper reactToHeight bind:flipped={$flipped}>
+				<Stats
+					{flip}
+					{searchQuery}
+					{subjects}
+					{passedSubjects}
+					{subjectsJSON}
+					slot="front"
+				/>
+				<DegreeCalculatorCard {flip} slot="back" />
+			</Flipper>
+		{/if}
+
+		<Grades {semesterId} {searchQuery} {filteredSubjects} />
+	{:catch error}
+		<ErrorLandingCard errorMsg={error.message} />
+	{/await}
+</ion-content>
+
+<style>
+	ion-header {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+	}
+
+	ion-content {
+		--padding-end: 0.6rem;
+		--padding-start: 0.6rem;
+	}
+</style>
