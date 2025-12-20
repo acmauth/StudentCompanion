@@ -45,13 +45,14 @@ export async function statistics(courseCode) {
     try {
 
 	let courses = await neoUniversisGet('students/me/courses?$top=-1');
+	console.log(courses)
 
 	let courseExam = '';
 
 	examCode = courses.value;
 
 	for (const exam of examCode) {
-		if (exam.course == courseCode) {
+		if (exam.id == courseCode) {
 			courseExam = exam.gradeExam;
 			myGrade = exam.grade;
 			break;
@@ -59,6 +60,9 @@ export async function statistics(courseCode) {
 	}
 
 	let statistic = await neoUniversisGet(`students/me/exams/${courseExam}/statistics?$top=-1&`,{lifetime: 600});
+	// console.log(courseCode)
+	// console.log(courseExam)
+	// console.log(statistic)
 
 	let passedGrades = [];
 
@@ -90,6 +94,7 @@ export async function statistics(courseCode) {
 	const averagePassed =
 		Math.round((totalPassedGrades / studentsPassed + Number.EPSILON) * 100) / 100;
 	totalStudents = studentsPassed + studentsFailed;
+	//console.log(averagePassed)
 
 	myGrade *= 10;
 	myGrade = Number.isInteger(myGrade) ? myGrade : Number((myGrade).toFixed(3)).toFixed(1);
@@ -119,6 +124,7 @@ export async function statistics(courseCode) {
 	};
 
 	console.log(studentsWorseThanMe)
+	//console.log(stats)
 	return stats;
     }
     catch (error) {

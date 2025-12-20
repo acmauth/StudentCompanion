@@ -22,6 +22,7 @@
                 'Students/me?$expand=studyProgram($expand=studyLevel($expand=locale),department($expand=locale)),person($expand=locale)',
                 { lifetime: 86000 }
             );
+			console.log(personalData)
         } catch (err) {
             error = err;
         } finally {

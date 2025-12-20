@@ -5,6 +5,7 @@
 	import CoursesSkeleton from "$lib/components/courses/coursesSkeleton.svelte";
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import { t } from "$lib/i18n";
+	import { course } from '$types/courseType';
 
 
 	// Initiniatize variables
@@ -38,7 +39,7 @@
 	};
 
 	export let id;
-	let result;
+	let result: any;
 
 	// Extract courseCode from the URL
 	// const courseCode = $page.params.courseId;
@@ -48,11 +49,12 @@
 		try {
 		// Fetch course information
 		result = await courseInformation(courseCode);
+		console.log(result)
 		if (result) {
 			
 			// Assign values from the result to course
 		course.title = result.courseTitle;
-		course.code = courseCode;
+		course.code = result.code;
 		course.ects = result.ects;
 
 		// Get teacher name for each teacher
@@ -82,19 +84,20 @@
 		
 		// Fetch statistics
 		result = await statistics(courseCode);
+		//console.log(result)
 		if (result) {	
-		stats.grade = result.myGrade;
-		stats.studentsLikeMe = result.studentsLikeMe;
-		stats.studentsBetterThanMe = result.studentsBetterThanMe;
-		stats.studentsWorseThanMe = result.studentsWorseThanMe;
-		stats.passedCount = result.studentsPassed;
-		stats.failedCount = result.studentsFailed;
-		stats.totalStudents = result.totalStudents;
-		// fix to 2 digits after decimal point
-		stats.averageGradePassed = result.averagePassed.toFixed(1);
-		stats.averageGrade = result.average.toFixed(1);
-		stats.gradesCount = result.gradesCount;
-		stats.top10Percent = result.topPercent;
+			stats.grade = result.myGrade;
+			stats.studentsLikeMe = result.studentsLikeMe;
+			stats.studentsBetterThanMe = result.studentsBetterThanMe;
+			stats.studentsWorseThanMe = result.studentsWorseThanMe;
+			stats.passedCount = result.studentsPassed;
+			stats.failedCount = result.studentsFailed;
+			stats.totalStudents = result.totalStudents;
+			// fix to 2 digits after decimal point
+			stats.averageGradePassed = Number((result.averagePassed as number).toFixed(1));
+			stats.averageGrade = result.average.toFixed(1);
+			stats.gradesCount = result.gradesCount;
+			stats.top10Percent = result.topPercent;
 		}
 
 

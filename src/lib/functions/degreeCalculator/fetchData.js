@@ -16,7 +16,7 @@ export async function fetchData(unpassed_courses, sums)
     courses.sort((/** @type {{ semester: { id: number; }; }} */ a, /** @type {{ semester: { id: number; }; }} */ b) => a.semester.id - b.semester.id);
     courses = courses.filter((/** @type {{ calculateGrade: number; }} */ course) => course.calculateGrade == 1);
 
-    console.log(courses)
+    //console.log(courses)
     for (const course of courses)
     {
         if (course.isPassed === 1)

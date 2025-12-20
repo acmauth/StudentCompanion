@@ -17,7 +17,7 @@
 	$: aem = personalData?.studentIdentifier;
 	$: apm = personalData?.uniqueIdentifier;
 	$: username = null;
-	$: inscriptionYear = personalData?.inscriptionYear.name;
+	//$: inscriptionYear = personalData?.inscriptionYear.name;
 	$: schoolGraduated = personalData?.schoolGraduated;
 	$: birthDate = personalData?.person.birthDate.slice(0, 10);
 	$: email = personalData?.person.email;
