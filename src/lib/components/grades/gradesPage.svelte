@@ -40,7 +40,8 @@
 
 	// Variables regarding grades and subjects
 	let searchQuery = '';
-	let subjects = 0;
+	let subjects: any;
+	subjects = 0
 	let passedSubjects = 0;
 	let coursesBySemester = {};
 	let subjectsJSON: number | null | undefined;
@@ -68,8 +69,8 @@
 		coursesBySemester = await coursesPerSemester(subjectsJSON);
 		// @ts-ignore
 		passedSubjects = subjects
-			.filter((/** @type {{ grade: number; }} */ course) => course.grade * 10 >= 5)
-			.filter(/** @type {{parentCourse: string;}} */ (course) => course.parentCourse === null);
+			.filter((/** @type {{ grade: number; }} */ course: any) => course.grade * 10 >= 5)
+			.filter(/** @type {{parentCourse: string;}} */ (course: any) => course.parentCourse === null);
 
 		// @ts-ignore
 		subjects = subjects.length;
@@ -90,9 +91,9 @@
 			};
 		});
 
-		semesters.sort((a, b) => a.semesterId - b.semesterId);
+		semesters.sort((a, b) => (Number(a.semesterId)) - Number(b.semesterId));
 
-		courseBySemester.set(semesters);
+		courseBySemester.set((semesters as any));
 
 		return semesters;
 	}
@@ -113,21 +114,21 @@
 		if (searchQuery.length === 0) {
 			filteredSubjects.set(courses);
 		} else {
-			const subjects = courses.reduce((acc, curr) => acc.concat(curr.courses), []);
+			const subjects = courses.reduce((acc, curr: any) => acc.concat(curr.courses), []);
 			const fuse = new Fuse(subjects, fuseOptions);
 			const searchResults = fuse.search(searchQuery);
 
 			const filtered = courses.map((semester) => {
 				return {
-					...semester,
+					...(semester as any),
 					courses: searchResults
 						.filter((result) =>
-							semester.courses.some((course) => course.course === result.item.course)
+							(semester as any).courses.some((course: any) => course.course === (result.item as any).course)
 						)
 						.map((result) => result.item)
 				};
 			});
-			filteredSubjects.set(filtered);
+			filteredSubjects.set(filtered as any);
 		}
 	}
 </script>
