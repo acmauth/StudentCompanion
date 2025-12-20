@@ -28,7 +28,7 @@
 	}
 
 	async function dixieGet(key: string) {
-		var db = new Dexie('cachedData');
+		var db: any = new Dexie('cachedData');
 		db.version(1).stores({
 			cachedData: 'key,value'
 		});
@@ -39,12 +39,12 @@
 	}
 
 	async function dixieGetKeys() {
-		var db = new Dexie('cachedData');
+		var db: any = new Dexie('cachedData');
 		db.version(1).stores({
 			cachedData: 'key,value'
 		});
 
-		const keys = (await db.cachedData.toArray()).map((item) => item.key);
+		const keys = (await db.cachedData.toArray()).map((item: any) => item.key);
 
 		return keys;
 	}
@@ -54,7 +54,7 @@
 
 		const url = 'https://analytics.neron.dev/v1/analytics';
 
-		let examkeys = (await dixieGetKeys()).filter((key) =>
+		let examkeys = (await dixieGetKeys()).filter((key: any) =>
 			key.includes('universis_students/me/exams')
 		);
 		let keys = [

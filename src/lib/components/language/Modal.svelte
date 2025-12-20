@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-	let onTop: null;   //keeping track of which open modal is on top
+	let onTop: any;   //keeping track of which open modal is on top
 
 	let modal: { open: () => void; close: () => void; };
 	
@@ -38,7 +38,8 @@
 
     visible=true;
     //Move the modal in the DOM to be the last child of <BODY> so that it can be on top of everything
-    document.body.appendChild(topDiv);
+    //Breaks Chart.js, svelte cant handle manual dom manipulation that well and with a stable manner
+    //document.body.appendChild(topDiv);
   }
     
   function close(){
