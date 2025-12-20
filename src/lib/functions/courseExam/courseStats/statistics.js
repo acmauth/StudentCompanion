@@ -45,7 +45,7 @@ export async function statistics(courseCode) {
     try {
 
 	let courses = await neoUniversisGet('students/me/courses?$top=-1');
-	console.log(courses)
+	//console.log(courses)
 
 	let courseExam = '';
 
@@ -123,7 +123,7 @@ export async function statistics(courseCode) {
 		topPercent: topPercent
 	};
 
-	console.log(studentsWorseThanMe)
+	//console.log(studentsWorseThanMe)
 	//console.log(stats)
 	return stats;
     }

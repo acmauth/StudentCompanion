@@ -49,7 +49,7 @@
 		try {
 		// Fetch course information
 		result = await courseInformation(courseCode);
-		console.log(result)
+		//console.log(result)
 		if (result) {
 			
 			// Assign values from the result to course
@@ -70,11 +70,11 @@
 		course.season = result.season;
 		if(result.syllabus){
 			course.syllabus = result.syllabus;
-			console.log(course.syllabus)
+			//console.log(course.syllabus)
 		}
 		if(result.eudoxus) {
 			course.eudoxus = result.eudoxus
-			console.log(course.eudoxus)
+			//console.log(course.eudoxus)
 		}
 		if (result.period) {
 			course.period = result.period;

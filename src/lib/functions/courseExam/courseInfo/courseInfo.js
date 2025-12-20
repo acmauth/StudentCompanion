@@ -28,8 +28,8 @@ let code;
 export async function courseInformation(courseID) {
 
     let courseInfo = decodeURIComponent(courseID);
-    console.log(courseID)
-    console.log(courseInfo)
+    //console.log(courseID)
+    //console.log(courseInfo)
     courses = [];
     registrations = [];
     courseTitle = "";
@@ -55,8 +55,8 @@ export async function courseInformation(courseID) {
         registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false", { lifetime: 600 })).value;
 
         //debug
-        console.log(registrations)
-        console.log(courses)
+        //console.log(registrations)
+        //console.log(courses)
         // Finding the course and storing informations about it in variables
         for (const course of courses) {
             if (course.id == courseInfo) {
@@ -93,7 +93,7 @@ export async function courseInformation(courseID) {
                                 let newCourseData;
                                 if (newCourseObject.ok) {
                                     newCourseData = await newCourseObject.json()
-                                    console.log(newCourseData)
+                                    //console.log(newCourseData)
                                     syllabus = localize(newCourseData, "content", get(locale))
                                     eudoxus = localize(newCourseData, "eudoxus", get(locale))
                                     //debug
