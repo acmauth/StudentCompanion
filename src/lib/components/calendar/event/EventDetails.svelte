@@ -90,7 +90,7 @@
             <ion-label>{$t('event.start')}</ion-label>
             <ion-datetime-button datetime="start"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="start" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateStartTime(event)} value="{templateStartTime}" max="2500-12-31T23:59"></ion-datetime>
+                <ion-datetime id="start" locale={getLocale()} presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateStartTime(event)} value="{templateStartTime}" max="2500-12-31T23:59"></ion-datetime>
             </ion-modal>
         </ion-item>
             
@@ -98,7 +98,7 @@
             <ion-label>{$t('event.end')}</ion-label>    
             <ion-datetime-button datetime="end"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                    <ion-datetime id="end" presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateEndTime(event)} value="{templateEndTime}" max="2500-12-31T23:59"></ion-datetime>
+                    <ion-datetime id="end" locale={getLocale()} presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateEndTime(event)} value="{templateEndTime}" max="2500-12-31T23:59"></ion-datetime>
             </ion-modal>
         </ion-item>
         

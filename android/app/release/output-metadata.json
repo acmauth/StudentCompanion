@@ -11,8 +11,8 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 19,
-      "versionName": "1.4 We`re back",
+      "versionCode": 38,
+      "versionName": "1.9.2 Stuffing",
       "outputFile": "app-release.apk"
     }
   ],
@@ -33,5 +33,5 @@
       ]
     }
   ],
-  "minSdkVersionForDexing": 26
+  "minSdkVersionForDexing": 30
 }

@@ -13,7 +13,7 @@
     import { handleNotificationPermission, handleExactAlarmPermission } from '$src/lib/calendarNotifications/runtimePermissions';
     import { removePastNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
     import { deleteEventNotifications, deleteSingleEventNotification } from '$src/lib/calendarNotifications/notificationFunctions';
-    import { t } from '$lib/i18n';
+    import { getLocale, t } from '$lib/i18n';
     import { buildCalendarWeeks, type DayObject, type SelectedDay, getNextMonth, getPreviousMonth } from '$lib/components/calendar/calendarUtils';
 
     let currentDate = new Date();
@@ -29,6 +29,23 @@
     let selectedEvent: Event | null = null;
     let modalOpen: boolean = false;
     let deleteModalOpen: boolean = false;
+
+    let prototypeEvent: Event = null;
+    $: prototypeEvent = {
+         id: new Date().getTime(),
+            title: "",
+            slot: {
+                start: new Date(activeDate.getTime()).setHours(new Date().getHours(), new Date().getMinutes()),
+                end: new Date(new Date(activeDate.getTime()).getTime() + 3600000),
+            },
+            type: EventType.TASK,
+            description: "",
+            repeat: EventRepeatType.NEVER,
+            repeatUntil: new Date(new Date(activeDate.getTime()).getTime() + 3600000),
+            repeatInterval: 1,
+            notify: false,
+            notifyTime: 1
+    }
 
     $: eventList = $EventStore
         .filter((item) => isCurrentDay(item, activeDate))
@@ -74,27 +91,27 @@
         }
     }
 
-    function createPrototypeEvent(): Event {
-        const currentTime = new Date();
-        const activeDateCurrentTime = new Date(activeDate.getTime());
-        activeDateCurrentTime.setHours(currentTime.getHours(), currentTime.getMinutes());
+    // function createPrototypeEvent(): Event {
+    //     const currentTime = new Date();
+    //     const activeDateCurrentTime = new Date(activeDate.getTime());
+    //     activeDateCurrentTime.setHours(currentTime.getHours(), currentTime.getMinutes());
         
-        return {
-            id: new Date().getTime(),
-            title: "",
-            slot: {
-                start: activeDateCurrentTime,
-                end: new Date(activeDateCurrentTime.getTime() + 3600000),
-            },
-            type: EventType.TASK,
-            description: "",
-            repeat: EventRepeatType.NEVER,
-            repeatUntil: new Date(activeDateCurrentTime.getTime() + 3600000),
-            repeatInterval: 1,
-            notify: false,
-            notifyTime: 1
-        };
-    }
+    //     return {
+    //         id: new Date().getTime(),
+    //         title: "",
+    //         slot: {
+    //             start: activeDateCurrentTime,
+    //             end: new Date(activeDateCurrentTime.getTime() + 3600000),
+    //         },
+    //         type: EventType.TASK,
+    //         description: "",
+    //         repeat: EventRepeatType.NEVER,
+    //         repeatUntil: new Date(activeDateCurrentTime.getTime() + 3600000),
+    //         repeatInterval: 1,
+    //         notify: false,
+    //         notifyTime: 1
+    //     };
+    // }
 
     function handleEventSubmit(event: Event) {
         const index = $EventStore.findIndex(x => x.id === event.id);
@@ -139,7 +156,7 @@
     }
 
     function openNewEventModal() {
-        selectedEvent = createPrototypeEvent();
+        selectedEvent = prototypeEvent;
         modalOpen = true;
     }
 
@@ -187,7 +204,7 @@
         <!-- Events Section -->
     <div class="events-section">
         <h3 style="align-self:center;">
-            {activeDate.toLocaleDateString(undefined, {
+            {activeDate.toLocaleDateString(getLocale(), {
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
@@ -224,7 +241,7 @@
     {#if selectedEvent}
         <EventModal
             bind:isOpen={modalOpen}
-            event={selectedEvent}
+            bind:event={selectedEvent}
             onSubmit={handleEventSubmit}
             onDelete={handleEventDelete}
             onClose={handleModalClose}

@@ -1,5 +1,6 @@
 import type { Event } from './event/Event';
 import { isCurrentDay } from './CalendarFunctions';
+import { getLocale } from '$src/lib/i18n';
 
 export interface DayObject {
     day: number;
@@ -19,7 +20,7 @@ export interface SelectedDay {
 export function getWeekdayNames(): string[] {
     return Array.from({ length: 7 }, (_, i) => {
         const date = new Date(2024, 0, i);
-        const fullName = date.toLocaleDateString(undefined, { weekday: 'long' });
+        const fullName = date.toLocaleDateString(getLocale(), { weekday: 'long' });
         return fullName.charAt(0).toUpperCase();
     });
 }
