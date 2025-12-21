@@ -11,6 +11,8 @@ export async function checkAppMode() {
         document.body.classList.add('dark');
         await StatusBar.setStyle({ style: Style.Dark });
     }
+    const isDark = darkMode === "true";
+    document.body.classList.toggle('dark', isDark);
 	
 }
 
