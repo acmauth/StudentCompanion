@@ -2,7 +2,7 @@ import { fetchData } from './fetchData.js';
 import { degreeGradeUpdate } from './degreeGradeUpdate.js';
 
 /**
- * @param { { name: string, id: string, semester_id: number, semester_name: string, grade: number, input_grade: string, coefficient: number, locale: any; }[] } unpassed_courses
+ * @param { { name: string, id: string, semester_id: number, semester_name: string, grade: number, input_grade: string, coefficient: number, locale: any;}[] } unpassed_courses
  * @param { { based: { grade_sum:number, coefficient: number}, simple: {grade_sum: number, passed: number}; } } sums
  * @param { { based: {value: number, stringed: string}, simple: {value: number, stringed: string}; } } degree_grade
  */

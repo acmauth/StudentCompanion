@@ -10,14 +10,12 @@ export async function coursesPerSemester(subjectsJSON: course[] | null | undefin
 
 	if (subjectsJSON) {
 		subjects = subjectsJSON;
-		registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false",{lifetime: 600})).value;
 	}
 	 
 	else {
 		subjects = (await neoUniversisGet('students/me/courses?$expand=examPeriod($expand=locales)&$top=-1',{lifetime: 600})).value;
-		registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false",{lifetime: 600})).value;
 	}
-
+	registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false",{lifetime: 600})).value;
 	// Sort courses by parentCourse property. First should be the courses with no parentCourse property
 	subjects.sort((a, b) => {
 		if (a.parentCourse && !b.parentCourse) {

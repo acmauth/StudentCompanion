@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 	import { afterUpdate, onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
 	import { t } from "$lib/i18n";
@@ -20,8 +20,8 @@
 	/**
 	 * @type {HTMLElement | null}
 	 */
-	let numberElement: any;
-	let gradeData: any[] = [];
+	let numberElement;
+	let gradeData = [];
 	let grades = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 	let maximum = 0;
 	let chart;
@@ -66,7 +66,12 @@
 			maximum = Math.max(...gradeData);
 
 			// Create a bar chart using Chart.js
-			const ctx = (document.getElementById('statChart') as HTMLCanvasElement).getContext('2d');
+			/**
+			 @type {HTMLCanvasElement | null}
+			*/
+			const statChart = /** @type {HTMLCanvasElement | null} */ (document.getElementById('statChart'));
+			if (!statChart) return;
+			const ctx = statChart.getContext('2d');
 			const colors = grades.map((grade) => (grade < 5 ? '#515151' : primaryColor));
 			if (!ctx) return;
 			chart = new Chart(ctx, {
