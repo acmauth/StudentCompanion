@@ -5,7 +5,7 @@
 	import CoursesSkeleton from "$lib/components/courses/coursesSkeleton.svelte";
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import { t } from "$lib/i18n";
-	import { course } from '$types/courseType';
+	//import { course } from '$types/courseType';
 
 
 	// Initiniatize variables
@@ -49,7 +49,7 @@
 		try {
 		// Fetch course information
 		result = await courseInformation(courseCode);
-		//console.log(result)
+		console.log(result)
 		if (result) {
 			
 			// Assign values from the result to course

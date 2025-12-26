@@ -22,12 +22,12 @@
 	export let flip;
 
 	/**
-	 * @type {null | undefined}
+	 * @type {number | null | undefined}
 	 */
 	export let subjectsJSON;
 
 	/**
-	 * @type {Chart<"line", number[], string>}
+	 * @type {Chart<"line", number[], string> | string}
 	 */
 
 	let primaryColor;
@@ -67,6 +67,9 @@
 	 */
 	async function processAverages(subjectsJSON) {
 		try {
+			/**
+			 * @type {any}
+			 */
 			const result = await averages(subjectsJSON);
 			gradesObject.average = result.avg;
 			gradesObject.weightedAverage = result.weighted_avg;
@@ -82,6 +85,9 @@
 	 */
 	async function processAveragesPerSemester(subjectsJSON) {
 		try {
+			/**
+			 * @type {any}
+			 */
 			const result = await averagesPerSemester(subjectsJSON);
 			gradesObject.averagesPerSemester = result;
 
@@ -107,47 +113,50 @@
 			chart.destroy();
 		}
 		if (!searchQuery.length) {
-			chart = new Chart(document.getElementById('gradeChart'), {
-				type: 'line',
-				data: {
-					labels: gradesObject.semester,
-					datasets: [
-						{
-							data: gradesObject.averagesPerSemester,
-							fill: {
-								target: 'origin',
-								above: gradeFill
-							},
-							tension: 0.4,
-							borderColor: primaryColor, // Set the color here
-							backgroundColor: 'primaryColor' // Optionally set the fill color
-						}
-					]
-				},
-				options: {
-					responsive: true,
-					scales: {
-						y: {
-							beginAtZero: false,
-							grid: {
-								display: false
+			const chartElement = document.getElementById('gradeChart');
+			if (chartElement) {
+				chart = new Chart(/** @type {HTMLCanvasElement} */ (chartElement), {
+					type: 'line',
+					data: {
+						labels: gradesObject.semester,
+						datasets: [
+							{
+								data: gradesObject.averagesPerSemester,
+								fill: {
+									target: 'origin',
+									above: gradeFill
+								},
+								tension: 0.4,
+								borderColor: primaryColor, // Set the color here
+								backgroundColor: 'primaryColor' // Optionally set the fill color
 							}
-						}
+						]
 					},
-					plugins: {
-						legend: {
-							display: false
+					options: {
+						responsive: true,
+						scales: {
+							y: {
+								beginAtZero: false,
+								grid: {
+									display: false
+								}
+							}
 						},
-						title: {
-							display: true,
-							text: $t('progress.average_evolution'),
-							font: {
-								size: 15
+						plugins: {
+							legend: {
+								display: false
+							},
+							title: {
+								display: true,
+								text: $t('progress.average_evolution'),
+								font: {
+									size: 15
+								}
 							}
 						}
 					}
-				}
-			});
+				});
+			}
 		}
 	});
 </script>

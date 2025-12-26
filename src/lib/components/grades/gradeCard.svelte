@@ -20,7 +20,7 @@
 
 	export function navigateToCourse(course: { childCourses: string | any[]; id: any }) {
 		if (!(course.childCourses && course.childCourses.length > 0))
-			navController.push(Course, { id: course.id });
+			navController.push(Course, { id: course.course });
 	}
 </script>
 

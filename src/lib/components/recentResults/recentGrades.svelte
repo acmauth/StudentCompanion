@@ -13,8 +13,9 @@
 	 * @param {{ childCourses: string | any[]; course: any; }} course
 	 */
    export function navigateToCourse(course) {
+      console.log(course)
 	    if (!(course.childCourses && course.childCourses.length > 0)) 
-		  navController.push(Course, {id: course.id});
+		  navController.push(Course, {id: course.course.id});
   }
 
 
@@ -23,7 +24,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-missing-attribute -->
-<a on:click={() => navigateToCourse(subject.course)} class="card-link">
+<a on:click={() => navigateToCourse(subject)} class="card-link">
   <ion-item lines="none" class="ion-no-padding">
     <div class="containerFlex">
       <div class="titlesFlex">

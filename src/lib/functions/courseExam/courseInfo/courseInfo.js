@@ -28,7 +28,7 @@ let code;
 export async function courseInformation(courseID) {
 
     let courseInfo = decodeURIComponent(courseID);
-    //console.log(courseID)
+    console.log(courseID)
     //console.log(courseInfo)
     courses = [];
     registrations = [];
@@ -59,7 +59,7 @@ export async function courseInformation(courseID) {
         //console.log(courses)
         // Finding the course and storing informations about it in variables
         for (const course of courses) {
-            if (course.id == courseInfo) {
+            if (course.course.id == courseInfo) {
                 //! Course name not localized in courses
                 //courseTitle = localize(course, "courseTitle", get(locale)); 
                 semester = course.semester.id;
@@ -82,9 +82,6 @@ export async function courseInformation(courseID) {
                 try {
                     for (const sem of registrations) {
                         for (const semClass of sem.classes) {
-                            //debug
-                            // console.log(semClass.courseClass.course.id)
-                            // console.log(course.id)
                             if (semClass.courseClass.course.id == course.course.id) {
                                 courseTitle = localize(semClass.courseClass.course, "name", get(locale))
                                 code = course.course.id
@@ -93,12 +90,8 @@ export async function courseInformation(courseID) {
                                 let newCourseData;
                                 if (newCourseObject.ok) {
                                     newCourseData = await newCourseObject.json()
-                                    //console.log(newCourseData)
                                     syllabus = localize(newCourseData, "content", get(locale))
                                     eudoxus = localize(newCourseData, "eudoxus", get(locale))
-                                    //debug
-                                    //console.log(syllabus)
-                                    //console.log(eudoxus)
                                 } else {
                                     let newCourseData = null
                                     alert("bad request")

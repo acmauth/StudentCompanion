@@ -56,9 +56,10 @@
 	 */
 
 	// Search
-	function handleChange(event: { target: { value: string } }) {
-		searchQuery = event.target.value;
-	}
+		function handleChange(event: any) {
+			// Ionic Searchbar emits a CustomEvent with detail.value (string | null); normalize to a string
+			searchQuery = event?.detail?.value ?? '';
+		}
 
 	// Flipper toggle
 	function flip() {
