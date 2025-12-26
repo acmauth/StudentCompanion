@@ -13,7 +13,6 @@
 	 * @param {{ childCourses: string | any[]; course: any; }} course
 	 */
    export function navigateToCourse(course) {
-      console.log(course)
 	    if (!(course.childCourses && course.childCourses.length > 0)) 
 		  navController.push(Course, {id: course.course.id});
   }

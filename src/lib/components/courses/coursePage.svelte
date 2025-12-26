@@ -49,7 +49,6 @@
 		try {
 		// Fetch course information
 		result = await courseInformation(courseCode);
-		console.log(result)
 		if (result) {
 			
 			// Assign values from the result to course
@@ -70,11 +69,9 @@
 		course.season = result.season;
 		if(result.syllabus){
 			course.syllabus = result.syllabus;
-			//console.log(course.syllabus)
 		}
 		if(result.eudoxus) {
 			course.eudoxus = result.eudoxus
-			//console.log(course.eudoxus)
 		}
 		if (result.period) {
 			course.period = result.period;
@@ -84,7 +81,6 @@
 		
 		// Fetch statistics
 		result = await statistics(courseCode);
-		//console.log(result)
 		if (result) {	
 			stats.grade = result.myGrade;
 			stats.studentsLikeMe = result.studentsLikeMe;

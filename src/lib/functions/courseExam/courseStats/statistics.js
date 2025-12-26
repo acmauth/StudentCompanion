@@ -51,7 +51,6 @@ export async function statistics(courseCode) {
 	examCode = courses.value;
 
 	for (const exam of examCode) {
-		console.log(exam)
 		if (exam.course == courseCode) {
 			courseExam = exam.gradeExam;
 			myGrade = exam.grade;

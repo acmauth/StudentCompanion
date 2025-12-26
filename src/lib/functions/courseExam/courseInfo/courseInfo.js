@@ -28,7 +28,6 @@ let code;
 export async function courseInformation(courseID) {
 
     let courseInfo = decodeURIComponent(courseID);
-    console.log(courseID)
     //console.log(courseInfo)
     courses = [];
     registrations = [];
@@ -54,9 +53,6 @@ export async function courseInformation(courseID) {
         // Getting an array with user's registered courses and information about them
         registrations = (await neoUniversisGet("students/me/Registrations?$expand=classes($expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$skip=0&$count=false", { lifetime: 600 })).value;
 
-        //debug
-        //console.log(registrations)
-        //console.log(courses)
         // Finding the course and storing informations about it in variables
         for (const course of courses) {
             if (course.course.id == courseInfo) {
