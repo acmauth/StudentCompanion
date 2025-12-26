@@ -1,7 +1,7 @@
 
 import { neoUniversisGet } from "$lib/dataService"
 import { locale, t } from "$src/lib/i18n";
-import { localize } from "../../localize";
+import { localize } from "../../../translations/localize";
 import { get } from 'svelte/store'
 
 let courses;

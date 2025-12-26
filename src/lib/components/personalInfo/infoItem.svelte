@@ -7,7 +7,7 @@
 	import type { ToastOptions } from '@ionic/core';
 	import {locale} from '$lib/i18n'
 	import {get} from 'svelte/store'
-	import {localize} from '$lib/functions/localize'
+	import {localize, sem_suffix} from '$src/lib/translations/localize'
 
 	export let personalData: any;
 
@@ -17,11 +17,9 @@
 	$: aem = personalData?.studentIdentifier;
 	$: apm = personalData?.uniqueIdentifier;
 	$: username = null;
-	//$: inscriptionYear = personalData?.inscriptionYear.name;
 	$: schoolGraduated = personalData?.schoolGraduated;
 	$: birthDate = personalData?.person.birthDate.slice(0, 10);
 	$: email = personalData?.person.email;
-	//let username = user.name;
 	$: familyName = localize(personalData?.person, "familyName", currentLocale); 
 	$: givenName = localize(personalData?.person, "givenName", currentLocale); 
 	$: gender = (() => {
@@ -37,7 +35,6 @@
 		return isMale ? 'Male' : 'Female';
 	})();
 
-		//console.log(gender)
 	$: departmentName = localize(personalData?.studyProgram.department, "name", currentLocale); 
 	$: semester = (() => {
 		const s = personalData?.semester;
@@ -47,16 +44,12 @@
 			return `${s}ο Εξάμηνο`;
 		}
 
-		const suffix =
-			s === 1 ? 'st' :
-			s === 2 ? 'nd' :
-			s === 3 ? 'rd' : 'th';
-
-		return `${s}${suffix} Semester`;
+		return `${sem_suffix(s)}`;
 	})();
-		//console.log(semester)
 	$: study_level = localize(personalData.studyProgram.studyLevel, "name", currentLocale); 
 	$: deptSecretaryEmail = personalData?.studyProgram.department.email;
+	$: deptSecretaryPhone = personalData?.studyProgram.department.phone1;
+	$: deptUrl = personalData?.studyProgram.department.url;
 	$: academicId = personalData.academicId;
 
 	// Function to show toast
@@ -147,26 +140,10 @@
 			</ion-item>
 		{/if}
 
-		{#if deptSecretaryEmail}
-			<ion-item button={true} on:click={() => writeToClipboard(deptSecretaryEmail)}>
-				<ion-icon size="small" icon={allIonicIcons.mail} />
-
-				<ion-label class="ion-padding-start">{deptSecretaryEmail}</ion-label>
-			</ion-item>
-		{/if}
-
 		{#if gender}
 			<ion-item button={true} on:click={() => writeToClipboard(gender)}>
 				<ion-icon size="small" icon={allIonicIcons.maleFemale} />
 				<ion-label class="ion-padding-start">{gender}</ion-label>
-			</ion-item>
-		{/if}
-
-		{#if departmentName}
-			<ion-item button={true} on:click={() => writeToClipboard(departmentName)}>
-				<ion-icon size="small" icon={allIonicIcons.location} />
-
-				<ion-label class="ion-padding-start">{departmentName}</ion-label>
 			</ion-item>
 		{/if}
 
@@ -185,6 +162,35 @@
 				<ion-label class="ion-padding-start">{study_level}</ion-label>
 			</ion-item>
 		{/if}
+
+		{#if departmentName}
+			<ion-accordion-group class="accordion" expand="compact">
+				<ion-accordion value="first">
+					<ion-item slot="header" color="white" lines="full">
+						<ion-icon size="small" icon={allIonicIcons.location} />
+						<ion-label class="ion-padding-start">{departmentName}</ion-label>
+					</ion-item>
+					{#if deptSecretaryEmail}
+						<div class="department-child" slot="content" on:click={() => writeToClipboard(deptSecretaryEmail)}>
+							<ion-icon size="small" icon={allIonicIcons.mail} />
+							<span class="department-text">{deptSecretaryEmail}</span>
+						</div>
+					{/if}
+					{#if deptSecretaryPhone}
+						<div class="department-child" slot="content" on:click={() => writeToClipboard(deptSecretaryPhone)}>
+							<ion-icon size="small" icon={allIonicIcons.call} />
+							<span class="department-text">{deptSecretaryPhone}</span>
+						</div>
+					{/if}
+					{#if deptUrl}
+						<div class="department-child" slot="content" on:click={() => writeToClipboard(deptUrl)}>
+							<ion-icon size="small" icon={allIonicIcons.globe} />
+							<span class="department-text">{deptUrl}</span>
+						</div>
+					{/if}
+				</ion-accordion>
+			</ion-accordion-group>
+		{/if}
 	</ion-card-content></ion-card
 >
 
@@ -202,5 +208,29 @@
 	ion-card-subtitle {
 		font-size: 1.2rem;
 		padding-left: 5px;
+	}
+
+	ion-accordion-group {
+		margin-top: 0.2rem;
+	}
+
+	.department-child {
+		padding-top: 0.8rem;
+		padding-bottom: 0.8rem;
+		color: var(--app-color-primary-dark);
+		cursor: pointer;
+		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+	}
+
+	.department-child:hover {
+		background-color: var(--ion-color-light);
+	}
+
+	.department-text {
+		color: var(--app-color-primary-dark);
 	}
 </style>

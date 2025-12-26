@@ -22,7 +22,7 @@
 	import { showLoginAlert } from "$components/webmailLogin/credentialLogin"
 	import Config from "$src/app.config";
 	import { get } from 'svelte/store';
-	import { localize } from '$src/lib/functions/localize';
+	import { localize } from '$src/lib/translations/localize';
 
 	let givenName = '';
 	let gender = '';

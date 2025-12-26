@@ -10,7 +10,7 @@
 	import { getSemester } from '$components/courses/getSemester';
 	import { t, getLocale, locale } from '$lib/i18n';
 	import { get } from 'svelte/store';
-	import { localize } from '$src/lib/functions/localize';
+	import { localize } from '$src/lib/translations/localize';
 
 	let childrenOpen: boolean[] = [];
 

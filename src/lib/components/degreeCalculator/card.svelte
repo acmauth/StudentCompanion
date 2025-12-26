@@ -15,7 +15,7 @@
 	import { fade } from 'svelte/transition';
 	import { courseAdded, customCourses } from './courseStore.ts';
 	import { get } from 'svelte/store';
-	import { localize } from '$src/lib/functions/localize.js';
+	import { localize } from '$src/lib/translations/localize.js';
 	import {locale} from "$lib/i18n.js"
 	export let flip;
 

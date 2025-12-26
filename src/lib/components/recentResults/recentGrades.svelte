@@ -1,7 +1,7 @@
 <script>
 	import { navController } from "$components/shared/StackedNav";
   import Course from "$components/courses/coursePage.svelte";
-  import { localize } from "$src/lib/functions/localize";
+  import { localize } from "$src/lib/translations/localize";
   import { get } from "svelte/store";
 	import { locale } from "$src/lib/i18n";
   /**

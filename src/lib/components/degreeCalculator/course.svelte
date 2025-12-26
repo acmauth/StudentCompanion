@@ -1,20 +1,13 @@
 <script lang="ts">
     import {get} from "svelte/store"
     import { locale } from "$src/lib/i18n";
+    import { sem_suffix } from "$src/lib/translations/localize";
     /** @type { string } */
     export let course_title;
     /** @type { number } */
     export let course_semester_id;
     /** @type { string } */
     export let course_semester_name;
-    function sem_suffix(sem: number){
-        switch(sem){
-            case 1: return "st"
-            case 2: return "nd"
-            case 3: return "rd"
-            default: return "th" 
-        }
-    }
 </script>
 
 
@@ -26,7 +19,7 @@
         {#if get(locale) == "el"}
             <div> <p class="course-semester">{course_semester_id}ο Εξάμηνο</p> </div>
         {:else}
-            <div> <p class="course-semester">{course_semester_id}{sem_suffix(course_semester_id)} semester</p> </div>
+            <div> <p class="course-semester">{sem_suffix(course_semester_id)}</p> </div>
         {/if}
     {:else}
     <div> <p class="course-semester">{course_semester_name}</p> </div>
