@@ -66,12 +66,15 @@
     on:ionBreakpointDidChange={handleBreakpointChange}
     on:ionModalDidDismiss={handleModalDismiss}
     on:ionModalWillPresent={handleModalPresent}
+    keep-contents-mounted
 >
     <ion-toolbar>
         <ion-buttons slot="end">
+            {#if event?.title !== ""}
             <ion-button id="delete" on:click={handleDelete} aria-hidden>
                 <ion-icon slot="icon-only" icon={trash}/>
             </ion-button>
+            {/if}
             <ion-button id="submit" on:click={submit} aria-hidden>
                 <ion-icon slot="icon-only" icon={checkmark}/>
             </ion-button>

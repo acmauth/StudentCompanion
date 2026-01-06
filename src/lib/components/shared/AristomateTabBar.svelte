@@ -4,6 +4,7 @@
 	import { navigating, page } from '$app/stores';
 	import { Keyboard } from '@capacitor/keyboard';
 	import { goto } from '$app/navigation';
+	import { navController } from "./StackedNav"
 
 	export let ionTabsDidChange = () => {};
 	export let ionTabsWillChange = () => {};
@@ -57,6 +58,7 @@
 	const tabBarClick = async (selectedTab) => {
 		moveTabBarLine(selectedTab);
 		currentTabName = selectedTab;
+		navController.popToRoot(); // Resetting the stack to the root of the selected tab
 		await goto(relativePath + selectedTab);
 		controller.select(selectedTab);
 	};

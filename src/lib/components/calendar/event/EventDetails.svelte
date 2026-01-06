@@ -140,6 +140,7 @@
 			<ion-modal keep-contents-mounted={true}>
 				<ion-datetime
 					id="start"
+					locale={getLocale()}
 					presentation="date-time"
 					minute-values="0,15,30,45"
 					hour-cycle="h23"
@@ -156,6 +157,7 @@
 			<ion-modal keep-contents-mounted={true}>
 				<ion-datetime
 					id="end"
+					locale={getLocale()}
 					presentation="date-time"
 					minute-values="0,15,30,45"
 					hour-cycle="h23"

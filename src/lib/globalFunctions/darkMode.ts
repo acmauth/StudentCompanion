@@ -8,6 +8,7 @@ export async function checkAppMode() {
     if (darkMode === null) { // Setting default dark mode | Fixes the toggle being ticked wrongly
         localStorage.setItem('darkMode', 'true');
         darkMode = "true";
+        document.body.classList.add('dark');
         await StatusBar.setStyle({ style: Style.Dark });
     }
     const isDark = darkMode === "true";

@@ -20,6 +20,15 @@
   let isAuthenticated = false;
   let pageLoaded = false;
 
+  async function onLoginClick() {
+    loading = true;
+    try {
+      await handleLogin();
+    } catch (err) {
+      loading = false;
+    }
+  }
+
   onMount(async () => {
     // Delay to prevent layout shift
     setTimeout(() => {
@@ -87,8 +96,12 @@
 				{/if}
 
 				<!-- Login Button -->
-				<ion-button class="login-button" on:click={handleLogin} expand="block">
-					{$t('login.connection')}
+				<ion-button class="login-button" on:click={onLoginClick} expand="block" disabled={loading}>
+					{#if loading}
+						<ion-spinner name="crescent" class="button-spinner" />
+					{:else}
+						{$t('login.connection')}
+					{/if}
 				</ion-button>
 			</div>
 
@@ -316,6 +329,17 @@
 
 	.login-button:active {
 		transform: translateY(0);
+	}
+
+	.login-button[disabled] {
+		--background: rgba(255, 255, 255, 0.7);
+		cursor: not-allowed;
+	}
+
+	.button-spinner {
+		--color: #1e3c72;
+		width: 24px;
+		height: 24px;
 	}
 
 	.loading-panel {

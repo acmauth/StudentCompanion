@@ -3,6 +3,7 @@
     import type { DayObject } from './calendarUtils';
     import { getWeekdayNames, isSelectedDay as checkIsSelectedDay, isToday as checkIsToday } from './calendarUtils';
     import type { SelectedDay } from './calendarUtils';
+    import { t, getLocale} from "$lib/i18n";
 
     export let weeks: DayObject[][] = [];
     export let month: number;
@@ -34,7 +35,7 @@
             <ion-icon icon={chevronBackOutline} />
         </ion-card>
         <div class="month-title">
-            {new Date(year, month).toLocaleDateString(undefined, {
+            {new Date(year, month).toLocaleDateString(getLocale(), {
                 month: 'long',
                 year: 'numeric'
             })}
