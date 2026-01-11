@@ -3,7 +3,7 @@ import { toggles } from "./pages/notifications/notificationToggles";
 import { dismissedItems } from "$components/recentResults/dismissedItems";
 import { EventStore } from "$components/calendar/event/EventStore";
 import { qrStore } from "$components/wallet/qrStore";
-import { userCreds, userTokens, useAlternativeLogin } from "$stores/credentials.store";
+import { userCreds, userTokens } from "$stores/credentials.store";
 import { scheduledNotifications } from "$lib/calendarNotifications/notificationsStore";
 import { loginStore } from "$src/lib/authentication/loginStore";
 import { userCredsFlag } from "$components/webmailLogin/userCredsFlagStore";
@@ -18,8 +18,7 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
     qrStore,
     userTokens,
     userCredsFlag,
-    loginStore,
-    useAlternativeLogin
+    loginStore
     // Add new stores here
 ];
 
