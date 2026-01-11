@@ -1,6 +1,7 @@
 import { alertController, toastController } from 'ionic-svelte';
 import type { ToastOptions } from '@ionic/core';
 import { userCredsFlag as autheticationFlag } from '$components/webmailLogin/userCredsFlagStore';
+import { userCreds } from '$stores/credentials.store';
 import { t } from "$lib/i18n";
 import { get } from 'svelte/store';
 
@@ -12,6 +13,7 @@ async function showToast(toast: ToastOptions) {
 async function checkCredsValidity(username: string, password: string) {
     // TODO: Implement proper credential checking
     autheticationFlag.set(true);
+    userCreds.set({ username, password });
     return true;
 }
 
