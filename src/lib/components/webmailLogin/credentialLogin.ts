@@ -1,7 +1,5 @@
 import { alertController, toastController } from 'ionic-svelte';
-import sisAuthenticator from "$lib/-universis/authenticator-deprecated/core";
 import type { ToastOptions } from '@ionic/core';
-import { userCreds, useAlternativeLogin } from '$stores/credentials.store';
 import { userCredsFlag as autheticationFlag } from '$components/webmailLogin/userCredsFlagStore';
 import { t } from "$lib/i18n";
 import { get } from 'svelte/store';
@@ -12,14 +10,9 @@ async function showToast(toast: ToastOptions) {
 }
 
 async function checkCredsValidity(username: string, password: string) {
-    const authResult = await sisAuthenticator(username, password);
-    if (authResult.error == null && authResult.token) {
-        userCreds.set({ username, password });
-        useAlternativeLogin.set(true);
-        autheticationFlag.set(true);
-        return true;
-    }
-    return false;
+    // TODO: Implement proper credential checking
+    autheticationFlag.set(true);
+    return true;
 }
 
 export async function showLoginAlert() {
