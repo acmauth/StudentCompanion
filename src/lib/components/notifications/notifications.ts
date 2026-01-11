@@ -3,7 +3,7 @@ import { userTokens } from "$stores/credentials.store";
 import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
 import { parseMail } from '@protontech/jsmimeparser';
-import { userCredsFlag as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
+import { webmailLoggedIn as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
 
 let userID = get(userTokens).elearning.userID;
 

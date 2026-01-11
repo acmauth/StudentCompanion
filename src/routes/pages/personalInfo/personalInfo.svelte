@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import { userCredsFlag } from '$components/webmailLogin/userCredsFlagStore';
+	import { webmailLoggedIn } from '$components/webmailLogin/userCredsFlagStore';
 	import { invalidateAuth } from '$lib/authentication/authValidator';
 	import { neoUniversisGet } from '$lib/dataService';
 	import { locale, locales, t } from '$lib/i18n';

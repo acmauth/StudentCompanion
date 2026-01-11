@@ -47,6 +47,7 @@ export default {
 		"settings.notifications": "Ρυθμίσεις ειδοποιήσεων",
 		"settings.guide": "Οδηγός χρήσης",
 		"settings.webmail": "Σύνδεση webmail",
+		'settings.webmailLogout': 'Αποσύνδεση webmail',
 		"faq.data_safety_q": "Είναι ασφαλή τα δεδομένα μου;",
 		"faq.data_safety_a": "Η φιλοσοφία μας είναι: ό,τι γίνεται στη συσκευή σου, μένει στη συσκευή σου. Αναπτύξαμε την εφαρμογή με μεθόδους και τεχνολογίες που διατηρούν τα δεδομένα σου ασφαλή και μόνο δικά σου. Τα στοιχεία σύνδεσης, τα προσωπικά δεδομένα και οι επιδόσεις σου είναι προσβάσιμα μόνο από εσένα και τις επίσημες υπηρεσίες του ΑΠΘ (students.auth.gr, elearning.auth.gr κ.α.).",
 		"faq.use_Aristomate_q": "Γιατί να χρησιμοποιήσω το Aristomate;",
@@ -273,6 +274,7 @@ export default {
 		'settings.notifications': 'Notification settings',
 		'settings.guide': 'User guide',
 		'settings.webmail': 'Webmail login',
+		'settings.webmailLogout': 'Webmail logout',
 		'faq.data_safety_q': 'Are my data safe?',
 		'faq.data_safety_a':
 			'Our philosophy is: what happens on your device, stays on your device. We developed the application with methods and technologies that keep your data safe and only yours. Your login details, personal data, and performance are accessible only by you and the official services of AUTH (students.auth.gr, elearning.auth.gr, etc.).',

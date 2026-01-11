@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class WebmailInboxScraperLogic {
 
-    public static JSObject getInboxEmails(String username, String password, String server, String port, boolean isNotification) {
+    public static JSObject getInboxEmails(String username, String password, String server, String port, boolean isNotification, boolean validate) {
         try {
             // IMAP settings
             Properties props = new Properties();
@@ -70,13 +70,24 @@ public class WebmailInboxScraperLogic {
             response.put("error", null);
             response.put("received", emailsArray);
             return response;
+        } catch (AuthenticationFailedException e) {
+            var response = new JSObject();
+            if (validate) {
+                response.put("error", "Authentication failed: Invalid username or password");
+            } else {
+                response.put("error", true);
+            }
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
+            var response = new JSObject();
+            if (validate) {
+                response.put("error", "Connection error: " + e.getMessage());
+            } else {
+                response.put("error", true);
+            }
+            return response;
         }
-
-        var response = new JSObject();
-        response.put("error", true);
-        return response;
     }
 
     private static String getRawMessageSource(Message message) throws Exception {
