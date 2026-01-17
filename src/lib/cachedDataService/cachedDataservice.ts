@@ -1,4 +1,4 @@
-import { universisGet, elearningGet, webmailInboxRequest } from "$lib/dataService"
+import { universisGet, webmailInboxRequest } from "$lib/dataService"
 import { Network } from '@capacitor/network';
 import Dexie, {Table} from "dexie";
 const isProduction = process.env.NODE_ENV === 'production';
@@ -52,19 +52,6 @@ export async function cachedUniversisGet (endpoint: string, options?: options): 
     }
 }
 
-export async function cachedElearningGet(data: any, options?: options): Promise<any> {
-    if (!options) options = {};
-    const key = `elearning_${JSON.stringify(data)}`;
-    const cached = await getFromCache(key);
-    if (cached.exists && (!cached.expired && !options.forceFresh || !(await Network.getStatus()).connected)){
-        return cached.value;
-    } else {
-        const response = await elearningGet(data);
-        cacheItem(key, response, options.lifetime);
-        return response;
-    }
-    
-}
 
 
 function cacheItem(key: string, value: any, lifetime: number = 180) {
