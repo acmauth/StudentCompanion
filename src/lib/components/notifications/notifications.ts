@@ -82,7 +82,7 @@ function filterWebmailNotifications(webmailNotifications: any[]){
     };
 
     for (const webmailNotification of webmailNotifications){
-        console.log(webmailNotification);
+        // console.log(webmailNotification);
         if (webmailNotification.sender.includes("(μέσω elearning_auth_gr)")){
             webmailNotification.type = "elearning";
             notifications.elearning.push(webmailNotification);
