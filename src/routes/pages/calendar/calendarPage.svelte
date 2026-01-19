@@ -1,4 +1,3 @@
-<!-- Svelte 4 Calendar Example Component -->
 <script lang="ts">
     import { onMount } from 'svelte';
     import { add } from 'ionicons/icons';
@@ -15,6 +14,7 @@
     import { deleteEventNotifications, deleteSingleEventNotification } from '$src/lib/calendarNotifications/notificationFunctions';
     import { getLocale, t } from '$lib/i18n';
     import { buildCalendarWeeks, type DayObject, type SelectedDay, getNextMonth, getPreviousMonth } from '$lib/components/calendar/calendarUtils';
+    import { universisGet } from '$src/lib/dataService';
 
     let currentDate = new Date();
     let month = currentDate.getMonth();
@@ -180,10 +180,67 @@
         }
     }
 
-    onMount(() => {
+    async function getCoursesEvents() {
+        console.log("Fetching courses events from Universis...");
+        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
+        console.log(fetchedExams);
+        $EventStore = $EventStore.concat(
+            fetchedExams.map((exam) => {
+                const existingIndex = $EventStore.findIndex(x => x.id == exam.id);
+                if (existingIndex == -1) {
+                    return {
+                        id: exam.id,
+                        title: exam.courseExam.name,
+                        description: exam.location.description,
+                        type: EventType.TEST,
+                        repeat: EventRepeatType.NEVER,
+                        notify: false,
+                        location: exam.location.description,
+                        slot: {
+                            start: new Date(exam.startDate),
+                            end: new Date(exam.endDate)
+                        }
+                    };
+                } else {
+                    return null; // Return null if the exam already exists in $EventStore
+                }
+            }).filter(event => event !== null) // Filter out null values
+        );
+
+        let fetchedClasses = (await universisGet('students/me/teachingEvents?$top=-1&$expand=location,performer')).value;
+        console.log(fetchedClasses);
+        $EventStore = $EventStore.concat(
+            fetchedClasses.map((classEvent) => {
+                const existingIndex = $EventStore.findIndex(x => x.id == classEvent.id);
+                if (existingIndex == -1) {
+                    return {
+                        id: classEvent.id,
+                        title: classEvent.name,
+                        type: EventType.CLASS,
+                        professor: classEvent.performer.alternateName,
+                        repeat: EventRepeatType.NEVER,
+                        notify: false,
+                        location: classEvent.location.description,
+                        slot: {
+                            start: new Date(classEvent.startDate),
+                            end: new Date(classEvent.endDate)
+                        }
+                    };
+                } else {
+                    return null; // Return null if the class already exists in $EventStore
+                }
+            }).filter(event => event !== null) // Filter out null values
+        );
+        
+    }
+
+            // $EventStore = [];
+    onMount(async () => {
         // Initialize selectedDay to today
         selectedDay = { day: currentDate.getDate(), month: currentDate.getMonth(), year: currentDate.getFullYear() };
         buildCalendar();
+        await getCoursesEvents();        
+
     });
 </script>
 

@@ -54,7 +54,9 @@
 				</div>
 				<div class="eventContent">
 					<ion-label class="eventHeader {isPastDate? 'pastDate' : null}">{eventItem.title}</ion-label>
-					{#if eventItem.description}
+					{#if eventItem.location}
+						<ion-label class="eventSubheader {isPastDate? 'pastDate' : null}">{eventItem.location}</ion-label>
+					{:else if eventItem.description}
 						<ion-label class="eventSubheader {isPastDate? 'pastDate' : null}">{eventItem.description}</ion-label>
 					{/if}
 				</div>
