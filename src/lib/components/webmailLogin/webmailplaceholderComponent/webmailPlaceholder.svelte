@@ -1,7 +1,7 @@
 <script>
     import darkIcon from "./icon_dark.png";
     import lightIcon from "./icon_light.png";
-	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
+	import { webmailLoggedIn as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
 	import { showLoginAlert } from "../credentialLogin";
 	import Config from "$src/app.config";
 

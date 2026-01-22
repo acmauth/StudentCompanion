@@ -2,7 +2,10 @@
   http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+  font-family: 'Roboto', sans-serif;
+}
 :root {
   /** primary **/
   --ion-color-primary: #3880ff;
