@@ -50,17 +50,19 @@ public class WebmailInboxScraperLogic {
             // Create JSON array to hold email details
             JSONArray emailsArray = new JSONArray();
 
-            // Iterate through messages and extract details
-            for (int i = messages.length - 1; i >= 0; i--) {
-                JSONObject emailJson = new JSONObject();
-                if (!messages[i].isSet(Flags.Flag.SEEN) || !isNotification){
-                    emailJson.put("data", getRawMessageSource(messages[i]));
-                    emailJson.put("subject", getDecodedText(messages[i].getSubject()));
-                    emailJson.put("sender", getDecodedText(messages[i].getFrom()[0].toString()));
-                    emailJson.put("date", messages[i].getSentDate());
-                    emailsArray.put(emailJson);
+            if (!validate){
+                // Iterate through messages and extract details
+                for (int i = messages.length - 1; i >= 0; i--) {
+                    JSONObject emailJson = new JSONObject();
+                    if (!messages[i].isSet(Flags.Flag.SEEN) || !isNotification){
+                        emailJson.put("data", getRawMessageSource(messages[i]));
+                        emailJson.put("subject", getDecodedText(messages[i].getSubject()));
+                        emailJson.put("sender", getDecodedText(messages[i].getFrom()[0].toString()));
+                        emailJson.put("date", messages[i].getSentDate());
+                        emailsArray.put(emailJson);
+                    }
                 }
-            }
+            } // Else empty, because if we reached here, credentials are valid
 
             // Close connections
             inbox.close(false);

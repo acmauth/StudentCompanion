@@ -54,18 +54,12 @@
 	// Log out
 	function logOut() {
 		invalidateAuth();
-		console.log("[src/routes/pages/personalInfo/+page.svelte] Navigating to login");
+		console.log('[src/routes/pages/personalInfo/+page.svelte] Navigating to login');
 		goto('/login');
 	}
 </script>
 
 <IonPage>
-	<ion-header translucent={Capacitor.getPlatform() === 'ios'} mode="ios">
-		<ion-toolbar mode="md">
-			<ion-title>{$t('settings.personal')}</ion-title>
-		</ion-toolbar>
-	</ion-header>
-
 	<ion-content fullscreen={true}>
 		<ion-header collapse="condense" mode="ios">
 			<ion-toolbar mode="md">
@@ -96,7 +90,6 @@
 		<Settings {logOut} />
 	</ion-content>
 </IonPage>
-	
 
 <style>
 	ion-content {
