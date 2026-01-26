@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class WebmailInboxScraperLogic {
 
-    public static JSObject getInboxEmails(String username, String password, String server, String port, boolean isNotification) {
+    public static JSObject getInboxEmails(String username, String password, String server, String port, boolean isNotification, boolean validate) {
         try {
             // IMAP settings
             Properties props = new Properties();
@@ -50,17 +50,19 @@ public class WebmailInboxScraperLogic {
             // Create JSON array to hold email details
             JSONArray emailsArray = new JSONArray();
 
-            // Iterate through messages and extract details
-            for (int i = messages.length - 1; i >= 0; i--) {
-                JSONObject emailJson = new JSONObject();
-                if (!messages[i].isSet(Flags.Flag.SEEN) || !isNotification){
-                    emailJson.put("data", getRawMessageSource(messages[i]));
-                    emailJson.put("subject", getDecodedText(messages[i].getSubject()));
-                    emailJson.put("sender", getDecodedText(messages[i].getFrom()[0].toString()));
-                    emailJson.put("date", messages[i].getSentDate());
-                    emailsArray.put(emailJson);
+            if (!validate){
+                // Iterate through messages and extract details
+                for (int i = messages.length - 1; i >= 0; i--) {
+                    JSONObject emailJson = new JSONObject();
+                    if (!messages[i].isSet(Flags.Flag.SEEN) || !isNotification){
+                        emailJson.put("data", getRawMessageSource(messages[i]));
+                        emailJson.put("subject", getDecodedText(messages[i].getSubject()));
+                        emailJson.put("sender", getDecodedText(messages[i].getFrom()[0].toString()));
+                        emailJson.put("date", messages[i].getSentDate());
+                        emailsArray.put(emailJson);
+                    }
                 }
-            }
+            } // Else empty, because if we reached here, credentials are valid
 
             // Close connections
             inbox.close(false);
@@ -70,13 +72,24 @@ public class WebmailInboxScraperLogic {
             response.put("error", null);
             response.put("received", emailsArray);
             return response;
+        } catch (AuthenticationFailedException e) {
+            var response = new JSObject();
+            if (validate) {
+                response.put("error", "Authentication failed: Invalid username or password");
+            } else {
+                response.put("error", true);
+            }
+            return response;
         } catch (Exception e) {
             e.printStackTrace();
+            var response = new JSObject();
+            if (validate) {
+                response.put("error", "Connection error: " + e.getMessage());
+            } else {
+                response.put("error", true);
+            }
+            return response;
         }
-
-        var response = new JSObject();
-        response.put("error", true);
-        return response;
     }
 
     private static String getRawMessageSource(Message message) throws Exception {

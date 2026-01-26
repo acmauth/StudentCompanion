@@ -1,6 +1,6 @@
 <script lang="ts">
     import { keySharp } from 'ionicons/icons';
-	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
+	import { webmailLoggedIn as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
     import { t } from "$lib/i18n";
     import { Keyboard } from "@capacitor/keyboard";
 	import { showLoginAlert } from "./credentialLogin";

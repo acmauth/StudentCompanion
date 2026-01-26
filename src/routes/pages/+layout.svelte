@@ -6,7 +6,7 @@
 	import chart_bar_solid from "$customIcons/chart-bar-solid.svg";
 	import { onMount } from 'svelte';
 	import initializeNotifications from '$lib/-notifications/core';
-	import { userCredsFlag as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
+	import { webmailLoggedIn as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
 	import { handleChangedPermission } from '$lib/calendarNotifications/exactAlarmPermissionStore';
 
 	// Routes

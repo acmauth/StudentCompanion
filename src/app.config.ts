@@ -29,6 +29,10 @@ const appConfig = {
     },
     menu: {
         apiBase: "https://api.aristomate.auth.gr/menu"
+    },
+    webmail: {
+        server: "mail.auth.gr",
+        port: '993',
     }
 }
 

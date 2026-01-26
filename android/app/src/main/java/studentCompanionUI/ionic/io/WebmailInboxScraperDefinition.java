@@ -17,12 +17,14 @@ public class WebmailInboxScraperDefinition extends Plugin {
         String password = call.getString("password", "");
         String server = call.getString("server", "");
         String port = call.getString("port", "");
+        Boolean validate = call.getBoolean("validate", false);
 
         assert username != null;
         assert password != null;
         assert server != null;
         assert port != null;
-        call.resolve(getInboxEmails(username, password, server, port, false));
+        assert validate != null;
+        call.resolve(getInboxEmails(username, password, server, port, false, validate));
     }
 
 }

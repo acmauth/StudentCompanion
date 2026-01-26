@@ -1,6 +1,8 @@
 <script lang="ts">
 	import Modal, { getModal } from '$components/language/Modal.svelte';
 	import { navController } from '$components/shared/StackedNav';
+	import { webmailLoggedIn } from '$components/webmailLogin/userCredsFlagStore';
+	import { userCreds } from '$stores/credentials.store';
 	import CredentialLoginItem from '$components/webmailLogin/CredentialLoginItem.svelte';
 	import cog_solid from '$customIcons/cog-solid.svg';
 	import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
@@ -148,6 +150,12 @@
 			});
 		}
 	};
+
+	function logoutWebmail(){
+		// Clear stored credentials
+		userCreds.set({ username: '', password: '' });
+        webmailLoggedIn.set(false);
+	}
 </script>
 
 <ion-card>
@@ -201,6 +209,15 @@
 			<ion-label class="ion-padding-start">{$t('update.updateButton')}</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
 		</ion-item>
+
+		{#if $webmailLoggedIn}
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<ion-item button on:click={logoutWebmail}>
+				<ion-icon color="warning" size="small" icon={allIonicIcons.logOut} />
+				<ion-label color="warning" class="ion-padding-start">{$t('settings.webmailLogout')}</ion-label>
+				<ion-icon color="warning" size="small" icon={allIonicIcons.chevronForwardCircle} />
+			</ion-item>
+		{/if}
 
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-static-element-interactions -->

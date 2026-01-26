@@ -18,7 +18,7 @@ export async function nativeSettings() {
             }
         }
     });
-
+    StatusBar.setOverlaysWebView({ overlay: true });
     SafeArea.getSafeAreaInsets().then((data) => {
     const { insets } = data;
     document.body.style.setProperty('--ion-safe-area-top', `${insets.top}px`);

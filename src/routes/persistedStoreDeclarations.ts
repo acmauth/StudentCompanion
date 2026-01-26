@@ -6,7 +6,7 @@ import { qrStore } from "$components/wallet/qrStore";
 import { userCreds, userTokens } from "$stores/credentials.store";
 import { scheduledNotifications } from "$lib/calendarNotifications/notificationsStore";
 import { loginStore } from "$src/lib/authentication/loginStore";
-import { userCredsFlag } from "$components/webmailLogin/userCredsFlagStore";
+import { webmailLoggedIn } from "$components/webmailLogin/userCredsFlagStore";
 import { get } from "svelte/store";
 
 const persistedStores: CapacitorPersistedStore<any>[] = [
@@ -17,7 +17,7 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
     EventStore,
     qrStore,
     userTokens,
-    userCredsFlag,
+    webmailLoggedIn,
     loginStore
     // Add new stores here
 ];

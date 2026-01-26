@@ -4,6 +4,7 @@ import { ImapFlow } from 'imapflow';
 export const POST: RequestHandler = async ({ request }) => {
 	
 	const requestBody = await request.json();
+	const validateMode = requestBody.validate === true;
 	let response; 
 	let emails = [];
 

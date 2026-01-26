@@ -10,5 +10,6 @@ export type WebmailInboxRequest = {
     username: string,
     password: string,
     server: string,
-    port: string
+    port: string,
+    checkValidation: boolean,
 }

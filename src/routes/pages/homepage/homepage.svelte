@@ -18,7 +18,7 @@
 	import Wallet from '$components/wallet/Wallet.svelte';
 	import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
 	import { keySharp } from 'ionicons/icons';
-	import { userCredsFlag as autheticationFlag } from '$components/webmailLogin/userCredsFlagStore';
+	import { webmailLoggedIn as autheticationFlag } from '$components/webmailLogin/userCredsFlagStore';
 	import { showLoginAlert } from "$components/webmailLogin/credentialLogin"
 	import Config from "$src/app.config";
 
