@@ -117,7 +117,7 @@
 					<div class="children" class:open={childrenOpen[index]}>
 						{#each course.childCourses as childCourse}
 							<!-- Card content for child course -->
-							<ion-item href={`/courses/${course.course}`} lines="none" class="ion-no-padding">
+							<ion-item on:click={() => navigateToCourse(childCourse)} lines="none" class="ion-no-padding">
 								<div class="containerFlex">
 									<div class="titlesFlex">
 										<ion-label class="ion-text-wrap courseTitle"
