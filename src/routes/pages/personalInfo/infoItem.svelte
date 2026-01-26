@@ -13,7 +13,6 @@
 	export let givenName: String;
 	export let aem: String;
 	export let apm: String;
-	export let schoolGraduated: String;
 	export let birthDate: String;
 	export let email: String;
 	export let departmentName: String;
@@ -61,19 +60,19 @@
 </ion-card>
 <ion-card>
 	<ion-card-content>
+		{#if departmentName}
+			<ion-item button="true" on:click={writeToClipboard(departmentName)}>
+				<ion-icon size="small" icon={allIonicIcons.location} />
+
+				<ion-label class="ion-padding-start">{departmentName}</ion-label>
+			</ion-item>
+		{/if}
+
 		{#if username}
 			<ion-item id="copyMessage" button="true" on:click={writeToClipboard(username)}>
 				<ion-icon size="small" icon={allIonicIcons.person} />
 
 				<ion-label class="ion-padding-start">{username}</ion-label>
-			</ion-item>
-		{/if}
-
-		{#if schoolGraduated}
-			<ion-item button="true" on:click={writeToClipboard(schoolGraduated)}>
-				<ion-icon size="small" icon={allIonicIcons.school} />
-
-				<ion-label class="ion-padding-start">{schoolGraduated}</ion-label>
 			</ion-item>
 		{/if}
 
@@ -106,14 +105,6 @@
 				<ion-icon size="small" icon={allIonicIcons.maleFemale} />
 
 				<ion-label class="ion-padding-start">{gender}</ion-label>
-			</ion-item>
-		{/if}
-
-		{#if departmentName}
-			<ion-item button="true" on:click={writeToClipboard(departmentName)}>
-				<ion-icon size="small" icon={allIonicIcons.location} />
-
-				<ion-label class="ion-padding-start">{departmentName}</ion-label>
 			</ion-item>
 		{/if}
 
