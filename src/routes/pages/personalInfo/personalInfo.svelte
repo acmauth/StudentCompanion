@@ -52,10 +52,10 @@
 	}
 
 	// Log out
-	function logOut() {
-		invalidateAuth();
+	async function logOut() {
+		await invalidateAuth();
 		console.log("[src/routes/pages/personalInfo/+page.svelte] Navigating to login");
-		goto('/login');
+		await goto('/login');
 	}
 </script>
 
