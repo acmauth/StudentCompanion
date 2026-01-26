@@ -240,7 +240,7 @@
         selectedDay = { day: currentDate.getDate(), month: currentDate.getMonth(), year: currentDate.getFullYear() };
         buildCalendar();
         await getCoursesEvents();        
-
+        buildCalendar();
     });
 </script>
 

@@ -66,7 +66,11 @@
                 >
                     <span>{dayObj.day}</span>
                     {#if hasEvents(dayObj)}
-                        <div class="event-badge" />
+                        <div class="event-badges">
+                            {#each Array(Math.min(dayObj.eventCount, 3)) as _, i}
+                                <div class="event-badge" />
+                            {/each}
+                        </div>
                     {/if}
                 </div>
             {/each}
@@ -164,6 +168,11 @@
     .day.unselectable {
         color: var(--ion-color-medium);
         cursor: pointer;
+    }
+    .event-badges {
+        display: flex;
+        gap: 2px;
+        justify-content: center;
     }
     .event-badge {
         width: 4px;

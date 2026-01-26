@@ -6,6 +6,7 @@ export interface DayObject {
     day: number;
     isCurrentMonth: boolean;
     hasEvents: boolean;
+    eventCount: number;
 }
 
 export interface SelectedDay {
@@ -42,14 +43,15 @@ export function buildCalendarWeeks(
 
     // Fill previous month's days
     for (let i = firstDay - 1; i >= 0; i--) {
-        week.push({ day: prevMonthDays - i, isCurrentMonth: false, hasEvents: false });
+        week.push({ day: prevMonthDays - i, isCurrentMonth: false, hasEvents: false, eventCount: 0 });
     }
 
     // Fill current month's days
     for (let d = 1; d <= daysInMonth; d++) {
         const dateToCheck = new Date(year, month, d);
-        const hasEventOnDay = events.some((event) => isCurrentDay(event, dateToCheck));
-        week.push({ day: d, isCurrentMonth: true, hasEvents: hasEventOnDay });
+        const eventsOnDay = events.filter((event) => isCurrentDay(event, dateToCheck));
+        const hasEventOnDay = eventsOnDay.length > 0;
+        week.push({ day: d, isCurrentMonth: true, hasEvents: hasEventOnDay, eventCount: eventsOnDay.length });
         if (week.length === 7) {
             tempWeeks.push(week);
             week = [];
@@ -60,7 +62,7 @@ export function buildCalendarWeeks(
     if (week.length > 0) {
         let nextDay = 1;
         while (week.length < 7) {
-            week.push({ day: nextDay++, isCurrentMonth: false, hasEvents: false });
+            week.push({ day: nextDay++, isCurrentMonth: false, hasEvents: false, eventCount: 0 });
         }
         tempWeeks.push(week);
     }
