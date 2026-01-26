@@ -16,8 +16,8 @@ const authClient = new OIDCClient(Config.auth);
 
 // Do we wanna log out? Let's clear our path
 export async function invalidateAuth(){
-    let x = "https://oauth2.it.auth.gr/auth/realms/universis/protocol/openid-connect/logout?id_token_hint=" + get(loginStore).id_token;
-    await fetch(x);
+    let x = "https://oauth2.it.auth.gr/auth/realms/universis/protocol/openid-connect/logout" //?id_token_hint=" + get(loginStore).id_token;
+    goto(x);
     localStorage.clear();
     Preferences.clear();
     Dexie.delete('cachedData');
