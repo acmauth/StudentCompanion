@@ -133,7 +133,7 @@
 						{#each course.childCourses as childCourse}
 							<!-- Card content for child course -->
 							<ion-item
-								href={`/courses/${course.course}`}
+								on:click={() => navigateToCourse(childCourse)}
 								lines="none"
 								class="ion-no-padding"
 							>

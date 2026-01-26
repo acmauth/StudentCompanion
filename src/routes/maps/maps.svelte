@@ -347,7 +347,7 @@
 	}
 
 	.marquee-container {
-		width: 70%;
+		width: 90%;
 		overflow: hidden;
 		white-space: nowrap;
 		position: relative;
@@ -404,12 +404,12 @@
 		}
 	}
 	.button-container {
-		width: 30%;
+		min-width: 10%;
 		height: 100%;
 		display: flex;
-		justify-content: center;
+		justify-content: end;
 		gap: 0.3rem;
-		align-items: center;
+		align-items: end;
 		padding: 0.3rem;
 	}
 
@@ -417,20 +417,22 @@
 		width: 100%;
 		height: 100%;
 		display: flex;
-		align-items: center;
-		justify-content: center;
+		align-items: end;
+		justify-content: end;
 		margin: 0;
 		padding: 0;
 		background-color: white;
 		border-color: grey;
 		border-width: 0.1rem;
 		border-style: solid;
+		max-height: 60px;
+		max-width: 60px;
 	}
 
 	.button-image {
 		width: 100%;
 		height: 100%;
-		object-fit: fill;
+		object-fit:contain;
 		aspect-ratio: 1;
 	}
 </style>

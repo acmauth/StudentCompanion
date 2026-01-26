@@ -3,7 +3,7 @@
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { webmailLoggedIn } from '$components/webmailLogin/userCredsFlagStore';
 	import { invalidateAuth } from '$lib/authentication/authValidator';
-	import { neoUniversisGet } from '$lib/dataService';
+	import { neoUniversisGet, universisGet } from '$lib/dataService';
 	import { locale, locales, t } from '$lib/i18n';
 	import { Capacitor } from '@capacitor/core';
 	import IonPage from 'ionic-svelte/components/IonPage.svelte';
@@ -16,7 +16,6 @@
 	let aem: String = '';
 	let apm: String = '';
 	let inscriptionYear: String = '';
-	let schoolGraduated: String = '';
 	let birthDate: String = '';
 	let email: String = '';
 	let familyName: String = '';
@@ -39,23 +38,22 @@
 		aem = personalData.studentIdentifier;
 		apm = personalData.uniqueIdentifier;
 		inscriptionYear = personalData.inscriptionYear.name;
-		schoolGraduated = personalData.schoolGraduated;
 		birthDate = personalData.person.birthDate.slice(0, 10);
 		email = personalData.person.email;
 		username = user.name;
 		familyName = personalData.person.familyName;
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
-		departmentName = personalData.department.abbreviation;
+		departmentName = personalData.department.name;
 		semester = personalData.semester;
 		study_level = personalData.studyProgram.studyLevel.name;
 	}
 
 	// Log out
-	function logOut() {
-		invalidateAuth();
-		console.log('[src/routes/pages/personalInfo/+page.svelte] Navigating to login');
-		goto('/login');
+	async function logOut() {
+		await invalidateAuth();
+		console.log("[src/routes/pages/personalInfo/+page.svelte] Navigating to login");
+		await goto('/login');
 	}
 </script>
 
@@ -74,7 +72,6 @@
 				{gender}
 				{aem}
 				{apm}
-				{schoolGraduated}
 				{birthDate}
 				{email}
 				{familyName}

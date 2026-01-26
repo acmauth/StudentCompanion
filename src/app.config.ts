@@ -18,7 +18,7 @@ const appConfig = {
         realm: 'universis',
         clientId: 'aristomate',
         redirectUri: 'https://applink.aristomate.auth.gr/authsso/callback',
-        scope: 'students:read offline_access',
+        scope: 'students:read offline_access openid',
         isMobile: isMobile,
         // Use proxy for web
         tokenUrl: isMobile ? undefined : 'https://applink.aristomate.auth.gr/api/auth/token',

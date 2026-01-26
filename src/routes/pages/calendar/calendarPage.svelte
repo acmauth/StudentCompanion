@@ -191,11 +191,11 @@
                     return {
                         id: exam.id,
                         title: exam.courseExam.name,
-                        description: exam.location.description,
+                        description: exam.location?.description,
                         type: EventType.TEST,
                         repeat: EventRepeatType.NEVER,
                         notify: false,
-                        location: exam.location.description,
+                        location: exam.location?.description,
                         slot: {
                             start: new Date(exam.startDate),
                             end: new Date(exam.endDate)
@@ -217,10 +217,10 @@
                         id: classEvent.id,
                         title: classEvent.name,
                         type: EventType.CLASS,
-                        professor: classEvent.performer.alternateName,
+                        professor: classEvent.performer?.alternateName,
                         repeat: EventRepeatType.NEVER,
                         notify: false,
-                        location: classEvent.location.description,
+                        location: classEvent.location?.description,
                         slot: {
                             start: new Date(classEvent.startDate),
                             end: new Date(classEvent.endDate)
@@ -240,7 +240,7 @@
         selectedDay = { day: currentDate.getDate(), month: currentDate.getMonth(), year: currentDate.getFullYear() };
         buildCalendar();
         await getCoursesEvents();        
-
+        buildCalendar();
     });
 </script>
 
