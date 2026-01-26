@@ -165,10 +165,12 @@
 					<ion-label>{$t("course.period")}</ion-label>
 					<ion-text slot="end">{course.season}</ion-text>
 				</ion-item>
-				<ion-item lines ="full">
-					<ion-label>{$t("course.weekly_hours")}</ion-label>
-					<ion-text slot="end">{course.weeklyHours}</ion-text>
-				</ion-item>
+				{#if course.weeklyHours}
+					<ion-item lines ="full">
+						<ion-label>{$t("course.weekly_hours")}</ion-label>
+						<ion-text slot="end">{course.weeklyHours}</ion-text>
+					</ion-item>
+				{/if}
 
 				<ion-accordion-group class="accordion" expand="compact">
 					<ion-accordion value="first">

@@ -76,6 +76,9 @@
                         courseInstructors.push({familyName: instructor.instructor.familyName, givenName: instructor.instructor.givenName});
                     }
                     flag = true;
+                    if (!weeklyHours && classes.courseClass.weekHours){ 
+                        weeklyHours = classes.courseClass.weekHours;
+                    }
                 }
                 if (flag)
                     break;
