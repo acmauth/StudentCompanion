@@ -11,6 +11,7 @@ import { Capacitor } from "@capacitor/core";
 import Config from "$src/app.config";
 import {goto} from "$app/navigation";
 import { Browser } from '@capacitor/browser'; 
+import { resetPersistedStores } from "$src/routes/persistedStoreDeclarations.js";
 
 const isMobile = Capacitor.isNativePlatform();
 const authClient = new OIDCClient(Config.auth);
@@ -18,10 +19,11 @@ const authClient = new OIDCClient(Config.auth);
 // Do we wanna log out? Let's clear our path
 export async function invalidateAuth(){
     let x = "https://oauth2.it.auth.gr/auth/realms/universis/protocol/openid-connect/logout" //?id_token_hint=" + get(loginStore).id_token;
-    await Browser.open({ url: x });
+    await resetPersistedStores();
     localStorage.clear();
     Preferences.clear();
     Dexie.delete('cachedData');
+    await Browser.open({ url: x });
 }
 
 export async function judgeAuth() {

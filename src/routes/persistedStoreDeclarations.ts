@@ -26,3 +26,8 @@ export async function loadPersistedStores() {
     console.log('Loading persisted stores');
     await Promise.all(persistedStores.map(store => store.loadFromStorage()));
 }
+
+export async function resetPersistedStores() {
+    console.log('Resetting persisted stores');
+    await Promise.all(persistedStores.map(store => store.reset()));
+}

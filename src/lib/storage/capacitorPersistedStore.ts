@@ -11,6 +11,7 @@ import type { GetResult } from '@capacitor/preferences';
 class CapacitorPersistedStore<T> {
     protected store: Writable<T>;
     protected key: string;
+    private initial_value: T;
 
     /**
      * Creates a new instance of CapacitorPersistedStore.
@@ -20,10 +21,16 @@ class CapacitorPersistedStore<T> {
     constructor(initialValue: T, key: string) {
         const storedValue = this.getStoredValue(key);
         this.key = key;
+        this.initial_value = initialValue;
         // this.store = writable(initialValue);
         this.store = persisted("capPeristedWorkaround_"+key, initialValue);
     }
     
+    public async reset(){
+        this.store.set(this.initial_value);
+        await Preferences.remove({key: this.key});
+    }
+
     /**
      * Loads the stored value from Capacitor's Preferences and sets it as the current value of the store.
      */

@@ -178,28 +178,8 @@ public class NotificationService extends Worker {
             try {
                 var universisNotifications = getUniversisNotifications(timestamp);
                 notifications.addAll(Arrays.asList(universisNotifications));
-            } catch (Exception e) {
-                try {
-                    updateStoredUniversisToken();
-                    var universisNotifications = getUniversisNotifications(timestamp);
-                    notifications.addAll(Arrays.asList(universisNotifications));
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
-            }
-
-            // Gathering eLearning
-            try {
-                var elearningNotifications = getElearningNotifications(timestamp);
-                notifications.addAll(Arrays.asList(elearningNotifications));
-            } catch (Exception e) {
-                try {
-                    updateStoredElearningToken();
-                    var elearningNotifications = getElearningNotifications(timestamp);
-                    notifications.addAll(Arrays.asList(elearningNotifications));
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
+            }  catch (Exception e) {
+                e.printStackTrace();
             }
 
             // Gathering webmail
@@ -236,95 +216,33 @@ public class NotificationService extends Worker {
         var credentials = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("usercredentials","");
         return new JSONObject(credentials);
     }
-
-    /**
-     * @return the token stored in the shared preferences
-     * @throws JSONException
-     */
-    private String updateStoredUniversisToken() throws JSONException {
-        JSONObject credentials = getCredentials();
-
-        var username = credentials.getString("username");
-        var password = credentials.getString("password");
-
-        var token = UniversisScraperLogic.scrape(username,password).getString("token");
-        if (token == null) return null;
-
-        var oldTokens = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("userTokens",""));
-        // Setting the token in oldTokens.universis.token
-        oldTokens.getJSONObject("universis").put("token",token);
-
-        SharedPreferences.Editor editor = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).edit();
-        editor.putString("userTokens",oldTokens.toString());
-        editor.apply();
-
-        return token;
-    }
-
-    /**
-     * @return the token stored in the shared preferences
-     * @throws JSONException
-     */
-    private JSONObject updateStoredElearningToken() throws JSONException {
-        JSONObject credentials = getCredentials();
-
-        var username = credentials.getString("username");
-        var password = credentials.getString("password");
-
-        JSONObject response = ElearningScraperLogic.scrape(username,password);
-        try {
-            if (response.has("error") && response.getBoolean("error")){
-                return null;
-            }
-        } catch (JSONException e) {
-            System.out.println(response.toString());
-            Log.d("Notification Content updateStoredElearningToken()", response.toString());
-            throw new RuntimeException(e);
-        }
-
-        JSONObject credentialsObject = response.getJSONObject("credentials");
-
-        var oldTokens = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("userTokens",""));
-
-        // Setting the new credentials in oldTokens.elearning.token
-        oldTokens.put("elearning",credentialsObject);
-
-        SharedPreferences.Editor editor = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).edit();
-        editor.putString("userTokens",oldTokens.toString());
-        editor.apply();
-
-        return credentialsObject;
-    }
-
+    
 
     private AristomateNotification[] getUniversisNotifications(long timestamp){
         try {
 
-            JSONObject tokens = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("userTokens",""));
-            String token = tokens.getJSONObject("universis").getString("token");
+            JSONObject loginStore = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("loginStore",""));
+            String token = loginStore.getString("access_token");
 
             Session session = new Session();
-            BasicResponse api_result = session.get("https://universis-api.it.auth.gr/api/students/me/messages?$top=3")
+            BasicResponse api_result = session.get("https://universis-api.it.auth.gr/api/Students/me/messages?$orderby=dateReceived desc, dateCreated desc&$top=3")
                     .header("Authorization","Bearer " + token)
                     .execute();
-            // {
-            //    "value": [
-            //        {
-            //            "subject": null,
-            //            "body": "Ένα επισυναπτόμενο αρχείο είναι διαθέσιμο.",
-            //            "sender": 1
-            //            "dateReceived": "2020-10-30T12:52:26.712+02:00",
-            //            "id": 64387
-            //        }
-            //    ]
-            //}
+
             var universisNotifications = new ArrayList<AristomateNotification>();
 
             JSONArray result = new JSONObject(api_result.text()).getJSONArray("value");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
             for (int i=0; i < result.length(); i++) {
                 JSONObject candidateNotification = result.getJSONObject(i);
-                ZonedDateTime dateReceived = ZonedDateTime.parse(candidateNotification.getString("dateReceived"), formatter);
+                var receivedDateString = candidateNotification.getString("dateReceived");
+                if (receivedDateString.equalsIgnoreCase("null")){
+                    receivedDateString = candidateNotification.getString("dateCreated");
+                    if (receivedDateString.equalsIgnoreCase("null")) {
+                        receivedDateString = formatter.format(ZonedDateTime.now());
+                    }
+                }
+                ZonedDateTime dateReceived = ZonedDateTime.parse(receivedDateString, formatter);
                 long timeReceived = dateReceived.toEpochSecond();
                 if (timeReceived > timestamp){
                     String plainText = candidateNotification.getString("body").replaceAll("\\<.*?\\>", "");
@@ -344,78 +262,7 @@ public class NotificationService extends Worker {
         }
     }
 
-    private AristomateNotification[] getElearningNotifications(long timestamp){
-        try {
-
-            // Getting the elearning credentials
-            JSONObject tokens = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("userTokens",""));
-            JSONObject elearningCredentials = tokens.getJSONObject("elearning");
-
-            String sesskey = elearningCredentials.getString("sesskey");
-            String moodleSession = elearningCredentials.getString("moodleSession");
-            String userID = elearningCredentials.getString("userID");
-
-            JSONArray dataArguments = new JSONArray().put(new JSONObject()
-                    .put("index",0)
-                    .put("methodname","core_message_get_messages")
-                    .put("args",new JSONObject()
-                            .put("useridto",userID)
-                            .put("useridfrom",0)
-                            .put("type","notifications")
-                            .put("limitfrom",0)
-                            .put("limitnum",3)
-                            .put("newestfirst",1)
-                            .put("read", 0)
-                    ));
-
-            JSONObject response = ElearningDataServiceLogic.get(sesskey, moodleSession, dataArguments.toString());
-            JSONObject actualData = new JSONArray(response.getString("data")).getJSONObject(0);
-//            Log.d("Notification Content getElearningNotifications()", response.toString());
-
-            if (actualData.getBoolean("error")){
-                throw new RuntimeException("Error in ElearningDataServiceLogic.get");
-            }
-
-            JSONArray messages = actualData.getJSONObject("data").getJSONArray("messages");
-            var elearningNotifications = new ArrayList<AristomateNotification>();
-
-            Log.e("in get mails","here");
-
-            for (int i=0; i < messages.length(); i++) {
-                JSONObject candidateNotification = messages.getJSONObject(i);
-                ZonedDateTime dateReceived = Instant.ofEpochSecond(candidateNotification.getInt("timecreated")).atZone(ZoneOffset.UTC);
-                long timeReceived = dateReceived.toEpochSecond();
-                if (timeReceived > timestamp){
-                    String plainText = cleanUpFullMessage(candidateNotification.getString("fullmessage"));
-                    elearningNotifications.add(new AristomateNotification(candidateNotification.getString("subject"), plainText, candidateNotification.getString("userfromfullname"), dateReceived.toEpochSecond(), "Elearning"));
-                }
-            }
-
-
-            return elearningNotifications.toArray(new AristomateNotification[0]);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String cleanUpFullMessage(String fullMessage) {
-
-        // Regular expression to match content between dashes
-        Pattern pattern = Pattern.compile("-{5,}\n([\\s\\S]*?)-{5,}");
-
-        // Extracting the content between dashes
-        Matcher matcher = pattern.matcher(fullMessage);
-
-        // Encapsulating URLs with anchor tags
-        if (((Matcher) matcher).find()) {
-            String extractedContent = matcher.group(1);
-            return extractedContent;
-        } else {
-            return fullMessage;
-        }
-    }
-
+    
 
     private AristomateNotification[] getWebmailNotifications(long timestamp){
         try {
