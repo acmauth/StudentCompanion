@@ -164,17 +164,19 @@
 				<ion-label>{$t('course.weekly_hours')}</ion-label>
 				<ion-text slot="end">{course.weeklyHours}</ion-text>
 			</ion-item>
-
-			<ion-accordion-group class="accordion" expand="compact">
-				<ion-accordion value="first">
-					<ion-item slot="header" color="white">
-						<ion-label>{$t('course.professors')}</ion-label>
-					</ion-item>
-					{#each course.teacher.split(', ') as teacher}
-						<h3 class="teachers" slot="content">{teacher}</h3>
-					{/each}
-				</ion-accordion>
-			</ion-accordion-group>
+			{#if course.teacher}
+				<ion-accordion-group class="accordion" expand="compact">
+					<ion-accordion value="first">
+						<ion-item slot="header" color="white">
+							<ion-label>{$t('course.professors')}</ion-label>
+						</ion-item>
+						{#each course.teacher.split(', ') as teacher}
+							<h3 class="teachers" slot="content">{teacher}</h3>
+						{/each}
+					</ion-accordion>
+				</ion-accordion-group>
+			{/if}
+			
 		</ion-list>
 	</ion-card-content>
 </ion-card>
