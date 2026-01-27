@@ -216,9 +216,8 @@ public class NotificationService extends Worker {
         var credentials = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("usercredentials","");
         return new JSONObject(credentials);
     }
-    
 
-    private AristomateNotification[] getUniversisNotifications(long timestamp){
+    private AristomateNotification[] getUniversisMessages(long timestamp){
         try {
 
             JSONObject loginStore = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("loginStore",""));
@@ -262,6 +261,61 @@ public class NotificationService extends Worker {
         }
     }
 
+    private AristomateNotification[] getUniversisRecentGrades(long timestamp) {
+        try {
+            DateTimeFormatter comp_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            String lastTimestampString = comp_formatter.format(Instant.ofEpochSecond(timestamp).atZone(ZoneOffset.UTC));
+            String Request_URI = "https://universis-api.it.auth.gr/api/students/me/grades?$expand=course($expand=gradeScale,locale)&$filter=gradeModified gt '" + lastTimestampString + "'&$top=-1&$count=false";
+            
+            JSONObject loginStore = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("loginStore",""));
+            String token = loginStore.getString("access_token");
+
+            Session session = new Session();
+            BasicResponse api_result = session.get(Request_URI)
+                    .header("Authorization","Bearer " + token)
+                    .execute();
+
+            var universisNotifications = new ArrayList<AristomateNotification>();
+            JSONArray result = new JSONObject(api_result.text()).getJSONArray("value");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+            for (int i=0; i < result.length(); i++) {
+                JSONObject candidateNotification = result.getJSONObject(i);
+                var receivedDateString = candidateNotification.getString("gradeModified");
+                if (receivedDateString.equalsIgnoreCase("null")){
+                    receivedDateString = formatter.format(ZonedDateTime.now());
+                }
+                ZonedDateTime dateReceived = ZonedDateTime.parse(receivedDateString, formatter);
+                long timeReceived = dateReceived.toEpochSecond();
+                if (timeReceived > timestamp){
+
+                    String plainText = candidateNotification.getJSONObject("course").getString("name");
+                    double grade = candidateNotification.getDouble("examGrade");
+                    double scaleFactor = candidateNotification.getJSONObject("course").getJSONObject("gradeScale").getDouble("scaleFactor");
+                    scaleFactor = scaleFactor == 0 ? 1 : scaleFactor;
+                    String finalGrade = String.format("%.1f", grade / scaleFactor);
+                    int isPassed = candidateNotification.getInt("isPassed");
+                    String subject = isPassed == 1 ?  finalGrade + " \uD83C\uDF89": finalGrade + " \uD83D\uDE14";
+                    universisNotifications.add(new AristomateNotification(subject, plainText, "Universis" ,dateReceived.toEpochSecond(), "Universis"));
+                }
+            }
+
+        return universisNotifications.toArray(new AristomateNotification[0]);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        
+    }
+    
+
+    private AristomateNotification[] getUniversisNotifications(long timestamp){
+        AristomateNotification[] UniversisMessages = getUniversisMessages(timestamp);
+        AristomateNotification[] UniversisRecentGrades = getUniversisRecentGrades(timestamp);
+        ArrayList<AristomateNotification> allNotifications = new ArrayList<>();
+        allNotifications.addAll(Arrays.asList(UniversisMessages));
+        allNotifications.addAll(Arrays.asList(UniversisRecentGrades));
+        return allNotifications.toArray(new AristomateNotification[0]);
+    }
+
     
 
     private AristomateNotification[] getWebmailNotifications(long timestamp){
@@ -285,6 +339,10 @@ public class NotificationService extends Worker {
 
                 String notificationSubject = candidateNotification.getString("subject");
                 String notificationSender = candidateNotification.getString("sender");
+                // Skip sis notifications to avoid duplicates
+                if (notificationSender.contains("sis-no-reply@auth.gr")){
+                    continue;
+                }
                 Date notificationDate = (Date) candidateNotification.get("date");
 
                 ZonedDateTime dateReceived = Instant.ofEpochMilli(notificationDate.getTime()).atZone(ZoneOffset.UTC);
