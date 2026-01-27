@@ -95,27 +95,16 @@
 			isDarkMode = document.body.classList.contains('dark');
 			const leaflet = await import('leaflet');
 
-			if (document.body.classList.contains('dark')) {
-				map = leaflet
-					.map(mapElement, { zoomControl: false })
-					.setView([40.63182425082954, 22.959049527401312], 15);
-				leaflet
-					.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-						attribution:
-							'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-					})
-					.addTo(map);
-			} else {
-				map = leaflet
-					.map(mapElement, { zoomControl: false })
-					.setView([40.63182425082954, 22.959049527401312], 15);
-				leaflet
-					.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-						attribution:
-							'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-					})
-					.addTo(map);
-			}
+			// Use colorful OpenStreetMap view
+			map = leaflet
+				.map(mapElement, { zoomControl: false })
+				.setView([40.63182425082954, 22.959049527401312], 15);
+			leaflet
+				.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+					attribution:
+						'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+				})
+				.addTo(map);
 
 			renderMarkers();
 
