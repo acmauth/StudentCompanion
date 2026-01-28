@@ -73,6 +73,36 @@ async function getWebmailNotifications(refresh: boolean = false) {
 
 }
 
+
+async function getUniversisMessages(refresh: boolean = false) {
+    const options = {forceFresh: refresh, lifetime: 60 * 15}
+    const daysToFetch = 30;
+    const date = new Date();
+    const timezoneOffset = date.getTimezoneOffset();
+    date.setMinutes(date.getMinutes() - timezoneOffset);
+    date.setDate(date.getDate() - daysToFetch);
+    const formattedDate = date.toISOString().replace('Z', ''); // Using ISO string format
+    console.log(`Fetching universis messages since ${formattedDate}`);
+    const requestURL = `students/me/messages?$orderby=dateReceived desc, dateCreated desc&$filter=dateCreated gt '${formattedDate}'&$top=8`;
+    console.log(`Request URL: ${requestURL}`);
+    const messages = await neoUniversisGet(requestURL, options);
+    if (messages.error) return [];
+
+    const notificationMessages = messages.value.map((message: any):notification => {
+        return {
+            type: "universis",
+            subject: message.subject ? message.subject : "Χωρίς θέμα",
+            body: message.body? message.body: "Χωρίς περιεχόμενο",
+            sender: "Universis",
+            url: "https://universis.auth.gr",
+            dateReceived: new Date(message.dateReceived? message.dateReceived : message.dateCreated),
+            id: message.id
+        };
+    });
+    return notificationMessages;
+}
+
+
 // filter out the elearning and universis notifications from the webmail ones, and return them seperatly
 function filterWebmailNotifications(webmailNotifications: any[]){
     const notifications: {webmail: any[]; elearning: any[]; universis: any[]} = {
@@ -87,6 +117,7 @@ function filterWebmailNotifications(webmailNotifications: any[]){
             webmailNotification.type = "elearning";
             notifications.elearning.push(webmailNotification);
         } else if (webmailNotification.sender.includes("sis-no-reply@auth.gr")){
+            continue;
             webmailNotification.type = "universis";
             notifications.universis.push(webmailNotification);
         }
@@ -110,7 +141,8 @@ export async function gatherNotifications(options?: options){
     const filteredNotifications = filterWebmailNotifications(webmailNotifications as any[]);
     webmailNotifications = filteredNotifications.webmail;
     const elearningNotifications = filteredNotifications.elearning;
-    const universisNotifications = filteredNotifications.universis;
+    // const universisNotifications = filteredNotifications.universis;
+    const universisNotifications = await getUniversisMessages(options.refresh);
 
     let notifications = elearningNotifications.concat(webmailNotifications)
                         .filter((notification, index, self) => {
