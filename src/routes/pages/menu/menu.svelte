@@ -173,8 +173,12 @@
 </script>
 
 <IonPage>
-	<SubPageHeader title={$t('menu.title')} stackedNav />
-	<ion-content class="ion-padding">
+    <ion-header collapse="condense" mode="ios">
+        <ion-toolbar mode="md">
+            <ion-title size="large">{$t('menu.title')}</ion-title>
+        </ion-toolbar>
+    </ion-header>	
+    <ion-content class="ion-padding">
 		{#await initializeData()}
 			<!-- Loading: Show skeleton while fetching data -->
 			<MenuSkeleton />
@@ -304,7 +308,7 @@
 		border-radius: 12px;
 	}
 
-	.formatted-menu {
+	:global(.formatted-menu) {
 		width: 100%;
 		max-width: 100%;
 		min-width: 0;

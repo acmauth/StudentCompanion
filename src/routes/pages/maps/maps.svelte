@@ -238,8 +238,6 @@
 	}
 </script>
 
-<ion-tab tab="maps" />
-
 <ion-page>
     <ion-header collapse="condense" mode="ios">
         <ion-toolbar mode="md">
