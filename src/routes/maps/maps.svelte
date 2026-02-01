@@ -98,6 +98,10 @@
             }).addTo(map);
             featureLayerGroup = L.layerGroup().addTo(map);
         }
+
+        await loadBuildings();
+        await loadRooms();
+
     });
 
     onDestroy(async () => {
@@ -199,7 +203,7 @@
                 </div>
             </div>
 
-            <div class="debug-buttons">
+            <div class="debug-buttons" style="display:none;">
                 <span>{isLoading ? $t('maps.loading') : ""}</span>
                 <button on:click={loadBuildings}>{$t('maps.load_buildings')}</button>
                 <button on:click={loadRooms} disabled={buildingIds.size === 0}>{$t('maps.load_rooms')}</button>

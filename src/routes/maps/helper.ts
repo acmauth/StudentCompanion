@@ -2,6 +2,7 @@ import * as authApi from "./functions";
 import type { BuildingInfo, Rooms } from "./types";
 import Fuse from "fuse.js";
 import { registerPlugin } from '@capacitor/core';
+import appConfig from "$src/app.config";
 // Register the custom AppLauncher plugin 
 const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
 
@@ -14,13 +15,20 @@ export async function fetchBuildings(): Promise<BuildingInfo[]> {
 }
 
 export async function fetchRoomsForBuildings(buildingIds: Set<string>): Promise<Record<string, Rooms["rooms"]>> {
-    const entries = await Promise.all(
-        [...buildingIds].map(async id => {
-            const { rooms } = await authApi.getRooms(id);
-            return [id, rooms.filter(r => r.roomCode && r.roomName && r.rommId)] as const;
-        })
-    );
-    return Object.fromEntries(entries);
+    // const entries = await Promise.all(
+    //     [...buildingIds].map(async id => {
+    //         const { rooms } = await authApi.getRooms(id);
+    //         return [id, rooms.filter(r => r.roomCode && r.roomName && r.rommId)] as const;
+    //     })
+    // );
+    // let data = Object.fromEntries(entries);
+    // console.log(JSON.stringify(data))
+    const response = await fetch(appConfig.map.aristomate_ws_ext_buildings_endpoint)
+    if (!response.ok){
+        throw new Error(`Error fetching rooms: ${response.statusText}`);
+    } else {
+        return response.json();
+    }
 }
 
 export function flattenRooms(roomsByBuilding: Record<string, Rooms["rooms"]>): RoomWithBuilding[] {

@@ -33,6 +33,12 @@ const appConfig = {
     webmail: {
         server: "mail.auth.gr",
         port: '993',
+    },
+    map: {
+        ws_ext_endpoint: "https://ws-ext.it.auth.gr",
+        gis_endpoint: "https://geoportal.auth.gr/giswa/rest/services/Aristomate/InteriorSpace_001_026/MapServer", //Update when buildings become available
+        gis_token_url: "https://api.aristomate.auth.gr/get_gis_token",
+        aristomate_ws_ext_buildings_endpoint: "https://api.aristomate.auth.gr/get_detailed_buildings"
     }
 }
 

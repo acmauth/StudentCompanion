@@ -1,6 +1,7 @@
 import type * as apitypes from "./types";
+import appConfig from "$src/app.config";
 
-const BASEURL = "https://ws-ext.it.auth.gr"
+const BASEURL = appConfig.map.ws_ext_endpoint;
 
 export async function getBuildings(): Promise<apitypes.Buildings> {
     const response = await fetch(`${BASEURL}/getBuildings`);

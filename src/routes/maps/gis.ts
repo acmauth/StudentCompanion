@@ -1,10 +1,40 @@
 import { queryFeatures, getLayer } from '@esri/arcgis-rest-feature-layer';
 import type { IFeature } from '@esri/arcgis-rest-types';
+import appConfig from '$src/app.config';
 
-const TOKEN = "_kGw8JmQu9Bjxsmo4TAqw77D33D7s5Zp1bohsiah00clGdsdu-43c3E65w8SUgFIVRdF-brVhGk6pyZN8XJoSlZlh4OKz4nOsIS-Pwmxep6IVKoBqnf6BZmngXmOwawil9SXZoxn8Vy0dZBsk-xTQ8nykBELgJPtn6XMfpjae3DUTmWHtHsnL64DspnSDQQZzDeQEvxzhDkWJyUdT96ZqMidx01215e_T1s8J8tWDHi-0sxumMb3RtjzCame83bHnRX7m7m776Vi-bDtrkPVzDiVEMPoOnWLwA-S7ozIv0B6Qz_B0q5SPO-zMi46Lmcz";
-const BASE_URL = "https://geoportal.auth.gr/giswa/rest/services/Aristomate/InteriorSpace_001_026/MapServer";
-const AUTH = { token: TOKEN };
-const GEOJSON = { ...AUTH, f: 'geojson' as const };
+type Token = {
+    token: string;
+    expires: number; // expiration timestamp in ms
+};
+
+const BASE_URL = appConfig.map.gis_endpoint;
+const TOKEN_URL = appConfig.map.gis_token_url;
+
+// Token cache
+let cachedToken: Token | null = null;
+
+async function getToken(): Promise<string> {
+    // Return cached token if still valid (with 60s buffer)
+    if (cachedToken && cachedToken.expires > Date.now() + 60000) {
+        return cachedToken.token;
+    }
+
+    const response = await fetch(TOKEN_URL);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch GIS token: ${response.status}`);
+    }
+
+    cachedToken = await response.json();
+    return cachedToken!.token;
+}
+
+async function getAuthParams() {
+    return { token: await getToken() };
+}
+
+async function getGeoJSONParams() {
+    return { ...(await getAuthParams()), f: 'geojson' as const };
+}
 
 // Coordinate offset to align vectors with base map
 const OFFSET = { x: 3, y: 1 };
@@ -34,13 +64,14 @@ export function offsetGeoJSON(geojson: any): any {
 
 async function query(layerId: number, where: string, opts: { outFields?: string[]; geometry?: boolean; geojson?: boolean } = {}) {
     const { outFields = ["*"], geometry = false, geojson = false } = opts;
+    const params = geojson ? await getGeoJSONParams() : await getAuthParams();
     return queryFeatures({
         url: `${BASE_URL}/${layerId}`,
         where,
         outFields,
         returnGeometry: geometry,
         outSR: geometry ? '4326' : undefined,
-        params: geojson ? GEOJSON : AUTH
+        params
     }) as Promise<{ features: IFeature[] }>;
 }
 
@@ -70,8 +101,8 @@ export async function getFloorDesign(floorKey: string) {
 
 // --- Unused (may be useful later) ---
 
-/* unused */ export const getServiceMetadata = (layerId?: number) =>
-    getLayer({ url: layerId !== undefined ? `${BASE_URL}/${layerId}` : BASE_URL, params: AUTH });
+/* unused */ export const getServiceMetadata = async (layerId?: number) =>
+    getLayer({ url: layerId !== undefined ? `${BASE_URL}/${layerId}` : BASE_URL, params: await getAuthParams() });
 
 /* unused */ export async function getUniqueValues(field: string, layerId = 0): Promise<string[]> {
     const res = await queryFeatures({
@@ -81,7 +112,7 @@ export async function getFloorDesign(floorKey: string) {
         returnDistinctValues: true,
         returnGeometry: false,
         orderByFields: field,
-        params: AUTH
+        params: await getAuthParams()
     }) as { features: IFeature[] };
     return res.features.map(f => f.attributes[field]).filter(v => v != null && v !== "");
 }
