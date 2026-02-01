@@ -242,7 +242,8 @@ export default {
 		'customCourse.title': 'Έξτρα μάθημα',
 		'customCourse.coefficient': 'Συντελεστής',
 		"homepage.today": "Σήμερα",
-		"homepage.tomorrow": "Αύριο"
+		"homepage.tomorrow": "Αύριο",
+		"recentgrades.nonews": "Δεν υπάρχουν νέα."
 	},
 	en: {
 		'menu.title': 'Club menu',
@@ -509,6 +510,7 @@ export default {
 		'customCourse.title': 'Extra course',
 		'customCourse.coefficient': 'Coefficient',
 		"homepage.today": "Today",
-		"homepage.tomorrow": "Tomorrow"
+		"homepage.tomorrow": "Tomorrow",
+		"recentgrades.nonews": "Nothing new."
 	}
 };

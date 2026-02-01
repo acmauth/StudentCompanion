@@ -228,7 +228,7 @@
 				</div>
 			</div>
 			<div style="margin-top: 0.5rem;">
-				<RecentItems/>
+				<RecentItems maxCards={6}/>
 			</div>
 		</div>
 		</div>
