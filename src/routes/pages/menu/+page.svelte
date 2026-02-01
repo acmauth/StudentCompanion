@@ -3,6 +3,7 @@
 	import Menu from './menu.svelte';
 </script>
 
-<StackedNav root={Menu} animation={undefined} rootParams={undefined} swipeGesture={undefined}/>
-
+<ion-tab tab="menu">
+	<StackedNav root={Menu} animation={undefined} rootParams={undefined} swipeGesture={undefined}/>
+</ion-tab>
 	

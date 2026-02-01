@@ -152,13 +152,13 @@
 			<div class="service-buttons-grid">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button service-button-orange" on:click={() => {navController.push(Links);}}>
+				<div class="service-button" on:click={() => {navController.push(Links);}}>
 					<ion-icon icon={linkOutline} class="service-button-icon"></ion-icon>
 					<span class="service-button-label">{$t('homepage.links')}</span>
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button service-button-purple" on:click={() => {navController.push(Gym);}}>
+				<div class="service-button" on:click={() => {navController.push(Gym);}}>
 					<ion-icon icon={barbellOutline} class="service-button-icon"></ion-icon>
 					<span class="service-button-label">{$t('homepage.gym')}</span>
 				</div>
@@ -355,7 +355,8 @@
 		margin: 0;
 		padding-left: 0.5rem;
 		padding-right: 0.5rem;
-		color: rgba(255, 255, 255, 0.7);
+		padding-top: 0.2rem;
+		color: var(--ion-color-medium);
 		font-weight: normal;
 		font-size: 0.875rem;
 	}
@@ -387,6 +388,8 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
+		position: relative;
+		z-index: 1;
 	}
 
 	.service-button {
@@ -395,13 +398,14 @@
 		align-items: center;
 		justify-content: start;
 		gap: 1rem;
-		padding: 0.5rem 0rem;
-		padding-inline-start: 1rem;
+		padding: 0.5rem 1rem;
 		border-radius: 3rem;
 		cursor: pointer;
 		transition: all 0.2s ease;
 		background: var(--app-color-map-input, #ffffff);
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+		position: relative;
+		z-index: 2;
 	}
 
 	.service-button:hover {
@@ -417,12 +421,14 @@
 
 	.service-button-icon {
 		font-size: 1.5rem;
+		pointer-events: none;
 	}
 
 	.service-button-label {
 		font-size: 0.875rem;
 		font-weight: 500;
 		letter-spacing: 0.2px;
+		pointer-events: none;
 	}
 
 	.settings-icon {

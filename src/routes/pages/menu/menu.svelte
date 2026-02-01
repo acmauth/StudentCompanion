@@ -172,13 +172,13 @@
 
 </script>
 
-<IonPage>
+<ion-page>
     <ion-header collapse="condense" mode="ios">
         <ion-toolbar mode="md">
             <ion-title size="large">{$t('menu.title')}</ion-title>
         </ion-toolbar>
     </ion-header>	
-    <ion-content class="ion-padding">
+    <ion-content style="padding-top:0;">
 		{#await initializeData()}
 			<!-- Loading: Show skeleton while fetching data -->
 			<MenuSkeleton />
@@ -197,14 +197,14 @@
 					{/if}
 				</div>
 
-				<h1 class="ion-padding" style="margin-top:0.1rem;">
-					<ion-icon icon={allIonicIcons.restaurantOutline} />
+				<!-- <h2 class="ion-padding" style="margin-top:0.1rem;">
 					{title}
-				</h1>
-				
-				<ion-card color="light">
-					<ion-card-content class="swiper-card-content">
-						<swiper-container
+				</h2> -->
+
+				<div style="margin: 0 0.6rem 0rem 0.6rem; margin-bottom: 5rem;">
+					<ion-card color="light">
+						<ion-card-content class="swiper-card-content">
+							<swiper-container
 							init="false"
 							pagination="true"
 							pagination-clickable="true"
@@ -231,69 +231,75 @@
 						</swiper-container>
 					</ion-card-content>
 				</ion-card>
+			<!-- </div> -->
 
-				&nbsp;
-
-				<h1 class="ion-padding">
-					<ion-icon icon={allIonicIcons.restaurantOutline} />
+				<!-- &nbsp; -->
+				
+				<h2 class="ion-padding">
 					{$t('menu.week')}
-				</h1>
+				</h2>
 				<ion-accordion-group expand="inset">
 					<ion-accordion value="first">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.monday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[0]}</div>
+						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[0]}</div>
 					</ion-accordion>
 					<ion-accordion value="second">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.tuesday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[1]}</div>
+						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[1]}</div>
 					</ion-accordion>
 					<ion-accordion value="third">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.wednesday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[2]}</div>
+						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[2]}</div>
 					</ion-accordion>
 					<ion-accordion value="fourth">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.thursday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[3]}</div>
+						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[3]}</div>
 					</ion-accordion>
 					<ion-accordion value="fifth">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.friday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[4]}</div>
+						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[4]}</div>
 					</ion-accordion>
 					<ion-accordion value="sixth">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.saturday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[5]}</div>
+						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[5]}</div>
 					</ion-accordion>
 					<ion-accordion value="seventh">
 						<ion-item slot="header" color="light">
 							<ion-label>{$t('menu.sunday')}</ion-label>
 						</ion-item>
-						<div class="ion-padding formatted-menu" slot="content">{@html cafeteriaData[6]}</div>
+						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[6]}</div>
 					</ion-accordion>
 				</ion-accordion-group>
+				</div>
 			{/if}
 		{:catch error}
 			<p>{error.message}</p>
 		{/await}
 	</ion-content>
-</IonPage>
+</ion-page>
 
 <style>
 	.swiper-card-content {
 		padding: 0 !important;
 	}
-
+	
+	h2 {
+		color: var(--ion-color-medium);
+		justify-self: center;
+	}
+	
 	.meal-slide {
 		/* padding: 1.25rem 1.5rem; */
 		height: auto;
@@ -306,6 +312,11 @@
 		flex-direction: column;
 		align-items: stretch;
 		border-radius: 12px;
+	}
+
+	.formatted-menu-acc {
+		padding: 1rem;
+		background-color: var(--ion-color-light);
 	}
 
 	:global(.formatted-menu) {

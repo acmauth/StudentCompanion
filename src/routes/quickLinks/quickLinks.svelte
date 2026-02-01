@@ -22,6 +22,16 @@
 
 	let links = [
 		{
+			linktitle: $t('links.club'),
+			linkaddress: 'http://www.pfl.auth.gr',
+			imagelink: undefined
+		},
+		{
+			linktitle: $t('links.gym'),
+			linkaddress: 'https://gym.auth.gr/reservations/',
+			imagelink: undefined
+		},
+		{
 			linktitle: $t('links.uni'),
 			linkaddress: 'https://www.auth.gr',
 			imagelink: authLogo
@@ -52,16 +62,6 @@
 			imagelink: eudoxusLogo
 		},
 		{
-			linktitle: $t('links.club'),
-			linkaddress: 'http://www.pfl.auth.gr',
-			imagelink: undefined
-		},
-		{
-			linktitle: $t('links.gym'),
-			linkaddress: 'https://gym.auth.gr/reservations/',
-			imagelink: undefined
-		},
-		{
 			linktitle: $t('links.camping'),
 			linkaddress: 'https://camping.auth.gr/en/',
 			imagelink: campingLogo
@@ -85,8 +85,8 @@
 	});
 </script>
 
+<SubPageHeader title={$t('links.title')} stackedNav />
 <ion-content>
-	<SubPageHeader title={$t('links.title')} stackedNav />
 	<div class="ion-padding">
 		{#each links as { linktitle, linkaddress, imagelink }}
 			<LinkCard {linktitle} {linkaddress} {imagelink} />
