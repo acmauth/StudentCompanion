@@ -128,8 +128,11 @@
   <style>
     .swipe-card {
       margin: 0;
-      padding: 1rem;
-      transition: transform 0.3s ease;
+      padding: 0.6rem;
+      padding-top: 0.2rem;
+      transition: transform 0.25s ease;
+      box-shadow: none;
+      border-radius: 1rem !important;
     }
   </style>
   

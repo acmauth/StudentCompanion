@@ -1,6 +1,8 @@
 <script>
 	import { navController } from "$components/shared/StackedNav";
   import Course from "$components/courses/coursePage.svelte";
+	import timeSinceDate from "$src/lib/globalFunctions/getTimeSinceDate";
+	import { getLocale } from "$src/lib/i18n";
 
   /**
    * @type any
@@ -26,7 +28,7 @@
     <div class="containerFlex">
       <div class="titlesFlex">
         <ion-label class="ion-text-wrap courseTitle">{subject.course.name}</ion-label>
-        <ion-label class="subjectID">{subject.course.id}</ion-label>
+        <ion-label class="subjectID">{timeSinceDate(subject.gradeModified, getLocale())}</ion-label>
       </div>
       {#if subject.examGrade * 10 >= 5}
         <ion-text class="success gradeNumber">

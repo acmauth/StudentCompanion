@@ -286,11 +286,11 @@
 </IonPage>
 
 <style>
-	:global(.swiper-card-content) {
+	.swiper-card-content {
 		padding: 0 !important;
 	}
 
-	:global(.meal-slide) {
+	.meal-slide {
 		/* padding: 1.25rem 1.5rem; */
 		height: auto;
 		box-sizing: border-box;
@@ -304,7 +304,7 @@
 		border-radius: 12px;
 	}
 
-	:global(.formatted-menu) {
+	.formatted-menu {
 		width: 100%;
 		max-width: 100%;
 		min-width: 0;
