@@ -1,425 +1,414 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
-	import { browser } from '$app/environment';
-	import { getMetroInfo } from '$lib/metroScraper/scraper';
-	import * as allIonicIcons from 'ionicons/icons';
-	import SubPageHeader from '$shared/subPageHeader.svelte';
-	import gym from '$lib/assets/gym.png';
-	import university from '$lib/assets/university.png';
-	import library from '$lib/assets/library.png';
-	import lesxi from '$lib/assets/lesxi.png';
-	import ceremony from '$lib/assets/ceremony.png';
-	import observatory from '$lib/assets/observatory.png';
-	import metro from '$lib/assets/metro.png';
-	import bus from '$lib/assets/bus.png';
-	import coordinates from '$lib/components/map/coordinates.json';
-	import Fuse from 'fuse.js';
-	import osethLogo from '$lib/assets/oseth.svg';
-	import campusSafetyLogo from '$lib/assets/campus-safety.png';
-	import { t, locale, locales, getLocale } from '$lib/i18n';
-	import { goto } from '$app/navigation';
-	import { registerPlugin } from '@capacitor/core';
-
-	// Register the custom AppLauncher plugin
-	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
-
-	let points = coordinates;
-	let filteredPoints = points;
-
-	let mapElement;
-	let map;
-	let searchQuery = '';
-	let metroInfo = '';
-	let lang = getLocale();
-	let isDarkMode = false;
-
-	async function handleTransportAppClick() {
-		const packageName = 'com.amco.city.thessaloniki';
-		const iosAppStoreUrl = 'https://apps.apple.com/gr/app/oseth-bus/id6748433667';
-		const fallbackUrl = 'https://telematics.oasth.gr/en/#main';
-
-		const ua = navigator.userAgent || navigator.vendor || window.opera;
-		const isAndroid = /android/i.test(ua);
-		const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-
-		if (isAndroid) {
-			try {
-				// Try to launch the app directly using our custom plugin
-				const result = await AppLauncherPlugin.launchApp({packageName});
-				
-				if (!result.launched) {
-					// App not installed, go to fallback URL
-					window.location.href = fallbackUrl;
-				}
-			} catch (err) {
-				console.error('Error launching app:', err);
-				window.location.href = fallbackUrl;
-			}
-		} else {
-			// Non-mobile devices always go to telematics URL
-			window.location.href = fallbackUrl;
-		}
-	}
-
-	async function handleCampusSafetyClick() {
-		const packageName = 'gr.auth.android.incidentmanager';
-		const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageName}&hl=el`;
-
-		const ua = navigator.userAgent || navigator.vendor || window.opera;
-		const isAndroid = /android/i.test(ua);
-
-		if (isAndroid) {
-			try {
-				// Try to launch the app directly using our custom plugin
-				const result = await AppLauncherPlugin.launchApp({ packageName });
-				
-				if (!result.launched) {
-					// App not installed, open Play Store
-					window.location.href = `market://details?id=${packageName}`;
-				}
-			} catch (err) {
-				console.error('Error launching app:', err);
-				window.location.href = `market://details?id=${packageName}`;
-			}
-		} else {
-			// For other platforms, go to Play Store
-			window.location.href = playStoreUrl;
-		}
-	}
+	import SubPageHeader from "$components/shared/subPageHeader.svelte";
+	import { getLocale, t } from "$src/lib/i18n";
+    import type Fuse from "fuse.js";
+    import { fetchBuildings, fetchRoomsForBuildings, flattenRooms, createRoomSearch, markRoomsWithGis, type RoomWithBuilding } from "./helper";
+    import { onMount } from "svelte";
+    import * as gis from "./gis";
+    import type { BuildingInfo, Rooms } from "./types";
+    import { trash, caretDown, close } from "ionicons/icons";
+	import { icon } from "leaflet";
 
 
-	onMount(async () => {
-		if (browser) {
-			isDarkMode = document.body.classList.contains('dark');
-			const leaflet = await import('leaflet');
+    let L: any;
+    let map: any;
+    let mapContainer: HTMLElement;
+    let featureLayerGroup: any;
 
-			// Use colorful OpenStreetMap view
-			map = leaflet
-				.map(mapElement, { zoomControl: false })
-				.setView([40.63182425082954, 22.959049527401312], 15);
-			leaflet
-				.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-					attribution:
-						'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-				})
-				.addTo(map);
+    //control state
+    let facultyDropdownOpen = false;
+    let activeRoom: RoomWithBuilding|undefined = undefined;
+    
+    //stateful variables
+    let isLoading = false; 
+    let searchQuery = "";
+    let selectedFaculty = "";
+    let buildings: BuildingInfo[] = [];
+    let buildingsRooms: Record<string, Rooms["rooms"]> = {};
+    let allRooms: RoomWithBuilding[] = [];
+    let fuse: Fuse<RoomWithBuilding>|undefined = undefined;
+    
+    // derived variables
+    $: buildingIds = new Set(buildings.map(b => b.bldId))
+    $: faculties = [...new Set(allRooms.map(r => r.faculty).filter(Boolean))].sort();
+    function updateSearchResults(searchQuery: string) {
+        if (!fuse || !searchQuery) return [];
+        const results = fuse.search(searchQuery);
+        return selectedFaculty ? results.filter(r => r.item.faculty === selectedFaculty) : results;
+    }
+    $: searchResults = updateSearchResults(searchQuery);
 
-			renderMarkers();
+    async function loadBuildings() {
+        buildings = await fetchBuildings();
+    }
 
-			metroInfo = await getMetroInfo();
-		}
-	});
+    async function loadRooms() {
+        isLoading = true;
+        const [roomsData, gisSpaceIds] = await Promise.all([
+            fetchRoomsForBuildings(buildingIds),
+            gis.getAllSpaceIds()
+        ]);
+        buildingsRooms = roomsData;
+        allRooms = markRoomsWithGis(flattenRooms(buildingsRooms), gisSpaceIds);
+        fuse = createRoomSearch(allRooms);
+        isLoading = false;
+    }
 
-	onDestroy(async () => {
-		if (map) {
-			console.log('Unloading Leaflet map.');
-			map.remove();
-		}
-	});
+    onMount(async () => {
+        if (typeof window !== 'undefined') {
+            L = (await import('leaflet')).default;
+            // @ts-ignore
+            await import('leaflet/dist/leaflet.css');
+        }
 
-	function normalizeString(str) {
-		return str
-			.normalize('NFD')
-			.replace(/[\u0300-\u036f]/g, '')
-			.toLowerCase();
-	}
+        if (mapContainer && L) {
+            map = L.map(mapContainer, { zoomControl: false }).setView([40.6300, 22.9550], 17);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 22
+            }).addTo(map);
+            featureLayerGroup = L.layerGroup().addTo(map);
+        }
 
-	function renderMarkers() {
-		map.eachLayer((layer) => {
-			if (layer instanceof L.Marker) {
-				map.removeLayer(layer);
-			}
-		});
+        // map.whenReady(async () => {setTimeout(() => {map.invalidateSize();}, 1000);});
+    });
 
-		for (const point of filteredPoints) {
-			const { name_en, name_el, coordinates, pointer, url } = point;
+    async function displayRoom(room: RoomWithBuilding) {
+        activeRoom = room;
+        if (!map || !featureLayerGroup) return;
 
-			let popupContent;
+        console.log("Displaying room:", JSON.stringify(room));
 
-			if (lang == 'en') {
-				popupContent = `${name_en}<br><a href=${url}> ${url} </a>`;
-			} else {
-				popupContent = `${name_el}<br><a href=${url}> ${url} </a>`;
-			}
+        featureLayerGroup.clearLayers();
 
-			let iconUrl;
-			if (pointer == 'department') {
-				iconUrl = university;
-			} else if (pointer == 'gym') {
-				iconUrl = gym;
-			} else if (pointer == 'lesxi') {
-				iconUrl = lesxi;
-			} else if (pointer == 'library') {
-				iconUrl = library;
-			} else if (pointer == 'observatory') {
-				iconUrl = observatory;
-			} else if (pointer == 'ceremony') {
-				iconUrl = ceremony;
-			} else if (pointer == 'metro') {
-				iconUrl = metro;
-			} else if (pointer == 'bus') {
-				iconUrl = bus;
-			}
+        // If room doesn't have GIS, fall back to building coordinates
+        if (!room.hasGis) {
+            const building = buildings.find(b => b.bldId === room.bldId);
+            if (building && building.latY && building.longX) {
+                L.marker([building.latY + 0.0026, building.longX + 0.0017])
+                    .addTo(featureLayerGroup)
+                map.setView([building.latY + 0.0026, building.longX + 0.0017], 18);
+            } else {
+                alert(`Room "${room.roomName}" has no location data available.`);
+            }
+            return;
+        }
 
-			let customIconSize = [38, 38];
-			let customIconAnchor = [19, 38];
-			let customPopupAnchor = [0, -38];
+        isLoading = true;
 
-			// bus and metro points need to be smaller
-			if (pointer == 'metro' || pointer == 'bus') {
-				customIconSize = [30, 30];
-				customIconAnchor = [15, 30];
-				customPopupAnchor = [0, -30];
-			}
-			const customIcon = L.icon({
-				iconUrl: iconUrl,
-				iconSize: customIconSize,
-				iconAnchor: customIconAnchor,
-				popupAnchor: customPopupAnchor
-			});
+        try {
+            const spaceInfo = await gis.getSpaceById(room.rommId);
+            if (!spaceInfo) return;
 
-			const marker = L.marker([coordinates.lat, coordinates.lng], { icon: customIcon }).addTo(map);
-			marker.bindPopup(popupContent);
+            const { SPACEID, FLOORKEY } = spaceInfo.attributes;
+            const [geometries, floorDesign] = await Promise.all([
+                gis.getSpaceGeometry(SPACEID),
+                FLOORKEY ? gis.getFloorDesign(FLOORKEY) : { features: [] }
+            ]);
 
-			// Only bind popup and open if searchQuery is not empty
-			if (searchQuery.trim() !== '') {
-				marker.bindPopup(popupContent).openPopup();
-			}
-		}
-	}
+            // Floor design (walls, doors)
+            if ((floorDesign as any)?.features?.length > 0) {
+                L.geoJSON(gis.offsetGeoJSON(floorDesign), {
+                    style: () => ({ color: '#333', weight: 1, opacity: 0.8, fillColor: '#f4f4f4', fillOpacity: 0.5 })
+                }).addTo(featureLayerGroup);
+            }
 
-	function handleSearch(event) {
-		const searchQuery = normalizeString(event.target.value.trim().toLowerCase());
+            // Room polygon
+            if (geometries.polygon) {
+                const layer = L.geoJSON(gis.offsetGeoJSON(geometries.polygon), {
+                    style: { color: '#0056b3', weight: 3, fillOpacity: 0.6, fillColor: '#007bc2' }
+                }).addTo(featureLayerGroup);
+                map.fitBounds(layer.getBounds(), { padding: [100, 100], maxZoom: 19 });
+            }
 
-		if (searchQuery === '' || searchQuery === ' ') {
-			filteredPoints = points;
-			map.closePopup();
-		} else {
-			let key;
-			if (lang == 'en') {
-				key = 'name_en';
-			} else {
-				key = 'name_el';
-			}
+            // Room point marker
+            if (geometries.point) {
+                const layer = L.geoJSON(gis.offsetGeoJSON(geometries.point), {
+                    pointToLayer: (_: any, latlng: any) => L.circleMarker(latlng, {
+                        radius: 6, fillColor: "red", color: "#000", weight: 1, opacity: 1, fillOpacity: 0.8
+                    })
+                }).addTo(featureLayerGroup);
+                if (!geometries.polygon) {
+                    map.setView(layer.getLayers()[0].getLatLng(), 19);
+                }
+            }
+        } catch (e) {
+            console.error("Failed to load room geometry", e);
+        } finally {
+            isLoading = false;
+        }
+    }
 
-			const fuse = new Fuse(points, {
-				keys: [key],
-				threshold: 0.3,
-				includeScore: true
-			});
+    function clearDisplay(){
+        searchQuery="";
+        searchResults=[]; 
+        selectedFaculty="";
+        featureLayerGroup?.clearLayers();
+        activeRoom = undefined;
+    }
 
-			// Perform the search
-			const results = fuse.search(searchQuery);
+    function floorDecode(floorCode: string, isMezz: boolean): string {
+        // Coded Values: [99: Εξωτερικός χώρος] , [I00: Ισόγειο] , [O01: 1ος όροφος] , ...10 more... )
+        // isMezz: true/false ημιόροφος
+        const locale = getLocale();
+        if (floorCode.startsWith("I")){
+            return isMezz ? $t('maps.floor.ground_mezzanine') : $t('maps.floor.ground');
+        }
+        else if (floorCode.startsWith("O")){
+            const floorNumber = parseInt(floorCode.slice(1));
+            return isMezz ? $t('maps.floor.above_mezzanine', { floor: floorNumber }) : $t('maps.floor.above', { floor: floorNumber });
+        }
+        else if (floorCode === "99"){
+            return $t('maps.floor.outdoor');
+        }
+        return floorCode;
+    }
 
-			// Find the best point based on the score provided by Fuse.js
-			const bestPoint = results.reduce((acc, curr) => {
-				return (curr?.score || Infinity) < (acc?.score || Infinity) ? curr : acc;
-			});
-
-			// Open popup for the marker corresponding to the first occurrence of the search query
-			if (bestPoint) {
-				const { coordinates, name_el, name_en, url } = bestPoint.item;
-				let variable;
-				if (lang == 'en') {
-					variable = name_en;
-				} else {
-					variable = name_el;
-				}
-
-				const popupContent = `${variable}<br><a href=${url}> ${url} </a>`;
-
-				map.eachLayer((layer) => {
-					if (layer instanceof L.Marker && layer.getLatLng().equals(coordinates)) {
-						layer.bindPopup(popupContent).openPopup();
-					}
-				});
-			}
-		}
-	}
 </script>
 
 <ion-page>
 	<SubPageHeader title={$t('maps.title')} stackedNav />
-	<div class="search-container">
-		<input type="text" placeholder="Search..." on:input={handleSearch} class="search-input" />
-	</div>
+    <div id="map-wrapper" bind:this={mapContainer}></div>
+    <div id="top-controls">
+        <div class="search-container" on:focusout={() => {searchResults=[];}} on:focusin={() => {searchResults=updateSearchResults(searchQuery);}}>
+            <div id="search-row-wrapper">
+                <input id="searchbox" placeholder="Search Classrooms" autocomplete="off" bind:value={searchQuery} />
+                <div 
+                    id="trashcan" 
+                    on:click={clearDisplay} 
+                    aria-hidden 
+                    class="ion-activatable"
+                    class:disabled={!searchQuery && !selectedFaculty}
+                >
+                    <ion-ripple-effect></ion-ripple-effect>
+                    <ion-icon icon={trash}></ion-icon>
+                </div>
+            </div>
 
-	<div bind:this={mapElement} class="map-container" />
-
-	<div class="footer-section">
-		<div class="marquee-container">
-			<div class="marquee-text" class:dark={isDarkMode}>
-				{#if isDarkMode}
-					Metro: {metroInfo.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
-				{:else}
-					<strong>Metro:</strong> {metroInfo}
-				{/if}
-			</div>
-		</div>
-
-		<div class="button-container">
-			<div style="width:0.5rem; align-self:stretch; background-color:grey; margin:0.18rem;" />
-
-			<ion-card
-				on:click={handleTransportAppClick}
-				class="button-card"
-				aria-label="OASTH Transport Services"
-				aria-hidden
-			>
-				<img src={osethLogo} alt="OSETH services" class="button-image" />
-			</ion-card>
-
-			<ion-card
-				on:click={handleCampusSafetyClick}
-				class="button-card"
-				style="background-color: #3F4953;"
-				aria-label="Campus Safety App"
-				aria-hidden
-			>
-				<img src={campusSafetyLogo} alt="Campus safety information" class="button-image" />
-			</ion-card>
-		</div>
-	</div>
+            <div class="debug-buttons">
+                <span>{isLoading? "Loading": ""}</span>
+                <button on:click={loadBuildings}>Load Buildings</button>
+                <button on:click={loadRooms} disabled={buildingIds.size === 0}>Load Rooms</button>
+            </div>
+            <div id="faculty-filter-row-wrapper">
+                <div id="faculty-filter" on:click={() => {facultyDropdownOpen = !facultyDropdownOpen}} aria-hidden class="ion-activatable">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    <span>
+                        {selectedFaculty || "All Schools"}
+                    </span>
+                    <ion-icon icon={caretDown}></ion-icon>
+                </div>
+            </div>
+            {#if searchResults.length > 0}
+                <ul class="autocomplete">
+                    {#each searchResults as { item }}
+                        <li on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
+                            {#if item.hasGis}<span class="gis-indicator">📍</span>{/if}
+                            {item.roomCode} - {item.roomName} - {item.bldName}
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
+            {#if facultyDropdownOpen}                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <div class="dropdown-backdrop" on:click={() => facultyDropdownOpen = false}></div>                <div id="faculty-filter-dropdown">
+                    <ul class="autocomplete">
+                        <li on:click={() => {selectedFaculty=""; facultyDropdownOpen=false;}} aria-hidden>All Schools</li>
+                        {#each faculties as faculty}
+                            <li on:click={() => {selectedFaculty=faculty; facultyDropdownOpen=false;}} aria-hidden>{faculty}</li>
+                        {/each}
+                    </ul>
+                </div>
+            {/if}
+        </div>
+    </div>
+    {#if activeRoom}
+        <div id="bottom-controls">
+            <span id="bottom-faculty">{activeRoom.faculty}</span>
+            <ion-icon id="bottom-close" icon={close} on:click={clearDisplay} aria-hidden />
+            <span id="bottom-room-name">{activeRoom.roomName}</span>
+            <span id="bottom-floor">{floorDecode(activeRoom.floor, activeRoom.isMezz)}</span>
+            <span id="bottom-building-name">{activeRoom.bldName}</span>
+        </div>
+    {/if}
 </ion-page>
 
 <style>
-	@import 'leaflet/dist/leaflet.css';
-	@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    @import 'leaflet/dist/leaflet.css';
 
-	.search-container {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		position: absolute;
-		top: 70px;
-		left: 50%;
-		transform: translateX(-50%);
-		z-index: 1000;
-		background-color: var(--app-color-map-input);
-		border-radius: 100px;
-		box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
-		padding: 5px;
-		width: 80%;
-		max-width: 300px;
-	}
+    #faculty-filter-row-wrapper {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
 
-	.search-input {
-		flex: 1;
-		border: none;
-		outline: none;
-		padding: 10px;
-		font-size: 16px;
-		border-radius: 100px;
-		background-color: var(--app-color-map-input);
-		color: var(--app-color-map-input-text);
-	}
+    #faculty-filter{
+        position: relative;
+        padding: 8px 16px 8px 16px; /* top | left and right | bottom */
+        font-size: 1rem;
+        border: 1px solid #CCC;
+        /* text-box: trim-both cap alphabetic; */
+        border-radius: 50rem;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        overflow: hidden;
+        cursor: pointer;
+    }
 
-	.map-container {
-		position: relative;
-		height: calc(100vh);
-	}
+    #search-row-wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.5rem;
+    }
 
-	.footer-section {
+    #trashcan {
+        position: relative;
+        padding: 8px;
+        border: solid 1px #CCC;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #trashcan.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+        cursor: default;
+    }
+
+
+    #searchbox {
+        flex: 1;
+        padding: 8px 16px 8px 16px; /* top | left and right | bottom */
+        font-size: 1rem;
+        border: 1px solid #CCC;
+        /* text-box: trim-both cap alphabetic; */
+        border-radius: 50rem;
+    }
+
+    .debug-buttons {
+        display:flex;
+        flex-direction: row;
+    }
+
+    .search-container {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .autocomplete {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: white;
+        border: 1px solid #ccc;
+        list-style: none;
+        margin: 0;
+        margin-top: 0.5rem;
+        padding: 0;
+        max-height: 300px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 1000;
+        width: 100%;
+        border-radius: 1rem;
+    }
+
+    .autocomplete li {
+        padding: 10px 14px;
+        cursor: pointer;
+        /* color: #888; */
+    }
+
+    .autocomplete li:first-child {
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    .autocomplete li:last-child {
+        border-radius: 0 0 1rem 1rem;
+    }
+
+    .autocomplete li:only-child {
+        border-radius: 1rem;
+    }
+
+    .autocomplete li.has-gis {
+        color: #000;
+    }
+
+    .autocomplete li:hover {
+        background: #f1f1f1;
+    }
+
+    #faculty-filter-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1001;
+    }
+
+    #faculty-filter-dropdown .autocomplete {
+        position: relative;
+        top: 0;
+    }
+
+    .dropdown-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+    }
+
+    #map-wrapper {
 		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		width: 100%;
-		height: fit-content;
-		background-color: var(--ion-color-light);
-		display: flex;
-		align-items: center;
-		z-index: 1000;
-		border-top: 1px solid rgba(255, 255, 255, 0.1);
+        width: 100%;
+        height: 100%;
 	}
 
-	.marquee-container {
-		width: 90%;
-		overflow: hidden;
-		white-space: nowrap;
-		position: relative;
-	}
+    #top-controls {
+        position: absolute;
+        width: 100%;
+        z-index: 1000;
+        background: white;
+        padding: 1rem;
+        border-radius: 0 0 2rem 2rem;
+        border-style: solid;
+        border-color: #E8E8E8;
+        border-width:  0 0 1px 0;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+        clip-path: inset(0px 0px -100vh 0px);
+    }
 
-	.marquee-container::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 1;
-	}
+    #bottom-controls {
+        position: absolute;
+        width: 100%;
+        bottom: -2px;
+        z-index: 1000;
+        background: white;
+        padding: 1rem;
+        border-radius: 2rem 2rem 0 0;
+        border-style: solid;
+        border-color: #E8E8E8;
+        border-width:  1px 0 0 0;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px -7px 29px 0px;
+        clip-path: inset(-100vh 0px 0px 0px);
+    }
 
-	.marquee-text {
-		display: inline-block;
-		width: auto;
-		padding-block: 0.8rem;
-		padding-inline: 0.8rem;
-		animation: marquee 15s linear infinite;
-		position: relative;
-		z-index: 2;
-		font-size: 0.9rem;
-		color: var(--ion-text-color, #000);
-	}
-
-	.marquee-text.dark {
-		color: #ff8c00;
-		font-family: 'Press Start 2P', monospace;
-		font-weight: 400;
-		letter-spacing: 0.1em;
-		text-shadow: 0 0 10px rgba(255, 140, 0, 0.8), 0 0 20px rgba(255, 140, 0, 0.4),
-			0 0 30px rgba(255, 140, 0, 0.2);
-		text-transform: uppercase;
-	}
-
-	.marquee-text strong {
-		color: var(--ion-text-color, #000);
-	}
-
-	.marquee-text.dark strong {
-		color: #ffa500;
-		letter-spacing: 0.1em;
-		text-shadow: 0 0 10px rgba(255, 165, 0, 1), 0 0 20px rgba(255, 165, 0, 0.6);
-	}
-
-	@keyframes marquee {
-		0% {
-			transform: translateX(50%);
-		}
-		100% {
-			transform: translateX(-100%);
-		}
-	}
-	.button-container {
-		min-width: 10%;
-		height: 100%;
-		display: flex;
-		justify-content: end;
-		gap: 0.3rem;
-		align-items: end;
-		padding: 0.3rem;
-	}
-
-	.button-card {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		align-items: end;
-		justify-content: end;
-		margin: 0;
-		padding: 0;
-		background-color: white;
-		border-color: grey;
-		border-width: 0.1rem;
-		border-style: solid;
-		max-height: 60px;
-		max-width: 60px;
-	}
-
-	.button-image {
-		width: 100%;
-		height: 100%;
-		object-fit:contain;
-		aspect-ratio: 1;
-	}
 </style>
