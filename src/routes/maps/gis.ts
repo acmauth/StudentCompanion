@@ -1,7 +1,7 @@
 import { queryFeatures, getLayer } from '@esri/arcgis-rest-feature-layer';
 import type { IFeature } from '@esri/arcgis-rest-types';
 
-const TOKEN = "NZ2mNOaBrq6yeXiEoVF0zacxNIOh26dSpooO_iFhcCDXWWpUJmKykqakUYSKJtl5TGBLrjPEvSGx3HQJ27AQrRhn_BLQP-QjYmfzrz9UPw8cnwhLJnxnWb1OwN0xo2G0E0_atW9SkSjuABrE3BKhnZPRTWyjDk1YbUNII7GM7XThyMn7Z0QBhbLWj__YBOd-gVgYfk0LOW1QCU9Kn_DGarrSQacykIDWEt3VSYl00dKdv26geC8y8spuCJAz4T5LNEjD4o-aDJ-jljInWGZIserNxl-0n1noRmXy0bnhXJ3N1HZsSDxQNJw9WTXnM311";
+const TOKEN = "_kGw8JmQu9Bjxsmo4TAqw77D33D7s5Zp1bohsiah00clGdsdu-43c3E65w8SUgFIVRdF-brVhGk6pyZN8XJoSlZlh4OKz4nOsIS-Pwmxep6IVKoBqnf6BZmngXmOwawil9SXZoxn8Vy0dZBsk-xTQ8nykBELgJPtn6XMfpjae3DUTmWHtHsnL64DspnSDQQZzDeQEvxzhDkWJyUdT96ZqMidx01215e_T1s8J8tWDHi-0sxumMb3RtjzCame83bHnRX7m7m776Vi-bDtrkPVzDiVEMPoOnWLwA-S7ozIv0B6Qz_B0q5SPO-zMi46Lmcz";
 const BASE_URL = "https://geoportal.auth.gr/giswa/rest/services/Aristomate/InteriorSpace_001_026/MapServer";
 const AUTH = { token: TOKEN };
 const GEOJSON = { ...AUTH, f: 'geojson' as const };
