@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AppCard from '$shared/AppCard.svelte';
-	import AppletsSlides from '../old-homepage/appletsSlides.svelte';
+	import AppletsSlides from '../../old-homepage/appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
@@ -192,7 +192,7 @@
 			<div class="service-buttons-grid">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button service-button-orange" on:click={() => goto('../menu')}>
+				<div class="service-button service-button-orange" on:click={() => goto('./menu')}>
 					<ion-icon icon={restaurantOutline} class="service-button-icon"></ion-icon>
 					<span class="service-button-label">Μενού λέσχης</span>
 				</div>
