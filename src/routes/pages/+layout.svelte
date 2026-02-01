@@ -29,7 +29,7 @@
 		{
 			label: '',
 			icon: map,
-			tab: 'map'
+			tab: 'maps'
 		},
 	];
 

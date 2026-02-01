@@ -238,9 +238,15 @@
 	}
 </script>
 
+<ion-tab tab="maps" />
+
 <ion-page>
-	<SubPageHeader title={$t('maps.title')} stackedNav />
-	<div class="search-container">
+    <ion-header collapse="condense" mode="ios">
+        <ion-toolbar mode="md">
+            <ion-title size="large">{$t('maps.title')}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    <div class="search-container">
 		<input type="text" placeholder="Search..." on:input={handleSearch} class="search-input" />
 	</div>
 
