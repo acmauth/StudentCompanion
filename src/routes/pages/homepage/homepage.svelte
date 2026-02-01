@@ -1,31 +1,22 @@
 <script lang="ts">
-	import AppCard from '$shared/AppCard.svelte';
-	import AppletsSlides from '../../old-homepage/appletsSlides.svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
-	import { wallet, settingsOutline, calendarOutline, alertCircleOutline, restaurantOutline, notificationsOutline, cloudOfflineOutline, barbellOutline } from 'ionicons/icons';
+	import { settingsOutline, calendarOutline, alertCircleOutline, linkOutline, notificationsOutline, cloudOfflineOutline, barbellOutline } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
 	import { register } from 'swiper/element/bundle';
-	import { getMenu } from '$lib/menuScraper/scraper';
-	import { getMenuFromCache } from '$lib/menuScraper/menuCache';
+
 
 	register();
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
-	import { qrStore } from '$lib/components/wallet/qrStore';
-	import type { qrItem } from '$lib/components/wallet/qrItem';
 	import Banner from '$components/advertisements/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { t } from '$lib/i18n';
-	import Wallet from '$components/wallet/Wallet.svelte';
+	import WalletCard from '$lib/components/wallet/WalletCard.svelte';
 	import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
-	import { keySharp } from 'ionicons/icons';
-	import { webmailLoggedIn as autheticationFlag } from '$components/webmailLogin/userCredsFlagStore';
-	import { showLoginAlert } from "$components/webmailLogin/credentialLogin"
-	import Config from "$src/app.config";
 	import { EventStore } from '$lib/components/calendar/event/EventStore';
 	import type { Event } from '$lib/components/calendar/event/Event';
 	import MenuSkeleton from '$components/menu/menuSkeleton.svelte';
@@ -85,23 +76,12 @@
 	let studyLevel = '';
 	let actualSemester = 0;
 	let studentStatus = '';
-
-	// Menu data variables
-	let breakfastData: string = '';
-	let lunchData: string = '';
-	let dinnerData: string = '';
-	let defaultSlideIndex: number = 0;
-	let showingCachedMenuData = false;
-	let menuDataLoaded = false;
-	let menuMessage = '';
-	let menuColor = 'success';
+	let isFlipped = false;
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet(
 			'Students/me?$expand=studyProgram($expand=studyLevel), department'
 		);
-
-		console.log(personalData);
 
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
@@ -129,6 +109,7 @@
 	{#await getInfo()}
 		<HomepageSkeleton />
 	{:then}
+		<div class="gradient-bg">
 		<div class="personal-section">
 			<div class="info-container">
 				<div class="header">
@@ -156,45 +137,24 @@
 				</div>
 			</div>
 
-			<div class="personal-card">
-				<div class="card-header">
-					<div class="department-info">
-						<h3 class="department-name">{departmentName}</h3>
-						<p class="study-level">{studyLevel} - Εξάμηνο {actualSemester}</p>
-					</div>
-					<div class="wallet-icon-container">
-						<ion-icon icon={wallet} class="wallet-icon"></ion-icon>
-					</div>
-				</div>
-
-				<div class="stats-container">
-					<div class="stat-card">
-						<div class="stat-header-horizontal">
-							<span class="stat-label">{$t('homepage.passed')}</span>
-							<span class="stat-value">{Math.round((numPassedSubjects / numSubjects) * 100)}%</span>
-						</div>
-						<ion-progress-bar class="progress-bar" value="{numPassedSubjects / numSubjects}"></ion-progress-bar>
-					</div>
-					<div class="stat-card">
-						<div class="stat-header-horizontal">
-							<span class="stat-label">{$t('homepage.average')}</span>
-							<span class="stat-value">{average.toFixed(1)}</span>
-						</div>
-						<ion-progress-bar class="progress-bar" value="{average / 10}"></ion-progress-bar>
-					</div>
-				</div>
-			</div>
+			<WalletCard 
+				{departmentName}
+				{studyLevel}
+				{actualSemester}
+				{numPassedSubjects}
+				{numSubjects}
+				{average}
+				bind:isFlipped
+			/>
 		</div>
 
-		<div style="padding-top:5.5rem;"/>
-
-		<div class="services-section">
+		<div class="services-section" class:card-flipped={isFlipped}>
 			<div class="service-buttons-grid">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div class="service-button service-button-orange" on:click={() => goto('./menu')}>
-					<ion-icon icon={restaurantOutline} class="service-button-icon"></ion-icon>
-					<span class="service-button-label">Μενού λέσχης</span>
+					<ion-icon icon={linkOutline} class="service-button-icon"></ion-icon>
+					<span class="service-button-label">Σύνδεσμοι</span>
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -279,6 +239,7 @@
 				<RecentItems/>
 			</div>
 		</div>
+		</div>
 
 	{:catch error}
 		<ErrorLandingCard errorMsg={error} />
@@ -287,42 +248,18 @@
 
 <style>
 	.main-content {
-		--background: var(--ion-background-color, #f5f5f5);
+		--background: transparent;
 	}
 
-	.personal-section {
+	.gradient-bg {
 		position: relative;
-		padding: 1.5rem 1.5rem 0 1.5rem;
-		border-radius: 0 0 0rem 0rem;
-		padding-bottom: 1rem;
-		background: linear-gradient(to bottom, #0a0e17, #1e3c72 80%);
+		min-height: 100%;
+		background: linear-gradient(to bottom, #0a0e17 0%, #1e3c72 22%, #1e3c72 22%, var(--ion-background-color, #f5f5f5) 22%);
 		background-blend-mode: overlay;
-		filter: brightness(1.05) saturate(1.2);
 		animation: gradientMove 20s ease-in-out infinite alternate;
 	}
 
-	/* Animated dark "blob" layers */
-	.personal-section::before,
-	.personal-section::after {
-		content: "";
-		position: absolute;
-		width: 200%;
-		height: 100%;
-		top: -50%;
-		left: -50%;
-		background: radial-gradient(
-			circle at 50% 50%,
-			rgba(72, 133, 247, 0.7) 0%,
-			rgba(2, 17, 43, 0.5) 25%,
-			transparent 70%
-		);
-		mix-blend-mode: multiply;
-		filter: blur(120px);
-		animation: blobMove 60s cubic-bezier(0.42, 0, 0.58, 1) infinite;
-		z-index: 0;
-	}
-
-	.personal-section::after {
+	.gradient-bg::after {
 		background: radial-gradient(
 			circle at 70% 70%,
 			rgba(72, 133, 247, 0.7) 0%,
@@ -332,6 +269,14 @@
 		mix-blend-mode: screen;
 		filter: blur(180px);
 		animation: blobMoveAlt 70s ease-in-out infinite;
+	}
+
+	.personal-section {
+		position: relative;
+		padding: 1.5rem 1.5rem 0 1.5rem;
+		border-radius: 0 0 0rem 0rem;
+		padding-bottom: 1rem;
+		z-index: 1;
 	}
 
 	/* Subtle gradient motion */
@@ -440,15 +385,15 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
-		padding: 0.65rem 0rem;
-		border-radius: 1rem;
+		justify-content: start;
+		gap: 1rem;
+		padding: 0.5rem 0rem;
+		padding-inline-start: 1rem;
+		border-radius: 3rem;
 		cursor: pointer;
 		transition: all 0.2s ease;
 		background: white;
-		border: 1px solid var(--ion-color-light-shade);
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 	}
 
 	.service-button:hover {
@@ -464,13 +409,11 @@
 
 	.service-button-icon {
 		font-size: 1.5rem;
-		color: var(--ion-color-primary);
 	}
 
 	.service-button-label {
 		font-size: 0.875rem;
 		font-weight: 500;
-		color: var(--ion-color-primary);
 		letter-spacing: 0.2px;
 	}
 
@@ -479,97 +422,17 @@
 		color: #FFFFFF;
 	}
 
-	.personal-card {
-		background: var(--app-color-map-input);
-		border-radius: 1.3rem;
-		padding: 1.25rem;
-		position: relative;
-		margin-bottom: -5rem;
-		color: var(--ion-text-color);
-	}
-
-	.card-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		margin-bottom: 1rem;
-	}
-
-	.department-info {
-		flex: 1;
-	}
-
-	.department-name {
-		margin: 0;
-		font-size: 0.95rem;
-		font-weight: 700;
-		letter-spacing: 0.5px;
-		color: var(--ion-text-color);
-	}
-
-	.study-level {
-		margin: 0.25rem 0 0 0;
-		font-size: 0.8rem;
-		color: var(--ion-color-medium);
-	}
-
-	.wallet-icon-container {
-		border-radius: 0.75rem;
-		padding: 0.5rem;
-		margin-top: -0.5rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.wallet-icon {
-		font-size: 1.8rem;
-		color: var(--ion-color-primary);
-	}
-
-	.stats-container {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 2rem;
-		padding-bottom: 0.5rem;
-	}
-
-	.stat-card {
-		background: var(--ion-color-light);
-		border-radius: 0.875rem;
-		padding: 0rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.stat-header-horizontal {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	.stat-label {
-		font-size: 0.85rem;
-		font-weight: 500;
-		color: var(--ion-color-medium);
-	}
-
-	.stat-value {
-		font-size: 1.5rem;
-		font-weight: 700;
-		color: var(--ion-text-color);
-	}
-
-	.progress-bar {
-		--progress-background: var(--ion-color-primary);
-		background: var(--ion-color-light-shade);
-		height: 0.7rem;
-		border-radius: 10px;
-	}
-
 	.events-section, .updates-section, .services-section {
 		padding: 0rem 1.5rem 1.5rem 1.5rem;
+	}
+
+	.services-section {
+		margin-top: 2.5rem !important;
+		transition: margin-top 0.6s ease;
+	}
+
+	.services-section.card-flipped {
+		margin-top: 5.5rem !important;
 	}
 
 	.middle-title {
@@ -763,34 +626,4 @@
 	.mini-day.today .mini-event-dot {
 		background: white;
 	}
-
-	/* .menu-section-container {
-		margin-top: 0.625rem;
-	}
-
-	.menu-card {
-		background: var(--ion-background-color);
-		border-radius: 0.625rem;
-		padding: 0.75rem;
-		padding-top: 0;
-		border: 1px solid var(--ion-color-light-shade);
-		cursor: pointer;
-	}
-
-	.menu-card:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	}
-
-	.menu-content {
-		width: 100%;
-		max-width: 100%;
-		min-width: 0;
-		box-sizing: border-box;
-		overflow-x: auto;
-		padding: 0.25rem 0;
-		margin: 0;
-		font-size: 0.875rem;
-		color: var(--ion-text-color);
-	} */
 </style>

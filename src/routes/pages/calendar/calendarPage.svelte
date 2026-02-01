@@ -91,6 +91,12 @@
         }
     }
 
+    function handleMonthYearChange(newMonth: number, newYear: number) {
+        month = newMonth;
+        year = newYear;
+        buildCalendar();
+    }
+
     // function createPrototypeEvent(): Event {
     //     const currentTime = new Date();
     //     const activeDateCurrentTime = new Date(activeDate.getTime());
@@ -181,9 +187,9 @@
     }
 
     async function getCoursesEvents() {
-        console.log("Fetching courses events from Universis...");
+        // console.log("Fetching courses events from Universis...");
         let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
-        console.log(fetchedExams);
+        // console.log(fetchedExams);
         $EventStore = $EventStore.concat(
             fetchedExams.map((exam) => {
                 const existingIndex = $EventStore.findIndex(x => x.id == exam.id);
@@ -208,7 +214,7 @@
         );
 
         let fetchedClasses = (await universisGet('students/me/teachingEvents?$top=-1&$expand=location,performer')).value;
-        console.log(fetchedClasses);
+        // console.log(fetchedClasses);
         $EventStore = $EventStore.concat(
             fetchedClasses.map((classEvent) => {
                 const existingIndex = $EventStore.findIndex(x => x.id == classEvent.id);
@@ -244,23 +250,24 @@
     });
 </script>
 
-
-<ion-header collapse="condense" mode="ios">
-    <ion-toolbar mode="md">
-        <ion-title size="large">{$t('schedule.title')}</ion-title>
-    </ion-toolbar>
-</ion-header>
-
-<div class="container">
-    <CalendarGrid
+<ion-content fullscreen>
+    <ion-header collapse="condense" mode="ios">
+        <ion-toolbar mode="md">
+            <ion-title size="large">{$t('schedule.title')}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+    
+    <div class="container">
+        <CalendarGrid
     {weeks}
     {month}
     {year}
     {selectedDay}
     onPreviousMonth={previousMonth}
     onNextMonth={nextMonth}
-    onSelectDay={selectDay}/>
-
+    onSelectDay={selectDay}
+    onMonthYearChange={handleMonthYearChange}/>
+    
     <!-- Events Section -->
     <div class="events-section">
         <h3 style="align-self:center;">
@@ -273,43 +280,46 @@
         </h3>
         {#if eventList.length > 0}
         <div class="events-list">
-                {#each eventList as eventItem}
+            {#each eventList as eventItem}
                 <EventCard
-                        {eventItem}
-                        bind:selectedEvent
-                        bind:modalOpen
-                        bind:deleteModalOpen
-                        bind:activeDate
-                        />
+                {eventItem}
+                bind:selectedEvent
+                bind:modalOpen
+                bind:deleteModalOpen
+                bind:activeDate
+                />
                 {/each}
             </div>
-        {:else}
+            {:else}
             <p class="no-events">
                 {$t('schedule.no_events_day')}
             </p>
-        {/if}
-    </div>
-
-    <!-- FAB Button for adding new event -->
-    <ion-fab vertical="bottom" horizontal="end">
-        <ion-fab-button on:click={openNewEventModal}>
-            <ion-icon icon={add}></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
-
-    <!-- Event Creation/Edit Modal -->
-    {#if selectedEvent}
+            {/if}
+        </div>
+        
+        <!-- FAB Button for adding new event -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <ion-fab vertical="bottom" horizontal="end">
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <ion-fab-button on:click={openNewEventModal}>
+                <ion-icon icon={add}></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+        
+        <!-- Event Creation/Edit Modal -->
+        {#if selectedEvent}
         <EventModal
-            bind:isOpen={modalOpen}
-            bind:event={selectedEvent}
-            onSubmit={handleEventSubmit}
-            onDelete={handleEventDelete}
-            onClose={handleModalClose}
+        bind:isOpen={modalOpen}
+        bind:event={selectedEvent}
+        onSubmit={handleEventSubmit}
+        onDelete={handleEventDelete}
+        onClose={handleModalClose}
         />
-    {/if}
-
-    <!-- Delete Event Alert -->
-    <ion-alert
+        {/if}
+        
+        <!-- Delete Event Alert -->
+        <ion-alert
         is-open={deleteModalOpen}
         header={$t('event.delete')}
         buttons={[
@@ -342,6 +352,7 @@
         mode="ios">
     </ion-alert>
 </div>
+</ion-content>
 
 <style>
     .container {
@@ -385,7 +396,7 @@
         font-size: 0.9rem;
     }
     ion-fab {
-        margin-bottom: 1rem;
+        margin-bottom: 4rem;
         margin-right: 1rem;
     }
     ion-fab-button {

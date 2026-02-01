@@ -1,6 +1,6 @@
 <script lang="ts">
   	import IonTabs from '$lib/components/shared/AristomateTabBar.svelte';
-	import { notifications, calendarClear, map  } from 'ionicons/icons';
+	import { restaurant, calendarClear, map, statsChart } from 'ionicons/icons';
 	import home_solid from "$customIcons/home-solid.svg";
 	import user_solid from "$customIcons/user-solid.svg";
 	import chart_bar_solid from "$customIcons/chart-bar-solid.svg";
@@ -23,7 +23,7 @@
 		},
 		{
 			label: '',
-			icon: chart_bar_solid,
+			icon: statsChart,
 			tab: 'grades'
 		},
 		{
@@ -31,6 +31,11 @@
 			icon: map,
 			tab: 'maps'
 		},
+		{
+			label: '',
+			icon: restaurant,
+			tab: 'menu'
+		}
 	];
 
 	const logsStuff =()=>{};
