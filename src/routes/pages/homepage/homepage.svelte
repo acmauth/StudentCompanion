@@ -46,11 +46,11 @@
 		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		if (eventDate.toDateString() === today.toDateString()) {
-			return 'Today';
+			return $t('homepage.today');
 		} else if (eventDate.toDateString() === tomorrow.toDateString()) {
-			return 'Tomorrow';
+			return $t('homepage.tomorrow');
 		} else {
-			return eventDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+			return eventDate.toLocaleDateString(getLocale(), { month: 'short', day: 'numeric' });
 		}
 	}
 
@@ -70,7 +70,9 @@
 	let isFlipped = false;
 
 	async function getInfo() {
-
+		if($EventStore.length === 0) 
+			getCoursesEvents();
+		
 		let expandedLocale = getLocale() == 'el' ? '' : '($expand=locale)';
 
 		let personalData = await neoUniversisGet(
@@ -96,8 +98,6 @@
 		averages().then((result) => {
 			average = (result as { weighted_avg: number }).weighted_avg;
 		});
-
-		await getCoursesEvents();
 	}
 </script>
 
@@ -254,10 +254,10 @@
 	.gradient-bg::before {
 		content: '';
 		position: absolute;
-		top: -10%;
+		top: -20rem;
 		left: -10%;
 		width: 80%;
-		height: 35rem;
+		height: 25rem;
 		background: radial-gradient(
 			circle,
 			rgba(2, 78, 194, 0.4) 0%,
@@ -274,18 +274,18 @@
 		content: '';
 		background: radial-gradient(
 			circle,
-			rgba(60, 110, 255, 0.5) 40%,
-			rgba(0, 20, 100, 0.3) 0%,
-			transparent 30%
+			rgba(60, 110, 255, 0.5) 0%,
+			rgba(0, 20, 100, 0.3) 40%,
+			transparent 90%
 		);
 		position: absolute;
-		top: 0;
+		top: -20rem;
 		right: -10%;
 		width: 90%;
-		height: 30rem;
+		height: 2rem;
 		mix-blend-mode: screen;
 		filter: blur(60px);
-		animation: blobMoveAlt 6s ease-in-out infinite alternate;
+		animation: blobMoveAlt 4s ease-in-out infinite alternate;
 		z-index: 0;
 		pointer-events: none;
 	}
@@ -381,9 +381,6 @@
 		cursor: pointer;
 	}
 
-	.service-icon {
-		font-size: 2rem;
-	}
 
 	.service-buttons-grid {
 		display: grid;
@@ -552,88 +549,5 @@
 		font-weight: 500;
 	}
 
-	/* Mini Calendar Styles */
-	.mini-calendar-container {
-		background: white;
-		border-radius: 1rem;
-		padding: 1rem;
-		border: 1px solid var(--ion-color-light-shade);
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	.mini-calendar-container:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(56, 128, 255, 0.12);
-		border-color: var(--ion-color-primary-tint);
-	}
-
-	.mini-calendar-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 1rem;
-	}
-
-	.mini-calendar-title {
-		margin: 0;
-		font-size: 1rem;
-		font-weight: 600;
-		color: var(--ion-text-color);
-	}
-
-	.mini-calendar-icon {
-		font-size: 1.25rem;
-		color: var(--ion-color-primary);
-	}
-
-	.mini-calendar-grid {
-		display: grid;
-		grid-template-columns: repeat(7, 1fr);
-		gap: 0.375rem;
-		text-align: center;
-	}
-
-	.mini-day-name {
-		font-size: 0.7rem;
-		font-weight: 600;
-		color: var(--ion-color-primary);
-		padding: 0.25rem 0;
-	}
-
-	.mini-day {
-		aspect-ratio: 1;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		border-radius: 0.5rem;
-		font-size: 0.875rem;
-		position: relative;
-		color: var(--ion-text-color);
-		transition: background 0.15s ease;
-	}
-
-	.mini-day.inactive {
-		color: var(--ion-color-medium-tint);
-	}
-
-	.mini-day.today {
-		background: var(--ion-color-primary);
-		color: white;
-		font-weight: 600;
-	}
-
-	.mini-event-dot {
-		width: 4px;
-		height: 4px;
-		border-radius: 50%;
-		background: var(--ion-color-primary);
-		position: absolute;
-		bottom: 2px;
-	}
-
-	.mini-day.today .mini-event-dot {
-		background: white;
-	}
+	
 </style>

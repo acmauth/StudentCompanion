@@ -77,25 +77,22 @@
 
 
 <div aria-hidden on:click ={() => {inlineModalOpen = true}} class="card-link">
-    <div class="top">
-            <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail" ? mail : elearningLogo} />
-            <ion-label class="notification-label sender">
-                <p>{notification.sender}</p>
-              </ion-label>
-              <p>-</p>
-              <ion-label class="notification-label date">
-                <p>{timeSinceDate(notification.dateReceived, getLocale())}</p>
-              </ion-label>
-              
-            
-  
-            <!-- <ion-label><p>{notification.sender} - {timeSinceDate(notification.dateReceived)}</p></ion-label> -->
+    <div class="notification-card">
+        <div class="row-header">
+            <div class="left-col">
+                <div class="icon-wrapper">
+                     <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail" ? mail : elearningLogo} />
+                </div>
+                <div class="details">
+                    <span class="sender">{notification.sender}</span>
+                    <span class="time">{timeSinceDate(notification.dateReceived, getLocale())}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row-content">
+            <p class="subject">{notification.subject}</p>
+        </div>
     </div>
-    <ion-item lines="none" class="ion-no-padding">
-        <ion-label>
-            <h2 class="ellipse-no-wrap">{notification.subject}</h2>
-        </ion-label>
-    </ion-item>
 </div>
 
 <!-- Modal which displays when clicked, showing the detailed contents of the notification -->
@@ -178,41 +175,84 @@
             gap: 1rem;
         }
 
-        .top {
+        .notification-card {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .row-header {
             display: flex;
             align-items: center;
-            vertical-align: middle;
-            gap: 0.5rem;
-            height: 1rem;
         }
 
-        .top img {
-            object-fit: contain;
+        .left-col {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .icon-wrapper {
+            background: var(--ion-color-step-50, #f4f5f8);
+            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 8px;
+        }
+
+        .icon-wrapper img {
+            width: 100%;
             height: 100%;
+            object-fit: contain;
         }
 
-        .top p {
-            margin: 0;
-        }
-
-        .card-link {
-            text-decoration: none;
-        }
-
-        .notification-label {
-            white-space: nowrap;
-            display: block; 
+        .details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow: hidden;
         }
 
         .sender {
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            display: inline-block;
-            max-width: calc(100% - 80px); /* Adjust as needed */
+            color: var(--ion-text-color);
+            display: block;
         }
 
-        .date p {
-            white-space: nowrap;
+        .time {
+            font-size: 0.75rem;
+            color: var(--ion-color-medium);
+        }
+
+        .row-content {
+            margin-top: 8px;
+        }
+
+        .subject {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--ion-text-color);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .card-link {
+            display: block;
+            text-decoration: none;
+            cursor: pointer;
         }
 
 </style>

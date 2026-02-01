@@ -128,11 +128,11 @@
   <style>
     .swipe-card {
       margin: 0;
-      padding: 0.6rem;
-      padding-top: 0.2rem;
+      padding: 12px 16px;
       transition: transform 0.25s ease;
-      box-shadow: none;
-      border-radius: 1rem !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-radius: 16px !important;
+      background: var(--ion-card-background, #fff);
     }
   </style>
   

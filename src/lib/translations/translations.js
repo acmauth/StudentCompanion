@@ -240,7 +240,9 @@ export default {
 		'update.updateButton': 'Αναβάθμιση',
 		'update.noUpdate': 'Δεν υπάρχει διαθέσιμη ενημέρωση',
 		'customCourse.title': 'Έξτρα μάθημα',
-		'customCourse.coefficient': 'Συντελεστής'
+		'customCourse.coefficient': 'Συντελεστής',
+		"homepage.today": "Σήμερα",
+		"homepage.tomorrow": "Αύριο"
 	},
 	en: {
 		'menu.title': 'Club menu',
@@ -505,6 +507,8 @@ export default {
 		'update.updateButton': 'Update',
 		'update.noUpdate': 'No update available',
 		'customCourse.title': 'Extra course',
-		'customCourse.coefficient': 'Coefficient'
+		'customCourse.coefficient': 'Coefficient',
+		"homepage.today": "Today",
+		"homepage.tomorrow": "Tomorrow"
 	}
 };
