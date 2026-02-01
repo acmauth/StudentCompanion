@@ -1,6 +1,6 @@
 <script lang="ts">
   	import IonTabs from '$lib/components/shared/AristomateTabBar.svelte';
-	import { notifications, calendarClear } from 'ionicons/icons';
+	import { notifications, calendarClear, map  } from 'ionicons/icons';
 	import home_solid from "$customIcons/home-solid.svg";
 	import user_solid from "$customIcons/user-solid.svg";
 	import chart_bar_solid from "$customIcons/chart-bar-solid.svg";
@@ -28,14 +28,9 @@
 		},
 		{
 			label: '',
-			icon: notifications,
-			tab: 'notifications'
+			icon: map,
+			tab: 'map'
 		},
-		{
-			label: '',
-			icon: user_solid,
-			tab: 'personalInfo'
-		}
 	];
 
 	const logsStuff =()=>{};
