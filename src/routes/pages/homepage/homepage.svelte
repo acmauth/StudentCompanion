@@ -17,6 +17,7 @@
 	import { EventStore } from '$lib/components/calendar/event/EventStore';
 	import type { Event } from '$lib/components/calendar/event/Event';
 	import { buildCalendarWeeks, type DayObject } from '$lib/components/calendar/calendarUtils';
+	import { calendarNavigation } from '$components/calendar/calendarNavigation';
 	import Links from '$src/routes/quickLinks/quickLinks.svelte';
 	import Notifications from '$src/routes/notifications/notificationsPage.svelte';
 	import Gym from '$src/routes/gym/reservIframe/gym.svelte';
@@ -173,7 +174,7 @@
 					{#each upcomingEvents as event}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
 						<!-- svelte-ignore a11y-no-static-element-interactions -->
-						<div class="event-card" on:click={() => goto('/pages/calendar')}>
+					<div class="event-card" on:click={() => { calendarNavigation.setNavigation({ date: new Date(event.slot.start), eventId: event.id }); goto('/pages/calendar'); }}>
 							<div class="event-header">
 								<div class="event-header-left">
 									<div class="event-type-badge" data-type={event.type}>
