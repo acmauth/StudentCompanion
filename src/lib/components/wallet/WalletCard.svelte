@@ -58,7 +58,7 @@
 			<div class="card-header" on:click={toggleCardFlip}>
 				<div class="department-info">
 					<h3 class="department-name">{departmentName}</h3>
-					<p class="study-level">{studyLevel} - Εξάμηνο {actualSemester}</p>
+					<p class="study-level">{studyLevel} - {$t('homepage.semester')} {actualSemester}</p>
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -225,7 +225,7 @@
 
 <style>
 	.flip-card-container {
-		perspective: 1000px;
+		/* perspective: 1000px; */
 		margin-bottom: -5rem;
 		position: relative;
 	}

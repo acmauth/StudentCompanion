@@ -2,26 +2,27 @@
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
-	import { settingsOutline, calendarOutline, alertCircleOutline, linkOutline, notificationsOutline, cloudOfflineOutline, barbellOutline } from 'ionicons/icons';
+	import { settingsOutline, calendarOutline, shield, linkOutline, notificationsCircle, cloudOfflineOutline, barbellOutline, addOutline } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.png';
 	import { register } from 'swiper/element/bundle';
-
-
-	register();
+	import { navController } from '$components/shared/StackedNav';
+	import PersonalInfo from '$src/routes/personalInfo/personalInfo.svelte';
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
-	import Banner from '$components/advertisements/BannerCard.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
-	import { t } from '$lib/i18n';
+	import { getLocale, t } from '$lib/i18n';
 	import WalletCard from '$lib/components/wallet/WalletCard.svelte';
-	import { checkForUpdates } from '$lib/globalFunctions/checkVersion';
 	import { EventStore } from '$lib/components/calendar/event/EventStore';
 	import type { Event } from '$lib/components/calendar/event/Event';
-	import MenuSkeleton from '$components/menu/menuSkeleton.svelte';
-	import { buildCalendarWeeks, type DayObject, getWeekdayNames, isToday as checkIsToday } from '$lib/components/calendar/calendarUtils';
+	import { buildCalendarWeeks, type DayObject } from '$lib/components/calendar/calendarUtils';
+	import Links from '$src/routes/quickLinks/quickLinks.svelte';
+	import Notifications from '$src/routes/notifications/notificationsPage.svelte';
+	import Gym from '$src/routes/gym/reservIframe/gym.svelte';
+	import { getCoursesEvents } from '$lib/components/calendar/calendarUtils';
 
+	register();
 	// Get upcoming events (next 2 events)
 	$: upcomingEvents = $EventStore
 		.filter((event: Event) => new Date(event.slot.start) >= new Date())
@@ -33,19 +34,9 @@
 	let miniMonth = currentDate.getMonth();
 	let miniYear = currentDate.getFullYear();
 	let miniWeeks: DayObject[][] = [];
-	const weekdayNames = getWeekdayNames();
 
 	$: {
 		miniWeeks = buildCalendarWeeks(miniMonth, miniYear, $EventStore);
-	}
-
-	function isToday(dayObj: DayObject) {
-		return checkIsToday(dayObj, miniMonth, miniYear);
-	}
-
-	function hasEvents(dayObj: DayObject) {
-		if (!dayObj || !dayObj.isCurrentMonth) return false;
-		return dayObj.hasEvents;
 	}
 
 	function formatEventDate(date: Date): string {
@@ -79,17 +70,21 @@
 	let isFlipped = false;
 
 	async function getInfo() {
+
+		let expandedLocale = getLocale() == 'el' ? '' : '($expand=locale)';
+
 		let personalData = await neoUniversisGet(
-			'Students/me?$expand=studyProgram($expand=studyLevel), department'
+			'Students/me?$expand=studyProgram($expand=studyLevel'+expandedLocale+'), department'+expandedLocale + (expandedLocale !== '' ? ', person' +expandedLocale : '')
 		);
 
-		givenName = personalData.person.givenName;
+		givenName = expandedLocale === '' ? personalData.person.givenName : personalData.person.locale.givenName;
 		gender = personalData.person.gender;
-		departmentName = personalData.department?.name || 'ΤΜΗΜΑ ΠΛΗΡΟΦΟΡΙΚΗΣ';
-		studyLevel = personalData.studyProgram?.studyLevel?.name || 'Διδακτορικό';
+		departmentName = expandedLocale === '' ? personalData.department?.name || 'Αδυναμία φόρτωσης' : personalData.department?.locale.name || 'Αδυναμία φόρτωσης';
+		studyLevel = expandedLocale === '' ? personalData.studyProgram?.studyLevel?.name : personalData.studyProgram?.studyLevel?.locale.name || 'Αδυναμία φόρτωσης' ;
 		actualSemester = personalData.actualSemester || 1;
-		studentStatus = personalData.studentStatus.description || 'Ενεργός φοιτητής';
+		studentStatus = personalData.studentStatus.id == 1 ? $t('homepage.studentStatusActive') : $t('homepage.studentStatusInactive');
 		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
+
 
 		let passedSubjects = subjects.filter(
 			(course: { grade: number }) => course.grade * 10 >= 5
@@ -102,8 +97,9 @@
 			average = (result as { weighted_avg: number }).weighted_avg;
 		});
 
+		await getCoursesEvents();
 	}
-	</script>
+</script>
 
 <ion-content class="main-content" fullscreen>
 	{#await getInfo()}
@@ -111,8 +107,11 @@
 	{:then}
 		<div class="gradient-bg">
 		<div class="personal-section">
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div class="info-container">
-				<div class="header">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<div class="header" on:click={() => {navController.push(PersonalInfo);}}>
 					<div class="welcome">
 						{#if gender === 'Α'}
 							<img class="avatar" alt="man" src={man} />
@@ -127,13 +126,13 @@
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="settings-icon-container" on:click={() => goto('/settings')}>
+				<div class="settings-icon-container" style="margin-inline-end:0.7rem;" on:click={() => {navController.push(PersonalInfo);}}>
 					<ion-icon icon={settingsOutline} class="settings-icon"></ion-icon>
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div class="settings-icon-container" on:click={() => goto('/settings')}>
-					<ion-icon icon={alertCircleOutline} class="settings-icon"></ion-icon>
+					<ion-icon icon={shield} class="settings-icon"></ion-icon>
 				</div>
 			</div>
 
@@ -152,15 +151,15 @@
 			<div class="service-buttons-grid">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button service-button-orange" on:click={() => goto('./menu')}>
+				<div class="service-button service-button-orange" on:click={() => {navController.push(Links);}}>
 					<ion-icon icon={linkOutline} class="service-button-icon"></ion-icon>
-					<span class="service-button-label">Σύνδεσμοι</span>
+					<span class="service-button-label">{$t('homepage.links')}</span>
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button service-button-purple" on:click={() => goto('../gym/reservIframe')}>
+				<div class="service-button service-button-purple" on:click={() => {navController.push(Gym);}}>
 					<ion-icon icon={barbellOutline} class="service-button-icon"></ion-icon>
-					<span class="service-button-label">Γυμναστήριο</span>
+					<span class="service-button-label">{$t('homepage.gym')}</span>
 				</div>
 			</div>
 
@@ -168,8 +167,8 @@
 
 		<div class="events-section">
 			<!-- Upcoming Events Section -->
-			{#if upcomingEvents.length > 0 }
-				<h4 class="middle-title">Μην ξεχάσεις!</h4>
+			{#if upcomingEvents.length > 0}
+				<h4 class="middle-title">{$t('homepage.dontForget')}</h4>
 				<div class="events-container">
 					{#each upcomingEvents as event}
 						<!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -194,33 +193,26 @@
 					{/each}
 				</div>
 			{:else}
-				<!-- Mini Calendar when no events -->
+				<!-- Create Event Prompt -->
+				<h4 class="middle-title">{$t('homepage.dontForget')}</h4>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="mini-calendar-container" on:click={() => goto('/pages/calendar')}>
-					<div class="mini-calendar-header">
-						<h4 class="mini-calendar-title">
-							{new Date(miniYear, miniMonth).toLocaleDateString(undefined, {
-								month: 'long',
-								year: 'numeric'
-							})}
-						</h4>
-						<ion-icon icon={calendarOutline} class="mini-calendar-icon"></ion-icon>
-					</div>
-					<div class="mini-calendar-grid">
-						{#each weekdayNames as dayName}
-							<div class="mini-day-name">{dayName}</div>
-						{/each}
-						{#each miniWeeks as week}
-							{#each week as dayObj}
-								<div class="mini-day {dayObj.isCurrentMonth ? '' : 'inactive'} {isToday(dayObj) ? 'today' : ''}">
-									<span>{dayObj.day}</span>
-									{#if hasEvents(dayObj)}
-										<div class="mini-event-dot"></div>
-									{/if}
+				<div class="events-container">
+					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<div class="event-card create-event-card" on:click={() => goto('/pages/calendar')}>
+						<h5 class="event-title" style="opacity: 0.7;">{$t('homepage.noEvents')}</h5>
+						<div class="event-header">
+							<div class="event-header-left">
+								<div class="event-type-badge" style="background: var(--ion-color-light-shade); color: var(--ion-text-color);">
+									<ion-icon icon={addOutline}></ion-icon>
 								</div>
-							{/each}
-						{/each}
+								<div class="event-detail-item">
+									<span class="event-time">
+										{$t('homepage.createNew')}
+									</span>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			{/if}
@@ -228,11 +220,11 @@
 		
 		<div class="updates-section">
 			<div style="display: flex; justify-content: space-between; align-items: center;">
-				<h4 class="middle-title" style="margin-bottom: 0;">Ενημερώσεις</h4>
+				<h4 class="middle-title" style="margin-bottom: 0;">{$t('homepage.updates')}</h4>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-icon-container" on:click={() => goto('../notifications')}>
-					<ion-icon icon={notificationsOutline} class="service-icon" style="font-size:1.5rem;"></ion-icon>
+				<div class="service-icon-container" on:click={() => {navController.push(Notifications);}}>
+					<ion-icon icon={notificationsCircle} style="font-size:2rem;"></ion-icon>
 				</div>
 			</div>
 			<div style="margin-top: 0.5rem;">
@@ -254,21 +246,48 @@
 	.gradient-bg {
 		position: relative;
 		min-height: 100%;
-		background: linear-gradient(to bottom, #0a0e17 0%, #1e3c72 22%, #1e3c72 22%, var(--ion-background-color, #f5f5f5) 22%);
+		background: linear-gradient(to bottom, #0a0e17 0, #174ea6 12rem, var(--ion-background-color, #f5f5f5) 12rem);
 		background-blend-mode: overlay;
-		animation: gradientMove 20s ease-in-out infinite alternate;
+		overflow: hidden;
+	}
+
+	.gradient-bg::before {
+		content: '';
+		position: absolute;
+		top: -10%;
+		left: -10%;
+		width: 80%;
+		height: 35rem;
+		background: radial-gradient(
+			circle,
+			rgba(2, 78, 194, 0.4) 0%,
+			transparent 70%
+		);
+		mix-blend-mode: screen;
+		filter: blur(50px);
+		animation: blobMove 4s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+		z-index: 0;
+		pointer-events: none;
 	}
 
 	.gradient-bg::after {
+		content: '';
 		background: radial-gradient(
-			circle at 70% 70%,
-			rgba(72, 133, 247, 0.7) 0%,
-			rgba(2, 17, 43, 0.5) 30%,
-			transparent 80%
+			circle,
+			rgba(60, 110, 255, 0.5) 40%,
+			rgba(0, 20, 100, 0.3) 0%,
+			transparent 30%
 		);
+		position: absolute;
+		top: 0;
+		right: -10%;
+		width: 90%;
+		height: 30rem;
 		mix-blend-mode: screen;
-		filter: blur(180px);
-		animation: blobMoveAlt 70s ease-in-out infinite;
+		filter: blur(60px);
+		animation: blobMoveAlt 6s ease-in-out infinite alternate;
+		z-index: 0;
+		pointer-events: none;
 	}
 
 	.personal-section {
@@ -279,40 +298,21 @@
 		z-index: 1;
 	}
 
-	/* Subtle gradient motion */
-	@keyframes gradientMove {
-		0% {
-			background-position: 0% 0%;
-		}
-		50% {
-			background-position: 100% 100%;
-		}
-		100% {
-			background-position: 0% 0%;
-		}
-	}
-
 	@keyframes blobMove {
 		0% {
-			transform: translate(0%, 0%) scale(1);
-		}
-		50% {
-			transform: translate(10%, -5%) scale(1.2);
+			transform: translate(0, 0) scale(1);
 		}
 		100% {
-			transform: translate(-5%, 10%) scale(1);
+			transform: translate(30px, 30px) scale(1.1);
 		}
 	}
 
 	@keyframes blobMoveAlt {
 		0% {
-			transform: translate(0%, 0%) scale(1);
-		}
-		50% {
-			transform: translate(-10%, 10%) scale(1.15);
+			transform: translate(0, 0) scale(1);
 		}
 		100% {
-			transform: translate(5%, -5%) scale(1);
+			transform: translate(-30px, 20px) scale(1.15);
 		}
 	}
 
@@ -363,6 +363,16 @@
 		display: flex;
 		align-items: center;
 		cursor: pointer;
+		position: relative;
+	}
+
+	.settings-icon-container::after {
+		content: '';
+		position: absolute;
+		top: -10px;
+		bottom: -10px;
+		left: -10px;
+		right: -10px;
 	}
 
 	.service-icon-container {
@@ -392,7 +402,7 @@
 		border-radius: 3rem;
 		cursor: pointer;
 		transition: all 0.2s ease;
-		background: white;
+		background: var(--app-color-map-input, #ffffff);
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 	}
 

@@ -3,18 +3,18 @@
 	import { onMount } from 'svelte';
 	import { universisGet } from '$lib/dataService';
 	import SubPageHeader from '$shared/subPageHeader.svelte';
-	import departmentLogo from '$lib/assets/departmentLogo.png';
+	// import departmentLogo from '$lib/assets/departmentLogo.png';
 	import authLogo from '$lib/assets/authLogo.png';
 	import elearningLogo from '$lib/assets/elearningLogo.png';
 	import webmailLogo from '$lib/assets/webmailLogo.png';
 	import itLogo from '$lib/assets/itLogo.png';
 	import sisLogo from '$lib/assets/sisLogo.png';
 	import eudoxusLogo from '$lib/assets/eudoxusLogo.png';
-	import restaurantLogo from '$lib/assets/restaurantLogo.png';
-	import gymLogo from '$lib/assets/gymLogo.png';
+	// import restaurantLogo from '$lib/assets/restaurantLogo.png';
+	// import gymLogo from '$lib/assets/gymLogo.png';
 	import campingLogo from '$lib/assets/campingLogo.png';
 	import erasmusLogo from '$lib/assets/erasmusLogo.png';
-	import { t, locale, locales } from '$lib/i18n';
+	import { t } from '$lib/i18n';
 
 	let department: any;
 	let departmentName = '';
@@ -54,12 +54,12 @@
 		{
 			linktitle: $t('links.club'),
 			linkaddress: 'http://www.pfl.auth.gr',
-			imagelink: restaurantLogo
+			imagelink: undefined
 		},
 		{
 			linktitle: $t('links.gym'),
 			linkaddress: 'https://gym.auth.gr/reservations/',
-			imagelink: gymLogo
+			imagelink: undefined
 		},
 		{
 			linktitle: $t('links.camping'),
@@ -79,7 +79,7 @@
 		departmentURL = department.url;
 		if (!departmentURL.startsWith('http')) departmentURL = 'https://' + departmentURL;
 		links = [
-			{ linktitle: departmentName, linkaddress: departmentURL, imagelink: departmentLogo },
+			{ linktitle: departmentName, linkaddress: departmentURL, imagelink: undefined },
 			...links
 		];
 	});

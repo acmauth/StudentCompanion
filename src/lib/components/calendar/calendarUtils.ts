@@ -1,6 +1,10 @@
-import type { Event } from './event/Event';
+import { EventRepeatType, EventType, type Event } from './event/Event';
 import { isCurrentDay } from './CalendarFunctions';
 import { getLocale } from '$src/lib/i18n';
+import { universisGet } from '$src/lib/dataService';
+import { EventStore } from '$lib/components/calendar/event/EventStore';
+import { get } from 'svelte/store';
+
 
 export interface DayObject {
     day: number;
@@ -140,3 +144,68 @@ export function getPreviousMonth(month: number, year: number): { month: number; 
     }
     return { month: month - 1, year };
 }
+
+
+export async function getCoursesEvents() {
+        // console.log("Fetching courses events from Universis...");
+        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
+        // console.log(fetchedExams);
+        await EventStore.loadFromStorage();
+        let currentEvents = get(EventStore);
+
+        const newExams = fetchedExams.map((exam: any) => {
+            const existingIndex = currentEvents.findIndex(x => x.id == exam.id);
+            if (existingIndex == -1) {
+                return {
+                    id: exam.id,
+                    title: exam.courseExam.name,
+                    description: exam.location?.description,
+                    type: EventType.TEST,
+                    repeat: EventRepeatType.NEVER,
+                    notify: false,
+                    location: exam.location?.description,
+                    slot: {
+                        start: new Date(exam.startDate),
+                        end: new Date(exam.endDate)
+                    }
+                };
+            } else {
+                return null; // Return null if the exam already exists in $EventStore
+            }
+        }).filter((event: any) => event !== null); // Filter out null values
+
+        if (newExams.length > 0) {
+            EventStore.update(events => [...events, ...newExams]);
+        }
+
+        let fetchedClasses = (await universisGet('students/me/teachingEvents?$top=-1&$expand=location,performer')).value;
+        // console.log(fetchedClasses);
+        
+        currentEvents = get(EventStore); // Refresh current events
+
+        const newClasses = fetchedClasses.map((classEvent: any) => {
+            const existingIndex = currentEvents.findIndex(x => x.id == classEvent.id);
+            if (existingIndex == -1) {
+                return {
+                    id: classEvent.id,
+                    title: classEvent.name,
+                    type: EventType.CLASS,
+                    professor: classEvent.performer?.alternateName,
+                    repeat: EventRepeatType.NEVER,
+                    notify: false,
+                    location: classEvent.location?.description,
+                    slot: {
+                        start: new Date(classEvent.startDate),
+                        end: new Date(classEvent.endDate)
+                    }
+                };
+            } else {
+                return null; // Return null if the class already exists in $EventStore
+            }
+        }).filter((event: any) => event !== null); // Filter out null values
+
+        if (newClasses.length > 0) {
+            EventStore.update(events => [...events, ...newClasses]);
+        }
+        
+    }
