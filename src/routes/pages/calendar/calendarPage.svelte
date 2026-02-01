@@ -245,6 +245,11 @@
 </script>
 
 
+<ion-header collapse="condense" mode="ios">
+    <ion-toolbar mode="md">
+        <ion-title size="large">{$t('schedule.title')}</ion-title>
+    </ion-toolbar>
+</ion-header>
 
 <div class="container">
     <CalendarGrid

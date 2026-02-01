@@ -91,7 +91,7 @@
 
     .calendar {
         width: 100%;
-        padding: 1rem 1rem 0.5rem 1rem;
+        padding: 0rem 1rem 0.5rem 1rem;
         font-family: sans-serif;
         color: var(--ion-color-dark);
         display: flex;
