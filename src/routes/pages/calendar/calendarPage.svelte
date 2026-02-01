@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { add } from 'ionicons/icons';
+    import { calendarNavigation } from '$components/calendar/calendarNavigation';
     import { EventStore } from '$lib/components/calendar/event/EventStore';
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
     import EventModal from '$lib/components/calendar/event/EventModal.svelte';
@@ -188,8 +189,31 @@
     //uncomment to clear events on each mount (for debugging)
     // $EventStore = [];
     onMount(async () => {
-        // Initialize selectedDay to today
-        selectedDay = { day: currentDate.getDate(), month: currentDate.getMonth(), year: currentDate.getFullYear() };
+        let initialDate = currentDate;
+
+        // Check for navigation params from store
+        if ($calendarNavigation) {
+            if ($calendarNavigation.date) {
+                initialDate = $calendarNavigation.date;
+                activeDate = initialDate;
+                month = initialDate.getMonth();
+                year = initialDate.getFullYear();
+            }
+            
+            // Open event modal immediately if event exists in store
+            if ($calendarNavigation.eventId) {
+                const event = $EventStore.find(e => e.id === $calendarNavigation.eventId);
+                if (event) {
+                    selectedEvent = event;
+                    modalOpen = true;
+                }
+                // Clear the navigation params after use
+                calendarNavigation.clear();
+            }
+        }
+
+        // Initialize selectedDay to today or param date
+        selectedDay = { day: initialDate.getDate(), month: initialDate.getMonth(), year: initialDate.getFullYear() };
         buildCalendar();
         await getCoursesEvents();        
         buildCalendar();
