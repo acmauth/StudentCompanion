@@ -55,8 +55,10 @@
 		<div class="personal-card card-front">
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div class="card-header" on:click={toggleCardFlip}>
-				<div class="department-info">
+			<div class="card-header">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<div class="department-info" on:click={toggleCardFlip}>
 					<h3 class="department-name">{departmentName}</h3>
 					<p class="study-level">{studyLevel} - {$t('homepage.semester')} {actualSemester}</p>
 				</div>
@@ -88,9 +90,10 @@
 		<!-- Back of card -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<div class="personal-card card-back">
-			<div class="card-header" style="margin-bottom: 0;" on:click={toggleCardFlip}>
-				<h3 class="department-name">{$t('homepage.wallet')}</h3>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div class="card-header" style="margin-bottom: 0;">
+				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+				<h3 class="department-name" on:click={toggleCardFlip}>{$t('homepage.wallet')}</h3>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div class="wallet-icon-container" on:click={toggleCardFlip}>
 					<ion-icon icon={wallet} class="wallet-icon"></ion-icon>
@@ -279,6 +282,7 @@
 
 	.department-info {
 		flex: 1;
+		cursor: pointer;
 	}
 
 	.department-name {
@@ -287,6 +291,7 @@
 		font-weight: 700;
 		letter-spacing: 0.5px;
 		color: var(--ion-text-color);
+		width: 100%;
 	}
 
 	.study-level {
@@ -304,6 +309,8 @@
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
+		position: relative;
+		z-index: 10;
 	}
 
 	.wallet-icon {
