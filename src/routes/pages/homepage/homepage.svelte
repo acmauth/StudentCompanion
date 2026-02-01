@@ -22,6 +22,12 @@
 	import Notifications from '$src/routes/notifications/notificationsPage.svelte';
 	import Gym from '$src/routes/gym/reservIframe/gym.svelte';
 	import { getCoursesEvents } from '$lib/components/calendar/calendarUtils';
+	import { registerPlugin, Capacitor } from '@capacitor/core';
+	import { is } from 'cheerio/lib/api/traversing';
+
+	// Register the custom AppLauncher plugin
+	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
+
 
 	register();
 	// Get upcoming events (next 2 events)
@@ -69,6 +75,31 @@
 	let actualSemester = 0;
 	let studentStatus = '';
 	let isFlipped = false;
+
+	async function handleCampusSafetyClick() {
+		const packageName = 'gr.auth.android.incidentmanager';
+		const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageName}&hl=el`;
+
+		const isAndroid = Capacitor.getPlatform() === 'android';
+
+		if (isAndroid) {
+			try {
+				// Try to launch the app directly using our custom plugin
+				const result = await AppLauncherPlugin.launchApp({ packageName });
+				
+				if (!result.launched) {
+					// App not installed, open Play Store
+					window.location.href = `market://details?id=${packageName}`;
+				}
+			} catch (err) {
+				console.error('Error launching app:', err);
+				window.location.href = `market://details?id=${packageName}`;
+			}
+		} else {
+			// For other platforms, go to Play Store
+			window.location.href = playStoreUrl;
+		}
+	}
 
 	async function getInfo() {
 		if($EventStore.length === 0) 
@@ -132,7 +163,7 @@
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="settings-icon-container" on:click={() => goto('/settings')}>
+				<div class="settings-icon-container" on:click={handleCampusSafetyClick}>
 					<ion-icon icon={shield} class="settings-icon"></ion-icon>
 				</div>
 			</div>
