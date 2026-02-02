@@ -18,7 +18,7 @@ export async function fetchRoomsForBuildings(buildingIds: Set<string>): Promise<
     // const entries = await Promise.all(
     //     [...buildingIds].map(async id => {
     //         const { rooms } = await authApi.getRooms(id);
-    //         return [id, rooms.filter(r => r.roomCode && r.roomName && r.rommId)] as const;
+    //         return [id, rooms.filter(r => r.roomCode && r.roomName && r.roomId)] as const;
     //     })
     // );
     // let data = Object.fromEntries(entries);
@@ -33,9 +33,9 @@ export async function fetchRoomsForBuildings(buildingIds: Set<string>): Promise<
 
 export function flattenRooms(roomsByBuilding: Record<string, Rooms["rooms"]>): RoomWithBuilding[] {
     const flat = Object.entries(roomsByBuilding).flatMap(([bldId, rooms]) =>
-        rooms.map(room => ({ ...room, bldId, isMezz: room.isMess === "true" || room.isMess === "1" }))
+        rooms.map(room => ({ ...room, bldId, isMezz: room.isMezz === "true" || room.isMezz === "1" }))
     );
-    return [...new Map(flat.map(r => [`${r.rommId},${r.roomName}`, r])).values()];
+    return [...new Map(flat.map(r => [`${r.roomId},${r.roomName}`, r])).values()];
 }
 
 export function createRoomSearch(rooms: RoomWithBuilding[]): Fuse<RoomWithBuilding> {
@@ -43,7 +43,7 @@ export function createRoomSearch(rooms: RoomWithBuilding[]): Fuse<RoomWithBuildi
 }
 
 export function markRoomsWithGis(rooms: RoomWithBuilding[], gisIds: Set<string>): RoomWithBuilding[] {
-    return rooms.map(room => ({ ...room, hasGis: gisIds.has(room.rommId) }));
+    return rooms.map(room => ({ ...room, hasGis: gisIds.has(room.roomId) }));
 }
 
 export async function handleTransportAppClick() {

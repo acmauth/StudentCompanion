@@ -22,7 +22,7 @@
     //control state
     let facultyDropdownOpen = false;
     let activeRoom: RoomWithBuilding|undefined = undefined;
-    // activeRoom = {"faculty":"ΣΧΟΛΗ ΓΕΩΠΟΝΙΚΗ","bldName":"ΓΕΩΠΟΝΙΑΣ ΚΑΙ ΔΑΣΟΛΟΓΙΑΣ ΚΤΙΡΙΟ Β","school":"Σχολή Γεωπονίας, Δασολογίας και Φυσικού Περιβάλλοντος","floor":"O01","isMezz":false,"roomType":"Αμφιθέατρο","roomCode":"A02","roomName":"ΑΜΦΙΘΕΑΤΡΟ Β","rommId":"001-004-O01-0-A02","capacity":"176","bldId":"19","hasGis":false};
+    // activeRoom = {"faculty":"ΣΧΟΛΗ ΓΕΩΠΟΝΙΚΗ","bldName":"ΓΕΩΠΟΝΙΑΣ ΚΑΙ ΔΑΣΟΛΟΓΙΑΣ ΚΤΙΡΙΟ Β","school":"Σχολή Γεωπονίας, Δασολογίας και Φυσικού Περιβάλλοντος","floor":"O01","isMezz":false,"roomType":"Αμφιθέατρο","roomCode":"A02","roomName":"ΑΜΦΙΘΕΑΤΡΟ Β","roomId":"001-004-O01-0-A02","capacity":"176","bldId":"19","hasGis":false};
     
     //stateful variables
     let isLoading = false; 
@@ -134,7 +134,7 @@
         isLoading = true;
 
         try {
-            const spaceInfo = await gis.getSpaceById(room.rommId);
+            const spaceInfo = await gis.getSpaceById(room.roomId);
             if (!spaceInfo) return;
 
             const { SPACEID, FLOORKEY } = spaceInfo.attributes;

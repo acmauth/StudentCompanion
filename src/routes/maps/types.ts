@@ -15,9 +15,9 @@ export interface Floor {
 }
 
 export interface Room {
-	rommId: string; // Note: 'rommId' is intentionally spelled this way to match the API response | GAMW xD
+	roomId: string;
 	floor: string;
-	isMess: string;
+	isMezz: string;
 	school: string;
 	roomType: string;
 	roomCode: string;
@@ -44,11 +44,11 @@ export interface RoomDetail {
 	bldName: string;
 	school: string;
 	floor: string;
-	isMess: string;
+	isMezz: string;
 	roomType: string;
 	roomCode: string;
 	roomName: string;
-	rommId: string;
+	roomId: string;
 	capacity: string;
 }
 
