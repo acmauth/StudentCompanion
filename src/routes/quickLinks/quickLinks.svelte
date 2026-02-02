@@ -87,7 +87,7 @@
 
 <SubPageHeader title={$t('links.title')} stackedNav />
 <ion-content>
-	<div class="ion-padding">
+	<div class="ion-padding" style="margin-bottom: 4rem;">
 		{#each links as { linktitle, linkaddress, imagelink }}
 			<LinkCard {linktitle} {linkaddress} {imagelink} />
 		{/each}
