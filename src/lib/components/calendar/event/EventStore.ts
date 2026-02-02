@@ -1,8 +1,8 @@
 import type { Event } from "./Event";
 import CapacitorPersistedStore from "$lib/storage/capacitorPersistedStore";
-import { Events } from "leaflet";
 
 export const EventStore = new CapacitorPersistedStore(new Array<Event>(), 'EventStore');
+EventStore.loadFromStorage();
 
 export function getEvents():Array<Event>{
     let storedEvents = new Array<Event>;
