@@ -20,10 +20,9 @@
 	import { calendarNavigation } from '$components/calendar/calendarNavigation';
 	import Links from '$src/routes/quickLinks/quickLinks.svelte';
 	import Notifications from '$src/routes/notifications/notificationsPage.svelte';
-	import Gym from '$src/routes/gym/reservIframe/gym.svelte';
 	import { getCoursesEvents } from '$lib/components/calendar/calendarUtils';
 	import { registerPlugin, Capacitor } from '@capacitor/core';
-	import { is } from 'cheerio/lib/api/traversing';
+	import { Browser } from '@capacitor/browser';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -60,6 +59,10 @@
 			return eventDate.toLocaleDateString(getLocale(), { month: 'short', day: 'numeric' });
 		}
 	}
+
+	async function openCapacitorSite() {
+		await Browser.open({ url: 'https://gym.auth.gr/reservations/' });
+	};
 
 	function formatEventTime(date: Date): string {
 		return new Date(date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
@@ -189,7 +192,7 @@
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button" on:click={() => {navController.push(Gym);}}>
+				<div class="service-button" on:click={openCapacitorSite}>
 					<ion-icon icon={barbellOutline} class="service-button-icon"></ion-icon>
 					<span class="service-button-label">{$t('homepage.gym')}</span>
 				</div>
