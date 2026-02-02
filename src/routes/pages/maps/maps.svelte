@@ -185,7 +185,11 @@
 </script>
 
 <ion-page>
-	<SubPageHeader title={$t('maps.title')} stackedNav />
+	<ion-header collapse="condense" mode="ios">
+        <ion-toolbar mode="md">
+            <ion-title size="large">{$t('maps.title')}</ion-title>
+        </ion-toolbar>
+    </ion-header>
     <div id="map-wrapper" bind:this={mapContainer}></div>
     <div id="top-controls">
         <div class="search-container" on:focusout={() => {searchResults=[];}} on:focusin={() => {searchResults=fuzzySearchResults(searchQuery);}}>
