@@ -220,13 +220,14 @@
     });
 </script>
 
-<ion-content fullscreen>
+<ion-content fullscreen class="ion-no-padding" scroll-y="false">
     <ion-header collapse="condense" mode="ios">
         <ion-toolbar mode="md">
             <ion-title size="large">{$t('schedule.title')}</ion-title>
         </ion-toolbar>
     </ion-header>
     
+    <div class="page-wrapper">
     <div class="container">
         <CalendarGrid
     {weeks}
@@ -258,7 +259,7 @@
                 bind:deleteModalOpen
                 bind:activeDate
                 />
-                {/each}
+            {/each}
             </div>
             {:else}
             <p class="no-events">
@@ -322,18 +323,24 @@
         mode="ios">
     </ion-alert>
 </div>
+</div>
 </ion-content>
 
 <style>
+    .page-wrapper {
+        height: 100%;
+        overflow: hidden;
+    }
     .container {
         width: 100%;
         height: 100%;
         margin-top: -0.5rem;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
     }
     .events-section {
-        flex: 1;
+        flex: 1 1 0;
         margin: 0;
         padding: 1.25rem 0 0 0;
         display: flex;
@@ -342,6 +349,7 @@
         border-radius: 16px 16px 0 0;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         min-height: 0;
+        overflow: hidden;
     }
     .events-section h3 {
         color: var(--ion-color-dark);

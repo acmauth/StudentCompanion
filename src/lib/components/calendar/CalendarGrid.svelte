@@ -147,6 +147,7 @@
         color: var(--ion-color-dark);
         display: flex;
         flex-direction: column;
+        flex-shrink: 0;
     }
     .header {
         display: flex;
@@ -176,7 +177,7 @@
     .grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        grid-auto-rows: minmax(2.5rem, auto);
+        grid-auto-rows: 2.5rem;
         text-align: center;
         gap: 0.5rem;
         margin-bottom: 0.5rem;
