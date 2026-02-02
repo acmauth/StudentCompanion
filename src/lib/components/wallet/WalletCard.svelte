@@ -429,7 +429,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: white;
+		background: var(--app-color-map-input);
 		border-radius: 1rem;
 		padding: 1.5rem;
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
