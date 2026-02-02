@@ -222,8 +222,14 @@
 
 <ion-content fullscreen class="ion-no-padding" scroll-y="false">
     <ion-header collapse="condense" mode="ios">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
         <ion-toolbar mode="md">
             <ion-title size="large">{$t('schedule.title')}</ion-title>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <ion-button style="font-size: 1rem;margin-inline-end:1rem;" slot="end" on:click={openNewEventModal} fill="clear">
+                <ion-icon icon={add} slot="icon-only"></ion-icon>
+            </ion-button>
         </ion-toolbar>
     </ion-header>
     
@@ -267,16 +273,6 @@
             </p>
             {/if}
         </div>
-        
-        <!-- FAB Button for adding new event -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <ion-fab vertical="bottom" horizontal="end">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <ion-fab-button on:click={openNewEventModal}>
-                <ion-icon icon={add}></ion-icon>
-            </ion-fab-button>
-        </ion-fab>
         
         <!-- Event Creation/Edit Modal -->
         {#if selectedEvent}
@@ -373,28 +369,5 @@
         color: var(--ion-color-medium);
         padding: 2rem 1.25rem;
         font-size: 0.9rem;
-    }
-    ion-fab {
-        margin-bottom: 4rem;
-        margin-right: 1rem;
-    }
-    ion-fab-button {
-        --background: var(--ion-color-primary);
-        --color: white;
-        --border-radius: 16px;
-        --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        width: 56px;
-        height: 56px;
-    }
-    ion-fab-button:hover {
-        --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
-        transform: scale(1.05);
-    }
-    ion-fab-button::part(native) {
-        border-radius: 16px;
-    }
-    ion-fab-button ion-icon {
-        font-size: 28px;
     }
 </style>
