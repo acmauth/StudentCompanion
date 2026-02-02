@@ -73,9 +73,9 @@
 				<div class="stat-card">
 					<div class="stat-header-horizontal">
 						<span class="stat-label">{$t('homepage.passed')}</span>
-						<span class="stat-value">{Math.round((numPassedSubjects / numSubjects) * 100)}%</span>
+						<span class="stat-value">{Math.round((numPassedSubjects > 0 ? numPassedSubjects / numSubjects : 0) * 100)}%</span>
 					</div>
-					<ion-progress-bar class="progress-bar" value="{numPassedSubjects / numSubjects}"></ion-progress-bar>
+					<ion-progress-bar class="progress-bar" value="{numPassedSubjects > 0 ? numPassedSubjects / numSubjects : 0}"></ion-progress-bar>
 				</div>
 				<div class="stat-card">
 					<div class="stat-header-horizontal">

@@ -122,13 +122,12 @@
 		studentStatus = personalData.studentStatus.id == 1 ? $t('homepage.studentStatusActive') : $t('homepage.studentStatusInactive');
 		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
 
-
 		let passedSubjects = subjects.filter(
 			(course: { grade: number }) => course.grade * 10 >= 5
 		);
 
-		numSubjects = subjects.length;
-		numPassedSubjects = passedSubjects.length;
+		numSubjects = subjects?.length;
+		numPassedSubjects = passedSubjects?.length;
 
 		averages().then((result) => {
 			average = (result as { weighted_avg: number }).weighted_avg;
