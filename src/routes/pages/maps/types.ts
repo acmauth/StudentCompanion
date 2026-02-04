@@ -55,3 +55,23 @@ export interface RoomDetail {
 export interface Rooms {
 	rooms: RoomDetail[];
 }
+
+export interface Unit {
+    name: string;
+    nameEn: string;
+    adminUnitIdFormatted: string;
+    parentDomain: string;
+    childrenDomains?: string;
+}
+export interface Units {
+	units: Record<string, Unit>;
+}
+
+export interface Department {
+	unitID: string;
+	name: string;
+	nameEn: string;
+    adminUnitIdFormatted: string;
+    parentDomain: string;
+    childrenDomains?: string;
+}

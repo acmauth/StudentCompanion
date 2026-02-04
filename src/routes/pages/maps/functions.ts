@@ -48,3 +48,12 @@ export async function getRoomInfo(roomId: string): Promise<apitypes.RoomDetail> 
     const data: apitypes.RoomDetail = await response.json();
     return data;
 }
+
+export async function getUnits(): Promise<apitypes.Units> {
+    const response = await fetch(`${BASEURL}/open/getUnits/school`);
+    if (!response.ok) {
+        throw new Error(`Error fetching units: ${response.statusText}`);
+    }
+    const data: apitypes.Units = await response.json();
+    return data;
+}

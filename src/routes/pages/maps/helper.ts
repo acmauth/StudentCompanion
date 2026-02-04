@@ -1,5 +1,5 @@
 import * as authApi from "./functions";
-import type { BuildingInfo, Rooms } from "./types";
+import type { BuildingInfo, Rooms, Department } from "./types";
 import Fuse from "fuse.js";
 import { registerPlugin } from '@capacitor/core';
 import appConfig from "$src/app.config";
@@ -7,11 +7,23 @@ import appConfig from "$src/app.config";
 const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
 
 
-export type RoomWithBuilding = Rooms["rooms"][number] & { bldId: string; hasGis?: boolean; isMezz: boolean };
+export type RoomWithBuilding = Rooms["rooms"][number] & { bldId: string; hasGis?: boolean; isMezz: string };
 
 export async function fetchBuildings(): Promise<BuildingInfo[]> {
     const { buildings } = await authApi.getBuildings();
     return buildings.filter(b => b.bldId != null && b.gisBldId != null);
+}
+
+export async function fetchDepartments(): Promise<Department[]> {
+	const units = (await authApi.getUnits()).units;
+	return Object.values(units).map(u => ({
+		unitID: u.adminUnitIdFormatted,
+		name: u.name,
+		nameEn: u.nameEn,
+		adminUnitIdFormatted: u.adminUnitIdFormatted,
+		parentDomain: u.parentDomain,
+		childrenDomains: u.childrenDomains
+	}));
 }
 
 export async function fetchRoomsForBuildings(buildingIds: Set<string>): Promise<Record<string, Rooms["rooms"]>> {
@@ -33,7 +45,7 @@ export async function fetchRoomsForBuildings(buildingIds: Set<string>): Promise<
 
 export function flattenRooms(roomsByBuilding: Record<string, Rooms["rooms"]>): RoomWithBuilding[] {
     const flat = Object.entries(roomsByBuilding).flatMap(([bldId, rooms]) =>
-        rooms.map(room => ({ ...room, bldId, isMezz: room.isMezz === "true" || room.isMezz === "1" }))
+        rooms.map(room => ({ ...room, bldId, isMezz: room.isMezz }))
     );
     return [...new Map(flat.map(r => [`${r.roomId},${r.roomName}`, r])).values()];
 }
@@ -50,14 +62,16 @@ export async function handleTransportAppClick() {
 		const packageName = 'com.amco.city.thessaloniki';
 		const iosAppStoreUrl = 'https://apps.apple.com/gr/app/oseth-bus/id6748433667';
 		const fallbackUrl = 'https://telematics.oasth.gr/en/#main';
-
+		//@ts-ignore
 		const ua = navigator.userAgent || navigator.vendor || window.opera;
 		const isAndroid = /android/i.test(ua);
-		const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+		//@ts-ignore
+		const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream; //@ts-ignore
 
 		if (isAndroid) {
 			try {
 				// Try to launch the app directly using our custom plugin
+				//@ts-ignore
 				const result = await AppLauncherPlugin.launchApp({packageName});
 				
 				if (!result.launched) {
@@ -78,12 +92,14 @@ export async function handleCampusSafetyClick() {
 		const packageName = 'gr.auth.android.incidentmanager';
 		const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageName}&hl=el`;
 
+		//@ts-ignore
 		const ua = navigator.userAgent || navigator.vendor || window.opera;
 		const isAndroid = /android/i.test(ua);
 
 		if (isAndroid) {
 			try {
 				// Try to launch the app directly using our custom plugin
+				//@ts-ignore
 				const result = await AppLauncherPlugin.launchApp({ packageName });
 				
 				if (!result.launched) {

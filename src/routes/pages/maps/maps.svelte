@@ -1,13 +1,14 @@
 <script lang="ts">
 	import SubPageHeader from "$components/shared/subPageHeader.svelte";
-	import { t } from "$src/lib/i18n";
+	import { t, getLocale } from "$src/lib/i18n";
     import type Fuse from "fuse.js";
-    import { fetchBuildings, fetchRoomsForBuildings, flattenRooms, createRoomSearch, markRoomsWithGis, type RoomWithBuilding } from "./helper";
+    import { fetchBuildings, fetchRoomsForBuildings, flattenRooms, createRoomSearch, markRoomsWithGis, fetchDepartments, type RoomWithBuilding } from "./helper";
+    import * as api from "./functions"
     import { onMount, onDestroy } from "svelte";
     import { slide, fly } from "svelte/transition";
     import * as gis from "./gis";
-    import type { BuildingInfo, Rooms } from "./types";
-    import { trash, caretDown, close, layersOutline, gridOutline, peopleOutline } from "ionicons/icons";
+    import type { BuildingInfo, Department, Rooms } from "./types";
+    import { trash, caretDown, close, layersOutline, gridOutline, peopleOutline, backspaceOutline, backspace } from "ionicons/icons";
     import MapFooter from "./MapFooter.svelte";
 
     // Constants
@@ -20,16 +21,19 @@
     let featureLayerGroup: any;
 
     //control state
-    let facultyDropdownOpen = false;
+    let departmentDropdownOpen = false;
+    let buildingDropdownOpen = false;
     let activeRoom: RoomWithBuilding|undefined = undefined;
     // activeRoom = {"faculty":"ΣΧΟΛΗ ΓΕΩΠΟΝΙΚΗ","bldName":"ΓΕΩΠΟΝΙΑΣ ΚΑΙ ΔΑΣΟΛΟΓΙΑΣ ΚΤΙΡΙΟ Β","school":"Σχολή Γεωπονίας, Δασολογίας και Φυσικού Περιβάλλοντος","floor":"O01","isMezz":false,"roomType":"Αμφιθέατρο","roomCode":"A02","roomName":"ΑΜΦΙΘΕΑΤΡΟ Β","roomId":"001-004-O01-0-A02","capacity":"176","bldId":"19","hasGis":false};
     
     //stateful variables
     let isLoading = false; 
     let searchQuery = "";
-    let selectedFaculty = "";
+    let selectedDepartment: Department|undefined = undefined;
+    let selectedBuilding: BuildingInfo|undefined = undefined;
     let buildings: BuildingInfo[] = [];
     let buildingsRooms: Record<string, Rooms["rooms"]> = {};
+    let departments: Department[] = [];
     let allRooms: RoomWithBuilding[] = [];
     let fuse: Fuse<RoomWithBuilding>|undefined = undefined;
     
@@ -38,14 +42,35 @@
     $: faculties = [...new Set(allRooms.map(r => r.faculty).filter(Boolean))].sort();
     $: searchResults = fuzzySearchResults(searchQuery);
 
+    // Experimental
+    $: altAvailableBuildings = fetchAvailableBuildings(selectedDepartment);
+    $: altAvailableDepartments = undefined;
+    $: altAvailableRooms = undefined;
+
+    async function fetchAvailableBuildings(selectedDepartment: Department|undefined): Promise<BuildingInfo[]> {
+        if (!selectedDepartment) return (await api.getBuildings()).buildings;
+        return (await api.getUnitBuildings(selectedDepartment.unitID)).buildings;
+    }
+
+    async function fetchAvailableDepartments(selectedBuilding: BuildingInfo|undefined): Promise<Department[]|undefined> {
+        const departments = await fetchDepartments();
+        if (!selectedBuilding) return departments;
+        //TODO
+    }
+
+
     function fuzzySearchResults(searchQuery: string) {
         if (!fuse || !searchQuery) return [];
         const results = fuse.search(searchQuery);
-        return selectedFaculty ? results.filter(r => r.item.faculty === selectedFaculty) : results;
+        return selectedDepartment ? results.filter(r => r.item.faculty === selectedDepartment?.name) : results;
     }
     
     async function loadBuildings() {
         buildings = await fetchBuildings();
+    }
+
+    async function loadDepartments() {
+        departments = await fetchDepartments();
     }
 
     async function loadRooms() {
@@ -66,9 +91,9 @@
         return n + (s[(v - 20) % 10] || s[v] || s[0]);
     }
 
-    function floorDecode(floorCode: string, isMezz: boolean): string {
+    function floorDecode(floorCode: string, isMezz: string): string {
         if (floorCode.startsWith("I")){
-            return isMezz ? $t('maps.floor.ground_mezzanine') : $t('maps.floor.ground');
+            return isMezz == "1" ? $t('maps.floor.ground_mezzanine') : $t('maps.floor.ground');
         }
         else if (floorCode.startsWith("O")){
             const floorNumber = parseInt(floorCode.slice(1));
@@ -102,6 +127,7 @@
 
         await loadBuildings();
         await loadRooms();
+        await loadDepartments();
 
     });
 
@@ -179,7 +205,8 @@
 
     function clearDisplay() {
         searchQuery = "";
-        selectedFaculty = "";
+        selectedDepartment = undefined;
+        selectedBuilding = undefined;
         featureLayerGroup?.clearLayers();
         activeRoom = undefined;
     }
@@ -196,10 +223,10 @@
                     on:click={clearDisplay} 
                     aria-hidden 
                     class="ion-activatable"
-                    class:disabled={!searchQuery && !selectedFaculty}
+                    class:disabled={!searchQuery && !selectedDepartment}
                 >
                     <ion-ripple-effect></ion-ripple-effect>
-                    <ion-icon icon={trash}></ion-icon>
+                    <ion-icon icon={backspace}></ion-icon>
                 </div>
             </div>
 
@@ -208,10 +235,17 @@
                 <button on:click={loadBuildings}>{$t('maps.load_buildings')}</button>
                 <button on:click={loadRooms} disabled={buildingIds.size === 0}>{$t('maps.load_rooms')}</button>
             </div>
-            <div id="faculty-filter-row-wrapper">
-                <div id="faculty-filter" on:click={() => {facultyDropdownOpen = !facultyDropdownOpen}} aria-hidden class="ion-activatable">
+            <div class="filter-row-wrapper">
+                <div class="filter ion-activatable" on:click={() => {departmentDropdownOpen = !departmentDropdownOpen}} aria-hidden>
                     <ion-ripple-effect></ion-ripple-effect>
-                    <span>{selectedFaculty || $t('maps.all_schools')}</span>
+                    <span>{selectedDepartment ? (getLocale()=="el" ? selectedDepartment.name : selectedDepartment.nameEn) : $t('maps.all_departments')}</span>
+                    <ion-icon icon={caretDown}></ion-icon>
+                </div>
+            </div>
+            <div class="filter-row-wrapper">
+                <div class="filter ion-activatable" on:click={() => {buildingDropdownOpen = !buildingDropdownOpen}} aria-hidden>
+                    <ion-ripple-effect></ion-ripple-effect>
+                    <span>{selectedBuilding?.name || $t('maps.all_buildings')}</span>
                     <ion-icon icon={caretDown}></ion-icon>
                 </div>
             </div>
@@ -225,15 +259,28 @@
                     {/each}
                 </ul>
             {/if}
-            {#if facultyDropdownOpen}
+            {#if departmentDropdownOpen}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <div class="dropdown-backdrop" on:click={() => facultyDropdownOpen = false}></div>
-                <div id="faculty-filter-dropdown" transition:slide={{ duration: 200 }}>
+                <div class="dropdown-backdrop" on:click={() => departmentDropdownOpen = false}></div>
+                <div class="filter-dropdown" transition:slide={{ duration: 200 }}>
                     <ul class="autocomplete">
-                        <li on:click={() => {selectedFaculty=""; facultyDropdownOpen=false;}} aria-hidden>{$t('maps.all_schools')}</li>
-                        {#each faculties as faculty}
-                            <li on:click={() => {selectedFaculty=faculty; facultyDropdownOpen=false;}} aria-hidden>{faculty}</li>
+                        <li on:click={() => {selectedDepartment=undefined; departmentDropdownOpen=false;}} aria-hidden>{$t('maps.all_departments')}</li>
+                        {#each departments as department}
+                            <li on:click={() => {selectedDepartment=department; departmentDropdownOpen=false;}} aria-hidden>{getLocale()=="el" ? department.name : department.nameEn}</li>
+                        {/each}
+                    </ul>
+                </div>
+            {/if}
+            {#if buildingDropdownOpen}
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y-no-static-element-interactions -->
+                <div class="dropdown-backdrop" on:click={() => buildingDropdownOpen = false}></div>
+                <div class="filter-dropdown" transition:slide={{ duration: 200 }}>
+                    <ul class="autocomplete">
+                        <li on:click={() => {selectedBuilding=undefined; buildingDropdownOpen=false;}} aria-hidden>{$t('maps.all_buildings')}</li>
+                        {#each buildings as building}
+                            <li on:click={() => {selectedBuilding=building; buildingDropdownOpen=false;}} aria-hidden>{building.name}</li>
                         {/each}
                     </ul>
                 </div>
@@ -286,7 +333,7 @@
         color: var(--ion-color-medium);
     }
 
-    #faculty-filter-row-wrapper {
+    .filter-row-wrapper {
         margin-top: 0.5rem;
         display: flex;
         flex-direction: row;
@@ -296,7 +343,7 @@
         gap: 0.5rem;
     }
 
-    #faculty-filter {
+    .filter {
         position: relative;
         padding: 8px 16px;
         font-size: 1rem;
@@ -411,7 +458,7 @@
         background: var(--ion-color-light);
     }
 
-    #faculty-filter-dropdown {
+    .filter-dropdown {
         position: absolute;
         top: 100%;
         left: 0;
@@ -419,7 +466,7 @@
         z-index: 1001;
     }
 
-    #faculty-filter-dropdown .autocomplete {
+    .filter-dropdown .autocomplete {
         position: relative;
         top: 0;
     }
