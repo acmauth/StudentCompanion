@@ -97,6 +97,7 @@
                 maxZoom: 22
             }).addTo(map);
             featureLayerGroup = L.layerGroup().addTo(map);
+            map.invalidateSize();
         }
 
         await loadBuildings();
