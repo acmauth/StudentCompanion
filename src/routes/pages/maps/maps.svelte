@@ -186,11 +186,6 @@
 </script>
 
 <ion-page>
-	<ion-header collapse="condense" mode="ios">
-        <ion-toolbar mode="md">
-            <ion-title size="large">{$t('maps.title')}</ion-title>
-        </ion-toolbar>
-    </ion-header>
     <div id="map-wrapper" bind:this={mapContainer}></div>
     <div id="top-controls">
         <div class="search-container" on:focusout={() => {searchResults=[];}} on:focusin={() => {searchResults=fuzzySearchResults(searchQuery);}}>
@@ -268,12 +263,19 @@
                 </ion-chip>
             </div>
         </div>
+    {:else}
+        <div id="map-footer-container" transition:fly={{ y: -200, duration: MAPANIMATIONDURATION * 1000 }}>
+            <MapFooter/>
+        </div>
     {/if}
-    <MapFooter />
 </ion-page>
 
 <style>
     @import 'leaflet/dist/leaflet.css';
+
+    #map-footer-container{
+        display:block;
+    }
 
     #bottom-close {
         position: absolute;
@@ -505,4 +507,31 @@
         --color: var(--ion-color-dark);
         margin: 0;
     }
+
+    @media (min-width: 768px) {
+        #top-controls {
+            width: 50%;
+            left: 25%;
+        }
+        #bottom-controls {
+            width: 50%;
+            left: 25%;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        #top-controls {
+            width: 33%;
+            left: 33%;
+        }
+        #bottom-controls {
+            width: 33%;
+            left: 33%;
+        }
+
+        #map-footer-container{
+            display:none;
+        }
+    }
+
 </style>
