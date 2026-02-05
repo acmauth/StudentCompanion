@@ -23,6 +23,7 @@
 	import { getCoursesEvents } from '$lib/components/calendar/calendarUtils';
 	import { registerPlugin, Capacitor } from '@capacitor/core';
 	import { Browser } from '@capacitor/browser';
+	import { locale } from '$lib/i18n';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -104,11 +105,11 @@
 		}
 	}
 
-	async function getInfo() {
+	async function getInfo(locale: string) {
 		if($EventStore.length === 0) 
 			getCoursesEvents();
 		
-		let expandedLocale = getLocale() == 'el' ? '' : '($expand=locale)';
+		let expandedLocale = locale == 'el' ? '' : '($expand=locale)';
 
 		let personalData = await neoUniversisGet(
 			'Students/me?$expand=studyProgram($expand=studyLevel'+expandedLocale+'), department'+expandedLocale + (expandedLocale !== '' ? ', person' +expandedLocale : '')
@@ -136,7 +137,7 @@
 </script>
 
 <ion-content class="main-content" fullscreen>
-	{#await getInfo()}
+	{#await getInfo($locale)}
 		<HomepageSkeleton />
 	{:then}
 		<div class="gradient-bg">
