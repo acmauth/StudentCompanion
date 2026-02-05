@@ -80,7 +80,7 @@
 				<div class="stat-card">
 					<div class="stat-header-horizontal">
 						<span class="stat-label">{$t('homepage.average')}</span>
-						<span class="stat-value">{average.toFixed(1)}</span>
+						<span class="stat-value">{average.toFixed(2)}</span>
 					</div>
 					<ion-progress-bar class="progress-bar" value="{average / 10}"></ion-progress-bar>
 				</div>

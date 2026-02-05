@@ -123,7 +123,7 @@
 		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
 
 		let passedSubjects = subjects.filter(
-			(course: { grade: number }) => course.grade * 10 >= 5
+			(course: { isPassed: number }) => course.isPassed == 1
 		);
 
 		numSubjects = subjects?.length;
