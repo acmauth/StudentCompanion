@@ -185,15 +185,17 @@
 			<div class="service-buttons-grid">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button" on:click={() => {navController.push(Links);}}>
+				<div class="service-button ion-activatable" on:click={() => {navController.push(Links);}}>
 					<ion-icon icon={linkOutline} class="service-button-icon"></ion-icon>
 					<span class="service-button-label">{$t('homepage.links')}</span>
+					<ion-ripple-effect></ion-ripple-effect>
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button" on:click={openCapacitorSite}>
+				<div class="service-button ion-activatable" on:click={openCapacitorSite}>
 					<ion-icon icon={barbellOutline} class="service-button-icon"></ion-icon>
 					<span class="service-button-label">{$t('homepage.gym')}</span>
+					<ion-ripple-effect></ion-ripple-effect>
 				</div>
 			</div>
 
@@ -438,18 +440,8 @@
 		background: var(--app-color-map-input, #ffffff);
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 		position: relative;
+		overflow: hidden;
 		z-index: 2;
-	}
-
-	.service-button:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(56, 128, 255, 0.15);
-		border-color: var(--ion-color-primary-tint);
-	}
-
-	.service-button:active {
-		transform: translateY(0);
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 	}
 
 	.service-button-icon {
