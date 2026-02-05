@@ -145,11 +145,26 @@
 		font-size: x-large;
 	}
 
+	ion-tab-bar {
+		display: flex;
+		justify-content: stretch;
+		align-items: stretch;
+		width: 100%;
+	}
+
 	ion-tab-button {
 		transition: all 0.3s ease;
+		flex: 1 1 0;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		max-width: none;
 	}
 
 	.tabBarLine2 {
+		display: none;
 		background-color: var(--app-color-primary-dark);
 		height: 4px;
 		border-radius: 2rem;
@@ -159,5 +174,13 @@
 		/* z-index: 1000; */
 		left: 0;
 		width: 1rem;
+	}
+
+	ion-label {
+		text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: 100%;
 	}
 </style>

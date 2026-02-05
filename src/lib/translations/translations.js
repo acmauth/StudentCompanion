@@ -2,6 +2,11 @@ import { menu } from 'ionicons/icons';
 
 export default {
 	el: {
+		"navigation.home": "Αρχική",
+		"navigation.progress": "Πρόοδος",
+		"navigation.calendar": "Ατζέντα",
+		"navigation.maps": "Χάρτες",
+		"navigation.club": "Λέσχη",
 		"menu.title": "Μενού Λέσχης",
 		"menu.week": "Το Μενού της Εβδομάδας",
 		"menu.morning_open": "Λέσχη ανοιχτή - Κλείνει στις 10:00",
@@ -246,6 +251,11 @@ export default {
 		"recentgrades.nonews": "Δεν υπάρχουν νέα."
 	},
 	en: {
+		'navigation.home': 'Home',
+		'navigation.progress': 'Progress',
+		'navigation.calendar': 'Agenda',
+		'navigation.maps': 'Maps',
+		'navigation.club': 'Club',
 		'menu.title': 'Club menu',
 		'menu.week': "The week's menu",
 		'menu.morning_open': 'Club open - Closes at 10:00',
