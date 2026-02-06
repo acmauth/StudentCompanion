@@ -218,11 +218,10 @@
   }
 
   ion-app {
-    background-color: var(--ion-background-color);
+    background-color: transparent;
   }
 
 }
-
 
 
 body.dark {

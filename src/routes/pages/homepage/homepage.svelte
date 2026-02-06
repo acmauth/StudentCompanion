@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount, onDestroy } from 'svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
@@ -27,7 +28,6 @@
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
-
 
 	register();
 	// Get upcoming events (next 2 events)
@@ -276,6 +276,7 @@
 </ion-content>
 
 <style>
+
 	.main-content {
 		--background: transparent;
 	}
@@ -283,12 +284,13 @@
 	.gradient-bg {
 		position: relative;
 		min-height: 100%;
-		background: linear-gradient(to bottom, #0a0e17 0, #174ea6 12rem, var(--ion-background-color, #f5f5f5) 12rem);
+		background: transparent;
+		/* background: linear-gradient(to bottom, #0a0e17 0, #174ea6 12rem, var(--ion-background-color, #f5f5f5) 12rem); */
 		background-blend-mode: overlay;
 		overflow: hidden;
 	}
 
-	.gradient-bg::before {
+	/* .gradient-bg::before {
 		content: '';
 		position: absolute;
 		top: -20rem;
@@ -325,14 +327,15 @@
 		animation: blobMoveAlt 4s ease-in-out infinite alternate;
 		z-index: 0;
 		pointer-events: none;
-	}
+	} */
 
 	.personal-section {
 		position: relative;
-		padding: 1.5rem 1.5rem 0 1.5rem;
+		padding: 0.5rem 1.5rem 0 1.5rem;
 		border-radius: 0 0 0rem 0rem;
 		padding-bottom: 1rem;
 		z-index: 1;
+		background: linear-gradient(to bottom, transparent 70%, var(--ion-background-color, #f5f5f5) 70%); /*linear-gradient(to bottom, #0a0e17 0, #174ea6 12rem, var(--ion-background-color, #f5f5f5) 12rem);*/
 	}
 
 	@keyframes blobMove {
@@ -464,10 +467,11 @@
 
 	.events-section, .updates-section, .services-section {
 		padding: 0rem 1.5rem 1.5rem 1.5rem;
+		background-color: var(--ion-background-color, #f5f5f5) ;
 	}
 
 	.services-section {
-		margin-top: 2.5rem !important;
+		padding-top: 2.5rem !important;
 		transition: margin-top 0.6s ease;
 	}
 
