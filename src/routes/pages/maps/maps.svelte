@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t, getLocale } from "$src/lib/i18n";
     import type Fuse from "fuse.js";
-    import { fetchBuildings, fetchRoomsForBuildings, flattenRooms, createRoomSearch, markRoomsWithGis, fetchDepartments, type RoomWithBuilding } from "./helper";
+    import { fetchBuildings, fetchRoomsForBuildings, flattenRooms, createRoomSearch, markRoomsWithGis, fetchDepartments, fetchAvailableBuildings, getOrdinalSuffix, type RoomWithBuilding } from "./helper";
     import * as api from "./functions"
     import { onMount, onDestroy, tick } from "svelte";
     import { slide, fly } from "svelte/transition";
@@ -61,22 +61,14 @@
         }
     }
 
-    async function fetchAvailableBuildings(selectedDepartment: Department|undefined): Promise<BuildingInfo[]> {
-        if (!selectedDepartment) return (await api.getBuildings()).buildings;
-        return (await api.getUnitBuildings(selectedDepartment.unitID)).buildings;
-    }
-
     async function setSelectedDepartment(department: Department|undefined) {
         selectedDepartment = department;
-        // Handling side-effects TODO:
         buildings = await fetchAvailableBuildings(department);
     }
 
     async function setSelectedBuilding(building: BuildingInfo|undefined) {
         selectedBuilding = building;
-        // Handling side-effects TODO:
     }
-
 
     function fuzzySearchResults(searchQuery: string): FuseResult<RoomWithBuilding>[] {
         if (!fuse || !searchQuery) return searchableRooms.map((room, i) => ({ item: room, refIndex: i, score: 0 }));
@@ -102,12 +94,6 @@
         allRooms = markRoomsWithGis(flattenRooms(buildingsRooms), gisSpaceIds);
         fuse = createRoomSearch(allRooms);
         isLoading = false;
-    }
-
-    function getOrdinalSuffix(n: number): string {
-        const s = ["th", "st", "nd", "rd"];
-        const v = n % 100;
-        return n + (s[(v - 20) % 10] || s[v] || s[0]);
     }
 
     function floorDecode(floorCode: string, isMezz: string): string {
@@ -171,7 +157,7 @@
 
         buildings.forEach(b => {
             if (b.latY && b.longX) {
-                L.marker([b.latY + OFFSETS.Y, b.longX + OFFSETS.X], { title: b.name, icon:L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]})}).on('click', () => mapMarkerSelect(b)).addTo(markerLayerGroup);
+                L.marker([b.latY + OFFSETS.Y, b.longX + OFFSETS.X], { title: b.name, icon:L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]})}).on('click', () => mapMarkerSelect(b)).bindPopup(`<span>${b.name}</span>`).addTo(markerLayerGroup);
             }
         });
     });

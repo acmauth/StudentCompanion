@@ -69,6 +69,17 @@ export function markRoomsWithGis(rooms: RoomWithBuilding[], gisIds: Set<string>)
     return rooms.map(room => ({ ...room, hasGis: gisIds.has(room.roomId) }));
 }
 
+export function getOrdinalSuffix(n: number): string {
+	const s = ["th", "st", "nd", "rd"];
+	const v = n % 100;
+	return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+export async function fetchAvailableBuildings(selectedDepartment: Department|undefined): Promise<BuildingInfo[]> {
+	if (!selectedDepartment) return (await authApi.getBuildings()).buildings;
+	return (await authApi.getUnitBuildings(selectedDepartment.unitID)).buildings;
+}
+
 export async function handleTransportAppClick() {
 		const packageName = 'com.amco.city.thessaloniki';
 		const iosAppStoreUrl = 'https://apps.apple.com/gr/app/oseth-bus/id6748433667';
