@@ -79,8 +79,6 @@
 
 
     function fuzzySearchResults(searchQuery: string): FuseResult<RoomWithBuilding>[] {
-        console.log("Fuzzy searching for:", searchQuery);
-        console.log("In rooms:", searchableRooms.length, "Fuse instance:", !!fuse);
         if (!fuse || !searchQuery) return searchableRooms.map((room, i) => ({ item: room, refIndex: i, score: 0 }));
         const results = fuse.search(searchQuery);
         return results;
@@ -280,6 +278,16 @@
                     <ion-ripple-effect></ion-ripple-effect>
                     <ion-icon icon={backspace}></ion-icon>
                 </div>
+                {#if searchResults.length > 0}
+                <ul class="autocomplete" transition:slide={{ duration: 200 }}>
+                    {#each searchResults as { item } (item.roomId)}
+                        <li on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
+                            {#if item.hasGis}<span class="gis-indicator">📍</span>{/if}
+                            {item.roomName} - <i class="building-name">{item.bldName}</i>
+                        </li>
+                    {/each}
+                </ul>
+            {/if}
             </div>
 
             <div class="debug-buttons" style="display:none;">
@@ -301,21 +309,11 @@
                     <ion-icon icon={caretDown}></ion-icon>
                 </div>
             </div>
-            {#if searchResults.length > 0}
-                <ul class="autocomplete" transition:slide={{ duration: 200 }}>
-                    {#each searchResults as { item } (item.roomId)}
-                        <li on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
-                            {#if item.hasGis}<span class="gis-indicator">📍</span>{/if}
-                            {item.roomName} - <i class="building-name">{item.bldName}</i>
-                        </li>
-                    {/each}
-                </ul>
-            {/if}
             {#if departmentDropdownOpen}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
                 <div class="dropdown-backdrop" on:click={() => departmentDropdownOpen = false}></div>
-                <div class="filter-dropdown" transition:slide={{ duration: 200 }}>
+                <div id="department-select" class="filter-dropdown" transition:slide={{ duration: 200 }}>
                     <ul class="autocomplete">
                         <li on:click={async () => {departmentDropdownOpen=false; await setSelectedDepartment(undefined); }} aria-hidden>{$t('maps.all_departments')}</li>
                         {#each departments as department}
@@ -328,7 +326,7 @@
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
                 <div class="dropdown-backdrop" on:click={() => buildingDropdownOpen = false}></div>
-                <div class="filter-dropdown" transition:slide={{ duration: 200 }}>
+                <div id="building-select" class="filter-dropdown" transition:slide={{ duration: 200 }}>
                     <ul class="autocomplete">
                         <li on:click={async () => { buildingDropdownOpen=false; await setSelectedBuilding(undefined);}} aria-hidden>{$t('maps.all_buildings')}</li>
                         {#each buildings as building}
@@ -429,6 +427,7 @@
         width: 100%;
         justify-content: space-between;
         gap: 0.5rem;
+        anchor-name: --search-row;
     }
 
     #trashcan {
@@ -488,6 +487,27 @@
         z-index: 1000;
         width: 100%;
         border-radius: 1rem;
+    }
+
+
+    #department-select {
+        anchor-name: --department-select;
+    }
+
+    #building-select {
+        anchor-name: --building-select;
+    }
+
+    #search-row-wrapper .autocomplete {
+        top: anchor(--search-row bottom) !important;
+    }
+
+    #department-select .autocomplete {
+        top: anchor(--department-select bottom) !important;
+    }
+
+    #building-select .autocomplete {
+        top: anchor(--building-select bottom) !important;
     }
 
     .autocomplete li {
