@@ -16,14 +16,25 @@ export async function fetchBuildings(): Promise<BuildingInfo[]> {
 
 export async function fetchDepartments(): Promise<Department[]> {
 	const units = (await authApi.getUnits()).units;
-	return Object.values(units).map(u => ({
-		unitID: u.adminUnitIdFormatted,
-		name: u.name,
-		nameEn: u.nameEn,
-		adminUnitIdFormatted: u.adminUnitIdFormatted,
-		parentDomain: u.parentDomain,
-		childrenDomains: u.childrenDomains
-	}));
+	return Object.keys(units).map(key => {
+		const u = units[key];
+		return {
+			unitID: key,
+			name: u.name,
+			nameEn: u.nameEn,
+			adminUnitIdFormatted: u.adminUnitIdFormatted,
+			parentDomain: u.parentDomain,
+			childrenDomains: u.childrenDomains
+		} as Department;
+	});
+	// return Object.values(units).map(u => ({
+	// 	unitID: u.adminUnitIdFormatted,
+	// 	name: u.name,
+	// 	nameEn: u.nameEn,
+	// 	adminUnitIdFormatted: u.adminUnitIdFormatted,
+	// 	parentDomain: u.parentDomain,
+	// 	childrenDomains: u.childrenDomains
+	// }));
 }
 
 export async function fetchRoomsForBuildings(buildingIds: Set<string>): Promise<Record<string, Rooms["rooms"]>> {
@@ -51,7 +62,7 @@ export function flattenRooms(roomsByBuilding: Record<string, Rooms["rooms"]>): R
 }
 
 export function createRoomSearch(rooms: RoomWithBuilding[]): Fuse<RoomWithBuilding> {
-    return new Fuse(rooms, { keys: ["faculty", "roomName"] });
+    return new Fuse(rooms, { keys: ["roomName"] });
 }
 
 export function markRoomsWithGis(rooms: RoomWithBuilding[], gisIds: Set<string>): RoomWithBuilding[] {
