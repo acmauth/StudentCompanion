@@ -21,7 +21,8 @@
     let L: any;
     let map: any;
     let mapContainer: HTMLElement;
-    let featureLayerGroup: any;
+    let selectedFeatureLayerGroup: any;
+    let markerLayerGroup: any;
 
     //control state
     let departmentDropdownOpen = false;
@@ -137,6 +138,16 @@
         }
     }
 
+    function hideMarkers(){
+        map.removeLayer(markerLayerGroup);
+    }
+
+    function showMarkers(){
+        if(!map.hasLayer(markerLayerGroup)){
+            markerLayerGroup.addTo(map);
+        }
+    }
+
     onMount(async () => {
         if (typeof window !== 'undefined') {
             L = (await import('leaflet')).default;
@@ -150,7 +161,8 @@
                 attribution: '&copy; OpenStreetMap contributors',
                 maxZoom: 22
             }).addTo(map);
-            featureLayerGroup = L.layerGroup().addTo(map);
+            selectedFeatureLayerGroup = L.layerGroup().addTo(map);
+            markerLayerGroup = L.layerGroup().addTo(map);
             map.invalidateSize();
         }
 
@@ -161,7 +173,7 @@
 
         buildings.forEach(b => {
             if (b.latY && b.longX) {
-                L.marker([b.latY + OFFSETS.Y, b.longX + OFFSETS.X], { title: b.name }).on('click', () => mapMarkerSelect(b)).addTo(featureLayerGroup);
+                L.marker([b.latY + OFFSETS.Y, b.longX + OFFSETS.X], { title: b.name }).on('click', () => mapMarkerSelect(b)).addTo(markerLayerGroup);
             }
         });
     });
@@ -174,18 +186,19 @@
 
     async function displayRoom(room: RoomWithBuilding) {
         activeRoom = room;
-        if (!map || !featureLayerGroup) return;
+        if (!map || !selectedFeatureLayerGroup) return;
 
         console.log("Displaying room:", JSON.stringify(room));
 
-        featureLayerGroup.clearLayers();
+        hideMarkers();
+        selectedFeatureLayerGroup.clearLayers();
 
         // If room doesn't have GIS, fall back to building coordinates
         if (!room.hasGis) {
             const building = buildings.find(b => b.bldId === room.bldId);
             if (building && building.latY && building.longX) {
                 L.marker([building.latY + OFFSETS.Y, building.longX + OFFSETS.X])
-                    .addTo(featureLayerGroup)
+                    .addTo(selectedFeatureLayerGroup)
                 map.flyTo([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], 18, { duration: MAPANIMATIONDURATION });
             } else {
                 alert(`Room "${room.roomName}" has no location data available.`);
@@ -209,14 +222,14 @@
             if ((floorDesign as any)?.features?.length > 0) {
                 L.geoJSON(gis.offsetGeoJSON(floorDesign), {
                     style: () => ({ color: '#333', weight: 1, opacity: 0.8, fillColor: '#f4f4f4', fillOpacity: 0.5 })
-                }).addTo(featureLayerGroup);
+                }).addTo(selectedFeatureLayerGroup);
             }
 
             // Room polygon
             if (geometries.polygon) {
                 const layer = L.geoJSON(gis.offsetGeoJSON(geometries.polygon), {
                     style: { color: '#0056b3', weight: 3, fillOpacity: 0.6, fillColor: '#007bc2' }
-                }).addTo(featureLayerGroup);
+                }).addTo(selectedFeatureLayerGroup);
                 map.flyToBounds(layer.getBounds(), { padding: [100, 100], maxZoom: 19, duration: MAPANIMATIONDURATION });
             }
 
@@ -226,7 +239,7 @@
                     pointToLayer: (_: any, latlng: any) => L.circleMarker(latlng, {
                         radius: 6, fillColor: "red", color: "#000", weight: 1, opacity: 1, fillOpacity: 0.8
                     })
-                }).addTo(featureLayerGroup);
+                }).addTo(selectedFeatureLayerGroup);
                 if (!geometries.polygon) {
                     map.flyTo(layer.getLayers()[0].getLatLng(), 19, { duration: MAPANIMATIONDURATION });
                 }
@@ -244,7 +257,8 @@
         departmentDropdownOpen = false;
         await setSelectedDepartment(undefined);
         await setSelectedBuilding(undefined);
-        featureLayerGroup?.clearLayers();
+        selectedFeatureLayerGroup?.clearLayers();
+        showMarkers();
         activeRoom = undefined;
         searchResults = [];
     }
