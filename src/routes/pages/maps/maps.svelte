@@ -22,7 +22,7 @@
     let map: any;
     let mapContainer: HTMLElement;
     let selectedFeatureLayerGroup: any;
-    let markerLayerGroup: any;
+    let markerClusterGroup: any;
 
     //control state
     let departmentDropdownOpen = false;
@@ -123,12 +123,12 @@
     }
 
     function hideMarkers(){
-        map.removeLayer(markerLayerGroup);
+        map.removeLayer(markerClusterGroup);
     }
 
     function showMarkers(){
-        if(!map.hasLayer(markerLayerGroup)){
-            markerLayerGroup.addTo(map);
+        if(!map.hasLayer(markerClusterGroup)){
+            markerClusterGroup.addTo(map);
         }
     }
 
@@ -137,6 +137,12 @@
             L = (await import('leaflet')).default;
             // @ts-ignore
             await import('leaflet/dist/leaflet.css');
+            // @ts-ignore
+            await import('leaflet.markercluster');
+            // @ts-ignore
+            await import('leaflet.markercluster/dist/MarkerCluster.css');
+            // @ts-ignore
+            await import('leaflet.markercluster/dist/MarkerCluster.Default.css');
         }
 
         if (mapContainer && L) {
@@ -146,7 +152,33 @@
                 maxZoom: 22
             }).addTo(map);
             selectedFeatureLayerGroup = L.layerGroup().addTo(map);
-            markerLayerGroup = L.layerGroup().addTo(map);
+            
+            // Initialize marker cluster group with custom options
+            markerClusterGroup = L.markerClusterGroup({
+                // Customize cluster icon
+                iconCreateFunction: function(cluster: any) {
+                    const count = cluster.getChildCount();
+                    let size = 'small';
+                    if (count > 10) size = 'medium';
+                    if (count > 25) size = 'large';
+                    
+                    return L.divIcon({
+                        html: `<div><span>${count}</span></div>`,
+                        className: `marker-cluster marker-cluster-${size}`,
+                        iconSize: L.point(40, 40)
+                    });
+                },
+                showCoverageOnHover: false,
+                zoomToBoundsOnClick: true,
+                maxClusterRadius: 80,
+                disableClusteringAtZoom: 20,
+                animate: true,
+                animateAddingMarkers: true,
+                spiderfyOnMaxZoom: false,
+                removeOutsideVisibleBounds: true
+            });
+            
+            markerClusterGroup.addTo(map);
             map.invalidateSize();
         }
 
@@ -155,9 +187,15 @@
         await loadDepartments();
         searchableRooms = allRooms;
 
+        // Add markers to cluster group
         buildings.forEach(b => {
             if (b.latY && b.longX) {
-                L.marker([b.latY + OFFSETS.Y, b.longX + OFFSETS.X], { title: b.name, icon:L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]})}).on('click', () => mapMarkerSelect(b)).bindPopup(`<span>${b.name}</span>`).addTo(markerLayerGroup);
+                const marker = L.marker(
+                    [b.latY + OFFSETS.Y, b.longX + OFFSETS.X],
+                    {title: b.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]})}
+                ).on('click', () => mapMarkerSelect(b)).bindPopup(`<span>${b.name}</span>`);
+                
+                markerClusterGroup.addLayer(marker);
             }
         });
     });
@@ -354,8 +392,42 @@
 </ion-page>
 
 <style>
-    @import 'leaflet/dist/leaflet.css';
 
+    /* Leaflet and marker cluster styles */
+    @import 'leaflet/dist/leaflet.css';
+    @import 'leaflet.markercluster/dist/MarkerCluster.css';
+    @import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+
+    :global(.marker-cluster div) {
+        font-weight: bold;
+    }
+    
+    :global(.marker-cluster span) {
+        color: white;
+        font-size: 12px;
+        line-height: 30px;
+    }
+    
+    :global(.marker-cluster-small) {
+        background-color: #155c979f !important;
+    }
+    :global(.marker-cluster-small div) {
+        background-color: #155C97 !important;
+    }
+    :global(.marker-cluster-medium) {
+        background-color: #2788d89f !important;
+    }
+    :global(.marker-cluster-medium div) {
+        background-color: #2788d8 !important;
+    }
+    :global(.marker-cluster-large) {
+        background-color: #2297f79f !important;
+    }
+    :global(.marker-cluster-large div) {
+        background-color: #2297f7 !important;
+    }
+
+    /* Map UI styles */
     #map-footer-container{
         display:block;
     }
