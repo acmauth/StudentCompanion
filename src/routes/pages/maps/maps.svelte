@@ -1,5 +1,4 @@
 <script lang="ts">
-	import SubPageHeader from "$components/shared/subPageHeader.svelte";
 	import { t, getLocale } from "$src/lib/i18n";
     import type Fuse from "fuse.js";
     import { fetchBuildings, fetchRoomsForBuildings, flattenRooms, createRoomSearch, markRoomsWithGis, fetchDepartments, type RoomWithBuilding } from "./helper";
@@ -11,6 +10,7 @@
     import { trash, caretDown, close, layersOutline, gridOutline, peopleOutline, backspaceOutline, backspace } from "ionicons/icons";
     import MapFooter from "./MapFooter.svelte";
 	import { FuseResult } from "fuse.js";
+    import markerIcon from '$lib/assets/marker.png';
 
     // Constants
     const MAPANIMATIONDURATION = 0.35; // seconds
@@ -171,7 +171,7 @@
 
         buildings.forEach(b => {
             if (b.latY && b.longX) {
-                L.marker([b.latY + OFFSETS.Y, b.longX + OFFSETS.X], { title: b.name }).on('click', () => mapMarkerSelect(b)).addTo(markerLayerGroup);
+                L.marker([b.latY + OFFSETS.Y, b.longX + OFFSETS.X], { title: b.name, icon:L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]})}).on('click', () => mapMarkerSelect(b)).addTo(markerLayerGroup);
             }
         });
     });
@@ -195,7 +195,7 @@
         if (!room.hasGis) {
             const building = buildings.find(b => b.bldId === room.bldId);
             if (building && building.latY && building.longX) {
-                L.marker([building.latY + OFFSETS.Y, building.longX + OFFSETS.X])
+                L.marker([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], { title: building.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]}) })
                     .addTo(selectedFeatureLayerGroup)
                 map.flyTo([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], 18, { duration: MAPANIMATIONDURATION });
             } else {
