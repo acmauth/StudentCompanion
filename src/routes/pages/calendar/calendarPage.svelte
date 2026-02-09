@@ -1,7 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { add } from 'ionicons/icons';
-    import { calendarNavigation } from '$components/calendar/calendarNavigation';
     import { EventStore } from '$lib/components/calendar/event/EventStore';
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
     import EventModal from '$lib/components/calendar/event/EventModal.svelte';
@@ -188,8 +187,6 @@
                     selectedEvent = event;
                     modalOpen = true;
                 }
-                // Clear the navigation params after use
-                calendarNavigation.clear();
             }
         }
 

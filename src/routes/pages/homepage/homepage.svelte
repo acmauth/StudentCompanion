@@ -17,7 +17,6 @@
 	import { EventStore } from '$lib/components/calendar/event/EventStore';
 	import type { Event } from '$lib/components/calendar/event/Event';
 	import { buildCalendarWeeks, type DayObject } from '$lib/components/calendar/calendarUtils';
-	import { calendarNavigation } from '$components/calendar/calendarNavigation';
 	import Links from '$src/routes/quickLinks/quickLinks.svelte';
 	import Notifications from '$src/routes/notifications/notificationsPage.svelte';
 	import { getCoursesEvents } from '$lib/components/calendar/calendarUtils';
