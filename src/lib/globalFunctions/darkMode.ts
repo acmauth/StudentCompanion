@@ -4,7 +4,7 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 // Check if dark mode is enabled and set it if it is
 export async function checkAppMode() {
     let darkMode = localStorage.getItem('darkMode');
-    console.log("Dark mode from localStorage:", darkMode);
+    // console.log("Dark mode from localStorage:", darkMode);
     if (darkMode === null) { // Setting default dark mode | Fixes the toggle being ticked wrongly
         localStorage.setItem('darkMode', 'true');
         darkMode = "true";

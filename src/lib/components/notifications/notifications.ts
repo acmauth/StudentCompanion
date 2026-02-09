@@ -82,9 +82,9 @@ async function getUniversisMessages(refresh: boolean = false) {
     date.setMinutes(date.getMinutes() - timezoneOffset);
     date.setDate(date.getDate() - daysToFetch);
     const formattedDate = date.toISOString().replace('Z', ''); // Using ISO string format
-    console.log(`Fetching universis messages since ${formattedDate}`);
+    // console.log(`Fetching universis messages since ${formattedDate}`);
     const requestURL = `students/me/messages?$orderby=dateReceived desc, dateCreated desc&$filter=dateCreated gt '${formattedDate}'&$top=8`;
-    console.log(`Request URL: ${requestURL}`);
+    // console.log(`Request URL: ${requestURL}`);
     const messages = await neoUniversisGet(requestURL, options);
     if (messages.error) return [];
 

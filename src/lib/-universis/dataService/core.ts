@@ -54,7 +54,17 @@ async function oidcApiRequest(endpoint: string): Promise<Object> {
       },
     });
     
-    //Todo: Check result for errors
-    const data = await response.json();
-    return data;
+
+
+    try {
+      if (!response.ok) {
+        throw new Error(`HTTP error ${response.status}`);
+      }
+      const text = await response.text();
+      return text ? JSON.parse(text) : {};
+    } catch (error) {      
+        console.error("API request error:", error);
+        return {};
+    }
+
 }

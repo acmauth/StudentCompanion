@@ -148,12 +148,12 @@ export function getPreviousMonth(month: number, year: number): { month: number; 
 
 export async function getCoursesEvents() {
         // console.log("Fetching courses events from Universis...");
-        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
+        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1'))?.value;
         // console.log(fetchedExams);
         await EventStore.loadFromStorage();
         let currentEvents = get(EventStore);
 
-        const newExams = fetchedExams.map((exam: any) => {
+        const newExams = fetchedExams?.map((exam: any) => {
             const existingIndex = currentEvents.findIndex(x => x.id == exam.id);
             if (existingIndex == -1) {
                 return {
@@ -174,16 +174,16 @@ export async function getCoursesEvents() {
             }
         }).filter((event: any) => event !== null); // Filter out null values
 
-        if (newExams.length > 0) {
+        if (newExams && newExams.length > 0) {
             EventStore.update(events => [...events, ...newExams]);
         }
 
-        let fetchedClasses = (await universisGet('students/me/teachingEvents?$top=-1&$expand=location,performer')).value;
+        let fetchedClasses = (await universisGet('students/me/teachingEvents?$top=-1&$expand=location,performer'))?.value;
         // console.log(fetchedClasses);
         
         currentEvents = get(EventStore); // Refresh current events
 
-        const newClasses = fetchedClasses.map((classEvent: any) => {
+        const newClasses = fetchedClasses?.map((classEvent: any) => {
             const existingIndex = currentEvents.findIndex(x => x.id == classEvent.id);
             if (existingIndex == -1) {
                 return {
@@ -204,7 +204,7 @@ export async function getCoursesEvents() {
             }
         }).filter((event: any) => event !== null); // Filter out null values
 
-        if (newClasses.length > 0) {
+        if (newClasses && newClasses.length > 0) {
             EventStore.update(events => [...events, ...newClasses]);
         }
         

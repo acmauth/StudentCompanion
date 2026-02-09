@@ -18,14 +18,14 @@ export async function handleCallback(url: string, loading: boolean) {
     
     try {
       const tokens = await authClient.handleCallback(url);
-      console.log('Login successful', tokens);
+      // console.log('Login successful', tokens);
       
       // Get user info
       userInfo = await authClient.getUserInfo();
       isAuthenticated = true;
       
       // Clean URL and redirect
-      console.log("[src/login/login.ts] Navigating to homepage");
+      // console.log("[src/login/login.ts] Navigating to homepage");
       goto('/pages/homepage', { replaceState: true });
     } catch (err) {
       console.error('Login failed:', err);
