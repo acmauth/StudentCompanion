@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { add } from 'ionicons/icons';
+    import { calendarNavigation } from '$components/calendar/calendarNavigation';
     import { EventStore } from '$lib/components/calendar/event/EventStore';
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
     import EventModal from '$lib/components/calendar/event/EventModal.svelte';
@@ -13,8 +14,7 @@
     import { removePastNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
     import { deleteEventNotifications, deleteSingleEventNotification } from '$src/lib/calendarNotifications/notificationFunctions';
     import { getLocale, t } from '$lib/i18n';
-    import { buildCalendarWeeks, type DayObject, type SelectedDay, getNextMonth, getPreviousMonth } from '$lib/components/calendar/calendarUtils';
-    import { universisGet } from '$src/lib/dataService';
+    import { buildCalendarWeeks, type DayObject, type SelectedDay, getNextMonth, getPreviousMonth, getCoursesEvents } from '$lib/components/calendar/calendarUtils';
 
     let currentDate = new Date();
     let month = currentDate.getMonth();
@@ -89,6 +89,12 @@
                 activeDate = new Date(year, month, dayObj.day);
             }
         }
+    }
+
+    function handleMonthYearChange(newMonth: number, newYear: number) {
+        month = newMonth;
+        year = newYear;
+        buildCalendar();
     }
 
     // function createPrototypeEvent(): Event {
@@ -180,82 +186,65 @@
         }
     }
 
-    async function getCoursesEvents() {
-        console.log("Fetching courses events from Universis...");
-        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1')).value;
-        console.log(fetchedExams);
-        $EventStore = $EventStore.concat(
-            fetchedExams.map((exam) => {
-                const existingIndex = $EventStore.findIndex(x => x.id == exam.id);
-                if (existingIndex == -1) {
-                    return {
-                        id: exam.id,
-                        title: exam.courseExam.name,
-                        description: exam.location?.description,
-                        type: EventType.TEST,
-                        repeat: EventRepeatType.NEVER,
-                        notify: false,
-                        location: exam.location?.description,
-                        slot: {
-                            start: new Date(exam.startDate),
-                            end: new Date(exam.endDate)
-                        }
-                    };
-                } else {
-                    return null; // Return null if the exam already exists in $EventStore
-                }
-            }).filter(event => event !== null) // Filter out null values
-        );
-
-        let fetchedClasses = (await universisGet('students/me/teachingEvents?$top=-1&$expand=location,performer')).value;
-        console.log(fetchedClasses);
-        $EventStore = $EventStore.concat(
-            fetchedClasses.map((classEvent) => {
-                const existingIndex = $EventStore.findIndex(x => x.id == classEvent.id);
-                if (existingIndex == -1) {
-                    return {
-                        id: classEvent.id,
-                        title: classEvent.name,
-                        type: EventType.CLASS,
-                        professor: classEvent.performer?.alternateName,
-                        repeat: EventRepeatType.NEVER,
-                        notify: false,
-                        location: classEvent.location?.description,
-                        slot: {
-                            start: new Date(classEvent.startDate),
-                            end: new Date(classEvent.endDate)
-                        }
-                    };
-                } else {
-                    return null; // Return null if the class already exists in $EventStore
-                }
-            }).filter(event => event !== null) // Filter out null values
-        );
-        
-    }
-
-            // $EventStore = [];
+    //uncomment to clear events on each mount (for debugging)
+    // $EventStore = [];
     onMount(async () => {
-        // Initialize selectedDay to today
-        selectedDay = { day: currentDate.getDate(), month: currentDate.getMonth(), year: currentDate.getFullYear() };
+        let initialDate = currentDate;
+
+        // Check for navigation params from store
+        if ($calendarNavigation) {
+            if ($calendarNavigation.date) {
+                initialDate = $calendarNavigation.date;
+                activeDate = initialDate;
+                month = initialDate.getMonth();
+                year = initialDate.getFullYear();
+            }
+            
+            // Open event modal immediately if event exists in store
+            if ($calendarNavigation.eventId) {
+                const event = $EventStore.find(e => e.id === $calendarNavigation.eventId);
+                if (event) {
+                    selectedEvent = event;
+                    modalOpen = true;
+                }
+                // Clear the navigation params after use
+                calendarNavigation.clear();
+            }
+        }
+
+        // Initialize selectedDay to today or param date
+        selectedDay = { day: initialDate.getDate(), month: initialDate.getMonth(), year: initialDate.getFullYear() };
         buildCalendar();
         await getCoursesEvents();        
         buildCalendar();
     });
 </script>
 
-
-
-<div class="container">
-    <CalendarGrid
+<ion-content fullscreen class="ion-no-padding" scroll-y="false">
+    <ion-header collapse="condense" mode="ios">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <ion-toolbar mode="md">
+            <ion-title size="large">{$t('schedule.title')}</ion-title>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <ion-button style="font-size: 1rem;margin-inline-end:1rem;" slot="end" on:click={openNewEventModal} fill="clear">
+                <ion-icon icon={add} slot="icon-only"></ion-icon>
+            </ion-button>
+        </ion-toolbar>
+    </ion-header>
+    
+    <div class="page-wrapper">
+    <div class="container">
+        <CalendarGrid
     {weeks}
     {month}
     {year}
     {selectedDay}
     onPreviousMonth={previousMonth}
     onNextMonth={nextMonth}
-    onSelectDay={selectDay}/>
-
+    onSelectDay={selectDay}
+    onMonthYearChange={handleMonthYearChange}/>
+    
     <!-- Events Section -->
     <div class="events-section">
         <h3 style="align-self:center;">
@@ -268,43 +257,36 @@
         </h3>
         {#if eventList.length > 0}
         <div class="events-list">
-                {#each eventList as eventItem}
+            {#each eventList as eventItem}
                 <EventCard
-                        {eventItem}
-                        bind:selectedEvent
-                        bind:modalOpen
-                        bind:deleteModalOpen
-                        bind:activeDate
-                        />
-                {/each}
+                {eventItem}
+                bind:selectedEvent
+                bind:modalOpen
+                bind:deleteModalOpen
+                bind:activeDate
+                />
+            {/each}
             </div>
-        {:else}
+            {:else}
             <p class="no-events">
                 {$t('schedule.no_events_day')}
             </p>
-        {/if}
-    </div>
-
-    <!-- FAB Button for adding new event -->
-    <ion-fab vertical="bottom" horizontal="end">
-        <ion-fab-button on:click={openNewEventModal}>
-            <ion-icon icon={add}></ion-icon>
-        </ion-fab-button>
-    </ion-fab>
-
-    <!-- Event Creation/Edit Modal -->
-    {#if selectedEvent}
+            {/if}
+        </div>
+        
+        <!-- Event Creation/Edit Modal -->
+        {#if selectedEvent}
         <EventModal
-            bind:isOpen={modalOpen}
-            bind:event={selectedEvent}
-            onSubmit={handleEventSubmit}
-            onDelete={handleEventDelete}
-            onClose={handleModalClose}
+        bind:isOpen={modalOpen}
+        bind:event={selectedEvent}
+        onSubmit={handleEventSubmit}
+        onDelete={handleEventDelete}
+        onClose={handleModalClose}
         />
-    {/if}
-
-    <!-- Delete Event Alert -->
-    <ion-alert
+        {/if}
+        
+        <!-- Delete Event Alert -->
+        <ion-alert
         is-open={deleteModalOpen}
         header={$t('event.delete')}
         buttons={[
@@ -337,16 +319,24 @@
         mode="ios">
     </ion-alert>
 </div>
+</div>
+</ion-content>
 
 <style>
+    .page-wrapper {
+        height: 100%;
+        overflow: hidden;
+    }
     .container {
         width: 100%;
         height: 100%;
+        margin-top: -0.5rem;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
     }
     .events-section {
-        flex: 1;
+        flex: 1 1 0;
         margin: 0;
         padding: 1.25rem 0 0 0;
         display: flex;
@@ -355,6 +345,7 @@
         border-radius: 16px 16px 0 0;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         min-height: 0;
+        overflow: hidden;
     }
     .events-section h3 {
         color: var(--ion-color-dark);
@@ -378,28 +369,5 @@
         color: var(--ion-color-medium);
         padding: 2rem 1.25rem;
         font-size: 0.9rem;
-    }
-    ion-fab {
-        margin-bottom: 1rem;
-        margin-right: 1rem;
-    }
-    ion-fab-button {
-        --background: var(--ion-color-primary);
-        --color: white;
-        --border-radius: 16px;
-        --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        width: 56px;
-        height: 56px;
-    }
-    ion-fab-button:hover {
-        --box-shadow: 0 6px 20px rgba(0, 0, 0, 0.16);
-        transform: scale(1.05);
-    }
-    ion-fab-button::part(native) {
-        border-radius: 16px;
-    }
-    ion-fab-button ion-icon {
-        font-size: 28px;
     }
 </style>

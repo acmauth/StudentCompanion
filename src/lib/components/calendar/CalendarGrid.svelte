@@ -4,6 +4,7 @@
     import { getWeekdayNames, isSelectedDay as checkIsSelectedDay, isToday as checkIsToday } from './calendarUtils';
     import type { SelectedDay } from './calendarUtils';
     import { t, getLocale} from "$lib/i18n";
+    // removed alertController
 
     export let weeks: DayObject[][] = [];
     export let month: number;
@@ -12,8 +13,40 @@
     export let onPreviousMonth: () => void;
     export let onNextMonth: () => void;
     export let onSelectDay: (dayObj: DayObject) => void;
+    export let onMonthYearChange: (newMonth: number, newYear: number) => void = () => {};
 
     const weekdayNames = getWeekdayNames();
+    
+    // Date Picker State
+    let isDatePickerOpen = false;
+
+    function openMonthYearPicker() {
+        isDatePickerOpen = true;
+    }
+
+    function handleDateChange(e: CustomEvent) {
+        const val = e.detail.value; 
+        if (typeof val === 'string') {
+            // Parse ISO string manually to avoid timezone issues with new Date()
+            // Format is typically YYYY-MM-DD or YYYY-MM
+            const parts = val.split(/[-T]/);
+            if (parts.length >= 2) {
+                const newYear = parseInt(parts[0], 10);
+                const newMonth = parseInt(parts[1], 10) - 1; // 0-based
+                onMonthYearChange(newMonth, newYear);
+            }
+        }
+        isDatePickerOpen = false;
+    }
+
+    function getISOString(y: number, m: number) {
+        // Construct YYYY-MM string locally
+        return `${y}-${String(m + 1).padStart(2, '0')}`;
+    }
+
+
+    const minDate = `${new Date().getFullYear() - 10}-01`;
+    const maxDate = `${new Date().getFullYear() + 10}-12`;
 
     $: isSelectedDay = (dayObj: DayObject) => {
         return checkIsSelectedDay(dayObj, selectedDay, month, year);
@@ -34,7 +67,9 @@
         <ion-card href="" on:click={onPreviousMonth} aria-label="Previous month" class="navButton" aria-hidden="true">
             <ion-icon icon={chevronBackOutline} />
         </ion-card>
-        <div class="month-title">
+        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="month-title" on:click={openMonthYearPicker}>
             {new Date(year, month).toLocaleDateString(getLocale(), {
                 month: 'long',
                 year: 'numeric'
@@ -76,6 +111,22 @@
             {/each}
         {/each}
     </div>
+    
+    <ion-modal is-open={isDatePickerOpen} on:ionModalDidDismiss={() => isDatePickerOpen = false} style="--height: auto; --width: auto; --border-radius: 8px;">
+        <ion-datetime
+            presentation="month-year"
+            value={getISOString(year, month)}
+            min={minDate}
+            max={maxDate}
+            show-default-buttons={true}
+            done-text={$t('common.apply', 'Apply')}
+            cancel-text={$t('common.cancel', 'Cancel')}
+            mode="ios"
+            on:ionChange={handleDateChange}
+            on:ionCancel={() => isDatePickerOpen = false}
+        >
+        </ion-datetime>
+    </ion-modal>
 </div>
 
 <style>
@@ -91,11 +142,12 @@
 
     .calendar {
         width: 100%;
-        padding: 1rem 1rem 0.5rem 1rem;
+        padding: 0rem 1rem 0.5rem 1rem;
         font-family: sans-serif;
         color: var(--ion-color-dark);
         display: flex;
         flex-direction: column;
+        flex-shrink: 0;
     }
     .header {
         display: flex;
@@ -125,7 +177,7 @@
     .grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
-        grid-auto-rows: minmax(2.5rem, auto);
+        grid-auto-rows: 2.5rem;
         text-align: center;
         gap: 0.5rem;
         margin-bottom: 0.5rem;

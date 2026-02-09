@@ -4,6 +4,7 @@
     import RecentsDisplay from "./recentsDisplay.svelte";
 	import Card from "$components/degreeCalculator/card.svelte";
 
+    export let maxCards = 6;
 
     const recentItemsFromCache: any[] = getCachedRecentItems();
 
@@ -49,9 +50,9 @@
 
 {#await gatherRecentItems()}
     <!-- <ion-progress-bar type="indeterminate"/> -->
-    <RecentsDisplay recentItems={recentItemsFromCache}/>
+    <RecentsDisplay recentItems={recentItemsFromCache} {maxCards}/>
 {:then recentItemsList}
-    <RecentsDisplay recentItems={recentItemsList}/>
+    <RecentsDisplay recentItems={recentItemsList} {maxCards}/>
 {/await}
 <!-- {:catch error}
     <p class="ion-padding">Σφάλμα: {error.message}</p>

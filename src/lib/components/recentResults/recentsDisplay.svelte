@@ -7,9 +7,11 @@
     import { refresh } from "ionicons/icons";
     import { flip } from "svelte/animate";
     import { quintOut } from 'svelte/easing';
+    import {t} from "$lib/i18n";
 
 
     export let recentItems: any[] = [];
+    export let maxCards = 6;
     let recentlyDismissedItem: any;
     let allRecentItems: any[] = [];
     let showUndoButton = false;
@@ -100,21 +102,19 @@
             }
         }
         
-        // sorting the recentItems so that the recentGrades are always first
+        // sorting the recentItems by date descending
         recentItems = recentItems.sort((a, b) => {
-            if (a.type === "recentGrade" && b.type === "notification") return -1;
-            if (a.type === "notification" && b.type === "recentGrade") return 1;
-            return 0;
+            const getDate = (item: any) => {
+                if (item.type === 'recentGrade') return new Date(item.content.gradeModified).getTime();
+                if (item.type === 'notification') return new Date(item.content.dateReceived).getTime();
+                return 0;
+            };
+            return getDate(b) - getDate(a);
         });
 
-        // keeping all the recent grades and removing the excess notifications
-        const maxNumOfCard = 6;
-        const numOfGrades = recentItems.filter((recentItem) => recentItem.type === "recentGrade").length;
-        
-        if (numOfGrades+3 > maxNumOfCard){ // ensuring that there are always at least 3 notifications
-            recentItems = recentItems.slice(0, numOfGrades+3); 
-        } else {
-            recentItems = recentItems.slice(0, maxNumOfCard); // can do that because recent grades are stored first
+        // keeping the top maxCards items
+        if (recentItems.length > maxCards){ 
+            recentItems = recentItems.slice(0, maxCards); 
         }
     }
 
@@ -123,7 +123,7 @@
 <div class="recentGrades ion-padding">
     
     {#if recentItems.length === 0}
-            <p class="ion-padding">Δεν υπάρχουν πρόσφατα</p>
+            <p class="ion-padding" style="color: var(--ion-color-medium)">{$t('recentgrades.nonews')}</p>
     {:else}
         {#each recentItems as recentItem (recentItem.id)} 
             <div animate:flip={{ duration: 500, easing: quintOut }}>
@@ -151,6 +151,7 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
+        padding: 0;
     }
 
     .button-container {

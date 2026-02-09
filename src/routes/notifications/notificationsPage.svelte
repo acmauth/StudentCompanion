@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Capacitor } from '@capacitor/core';
 	import Chips from './chips.svelte';
-	import { gatherNotifications } from '../../../lib/components/notifications/notifications';
-	import Notification from '../../../lib/components/notifications/notification.svelte';
+	import { gatherNotifications } from '../../lib/components/notifications/notifications';
+	import Notification from '../../lib/components/notifications/notification.svelte';
 	import { toggles } from './notificationToggles';
 	import { flip } from 'svelte/animate';
 	import { quintOut } from 'svelte/easing';
@@ -13,6 +13,7 @@
 	import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
 	import WebmailPlaceholder from '$lib/components/webmailLogin/webmailplaceholderComponent/webmailPlaceholder.svelte';
 	import { t } from '$lib/i18n';
+	import SubPageHeader from '$components/shared/subPageHeader.svelte';
 
 	let refresher: HTMLIonRefresherElement;
 	let notificationsPromise = gatherNotifications();
@@ -29,20 +30,9 @@
 </script>
 
 <ion-content fullscreen={true}>
+	<SubPageHeader title={$t('notifications.title')} stackedNav />
+	
 	<ion-header collapse="condense" mode="ios">
-		<ion-toolbar mode="md">
-			<ion-title size="large">{$t('notifications.title')}</ion-title>
-			{#if Capacitor.isNativePlatform()}
-				<ion-chip slot="end" style="background-color: transparent;">
-					<ion-icon
-						icon={cog}
-						style="font-size: 1.5rem; margin: 0;"
-						on:click={launchNativenotificationSettings}
-						aria-hidden
-					/>
-				</ion-chip>
-			{/if}
-		</ion-toolbar>
 		<Chips />
 	</ion-header>
 

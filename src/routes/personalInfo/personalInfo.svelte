@@ -10,6 +10,7 @@
 	import InfoItem from './infoItem.svelte';
 	import PersonSkeleton from './personSkeleton.svelte';
 	import Settings from './settings.svelte';
+	import SubPageHeader from '$components/shared/subPageHeader.svelte';
 
 	// Keep personal info
 
@@ -58,12 +59,8 @@
 </script>
 
 <IonPage>
+	<SubPageHeader title={$t('settings.personal')} stackedNav />
 	<ion-content fullscreen={true}>
-		<ion-header collapse="condense" mode="ios">
-			<ion-toolbar mode="md">
-				<ion-title size="large">{$t('settings.personal')}</ion-title>
-			</ion-toolbar>
-		</ion-header>
 
 		{#await getPersonalInfo()}
 			<PersonSkeleton />
