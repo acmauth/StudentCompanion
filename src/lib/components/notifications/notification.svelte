@@ -26,7 +26,9 @@
 
     // Fixing the height of the iframe
     function fixIframeHeight() {
-        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 100 + 'px';
+        if (iframe){
+            iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 100 + 'px';
+        }
     }
 
 
@@ -36,7 +38,6 @@
         const body = iframe.contentDocument.querySelector("html");
         let bodyColor = '';
         if (body) {
-
             const root = document.documentElement;
             // Check if body has the class 'dark'
             if (document.body.classList.contains('dark')) {

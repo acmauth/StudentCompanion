@@ -22,6 +22,7 @@
 
 	// we need relative path for the goto to function properly and to allow for relative tab definitions
 	const { pathname } = $page.url;
+	const searchParams = $page.url.searchParams;
 	const cleanedPath = pathname.replace(/\/+$/, ''); // Strip trailing slashes, so we can get the last part of the path correctly. (e.g. /pages/homepage/ -> /pages/homepage)
 	const pathSplit = cleanedPath.split('/');
 	let currentTabName = pathSplit[pathSplit.length - 1]; // we don't want to use at(-1) because of old browsers
@@ -32,7 +33,7 @@
 		tabs.forEach(async (tab) => {
 			if ($navigating.to.url.pathname.includes(relativePath + tab.tab)) {
 				currentTabName = tab.tab;
-				await goto($navigating.to.url.pathname);
+				await goto($navigating.to.url);
 				controller.select(tab.tab);
 				moveTabBarLine(tab.tab);
 			}

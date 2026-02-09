@@ -15,6 +15,7 @@
     import { deleteEventNotifications, deleteSingleEventNotification } from '$src/lib/calendarNotifications/notificationFunctions';
     import { getLocale, t } from '$lib/i18n';
     import { buildCalendarWeeks, type DayObject, type SelectedDay, getNextMonth, getPreviousMonth, getCoursesEvents } from '$lib/components/calendar/calendarUtils';
+	import { page } from '$app/stores';
 
     let currentDate = new Date();
     let month = currentDate.getMonth();
@@ -97,28 +98,6 @@
         buildCalendar();
     }
 
-    // function createPrototypeEvent(): Event {
-    //     const currentTime = new Date();
-    //     const activeDateCurrentTime = new Date(activeDate.getTime());
-    //     activeDateCurrentTime.setHours(currentTime.getHours(), currentTime.getMinutes());
-        
-    //     return {
-    //         id: new Date().getTime(),
-    //         title: "",
-    //         slot: {
-    //             start: activeDateCurrentTime,
-    //             end: new Date(activeDateCurrentTime.getTime() + 3600000),
-    //         },
-    //         type: EventType.TASK,
-    //         description: "",
-    //         repeat: EventRepeatType.NEVER,
-    //         repeatUntil: new Date(activeDateCurrentTime.getTime() + 3600000),
-    //         repeatInterval: 1,
-    //         notify: false,
-    //         notifyTime: 1
-    //     };
-    // }
-
     function handleEventSubmit(event: Event) {
         const index = $EventStore.findIndex(x => x.id === event.id);
 
@@ -191,18 +170,20 @@
     onMount(async () => {
         let initialDate = currentDate;
 
-        // Check for navigation params from store
-        if ($calendarNavigation) {
-            if ($calendarNavigation.date) {
-                initialDate = $calendarNavigation.date;
-                activeDate = initialDate;
-                month = initialDate.getMonth();
-                year = initialDate.getFullYear();
-            }
-            
-            // Open event modal immediately if event exists in store
-            if ($calendarNavigation.eventId) {
-                const event = $EventStore.find(e => e.id === $calendarNavigation.eventId);
+        const launchEventIdStr = $page.url.searchParams.get("showEventId")
+        const launchEventDateStr = $page.url.searchParams.get("eventDate")
+
+        if (launchEventDateStr) {
+            const launchEventDate: Date = new Date(decodeURIComponent(launchEventDateStr));
+            console.log(launchEventDate)
+            initialDate = launchEventDate
+            activeDate = initialDate;
+            month = initialDate.getMonth();
+            year = initialDate.getFullYear();
+
+            if (launchEventIdStr) {
+                const launchEventId = parseInt(decodeURIComponent(launchEventIdStr))
+                const event = $EventStore.find(e => e.id === launchEventId);
                 if (event) {
                     selectedEvent = event;
                     modalOpen = true;
@@ -211,6 +192,7 @@
                 calendarNavigation.clear();
             }
         }
+
 
         // Initialize selectedDay to today or param date
         selectedDay = { day: initialDate.getDate(), month: initialDate.getMonth(), year: initialDate.getFullYear() };

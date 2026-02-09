@@ -121,6 +121,7 @@
     on:touchstart={handleTouchStart}
     on:touchmove={handleTouchMove}
     on:touchend={handleTouchEnd}
+    href=""
   >
     <slot></slot>
 </ion-card>

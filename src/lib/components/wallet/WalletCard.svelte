@@ -7,6 +7,7 @@
 	import { t } from '$lib/i18n';
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
+	import { goto } from '$app/navigation';
 
 	export let departmentName: string = '';
 	export let studyLevel: string = '';
@@ -52,7 +53,8 @@
 	<div class="flip-card-inner">
 		<!-- Front of card -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div class="personal-card card-front">
+		<div class="personal-card card-front ion-activatable">
+			<ion-ripple-effect/>
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div class="card-header">
@@ -73,7 +75,7 @@
 				</div>
 			</div>
 
-			<div class="stats-container">
+			<div class="stats-container" on:click={()=>{goto("/pages/grades")}}>
 				<div class="stat-card">
 					<div class="stat-header-horizontal">
 						<span class="stat-label">{$t('homepage.passed')}</span>
@@ -93,7 +95,8 @@
 
 		<!-- Back of card -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div class="personal-card card-back">
+		<div class="personal-card card-back ion-activatable">
+			<ion-ripple-effect/>
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div class="card-header" style="margin-bottom: 0;">
 				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
@@ -257,6 +260,7 @@
 		top: 0;
 		left: 0;
 		width: 100%;
+		overflow:hidden;
 		backface-visibility: hidden;
 		-webkit-backface-visibility: hidden;
 		color: var(--ion-text-color);

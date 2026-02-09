@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.png';
@@ -143,11 +142,9 @@
 	{:then}
 	<div id="scrolled_content">
 		<div class="personal-section">
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div class="info-container">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<div class="header" on:click={() => {navController.push(PersonalInfo);}}>
+				<div class="header ion-activatable" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
+					<ion-ripple-effect/>
 					<div class="welcome">
 						{#if gender === 'Α'}
 							<img class="avatar" alt="man" src={man} />
@@ -160,14 +157,12 @@
 						</div>
 					</div>
 				</div>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="settings-icon-container" style="margin-inline-end:0.7rem;" on:click={() => {navController.push(PersonalInfo);}}>
+				<div class="settings-icon-container ion-activatable" style="margin-inline-end:0.7rem;" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
+					<ion-ripple-effect/>
 					<ion-icon icon={settingsOutline} class="settings-icon"></ion-icon>
 				</div>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="settings-icon-container" on:click={handleCampusSafetyClick}>
+				<div class="settings-icon-container ion-activatable" on:click={handleCampusSafetyClick} aria-hidden>
+					<ion-ripple-effect/>
 					<ion-icon icon={shield} class="settings-icon"></ion-icon>
 				</div>
 			</div>
@@ -185,22 +180,17 @@
 
 		<div class="services-section" class:card-flipped={isFlipped}>
 			<div class="service-buttons-grid">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button ion-activatable" on:click={() => {navController.push(Links);}}>
+				<div class="service-button ion-activatable" on:click={() => {navController.push(Links);}} aria-hidden>
 					<ion-icon icon={linkOutline} class="service-button-icon"></ion-icon>
 					<span class="service-button-label">{$t('homepage.links')}</span>
 					<ion-ripple-effect></ion-ripple-effect>
 				</div>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-button ion-activatable" on:click={openCapacitorSite}>
+				<div class="service-button ion-activatable" on:click={openCapacitorSite} aria-hidden>
 					<ion-icon icon={barbellOutline} class="service-button-icon"></ion-icon>
 					<span class="service-button-label">{$t('homepage.gym')}</span>
 					<ion-ripple-effect></ion-ripple-effect>
 				</div>
 			</div>
-
 		</div>
 
 		<div class="events-section">
@@ -209,16 +199,15 @@
 				<h4 class="middle-title">{$t('homepage.dontForget')}</h4>
 				<div class="events-container">
 					{#each upcomingEvents as event}
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<!-- svelte-ignore a11y-no-static-element-interactions -->
-					<div class="event-card" on:click={() => { calendarNavigation.setNavigation({ date: new Date(event.slot.start), eventId: event.id }); goto('/pages/calendar'); }}>
+					
+					<div class="event-card ion-activatable" aria-hidden
+					on:click={() => {goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
 							<div class="event-header">
 								<div class="event-header-left">
 									<div class="event-type-badge" data-type={event.type}>
 										{event.type}
 									</div>
 									<div class="event-detail-item">
-										<!-- <ion-icon icon={timeOutline} class="detail-icon"></ion-icon> -->
 										<span class="event-time">
 											{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start)}
 										</span>
@@ -227,6 +216,7 @@
 								<ion-icon icon={calendarOutline} class="event-icon"></ion-icon>
 							</div>
 							<h5 class="event-title">{event.title}</h5>
+							<ion-ripple-effect></ion-ripple-effect>
 						</div>
 					{/each}
 				</div>
@@ -325,6 +315,9 @@
 		display: flex;
 		align-items: center;
 		flex: 1;
+		overflow: hidden;
+		border-radius: 50px;
+		position: relative;
 	}
 
 	.welcome {
@@ -347,15 +340,9 @@
 		align-items: center;
 		cursor: pointer;
 		position: relative;
-	}
-
-	.settings-icon-container::after {
-		content: '';
-		position: absolute;
-		top: -10px;
-		bottom: -10px;
-		left: -10px;
-		right: -10px;
+		border-radius: 150px;
+		overflow: hidden;
+		padding: 4px;
 	}
 
 	.service-icon-container {
@@ -370,7 +357,7 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
 		position: relative;
-			}
+	}
 
 	.service-button {
 		display: flex;
@@ -387,7 +374,7 @@
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 		position: relative;
 		overflow: hidden;
-			}
+	}
 
 	.service-button-icon {
 		font-size: 1.5rem;
@@ -437,17 +424,17 @@
 
 	/* TODO: Remove in favor for ion card */
 	.event-card {
+		position: relative;
 		border-radius: 0.625rem;
 		padding: 0.625rem 0.75rem;
 		border: 1px solid var(--ion-color-light-shade);
 		transition: all 0.2s ease;
 		cursor: pointer;
+		overflow: hidden;
+		width: 100%;
+		height: fit-content;
 	}
 
-	.event-card:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-	}
 
 	.event-header {
 		display: flex;
