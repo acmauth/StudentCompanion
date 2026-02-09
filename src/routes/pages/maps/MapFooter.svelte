@@ -2,7 +2,7 @@
     import osethLogo from '$lib/assets/oseth.svg';
     import campusSafetyLogo from '$lib/assets/campus-safety.png';
     import { getMetroInfo } from '$lib/metroScraper/scraper';
-    import { handleTransportAppClick, handleCampusSafetyClick } from "./helper";
+    import { handleTransportAppClick } from "./helper";
     import { onMount } from "svelte";
 
     let isDarkMode = false;

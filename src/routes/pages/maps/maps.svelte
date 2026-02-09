@@ -198,6 +198,14 @@
                 markerClusterGroup.addLayer(marker);
             }
         });
+
+        const roomid = new URLSearchParams(window.location.search).get("roomid");
+        if (roomid) {
+            const roomToShow = allRooms.find(r => r.roomId === roomid);
+            if (roomToShow) {
+                displayRoom(roomToShow);
+            }
+        }
     });
 
     onDestroy(async () => {
