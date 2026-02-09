@@ -137,11 +137,11 @@
 	}
 </script>
 
-<ion-content class="main-content" fullscreen>
+<ion-content id="homepage_content" fullscreen>
 	{#await getInfo($locale)}
 		<HomepageSkeleton />
 	{:then}
-		<div class="gradient-bg">
+	<div id="scrolled_content">
 		<div class="personal-section">
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -237,11 +237,12 @@
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div class="events-container">
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					 <!-- TODO: Convert to ion card! -->
 					<div class="event-card create-event-card" on:click={() => goto('/pages/calendar')}>
 						<h5 class="event-title" style="opacity: 0.7;">{$t('homepage.noEvents')}</h5>
 						<div class="event-header">
 							<div class="event-header-left">
-								<div class="event-type-badge" style="background: var(--ion-color-light-shade); color: var(--ion-text-color);">
+								<div class="event-type-badge">
 									<ion-icon icon={addOutline}></ion-icon>
 								</div>
 								<div class="event-detail-item">
@@ -269,7 +270,7 @@
 				<RecentItems maxCards={6}/>
 			</div>
 		</div>
-		</div>
+	</div>
 
 	{:catch error}
 		<ErrorLandingCard errorMsg={error} />
@@ -278,83 +279,24 @@
 
 <style>
 
-	.main-content {
-		--background: transparent;
+	:global(ion-tabs):has(#homepage_content) :global(ion-toolbar){
+		padding-top: var(--ion-safe-area-top) !important;
 	}
 
-	.gradient-bg {
-		position: relative;
-		min-height: 100%;
-		background: transparent;
-		/* background: linear-gradient(to bottom, #0a0e17 0, #174ea6 12rem, var(--ion-background-color, #f5f5f5) 12rem); */
-		background-blend-mode: overlay;
-		overflow: hidden;
+	:global(ion-tabs):has(#homepage_content){
+		padding-top: 0px !important;
 	}
 
-	/* .gradient-bg::before {
-		content: '';
-		position: absolute;
-		top: -20rem;
-		left: -10%;
-		width: 80%;
-		height: 25rem;
-		background: radial-gradient(
-			circle,
-			rgba(2, 78, 194, 0.4) 0%,
-			transparent 70%
-		);
-		mix-blend-mode: screen;
-		filter: blur(50px);
-		animation: blobMove 4s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
-		z-index: 0;
-		pointer-events: none;
+	#scrolled_content{
+		padding-top: var(--ion-safe-area-top); 
+		background: radial-gradient(circle at top right, #172da6 0%, #081a44 70%, #0A0E17 90%) top / 100% 12rem no-repeat, var(--ion-background-color, white);;
 	}
-
-	.gradient-bg::after {
-		content: '';
-		background: radial-gradient(
-			circle,
-			rgba(60, 110, 255, 0.5) 0%,
-			rgba(0, 20, 100, 0.3) 40%,
-			transparent 90%
-		);
-		position: absolute;
-		top: -20rem;
-		right: -10%;
-		width: 90%;
-		height: 2rem;
-		mix-blend-mode: screen;
-		filter: blur(60px);
-		animation: blobMoveAlt 4s ease-in-out infinite alternate;
-		z-index: 0;
-		pointer-events: none;
-	} */
 
 	.personal-section {
 		position: relative;
 		padding: 0.5rem 1.5rem 0 1.5rem;
 		border-radius: 0 0 0rem 0rem;
 		padding-bottom: 1rem;
-		z-index: 1;
-		background: linear-gradient(to bottom, transparent 70%, var(--ion-background-color, #f5f5f5) 70%); /*linear-gradient(to bottom, #0a0e17 0, #174ea6 12rem, var(--ion-background-color, #f5f5f5) 12rem);*/
-	}
-
-	@keyframes blobMove {
-		0% {
-			transform: translate(0, 0) scale(1);
-		}
-		100% {
-			transform: translate(30px, 30px) scale(1.1);
-		}
-	}
-
-	@keyframes blobMoveAlt {
-		0% {
-			transform: translate(0, 0) scale(1);
-		}
-		100% {
-			transform: translate(-30px, 20px) scale(1.15);
-		}
 	}
 
 	.avatar {
@@ -377,8 +319,7 @@
 		gap: 1rem;
 		margin-bottom: 2rem;
 		position: relative;
-		z-index: 1;
-	}
+			}
 
 	.header {
 		display: flex;
@@ -429,8 +370,7 @@
 		grid-template-columns: 1fr 1fr;
 		gap: 1rem;
 		position: relative;
-		z-index: 1;
-	}
+			}
 
 	.service-button {
 		display: flex;
@@ -442,12 +382,12 @@
 		border-radius: 3rem;
 		cursor: pointer;
 		transition: all 0.2s ease;
-		background: var(--app-color-map-input, #ffffff);
+		background: var(--app-color-map-input, rgb(167, 167, 167));
+		border: 1px solid var(--ion-color-light-shade);
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 		position: relative;
 		overflow: hidden;
-		z-index: 2;
-	}
+			}
 
 	.service-button-icon {
 		font-size: 1.5rem;
@@ -468,7 +408,6 @@
 
 	.events-section, .updates-section, .services-section {
 		padding: 0rem 1.5rem 1.5rem 1.5rem;
-		background-color: var(--ion-background-color, #f5f5f5) ;
 	}
 
 	.services-section {
@@ -491,14 +430,13 @@
 		border: 2px dashed var(--ion-color-medium-tint);
 		border-radius: 1rem;
 		padding: 0.625rem;
-		background: var(--ion-color-light);
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 	}
 
+	/* TODO: Remove in favor for ion card */
 	.event-card {
-		background: var(--ion-background-color);
 		border-radius: 0.625rem;
 		padding: 0.625rem 0.75rem;
 		border: 1px solid var(--ion-color-light-shade);

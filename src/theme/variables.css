@@ -218,7 +218,7 @@
   }
 
   ion-app {
-    background-color: transparent;
+    background-color: var(--ion-background-color);
   }
 
 }
