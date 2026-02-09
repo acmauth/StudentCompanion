@@ -115,11 +115,12 @@
 			'Students/me?$expand=studyProgram($expand=studyLevel'+expandedLocale+'), department'+expandedLocale + (expandedLocale !== '' ? ', person' +expandedLocale : '')
 		);
 
+
 		givenName = expandedLocale === '' ? personalData.person.givenName : personalData.person.locale.givenName;
 		gender = personalData.person.gender;
 		departmentName = expandedLocale === '' ? personalData.department?.name || 'Αδυναμία φόρτωσης' : personalData.department?.locale.name || 'Αδυναμία φόρτωσης';
 		studyLevel = expandedLocale === '' ? personalData.studyProgram?.studyLevel?.name : personalData.studyProgram?.studyLevel?.locale.name || 'Αδυναμία φόρτωσης' ;
-		actualSemester = personalData.actualSemester || 1;
+		actualSemester = personalData.actualSemester || null;
 		studentStatus = personalData.studentStatus.id == 1 ? $t('homepage.studentStatusActive') : $t('homepage.studentStatusInactive');
 		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
 

@@ -30,7 +30,7 @@
     </div>
 
     <div class="button-container">
-        <div style="width:0.5rem; align-self:stretch; background-color:grey; margin:0.18rem;" />
+        <div style="width:0.2rem; align-self:stretch; background-color:grey; margin:0.2rem;" />
 
         <ion-card
             on:click={handleTransportAppClick}
@@ -39,16 +39,6 @@
             aria-hidden
         >
             <img src={osethLogo} alt="OSETH services" class="button-image" />
-        </ion-card>
-
-        <ion-card
-            on:click={handleCampusSafetyClick}
-            class="button-card"
-            style="background-color: #3F4953;"
-            aria-label="Campus Safety App"
-            aria-hidden
-        >
-            <img src={campusSafetyLogo} alt="Campus safety information" class="button-image" />
         </ion-card>
     </div>
 </div>
@@ -148,8 +138,8 @@
         border-color: grey;
         border-width: 0.1rem;
         border-style: solid;
-        max-height: 60px;
-        max-width: 60px;
+        max-height: 40px;
+        max-width: 40px;
     }
 
     .button-image {

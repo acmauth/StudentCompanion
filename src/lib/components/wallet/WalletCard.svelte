@@ -60,7 +60,11 @@
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div class="department-info" on:click={toggleCardFlip}>
 					<h3 class="department-name">{departmentName}</h3>
-					<p class="study-level">{studyLevel} - {$t('homepage.semester')} {actualSemester}</p>
+					{#if actualSemester !== null}
+						<p class="study-level">{studyLevel} - {$t('homepage.semester')} {actualSemester}</p>
+					{:else}
+						<p class="study-level">{studyLevel}</p>
+					{/if}
 				</div>
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-static-element-interactions -->

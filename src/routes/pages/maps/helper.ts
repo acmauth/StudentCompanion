@@ -110,31 +110,3 @@ export async function handleTransportAppClick() {
 		}
 	}
 
-export async function handleCampusSafetyClick() {
-		const packageName = 'gr.auth.android.incidentmanager';
-		const playStoreUrl = `https://play.google.com/store/apps/details?id=${packageName}&hl=el`;
-
-		//@ts-ignore
-		const ua = navigator.userAgent || navigator.vendor || window.opera;
-		const isAndroid = /android/i.test(ua);
-
-		if (isAndroid) {
-			try {
-				// Try to launch the app directly using our custom plugin
-				//@ts-ignore
-				const result = await AppLauncherPlugin.launchApp({ packageName });
-				
-				if (!result.launched) {
-					// App not installed, open Play Store
-					window.location.href = `market://details?id=${packageName}`;
-				}
-			} catch (err) {
-				console.error('Error launching app:', err);
-				window.location.href = `market://details?id=${packageName}`;
-			}
-		} else {
-			// For other platforms, go to Play Store
-			window.location.href = playStoreUrl;
-		}
-	}
-
