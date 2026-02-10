@@ -24,7 +24,7 @@
 	import { Browser } from '@capacitor/browser';
 	import { locale } from '$lib/i18n';
 	import { onDestroy, onMount } from 'svelte';
-	import { StatusBar } from '@capacitor/status-bar';
+	import { StatusBar, Style } from '@capacitor/status-bar';
 	import { animation } from 'ionic-svelte/components/IonNav.svelte';
 	import QuickLinks from '$src/routes/quickLinks/quickLinks.svelte';
 
@@ -152,6 +152,8 @@
 			isStatusBarHidden = false;
 		}
 	}
+
+	$: StatusBar.setStyle({ style: Style.Dark });
 
 </script>
 
