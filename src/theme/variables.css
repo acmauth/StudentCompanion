@@ -8,6 +8,8 @@
 }
 :root {
   /** primary **/
+  
+  --ion-background-color :#f5f5f5;
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #ffffff;

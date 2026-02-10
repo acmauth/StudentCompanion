@@ -267,7 +267,6 @@
 </ion-content>
 
 <style>
-
 	:global(ion-tabs):has(#homepage_content) :global(ion-toolbar){
 		padding-top: var(--ion-safe-area-top) !important;
 	}
@@ -278,8 +277,15 @@
 
 	#scrolled_content{
 		padding-top: var(--ion-safe-area-top); 
-		background: radial-gradient(circle at top right, #172da6 0%, #081a44 70%, #0A0E17 90%) top / 100% 12rem no-repeat, var(--ion-background-color, white);;
-	}
+		background:
+		radial-gradient(
+			circle at 80% -10px,
+			#172da6 0%,
+			#071462 40%,
+			#081a44 85%,
+			#0A0E17 99%
+		) top / 100% 12rem no-repeat,
+		var(--ion-background-color, #f5f5f5);	}
 
 	.personal-section {
 		position: relative;
@@ -455,8 +461,7 @@
 		letter-spacing: 0.3px;
 		padding: 0.2rem 0.5rem;
 		border-radius: 0.3rem;
-		background: var(--ion-color-primary-tint);
-		color: var(--ion-color-primary-contrast);
+		background: var(--ion-color-light-shade);
 	}
 
 	.event-type-badge[data-type="TEST"] {
