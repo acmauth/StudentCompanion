@@ -57,7 +57,7 @@
 	});
 
 	const tabBarClick = async (selectedTab) => {
-		moveTabBarLine(selectedTab);
+		// moveTabBarLine(selectedTab);
 		currentTabName = selectedTab;
 		navController.popToRoot(); // Resetting the stack to the root of the selected tab
 		await goto(relativePath + selectedTab);
@@ -163,7 +163,7 @@
 		align-items: center;
 		max-width: none;
 	}
-
+/* 
 	.tabBarLine2 {
 		display: none;
 		background-color: var(--app-color-primary-dark);
@@ -172,10 +172,9 @@
 		position: absolute;
 		transition: 0.4s ease-in-out;
 		bottom: calc(var(--ion-safe-area-bottom) + 10px);
-		/* z-index: 1000; */
 		left: 0;
 		width: 1rem;
-	}
+	} */
 
 	ion-label {
 		text-align: center;

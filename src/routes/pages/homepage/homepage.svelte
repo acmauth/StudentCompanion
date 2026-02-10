@@ -23,6 +23,10 @@
 	import { registerPlugin, Capacitor } from '@capacitor/core';
 	import { Browser } from '@capacitor/browser';
 	import { locale } from '$lib/i18n';
+	import { onDestroy, onMount } from 'svelte';
+	import { StatusBar } from '@capacitor/status-bar';
+	import { animation } from 'ionic-svelte/components/IonNav.svelte';
+	import QuickLinks from '$src/routes/quickLinks/quickLinks.svelte';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -133,9 +137,25 @@
 			average = (result as { weighted_avg: number }).weighted_avg;
 		});
 	}
+
+	let isStatusBarHidden = false;
+	const SCROLL_THRESHOLD = 12;
+	
+	async function handleScroll(event: CustomEvent) {
+		const scrollTop = event.detail.scrollTop;
+
+		if (scrollTop > SCROLL_THRESHOLD && !isStatusBarHidden) {
+			await StatusBar.hide();
+			isStatusBarHidden = true;
+		} else if (scrollTop <= SCROLL_THRESHOLD && isStatusBarHidden) {
+			await StatusBar.show();
+			isStatusBarHidden = false;
+		}
+	}
+
 </script>
 
-<ion-content id="homepage_content" fullscreen>
+<ion-content id="homepage_content" fullscreen on:ionScroll={handleScroll} scrollEvents="true">
 	{#await getInfo($locale)}
 		<HomepageSkeleton />
 	{:then}
