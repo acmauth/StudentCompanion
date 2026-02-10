@@ -402,7 +402,7 @@
 	}
 
 	.services-section.card-flipped {
-		margin-top: 5.5rem !important;
+		margin-top: 3.5rem !important;
 	}
 
 	.middle-title {
