@@ -94,7 +94,7 @@ async function getUniversisMessages(refresh: boolean = false) {
             subject: message.subject ? message.subject : "Χωρίς θέμα",
             body: message.body? message.body: "Χωρίς περιεχόμενο",
             sender: "Universis",
-            url: "https://universis.auth.gr",
+            url: "https://students.auth.gr",
             dateReceived: new Date(message.dateReceived? message.dateReceived : message.dateCreated),
             id: message.id
         };
