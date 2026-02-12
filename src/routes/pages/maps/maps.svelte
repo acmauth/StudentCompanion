@@ -294,7 +294,6 @@
     }
 </script>
 
-<ion-page>
     <ion-content>
         
     <div id="map-wrapper" bind:this={mapContainer}></div>
@@ -400,8 +399,6 @@
         </div>
     {/if}
     </ion-content>
-</ion-page>
-
 <style>
 
     /* Leaflet and marker cluster styles */
@@ -644,7 +641,6 @@
         border-color: var(--ion-border-color, #E8E8E8);
         border-width: 0 0 1px 0;
         box-shadow: var(--shadow-md);
-        clip-path: inset(0px 0px -100vh 0px);
     }
 
     #bottom-controls {

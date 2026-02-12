@@ -85,11 +85,13 @@
 	});
 </script>
 
-<SubPageHeader title={$t('links.title')} stackedNav />
-<ion-content>
-	<div class="ion-padding" style="margin-bottom: 4rem;">
-		{#each links as { linktitle, linkaddress, imagelink }}
+<ion-page>
+	<SubPageHeader title={$t('links.title')} stackedNav />
+	<ion-content>
+		<div class="ion-padding" style="margin-bottom: 4rem;">
+			{#each links as { linktitle, linkaddress, imagelink }}
 			<LinkCard {linktitle} {linkaddress} {imagelink} />
-		{/each}
-	</div>
-</ion-content>
+			{/each}
+		</div>
+	</ion-content>
+</ion-page>
