@@ -154,38 +154,40 @@
 
 </script>
 
-<ion-content id="homepage_content" fullscreen on:ionScroll={handleScroll} scrollEvents="true">
-	{#await getInfo($locale)}
+<ion-page>
+
+	<ion-content id="homepage_content" fullscreen on:ionScroll={handleScroll} scrollEvents="true">
+		{#await getInfo($locale)}
 		<HomepageSkeleton />
-	{:then}
-	<div id="scrolled_content">
-		<div class="personal-section">
-			<div class="info-container">
-				<div class="header ion-activatable" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
-					<ion-ripple-effect/>
-					<div class="welcome">
-						{#if gender === 'Α'}
+		{:then}
+		<div id="scrolled_content">
+			<div class="personal-section">
+				<div class="info-container">
+					<div class="header ion-activatable" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
+						<ion-ripple-effect/>
+						<div class="welcome">
+							{#if gender === 'Α'}
 							<img class="avatar" alt="man" src={man} />
-						{:else}
+							{:else}
 							<img class="avatar" alt="woman" src={woman} />
-						{/if}
-						<div>
-							<h5 class="h5">{$t('homepage.greeting')}, <span><b>{getVocativeCase(givenName)}!</b></span></h5>
-							<h5 class="h6">{studentStatus}</h5>
+							{/if}
+							<div>
+								<h5 class="h5">{$t('homepage.greeting')}, <span><b>{getVocativeCase(givenName)}!</b></span></h5>
+								<h5 class="h6">{studentStatus}</h5>
+							</div>
 						</div>
 					</div>
+					<div class="settings-icon-container ion-activatable" style="margin-inline-end:0.7rem;" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
+						<ion-ripple-effect/>
+						<ion-icon icon={settingsOutline} class="settings-icon"></ion-icon>
+					</div>
+					<div class="settings-icon-container ion-activatable" on:click={handleCampusSafetyClick} aria-hidden>
+						<ion-ripple-effect/>
+						<ion-icon icon={shield} class="settings-icon"></ion-icon>
+					</div>
 				</div>
-				<div class="settings-icon-container ion-activatable" style="margin-inline-end:0.7rem;" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
-					<ion-ripple-effect/>
-					<ion-icon icon={settingsOutline} class="settings-icon"></ion-icon>
-				</div>
-				<div class="settings-icon-container ion-activatable" on:click={handleCampusSafetyClick} aria-hidden>
-					<ion-ripple-effect/>
-					<ion-icon icon={shield} class="settings-icon"></ion-icon>
-				</div>
-			</div>
-
-			<WalletCard 
+				
+				<WalletCard 
 				{departmentName}
 				{studyLevel}
 				{actualSemester}
@@ -193,75 +195,75 @@
 				{numSubjects}
 				{average}
 				bind:isFlipped
-			/>
-		</div>
-
-		<div class="services-section" class:card-flipped={isFlipped}>
-			<div class="service-buttons-grid">
-				<div class="service-button ion-activatable" on:click={() => {navController.push(Links);}} aria-hidden>
-					<ion-icon icon={linkOutline} class="service-button-icon"></ion-icon>
-					<span class="service-button-label">{$t('homepage.links')}</span>
-					<ion-ripple-effect></ion-ripple-effect>
-				</div>
-				<div class="service-button ion-activatable" on:click={openCapacitorSite} aria-hidden>
-					<ion-icon icon={barbellOutline} class="service-button-icon"></ion-icon>
-					<span class="service-button-label">{$t('homepage.gym')}</span>
-					<ion-ripple-effect></ion-ripple-effect>
+				/>
+			</div>
+			
+			<div class="services-section" class:card-flipped={isFlipped}>
+				<div class="service-buttons-grid">
+					<div class="service-button ion-activatable" on:click={() => {navController.push(Links);}} aria-hidden>
+						<ion-icon icon={linkOutline} class="service-button-icon"></ion-icon>
+						<span class="service-button-label">{$t('homepage.links')}</span>
+						<ion-ripple-effect></ion-ripple-effect>
+					</div>
+					<div class="service-button ion-activatable" on:click={openCapacitorSite} aria-hidden>
+						<ion-icon icon={barbellOutline} class="service-button-icon"></ion-icon>
+						<span class="service-button-label">{$t('homepage.gym')}</span>
+						<ion-ripple-effect></ion-ripple-effect>
+					</div>
 				</div>
 			</div>
-		</div>
-
-		<div class="events-section">
-			<!-- Upcoming Events Section -->
-			{#if upcomingEvents.length > 0}
+			
+			<div class="events-section">
+				<!-- Upcoming Events Section -->
+				{#if upcomingEvents.length > 0}
 				<h4 class="middle-title">{$t('homepage.dontForget')}</h4>
 				<div class="events-container">
 					{#each upcomingEvents as event}
 					
 					<div class="event-card ion-activatable" aria-hidden
 					on:click={() => {goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
-							<div class="event-header">
-								<div class="event-header-left">
-									<div class="event-type-badge" data-type={event.type}>
-										{event.type}
-									</div>
-									<div class="event-detail-item">
-										<span class="event-time">
-											{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start)}
-										</span>
-									</div>
-								</div>
-								<ion-icon icon={calendarOutline} class="event-icon"></ion-icon>
+					<div class="event-header">
+						<div class="event-header-left">
+							<div class="event-type-badge" data-type={event.type}>
+								{event.type}
 							</div>
-							<h5 class="event-title">{event.title}</h5>
-							<ion-ripple-effect></ion-ripple-effect>
+							<div class="event-detail-item">
+								<span class="event-time">
+									{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start)}
+								</span>
+							</div>
 						</div>
-					{/each}
+						<ion-icon icon={calendarOutline} class="event-icon"></ion-icon>
+					</div>
+					<h5 class="event-title">{event.title}</h5>
+					<ion-ripple-effect></ion-ripple-effect>
 				</div>
+				{/each}
+			</div>
 			{:else}
-				<!-- Create Event Prompt -->
-				<h4 class="middle-title">{$t('homepage.dontForget')}</h4>
+			<!-- Create Event Prompt -->
+			<h4 class="middle-title">{$t('homepage.dontForget')}</h4>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<!-- svelte-ignore a11y-no-static-element-interactions -->
+			<div class="events-container">
 				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="events-container">
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					 <!-- TODO: Convert to ion card! -->
-					<div class="event-card create-event-card" on:click={() => goto('/pages/calendar')}>
-						<h5 class="event-title" style="opacity: 0.7;">{$t('homepage.noEvents')}</h5>
-						<div class="event-header">
-							<div class="event-header-left">
-								<div class="event-type-badge">
-									<ion-icon icon={addOutline}></ion-icon>
-								</div>
-								<div class="event-detail-item">
-									<span class="event-time">
-										{$t('homepage.createNew')}
-									</span>
-								</div>
+				<!-- TODO: Convert to ion card! -->
+				<div class="event-card create-event-card" on:click={() => goto('/pages/calendar')}>
+					<h5 class="event-title" style="opacity: 0.7;">{$t('homepage.noEvents')}</h5>
+					<div class="event-header">
+						<div class="event-header-left">
+							<div class="event-type-badge">
+								<ion-icon icon={addOutline}></ion-icon>
+							</div>
+							<div class="event-detail-item">
+								<span class="event-time">
+									{$t('homepage.createNew')}
+								</span>
 							</div>
 						</div>
 					</div>
 				</div>
+			</div>
 			{/if}
 		</div>
 		
@@ -279,17 +281,18 @@
 			</div>
 		</div>
 	</div>
-
+	
 	{:catch error}
-		<ErrorLandingCard errorMsg={error} />
+	<ErrorLandingCard errorMsg={error} />
 	{/await}
 </ion-content>
+</ion-page>
 
 <style>
 	:global(ion-tabs):has(#homepage_content) :global(ion-toolbar){
 		padding-top: var(--ion-safe-area-top) !important;
 	}
-
+	
 	:global(ion-tabs):has(#homepage_content){
 		padding-top: 0px !important;
 	}

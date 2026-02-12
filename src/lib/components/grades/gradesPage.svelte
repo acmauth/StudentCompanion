@@ -133,6 +133,8 @@
 </script>
 
 <!-- Show skeleton while loading -->
+<ion-page>
+
 <ion-content fullscreen={true}>
 	<ion-header collapse="condense" mode="ios">
 		<ion-toolbar mode='md'>
@@ -174,7 +176,7 @@
 				  <ErrorLandingCard errorMsg={error.message} />
 	  {/await}
   </ion-content>
-  
+</ion-page>
   
   <style>
   
