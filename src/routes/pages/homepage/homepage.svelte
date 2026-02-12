@@ -156,7 +156,7 @@
 
 <ion-page>
 
-	<ion-content id="homepage_content" fullscreen on:ionScroll={handleScroll} scrollEvents="true">
+	<ion-content id="homepage_content" fullscreen={false} on:ionScroll={handleScroll}>
 		{#await getInfo($locale)}
 		<HomepageSkeleton />
 		{:then}
