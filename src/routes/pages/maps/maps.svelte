@@ -295,6 +295,8 @@
 </script>
 
 <ion-page>
+    <ion-content>
+        
     <div id="map-wrapper" bind:this={mapContainer}></div>
     <div id="top-controls">
         <div class="search-container" on:focusout={() => {searchResults=[];}} on:focusin={() => {searchResults=fuzzySearchResults(searchQuery);}}>
@@ -397,6 +399,7 @@
             <MapFooter/>
         </div>
     {/if}
+    </ion-content>
 </ion-page>
 
 <style>
