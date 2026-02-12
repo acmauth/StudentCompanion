@@ -202,7 +202,7 @@
 				</h2> -->
 
 				<div style="margin: 0 0.6rem 0rem 0.6rem; margin-bottom: 5rem;">
-					<ion-card color="light">
+					<ion-card>
 						<ion-card-content class="swiper-card-content">
 							<swiper-container
 							init="false"
@@ -240,43 +240,43 @@
 				</h2>
 				<ion-accordion-group expand="inset">
 					<ion-accordion value="first">
-						<ion-item slot="header" color="light">
+						<ion-item slot="header">
 							<ion-label>{$t('menu.monday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[0]}</div>
 					</ion-accordion>
 					<ion-accordion value="second">
-						<ion-item slot="header" color="light">
+						<ion-item slot="header">
 							<ion-label>{$t('menu.tuesday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[1]}</div>
 					</ion-accordion>
 					<ion-accordion value="third">
-						<ion-item slot="header" color="light">
+						<ion-item slot="header">
 							<ion-label>{$t('menu.wednesday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[2]}</div>
 					</ion-accordion>
 					<ion-accordion value="fourth">
-						<ion-item slot="header" color="light">
+						<ion-item slot="header">
 							<ion-label>{$t('menu.thursday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[3]}</div>
 					</ion-accordion>
 					<ion-accordion value="fifth">
-						<ion-item slot="header" color="light">
+						<ion-item slot="header">
 							<ion-label>{$t('menu.friday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[4]}</div>
 					</ion-accordion>
 					<ion-accordion value="sixth">
-						<ion-item slot="header" color="light">
+						<ion-item slot="header">
 							<ion-label>{$t('menu.saturday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[5]}</div>
 					</ion-accordion>
 					<ion-accordion value="seventh">
-						<ion-item slot="header" color="light">
+						<ion-item slot="header">
 							<ion-label>{$t('menu.sunday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[6]}</div>
@@ -305,13 +305,16 @@
 		height: auto;
 		box-sizing: border-box;
 		width: 100%;
-		max-width: 600px;
 		margin: 0.7rem 0.7rem;
 		min-width: 0;
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
 		border-radius: 12px;
+	}
+
+	ion-accordion-group ion-item {
+		background-color: var(--ion-color-light);
 	}
 
 	.formatted-menu-acc {
@@ -350,7 +353,6 @@
 
 	:global(swiper-container) {
 		width: 100%;
-		max-width: 600px;
 		margin: 0 auto;
 		height: auto;
 		min-width: 0;
