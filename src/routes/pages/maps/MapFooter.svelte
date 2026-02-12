@@ -4,8 +4,9 @@
     import { getMetroInfo } from '$lib/metroScraper/scraper';
     import { handleTransportAppClick } from "./helper";
     import { onMount } from "svelte";
+    import { darkMode } from '$src/lib/globalFunctions/darkMode';
 
-    let isDarkMode = false;
+    $: isDarkMode = $darkMode;
 
     onMount(() => {
         if (typeof window !== 'undefined') {

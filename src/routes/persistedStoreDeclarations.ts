@@ -7,9 +7,10 @@ import { userCreds, userTokens } from "$stores/credentials.store";
 import { scheduledNotifications } from "$lib/calendarNotifications/notificationsStore";
 import { loginStore } from "$src/lib/authentication/loginStore";
 import { webmailLoggedIn } from "$components/webmailLogin/userCredsFlagStore";
-import { get } from "svelte/store";
+import { darkMode } from "$src/lib/globalFunctions/darkMode";
 
 const persistedStores: CapacitorPersistedStore<any>[] = [
+    darkMode,
     toggles,
     userCreds,
     dismissedItems,

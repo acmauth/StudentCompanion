@@ -182,5 +182,7 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		width: 100%;
+		font-weight: bold;
+		/* font-size: smaller; */
 	}
 </style>

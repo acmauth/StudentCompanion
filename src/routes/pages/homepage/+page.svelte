@@ -2,21 +2,16 @@
 	import StackedNav from "$components/shared/StackedNav"
 	import { StatusBar, Style } from "@capacitor/status-bar";
 	import Homepage from './homepage.svelte';
-	import {onDestroy} from 'svelte';
+	import {onDestroy, onMount} from 'svelte';
+	import { darkMode } from "$src/lib/globalFunctions/darkMode";
+	import { get } from "svelte/store";
 
-	let init_style: Style;
-
-	$: if (localStorage.getItem('darkMode') === 'true') {
-			init_style = Style.Dark;
-		} else {
-			init_style = Style.Light;
-		}
-	
-
-	$: StatusBar.setStyle({ style: Style.Dark });
+	onMount(async () => {
+		await StatusBar.setStyle({ style: Style.Dark });
+	})
 
 	onDestroy(async () => {
-		await StatusBar.setStyle({ style: init_style });
+		await StatusBar.setStyle({ style: get(darkMode)? Style.Dark : Style.Light });
 		await StatusBar.show();
 	});
 

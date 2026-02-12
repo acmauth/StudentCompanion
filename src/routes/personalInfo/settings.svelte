@@ -17,6 +17,7 @@
 	import { onMount } from 'svelte';
 	import About from './about.svelte';
 	import Faq from './faq.svelte';
+	import { darkMode } from '$lib/globalFunctions/darkMode';
 
 	/**
 	 * @type {any}
@@ -166,7 +167,7 @@
 			<ion-toggle
 				id="themeToggle"
 				class="ion-padding-start"
-				checked={localStorage.getItem('darkMode') === 'true'}
+				checked={$darkMode}
 				on:ionChange={async () => await toggleDarkTheme()}
 			>
 				Dark Mode

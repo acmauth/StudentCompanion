@@ -17,6 +17,7 @@
 	import osethLogo from '$lib/assets/oseth.svg';
 	import campusSafetyLogo from '$lib/assets/campus-safety.png';
 	import { t, locale, locales, getLocale } from '$lib/i18n';
+	import { darkMode } from '$src/lib/globalFunctions/darkMode';
 
 	let points = coordinates;
 	let filteredPoints = points;
@@ -26,7 +27,7 @@
 	let searchQuery = '';
 	let metroInfo = '';
 	let lang = getLocale();
-	let isDarkMode = false;
+	$: isDarkMode = $darkMode;
 
 	function handleTransportAppClick() {
 		const androidPackageName = 'com.amco.city.thessaloniki';

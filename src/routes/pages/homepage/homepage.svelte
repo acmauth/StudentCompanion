@@ -23,10 +23,7 @@
 	import { registerPlugin, Capacitor } from '@capacitor/core';
 	import { Browser } from '@capacitor/browser';
 	import { locale } from '$lib/i18n';
-	import { onDestroy, onMount } from 'svelte';
 	import { StatusBar, Style } from '@capacitor/status-bar';
-	import { animation } from 'ionic-svelte/components/IonNav.svelte';
-	import QuickLinks from '$src/routes/quickLinks/quickLinks.svelte';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -219,6 +216,48 @@
 			{#if upcomingEvents.length > 0}
 				<h4 class="middle-title">{$t('homepage.dontForget')}</h4>
 				<div class="events-container">
+					{#each upcomingEvents as event}
+					
+					<div class="event-card ion-activatable" aria-hidden
+					on:click={() => {goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
+							<div class="event-header">
+								<div class="event-header-left">
+									<div class="event-type-badge" data-type={event.type}>
+										{event.type}
+									</div>
+									<div class="event-detail-item">
+										<span class="event-time">
+											{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start)}
+										</span>
+									</div>
+								</div>
+								<ion-icon icon={calendarOutline} class="event-icon"></ion-icon>
+							</div>
+							<h5 class="event-title">{event.title}</h5>
+							<ion-ripple-effect></ion-ripple-effect>
+						</div>
+					{/each}
+					{#each upcomingEvents as event}
+					
+					<div class="event-card ion-activatable" aria-hidden
+					on:click={() => {goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
+							<div class="event-header">
+								<div class="event-header-left">
+									<div class="event-type-badge" data-type={event.type}>
+										{event.type}
+									</div>
+									<div class="event-detail-item">
+										<span class="event-time">
+											{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start)}
+										</span>
+									</div>
+								</div>
+								<ion-icon icon={calendarOutline} class="event-icon"></ion-icon>
+							</div>
+							<h5 class="event-title">{event.title}</h5>
+							<ion-ripple-effect></ion-ripple-effect>
+						</div>
+					{/each}
 					{#each upcomingEvents as event}
 					
 					<div class="event-card ion-activatable" aria-hidden
