@@ -237,48 +237,6 @@
 							<ion-ripple-effect></ion-ripple-effect>
 						</div>
 					{/each}
-					{#each upcomingEvents as event}
-					
-					<div class="event-card ion-activatable" aria-hidden
-					on:click={() => {goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
-							<div class="event-header">
-								<div class="event-header-left">
-									<div class="event-type-badge" data-type={event.type}>
-										{event.type}
-									</div>
-									<div class="event-detail-item">
-										<span class="event-time">
-											{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start)}
-										</span>
-									</div>
-								</div>
-								<ion-icon icon={calendarOutline} class="event-icon"></ion-icon>
-							</div>
-							<h5 class="event-title">{event.title}</h5>
-							<ion-ripple-effect></ion-ripple-effect>
-						</div>
-					{/each}
-					{#each upcomingEvents as event}
-					
-					<div class="event-card ion-activatable" aria-hidden
-					on:click={() => {goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
-							<div class="event-header">
-								<div class="event-header-left">
-									<div class="event-type-badge" data-type={event.type}>
-										{event.type}
-									</div>
-									<div class="event-detail-item">
-										<span class="event-time">
-											{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start)}
-										</span>
-									</div>
-								</div>
-								<ion-icon icon={calendarOutline} class="event-icon"></ion-icon>
-							</div>
-							<h5 class="event-title">{event.title}</h5>
-							<ion-ripple-effect></ion-ripple-effect>
-						</div>
-					{/each}
 				</div>
 			{:else}
 				<!-- Create Event Prompt -->
