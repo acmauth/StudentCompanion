@@ -24,6 +24,7 @@
 	import { Browser } from '@capacitor/browser';
 	import { locale } from '$lib/i18n';
 	import { StatusBar, Style } from '@capacitor/status-bar';
+	import AdBanner from './ad_banner.svelte';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -266,7 +267,7 @@
 			</div>
 			{/if}
 		</div>
-		
+		<AdBanner departmentName={departmentName} semester={actualSemester}/>
 		<div class="updates-section">
 			<div style="display: flex; justify-content: space-between; align-items: center;">
 				<h4 class="middle-title" style="margin-bottom: 0;">{$t('homepage.updates')}</h4>
