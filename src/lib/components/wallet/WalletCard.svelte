@@ -98,7 +98,7 @@
 		<div class="personal-card card-back ion-activatable">
 			<ion-ripple-effect/>
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div class="card-header" style="margin-bottom: 0;">
+			<div class="card-header wallet-header">
 				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<h3 class="department-name" on:click={toggleCardFlip}>{$t('homepage.wallet')}</h3>
 				<!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -318,7 +318,13 @@
 		justify-content: center;
 		cursor: pointer;
 		position: relative;
-		z-index: 10;
+		z-index: 1;
+	}
+
+
+	.wallet-header .wallet-icon-container {
+		margin-top: -0.8rem;
+		margin-bottom: -0.5rem;
 	}
 
 	.wallet-icon {
