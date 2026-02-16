@@ -267,7 +267,7 @@
 			</div>
 			{/if}
 		</div>
-		<AdBanner departmentName={departmentName} semester={actualSemester}/>
+		<!-- <AdBanner departmentName={departmentName} semester={actualSemester}/> -->
 		<div class="updates-section">
 			<div style="display: flex; justify-content: space-between; align-items: center;">
 				<h4 class="middle-title" style="margin-bottom: 0;">{$t('homepage.updates')}</h4>
