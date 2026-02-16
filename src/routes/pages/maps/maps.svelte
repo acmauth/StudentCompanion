@@ -703,7 +703,6 @@
     }
 
     #bottom-meta ion-chip {
-        --background: var(--ion-color-light);
         --color: var(--ion-color-dark);
         margin: 0;
     }
