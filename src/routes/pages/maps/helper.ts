@@ -7,7 +7,7 @@ import appConfig from "$src/app.config";
 const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
 
 
-export type RoomWithBuilding = Rooms["rooms"][number] & { bldId: string; hasGis?: boolean; isMezz: string };
+export type RoomWithBuilding = Rooms["rooms"][number] & { bldId: string; hasGis?: boolean; isMezz: string; X: number; Y:number };
 
 export async function fetchBuildings(): Promise<BuildingInfo[]> {
     const { buildings } = await authApi.getBuildings();

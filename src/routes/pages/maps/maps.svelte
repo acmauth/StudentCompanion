@@ -7,7 +7,7 @@
     import { slide, fly } from "svelte/transition";
     import * as gis from "./gis";
     import type { BuildingInfo, Department, Rooms } from "./types";
-    import { trash, caretDown, close, layersOutline, gridOutline, peopleOutline, backspaceOutline, backspace } from "ionicons/icons";
+    import { trash, caretDown, close, layersOutline, gridOutline, peopleOutline, backspaceOutline, backspace, mapOutline, navigate } from "ionicons/icons";
     import MapFooter from "./MapFooter.svelte";
 	import { FuseResult } from "fuse.js";
     import markerIcon from '$lib/assets/marker.png';
@@ -215,6 +215,10 @@
 	});
 
     async function displayRoom(room: RoomWithBuilding) {
+        const bldInfo = (await api.getBuildingInfo(room.bldId)).buildingInfo;
+        room.X = bldInfo.longX
+        room.Y = bldInfo.latY
+
         activeRoom = room;
         if (!map || !selectedFeatureLayerGroup) return;
 
@@ -391,6 +395,12 @@
                     <ion-icon icon={gridOutline}></ion-icon>
                     <ion-label>{activeRoom.roomType}</ion-label>
                 </ion-chip>
+                <a href="https://www.google.com/maps?q={activeRoom.Y + OFFSETS.Y},{activeRoom.X + OFFSETS.X}">
+                    <ion-chip color="primary">
+                        <ion-icon icon={navigate}></ion-icon>
+                        <ion-label>{$t("maps.open_in_gmaps")}</ion-label>
+                    </ion-chip>
+                </a>
             </div>
         </div>
     {:else}
