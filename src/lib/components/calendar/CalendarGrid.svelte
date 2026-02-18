@@ -163,7 +163,7 @@
         transition: background 0.15s ease;
         font-weight: 500;
     }
-    .header .month-title:hover {
+    .header .month-title {
         background: var(--ion-color-light);
     }
 
@@ -199,7 +199,7 @@
         transition: all 0.15s ease;
         gap: 0.15rem;
     }
-    .day.selectable:hover {
+    .day.selectable {
         background: var(--ion-color-light);
         cursor: pointer;
         transform: scale(1.05);

@@ -200,7 +200,7 @@
 </script>
 
 <ion-page>
-<ion-content fullscreen class="ion-no-padding" scroll-y="false">
+<ion-content fullscreen class="ion-no-padding" scroll-y={false}>
     <ion-header collapse="condense" mode="ios">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
