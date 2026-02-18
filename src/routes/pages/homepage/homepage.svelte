@@ -78,6 +78,7 @@
 	let studyLevel = '';
 	let actualSemester = 0;
 	let studentStatus = '';
+
 	let isFlipped = false;
 
 	async function handleCampusSafetyClick() {
@@ -195,11 +196,10 @@
 				{numPassedSubjects}
 				{numSubjects}
 				{average}
-				bind:isFlipped
 				/>
 			</div>
 			
-			<div class="services-section" class:card-flipped={isFlipped}>
+			<div class="services-section">
 				<div class="service-buttons-grid">
 					<div class="service-button ion-activatable" on:click={() => {navController.push(Links);}} aria-hidden>
 						<ion-icon icon={linkOutline} class="service-button-icon"></ion-icon>
@@ -426,12 +426,8 @@
 	}
 
 	.services-section {
-		padding-top: 2.5rem !important;
+		/* padding-top: 2.5rem !important; */
 		transition: margin-top 0.6s ease;
-	}
-
-	.services-section.card-flipped {
-		margin-top: 4rem !important;
 	}
 
 	.middle-title {

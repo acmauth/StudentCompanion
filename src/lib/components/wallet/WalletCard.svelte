@@ -8,7 +8,9 @@
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { goto } from '$app/navigation';
+	import { flip } from 'svelte/animate';
 
+	export let reactToHeight: boolean = true;
 	export let departmentName: string = '';
 	export let studyLevel: string = '';
 	export let actualSemester: number = 0;
@@ -17,7 +19,7 @@
 	export let average: number = 0;
 
 	// Card flip state
-	export let isFlipped = false;
+	let isFlipped = false;
 	let addQRAlertOpen = false;
 	let qrDisplayModalOpen = false;
 	let qr_value: string | null = null;
@@ -45,22 +47,42 @@
 		const toast_ = await toastController.create(toast);
 		toast_.present();
 	}
+
+	let flipClass = false;
+	$: flipClass = isFlipped;
+
+	// We need to keep track of the flip container and the front
+	// and back children so we can update the height of the flip card.
+	let flipContainer: HTMLElement;
+	let frontChild: HTMLElement;
+	let backChild: HTMLElement;
+
+	// This function updates the height of the flip card when it's toggled.
+	const updateHeight = (status: Boolean) => {
+		// Important, this code will run once before the flip container is defined, so we need to check it exists.
+		if (flipContainer && frontChild && backChild) {
+			// The height relative to the rest of the page is dictated by the main container, so we
+			// set it's height to the height of the front or back child, depending on the status of the flip.
+			// So if we're isFlipped, use the back child, otherwise the front
+			flipContainer.style.height = status
+				? `${backChild.clientHeight}px`
+				: `${frontChild.clientHeight}px`;
+		}
+	};
+
+	// When the flip class changes, update the height of the flip card.
+	// Check if we should update the height of the flip card when it's toggled.
+	// Sometimes we don't want to do this, that's why it's optional.
+	$: if (reactToHeight) updateHeight(flipClass);
 </script>
 
-<div class="flip-card-container" class:flipped={isFlipped}>
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
-	<div class="flip-card-inner">
+<div class="flip-container" class:flipClass aria-hidden bind:this={flipContainer}>
+	<div class="flipper" bind:this={frontChild} aria-hidden>
 		<!-- Front of card -->
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div class="personal-card card-front ion-activatable">
+		<div class="front personal-card card-front ion-activatable" bind:this={frontChild} aria-hidden>
 			<ion-ripple-effect/>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div class="card-header">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="department-info" on:click={toggleCardFlip}>
+			<div class="card-header" aria-hidden>
+				<div class="department-info" on:click={toggleCardFlip} aria-hidden>
 					<h3 class="department-name">{departmentName}</h3>
 					{#if actualSemester !== null}
 						<p class="study-level">{studyLevel} - {$t('homepage.semester')} {actualSemester}</p>
@@ -68,14 +90,13 @@
 						<p class="study-level">{studyLevel}</p>
 					{/if}
 				</div>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="wallet-icon-container" on:click={toggleCardFlip}>
+
+				<div class="wallet-icon-container" on:click={toggleCardFlip} aria-hidden>
 					<ion-icon icon={wallet} class="wallet-icon"></ion-icon>
 				</div>
 			</div>
 
-			<div class="stats-container" on:click={()=>{goto("/pages/grades")}}>
+			<div class="stats-container" on:click={()=>{goto("/pages/grades")}} aria-hidden>
 				<div class="stat-card">
 					<div class="stat-header-horizontal">
 						<span class="stat-label">{$t('homepage.passed')}</span>
@@ -94,15 +115,13 @@
 		</div>
 
 		<!-- Back of card -->
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<div class="personal-card card-back ion-activatable">
+		<div class="back personal-card card-back ion-activatable" bind:this={backChild}>
 			<ion-ripple-effect/>
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<div class="card-header wallet-header">
+			<div class="card-header wallet-header" aria-hidden>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<h3 class="department-name" on:click={toggleCardFlip}>{$t('homepage.wallet')}</h3>
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="wallet-icon-container" on:click={toggleCardFlip}>
+				<div class="wallet-icon-container" on:click={toggleCardFlip} aria-hidden>
 					<ion-icon icon={wallet} class="wallet-icon"></ion-icon>
 				</div>
 			</div>
@@ -110,8 +129,7 @@
 			<div class="wallet-container">
 				<div class="wallet-item">
 					{#if $qrStore.filter((item) => item.title === "school").length > 0}
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<!-- svelte-ignore a11y-no-static-element-interactions -->
+						
 						<svg 
 							use:qr={{
 								data: $qrStore.filter((item) => item.title === "school")[0].data,
@@ -121,16 +139,12 @@
 							aria-hidden
 						/>
 					{:else}
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						<img src={student_id} alt="student id" on:click={()=>{addQRAlertOpen=true; gymQRPressed=false; schoolQRPressed = true;}} aria-hidden/>
 					{/if}
 					<p class="wallet-label">{$t("homepage.schoolQR")}</p>
 				</div>
 				<div class="wallet-item">
 					{#if $qrStore.filter((item) => item.title === "gym").length > 0}
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						<svg
 							use:qr={{
 								data: $qrStore.filter((item) => item.title === "gym")[0].data,
@@ -140,8 +154,6 @@
 							aria-hidden
 						/>
 					{:else}
-						<!-- svelte-ignore a11y-click-events-have-key-events -->
-						<!-- svelte-ignore a11y-no-static-element-interactions -->
 						<img src={gym_id} alt="gym id" on:click={()=>{addQRAlertOpen=true; gymQRPressed=true; schoolQRPressed = false;}} aria-hidden>
 					{/if}
 					<p class="wallet-label">{$t("homepage.gymQR")}</p>
@@ -234,24 +246,6 @@
 ></ion-alert>
 
 <style>
-	.flip-card-container {
-		/* perspective: 1000px; */
-		margin-bottom: -5rem;
-		position: relative;
-	}
-
-	.flip-card-inner {
-		position: relative;
-		width: 100%;
-		min-height: 200px;
-		transition: transform 0.6s;
-		transform-style: preserve-3d;
-	}
-
-	.flip-card-container.flipped .flip-card-inner {
-		transform: rotateY(180deg);
-	}
-
 	.personal-card {
 		background: var(--app-color-map-input);
 		border-radius: 1.3rem;
@@ -270,6 +264,8 @@
 		-moz-osx-font-smoothing: grayscale;
 		transform: translateZ(0);
 		will-change: transform;
+		image-rendering: -webkit-optimize-contrast;
+		image-rendering: crisp-edges;
 	}
 
 	.card-front {
@@ -393,6 +389,9 @@
 		max-width: 120px;
 		cursor: pointer;
 		transition: transform 0.2s ease;
+		image-rendering: -webkit-optimize-contrast;
+		image-rendering: crisp-edges;
+		transform: translate3d(0, 0, 0);
 	}
 
 	.wallet-item img:hover {
@@ -404,6 +403,9 @@
 		max-width: 120px;
 		cursor: pointer;
 		transition: transform 0.2s ease;
+		image-rendering: -webkit-optimize-contrast;
+		shape-rendering: crispEdges;
+		transform: translate3d(0, 0, 0);
 	}
 
 	.wallet-item svg:hover {
@@ -464,5 +466,89 @@
 	.remove-button {
 		flex: 1;
 		margin: 0;
+	}
+
+	.flip-container,
+	.flipper,
+	.front,
+	.back {
+		will-change: transform;
+		transform: translateZ(0);
+	}
+
+	/*  */
+	.flip-container {
+		-webkit-perspective: 1000px;
+		-moz-perspective: 1000px;
+		-o-perspective: 1000px;
+		perspective: 1000px;
+		transition: 0.2s;
+		-webkit-transition: 0.2s;
+		-moz-transition: 0.2s;
+		-o-transition: 0.2s;
+		-ms-transition: 0.2s;
+	}
+
+	/* When flipClass is active, rotate the whole contents of flipper 180 */
+	.flip-container.flipClass .flipper {
+		-webkit-transform: rotateY(-180deg);
+		-moz-transform: rotateY(-180deg);
+		-o-transform: rotateY(-180deg);
+		-ms-transform: rotateY(-180deg);
+		transform: rotateY(-180deg);
+	}
+
+	/* Animation for the rotation and style */
+	.flipper {
+		transition: 0.6s;
+		-webkit-transition: 0.6s;
+		-moz-transition: 0.6s;
+		-o-transition: 0.6s;
+		-ms-transition: 0.6s;
+		transform-style: preserve-3d;
+		-webkit-transform-style: preserve-3d;
+		-moz-transform-style: preserve-3d;
+		-o-transform-style: preserve-3d;
+		-ms-transform-style: preserve-3d;
+		position: relative;
+	}
+
+	/* hide back of pane during swap */
+	.front,
+	.back {
+		-webkit-backface-visibility: hidden;
+		-moz-backface-visibility: hidden;
+		-o-backface-visibility: hidden;
+		backface-visibility: hidden;
+	}
+
+	/* front pane, placed above back */
+	.front {
+		z-index: 2;
+		/* for firefox 31 */
+		position: relative;
+		-webkit-transform: rotateY(0deg);
+		-moz-transform: rotateY(0deg);
+		-o-transform: rotateY(0deg);
+		-ms-transform: rotateY(0deg);
+		transform: rotateY(0deg);
+	}
+
+	/* back, initially hidden pane, moved to the same position as the front pane */
+	.back {
+		position: absolute;
+		top: 0;
+		left: 0;
+		-webkit-transform: rotateY(180deg);
+		-moz-transform: rotateY(180deg);
+		-o-transform: rotateY(180deg);
+		transform: rotateY(180deg);
+	}
+
+	.flip-container.flipClass .front {
+		clip-path: polygon(0 0, 0 0, 0 0, 0 0); /* Hide front when isFlipped */
+	}
+	.flip-container:not(.flipClass) .back {
+		clip-path: polygon(0 0, 0 0, 0 0, 0 0); /* Hide back when not isFlipped */
 	}
 </style>
