@@ -312,9 +312,9 @@
 
 	.personal-section {
 		position: relative;
-		padding: 0.5rem 1.5rem 0 1.5rem;
+		padding: 0.5rem 1.5rem 1.5rem 1.5rem;
 		border-radius: 0 0 0rem 0rem;
-		padding-bottom: 1rem;
+		/* padding-bottom: 2rem; */
 	}
 
 	.avatar {
