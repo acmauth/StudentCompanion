@@ -29,6 +29,7 @@ end
 target 'App' do
   capacitor_pods
   # Add your Pods here
+  pod 'mailcore2-ios'
 end
 
 post_install do |installer|

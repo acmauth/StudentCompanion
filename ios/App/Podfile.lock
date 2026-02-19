@@ -28,6 +28,7 @@ PODS:
     - Capacitor
   - CapawesomeCapacitorAppUpdate (7.2.0):
     - Capacitor
+  - mailcore2-ios (0.6.4)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -45,6 +46,11 @@ DEPENDENCIES:
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - "CapacitorToast (from `../../node_modules/@capacitor/toast`)"
   - "CapawesomeCapacitorAppUpdate (from `../../node_modules/@capawesome/capacitor-app-update`)"
+  - mailcore2-ios
+
+SPEC REPOS:
+  trunk:
+    - mailcore2-ios
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -94,7 +100,8 @@ SPEC CHECKSUMS:
   CapacitorStatusBar: 0659ddc7b1713764a05831463d215b177a15d054
   CapacitorToast: 166611aea815418fc08894b77a915773e3d059d5
   CapawesomeCapacitorAppUpdate: 9fb16b07faaa1c86468c794e39bfedb822a1a446
+  mailcore2-ios: 3ff0be2fa553d4da9c11d39c11d51863c768f24f
 
-PODFILE CHECKSUM: 3759eb384deac6bea17a19440fdfa530eb7883db
+PODFILE CHECKSUM: 2a1682b778b35ef1ed8342983c9e999ca587fc7e
 
 COCOAPODS: 1.16.2
