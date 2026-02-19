@@ -1,6 +1,19 @@
 <script lang='ts'>
     import { sadOutline } from 'ionicons/icons';
+    import { logOut } from '$src/routes/personalInfo/personalInfo.svelte';
+    import { resetPersistedStores } from "$src/routes/persistedStoreDeclarations.js";
+    import { Preferences } from "@capacitor/preferences";
+    import Dexie from 'dexie';
+    import { t } from '$lib/i18n';
     export let errorMsg: string;
+
+    async function clearCacheAndReload() {
+        await resetPersistedStores();
+        localStorage.clear();
+        Preferences.clear();
+        Dexie.delete('cachedData');
+        location.reload();
+    }
 </script>
 
 <ion-card class="custom-card">
@@ -20,7 +33,12 @@
               </ion-list>
            </ion-accordion>
      </ion-accordion-group>    
+     <ion-button shape="round" style="margin-top: 1rem;" on:click={logOut}>{$t('settings.logout')}</ion-button>
+     <ion-button shape="round" fill="outline" style="margin-bottom: 1rem;" on:click={clearCacheAndReload}>{$t('settings.retry')}</ion-button>
     </ion-list>
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-static-element-interactions -->
+     
 </ion-card>
 
 <style>
@@ -44,5 +62,10 @@
 
     .custom-accordion {
         transform: scale(0.8); 
+    }
+
+    ion-button {
+        text-transform: none;
+        margin:0.5rem;
     }
 </style>
