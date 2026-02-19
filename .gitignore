@@ -12,8 +12,6 @@ vite.config.ts.timestamp-*
 package-lock.json
 /.env
 .temp
-ios
-ios/*
 src/debug/*
 visit-log.csv
 pnpm-lock.yaml
