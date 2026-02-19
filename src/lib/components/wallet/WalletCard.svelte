@@ -9,6 +9,7 @@
 	import type { ToastOptions } from '@ionic/core';
 	import { goto } from '$app/navigation';
 	import { flip } from 'svelte/animate';
+	import { onMount } from 'svelte';
 
 	export let reactToHeight: boolean = true;
 	export let departmentName: string = '';
@@ -69,6 +70,18 @@
 				: `${frontChild.clientHeight}px`;
 		}
 	};
+
+	// Initialise height once after first browser layout so the CSS transition
+	// has a pixel value to animate FROM on the very first flip.
+	onMount(() => {
+		if (reactToHeight) {
+			requestAnimationFrame(() => {
+				if (flipContainer && frontChild) {
+					flipContainer.style.height = `${frontChild.clientHeight}px`;
+				}
+			});
+		}
+	});
 
 	// When the flip class changes, update the height of the flip card.
 	// Check if we should update the height of the flip card when it's toggled.
@@ -473,20 +486,16 @@
 	.front,
 	.back {
 		will-change: transform;
-		transform: translateZ(0);
 	}
 
 	/*  */
 	.flip-container {
-		-webkit-perspective: 1000px;
-		-moz-perspective: 1000px;
-		-o-perspective: 1000px;
-		perspective: 1000px;
-		transition: 0.2s;
-		-webkit-transition: 0.2s;
-		-moz-transition: 0.2s;
-		-o-transition: 0.2s;
-		-ms-transition: 0.2s;
+		-webkit-perspective: 700px;
+		-moz-perspective: 700px;
+		-o-perspective: 700px;
+		perspective: 700px;
+		transition: height 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+		-webkit-transition: height 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
 	}
 
 	/* When flipClass is active, rotate the whole contents of flipper 180 */
@@ -500,11 +509,8 @@
 
 	/* Animation for the rotation and style */
 	.flipper {
-		transition: 0.6s;
-		-webkit-transition: 0.6s;
-		-moz-transition: 0.6s;
-		-o-transition: 0.6s;
-		-ms-transition: 0.6s;
+		transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+		-webkit-transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
 		transform-style: preserve-3d;
 		-webkit-transform-style: preserve-3d;
 		-moz-transform-style: preserve-3d;
@@ -545,10 +551,5 @@
 		transform: rotateY(180deg);
 	}
 
-	.flip-container.flipClass .front {
-		clip-path: polygon(0 0, 0 0, 0 0, 0 0); /* Hide front when isFlipped */
-	}
-	.flip-container:not(.flipClass) .back {
-		clip-path: polygon(0 0, 0 0, 0 0, 0 0); /* Hide back when not isFlipped */
-	}
+
 </style>
