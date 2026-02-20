@@ -13,7 +13,7 @@
     import { removePastNotifications } from '$src/lib/calendarNotifications/repeatedNotifications';
     import { deleteEventNotifications, deleteSingleEventNotification } from '$src/lib/calendarNotifications/notificationFunctions';
     import { getLocale, t } from '$lib/i18n';
-    import { buildCalendarWeeks, type DayObject, type SelectedDay, getNextMonth, getPreviousMonth, getCoursesEvents } from '$lib/components/calendar/calendarUtils';
+    import { buildCalendarWeeks, type DayObject, type SelectedDay, getNextMonth, getPreviousMonth, fetchUniversisEvents } from '$lib/components/calendar/calendarUtils';
 	import { page } from '$app/stores';
 
     let currentDate = new Date();
@@ -193,7 +193,7 @@
         // Initialize selectedDay to today or param date
         selectedDay = { day: initialDate.getDate(), month: initialDate.getMonth(), year: initialDate.getFullYear() };
         buildCalendar();
-        await getCoursesEvents();        
+        await fetchUniversisEvents();        
         buildCalendar();
     });
 </script>

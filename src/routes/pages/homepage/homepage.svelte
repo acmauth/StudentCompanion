@@ -19,7 +19,7 @@
 	import { buildCalendarWeeks, type DayObject } from '$lib/components/calendar/calendarUtils';
 	import Links from '$src/routes/quickLinks/quickLinks.svelte';
 	import Notifications from '$src/routes/notifications/notificationsPage.svelte';
-	import { getCoursesEvents } from '$lib/components/calendar/calendarUtils';
+	import { fetchUniversisEvents } from '$lib/components/calendar/calendarUtils';
 	import { registerPlugin, Capacitor } from '@capacitor/core';
 	import { Browser } from '@capacitor/browser';
 	import { locale } from '$lib/i18n';
@@ -108,7 +108,7 @@
 
 	async function getInfo(locale: string) {
 		if($EventStore.length === 0) 
-			getCoursesEvents();
+			fetchUniversisEvents();
 		
 		let expandedLocale = locale == 'el' ? '' : '($expand=locale)';
 
