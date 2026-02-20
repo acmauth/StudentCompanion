@@ -30,7 +30,6 @@
     let modalOpen: boolean = false;
     let deleteModalOpen: boolean = false;
 
-    let prototypeEvent: Event = null;
     $: prototypeEvent = {
          id: new Date().getTime(),
             title: "",
@@ -174,7 +173,7 @@
 
         if (launchEventDateStr) {
             const launchEventDate: Date = new Date(decodeURIComponent(launchEventDateStr));
-            console.log(launchEventDate)
+            // console.log(launchEventDate)
             initialDate = launchEventDate
             activeDate = initialDate;
             month = initialDate.getMonth();

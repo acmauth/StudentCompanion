@@ -159,11 +159,11 @@ export async function getCoursesEvents() {
                 return {
                     id: exam.id,
                     title: exam.courseExam.name,
-                    description: exam.location?.description,
                     type: EventType.TEST,
                     repeat: EventRepeatType.NEVER,
                     notify: false,
                     location: exam.location?.description,
+                    locationCode: exam.location?.alternateName,
                     slot: {
                         start: new Date(exam.startDate),
                         end: new Date(exam.endDate)
@@ -197,7 +197,8 @@ export async function getCoursesEvents() {
                     slot: {
                         start: new Date(classEvent.startDate),
                         end: new Date(classEvent.endDate)
-                    }
+                    },
+                    locationCode: classEvent.location?.alternateName
                 };
             } else {
                 return null; // Return null if the class already exists in $EventStore

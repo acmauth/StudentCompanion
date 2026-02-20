@@ -3,6 +3,8 @@
     import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue, getEventRepeatTypeCycleValue} from '$components/calendar/event/Event';
     import type { DatetimeChangeEventDetail } from '@ionic/core';
     import { t, getLocale} from "$lib/i18n";
+	import { navigateCircle } from 'ionicons/icons';
+	import { goto } from '$app/navigation';
 
     export let copyEvent: Event;
     let templateStartTime: string, templateEndTime: string;
@@ -102,7 +104,7 @@
             </ion-modal>
         </ion-item>
         
-        <div style="padding:10px;"/>
+        <!-- <div style="padding:10px;"/> -->
 
         <ion-item>
             <ion-select label={$t('event.type')} interface="popover" value={copyEvent.type} on:ionChange={(event)=>copyEvent.type=event.detail.value} label-placement="floating">
@@ -138,6 +140,33 @@
                 />
             </ion-item>
         {/if}
+        <ion-item>
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                {#if copyEvent.location && copyEvent.locationCode}
+                    <ion-label>{$t('event.location')}</ion-label>
+                    <ion-chip
+                        outline
+                        style="cursor: pointer; flex-shrink: 1; min-width: 0;"
+                        on:click={() => { if (copyEvent.locationCode) goto("/pages/maps?roomid=" + copyEvent.locationCode);}}
+                        aria-hidden
+                    >
+                        <ion-icon icon={navigateCircle}></ion-icon>
+                        <ion-label style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 10rem; display: block;">{copyEvent.location}eeeeeeeeeeeeeeeeeee</ion-label>
+                    </ion-chip>
+                {:else}
+                    <ion-input
+                        label={$t('event.location')}
+                        label-placement="floating"
+                        id="location"
+                        type="text"
+                        value={copyEvent.location || null}
+                        contenteditable="true"
+                        spellcheck={true}
+                        on:ionChange={(event)=>copyEvent.location=event.detail.value?? "" }
+                    />
+                {/if}
+            </div>
+        </ion-item>
 
         <ion-item>
             <ion-textarea
