@@ -8,7 +8,6 @@
     export let errorMsg: string;
 
     async function clearCacheAndReload() {
-        await resetPersistedStores();
         Dexie.delete('cachedData');
         await tick();
         location.reload();
