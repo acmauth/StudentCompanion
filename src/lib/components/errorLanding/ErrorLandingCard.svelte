@@ -9,9 +9,8 @@
 
     async function clearCacheAndReload() {
         await resetPersistedStores();
-        localStorage.clear();
-        Preferences.clear();
         Dexie.delete('cachedData');
+        await tick();
         location.reload();
     }
 </script>
