@@ -4,6 +4,7 @@ import { get } from "svelte/store";
 import type { messages, elearningMessages } from "$types/messages";
 import { parseMail } from '@protontech/jsmimeparser';
 import { webmailLoggedIn as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
+import { json } from "@sveltejs/kit";
 
 let userID = get(userTokens).elearning.userID;
 
@@ -143,6 +144,8 @@ export async function gatherNotifications(options?: options){
     const elearningNotifications = filteredNotifications.elearning;
     // const universisNotifications = filteredNotifications.universis;
     const universisNotifications = await getUniversisMessages(options.refresh);
+
+    console.log(JSON.stringify(webmailNotifications));
 
     let notifications = elearningNotifications.concat(webmailNotifications)
                         .filter((notification, index, self) => {

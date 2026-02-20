@@ -43,25 +43,76 @@ public class ImapPlugin: CAPPlugin, CAPBridgedPlugin {
                 requestKind: [.headers, .flags, .size],
                 numbers: MCOIndexSet(range: MCORangeMake(1, UINT64_MAX))
             )
-            print("here")
+
             fetchOp?.start { error, messages, _ in
                 if let error = error {
-                    call.resolve(["error": error.localizedDescription, "received": []])
+                    let nsError = error as NSError
+                    let isAuthError = nsError.code == MCOErrorCode.authentication.rawValue
+                    if validate {
+                        let msg = isAuthError
+                            ? "Authentication failed: Invalid username or password"
+                            : "Connection error: \(error.localizedDescription)"
+                        call.resolve(["error": msg, "received": []])
+                    } else {
+                        call.resolve(["error": true, "received": []])
+                    }
                     return
                 }
 
-                let result = (messages as? [MCOIMAPMessage] ?? []).map { msg -> [String: Any] in
-                    return [
-                        "uid": msg.uid,
-                        "subject": msg.header?.subject ?? "(no subject)",
-                        "from": msg.header?.from?.displayName ?? msg.header?.from?.mailbox ?? "",
-                        "date": msg.header?.date?.timeIntervalSince1970 ?? 0,
-                        "size": msg.size,
-                        "isRead": !msg.flags.contains(.seen) ? false : true
-                    ]
+                // If validating, credentials are confirmed valid — return empty array
+                if validate {
+                    call.resolve(["error": NSNull(), "received": []])
+                    return
                 }
 
-                call.resolve(["error": NSNull(), "received": result])
+                let allMessages = (messages as? [MCOIMAPMessage]) ?? []
+                let messagesArray = Array(allMessages.suffix(7))
+                let group = DispatchGroup()
+                var results: [[String: Any]] = []
+                let resultQueue = DispatchQueue(label: "imap.result.queue")
+
+                for msg in messagesArray {
+                    group.enter()
+                    if let fetchDataOp = session.fetchMessageOperation(withFolder: "INBOX", uid: msg.uid) {
+                        fetchDataOp.start { fetchErr, data in
+                            if let _ = fetchErr {
+                                resultQueue.async {
+                                    group.leave()
+                                }
+                                return
+                            }
+
+                            var rawDataValue: Any = ""
+                            if let data = data {
+                                if let str = String(data: data, encoding: .utf8) {
+                                    rawDataValue = str
+                                } else {
+                                    rawDataValue = data.base64EncodedString()
+                                }
+                            }
+
+                            let item: [String: Any] = [
+                                "data": rawDataValue,
+                                "subject": msg.header?.subject ?? "(no subject)",
+                                "sender": msg.header?.from?.displayName ?? msg.header?.from?.mailbox ?? "",
+                                "date": msg.header?.date?.timeIntervalSince1970 ?? 0
+                            ]
+
+                            resultQueue.async {
+                                results.append(item)
+                                group.leave()
+                            }
+                        }
+                    } else {
+                        resultQueue.async {
+                            group.leave()
+                        }
+                    }
+                }
+
+                group.notify(queue: DispatchQueue.global(qos: .userInitiated)) {
+                    call.resolve(["error": NSNull(), "received": results])
+                }
             }
         }
     }
