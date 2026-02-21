@@ -62,11 +62,13 @@
     }
 
     async function setSelectedDepartment(department: Department|undefined) {
+        await clearActiveRoom();
         selectedDepartment = department;
         buildings = await fetchAvailableBuildings(department);
     }
 
     async function setSelectedBuilding(building: BuildingInfo|undefined) {
+        await clearActiveRoom();
         selectedBuilding = building;
     }
 
@@ -283,6 +285,13 @@
         } finally {
             isLoading = false;
         }
+    }
+
+    async function clearActiveRoom(){
+        activeRoom = undefined;
+        selectedFeatureLayerGroup?.clearLayers();
+        searchResults = [];
+        await tick();
     }
 
     async function clearDisplay() {

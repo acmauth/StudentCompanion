@@ -62,7 +62,11 @@ export function flattenRooms(roomsByBuilding: Record<string, Rooms["rooms"]>): R
 }
 
 export function createRoomSearch(rooms: RoomWithBuilding[]): Fuse<RoomWithBuilding> {
-    return new Fuse(rooms, { keys: ["roomName"] });
+    return new Fuse(rooms, { 
+		keys: ["roomName"],
+		ignoreDiacritics: true,
+		threshold: 0.4
+	});
 }
 
 export function markRoomsWithGis(rooms: RoomWithBuilding[], gisIds: Set<string>): RoomWithBuilding[] {
