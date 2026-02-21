@@ -7,23 +7,21 @@ import Config from "$src/app.config";
 // Initialize OIDC client
 export const authClient = new OIDCClient(Config.auth);
 
-let loading = false;
 let error = '';
 let userInfo: any = null;
 let isAuthenticated = false;
 
-export async function handleCallback(url: string, loading: boolean) {
-    loading = true;
+export async function handleCallback(url: string) {
     error = '';
     
     try {
       const tokens = await authClient.handleCallback(url);
       // console.log('Login successful', tokens);
-      
+
       // Get user info
       userInfo = await authClient.getUserInfo();
       isAuthenticated = true;
-      
+
       // Clean URL and redirect
       // console.log("[src/login/login.ts] Navigating to homepage");
       goto('/pages/homepage', { replaceState: true });
@@ -31,13 +29,10 @@ export async function handleCallback(url: string, loading: boolean) {
       console.error('Login failed:', err);
       error = err.message || 'Authentication failed';
       isAuthenticated = false;
-    } finally {
-      loading = false;
     }
   }
 
 export async function handleLogin() {
-    loading = true;
     error = '';
     
     try {
@@ -45,12 +40,10 @@ export async function handleLogin() {
     } catch (err) {
       console.error('Login initiation failed:', err);
       error = err.message || 'Failed to initiate login';
-      loading = false;
     }
   }
 
 export async function handleLogout() {
-    loading = true;
     error = '';
     
     try {
@@ -62,13 +55,10 @@ export async function handleLogout() {
     } catch (err) {
       console.error('Logout failed:', err);
       error = err.message || 'Logout failed';
-    } finally {
-      loading = false;
     }
   }
 
 export async function testApiCall() {
-    loading = true;
     error = '';
     
     try {
@@ -80,8 +70,6 @@ export async function testApiCall() {
     } catch (err) {
       console.error('API call failed:', err);
       error = err.message || 'API call failed';
-    } finally {
-      loading = false;
     }
 }
 
