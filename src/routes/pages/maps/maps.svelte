@@ -355,8 +355,9 @@
                 {#if searchResults.length > 0}
                     <ul class="autocomplete" transition:slide={{ duration: 200 }}>
                         {#each searchResults as { item } (item.roomId)}
-                            <li on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
+                            <li class="ion-activatable" on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
                                 <!-- {#if item.hasGis}<span class="gis-indicator">📍</span>{/if} -->
+                                <ion-ripple-effect></ion-ripple-effect>
                                 {item.roomName} - <i class="building-name"><ion-icon class:hasGis={item.hasGis} icon={item.hasGis? buildingIcon : buildingVague}/> {item.bldName}</i>
                             </li>
                         {/each}
@@ -374,9 +375,10 @@
                  />
                  {#if deptSearchResults.length > 0 && allowShowingDeptResults}
                     <ul class="autocomplete departments" transition:slide={{ duration: 200 }}>
-                        <li on:mousedown={() => {setSelectedDepartment(undefined);deptSearchResults=[]}} aria-hidden>{$t('maps.all_departments')}</li>
+                        <li class="ion-activatable" on:mousedown={() => {setSelectedDepartment(undefined);deptSearchResults=[]}} aria-hidden><ion-ripple-effect/>{$t('maps.all_departments')}</li>
                         {#each deptSearchResults as { item } (item.unitID)}
-                            <li on:mousedown={() => {setSelectedDepartment(item);deptSearchResults=[]}} aria-hidden>
+                            <li class="ion-activatable" on:mousedown={() => {setSelectedDepartment(item);deptSearchResults=[]}} aria-hidden>
+                                <ion-ripple-effect/>
                                 {getLocale()=="el" ? item.name : item.nameEn}
                             </li>
                         {/each}
@@ -393,9 +395,10 @@
                  />
                  {#if buildingSearchResults.length > 0 && allowShowingBuildingResults}
                     <ul class="autocomplete buildings" transition:slide={{ duration: 200 }}>
-                        <li on:mousedown={() => {setSelectedBuilding(undefined); buildingSearchResults=[]}} aria-hidden>{$t('maps.all_buildings')}</li>
+                        <li class="ion-activatable" on:mousedown={() => {setSelectedBuilding(undefined); buildingSearchResults=[]}} aria-hidden><ion-ripple-effect/>{$t('maps.all_buildings')}</li>
                         {#each buildingSearchResults as { item } }
-                            <li on:mousedown={() => {setSelectedBuilding(item);buildingSearchResults=[]}} aria-hidden>
+                            <li class="ion-activatable" on:mousedown={() => {setSelectedBuilding(item);buildingSearchResults=[]}} aria-hidden>
+                                <ion-ripple-effect/>
                                 {getLocale()=="el" ? item.name : item.name}
                             </li>
                         {/each}
@@ -593,6 +596,11 @@
 
     .searchable-filter-row-wrapper .autocomplete.buildings {
         top: anchor(--building-select bottom) !important;
+    }
+
+    li {
+        position: relative;
+        overflow: hidden;
     }
 
     .autocomplete li {
