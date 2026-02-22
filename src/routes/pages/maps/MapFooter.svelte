@@ -2,7 +2,6 @@
     import osethLogo from '$lib/assets/oseth.svg';
     import campusSafetyLogo from '$lib/assets/campus-safety.png';
     import { getMetroInfo } from '$lib/metroScraper/scraper';
-    import { handleTransportAppClick } from "./helper";
     import { onMount } from "svelte";
     import { darkMode } from '$src/lib/globalFunctions/darkMode';
 
@@ -13,6 +12,36 @@
             isDarkMode = document.body.classList.contains('dark');
         }
     });
+
+    async function handleTransportAppClick() {
+		const packageName = 'com.amco.city.thessaloniki';
+		const iosAppStoreUrl = 'https://apps.apple.com/gr/app/oseth-bus/id6748433667';
+		const fallbackUrl = 'https://telematics.oasth.gr/en/#main';
+		//@ts-ignore
+		const ua = navigator.userAgent || navigator.vendor || window.opera;
+		const isAndroid = /android/i.test(ua);
+		//@ts-ignore
+		const isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream; //@ts-ignore
+
+		if (isAndroid) {
+			try {
+				// Try to launch the app directly using our custom plugin
+				//@ts-ignore
+				const result = await AppLauncherPlugin.launchApp({packageName});
+				
+				if (!result.launched) {
+					// App not installed, go to fallback URL
+					window.location.href = fallbackUrl;
+				}
+			} catch (err) {
+				console.error('Error launching app:', err);
+				window.location.href = fallbackUrl;
+			}
+		} else {
+			// Non-mobile devices always go to telematics URL
+			window.location.href = fallbackUrl;
+		}
+	}
 </script>
 
 <div class="footer-section">

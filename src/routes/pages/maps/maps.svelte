@@ -53,7 +53,7 @@
     $: deptSearchResults = fuzzyDeptSearchResults(deptSearchQuery);
     $: buildingSearchResults = fuzzyBuildingSearchResults(buildingSearchQuery);
 
-    function updateSearchableRooms(selectedDepartment: Department|undefined, selectedBuilding: BuildingInfo|undefined, buildings: BuildingInfo[]): RoomWithBuilding[] {
+    function updateSearchableRooms(selectedDepartment: Department|undefined, selectedBuilding: BuildingInfo|undefined, buildings: BuildingInfo[]): helpers.RoomWithBuilding[] {
         if (selectedBuilding) {
             const availRooms = allRooms.filter(r => r.bldId === selectedBuilding.bldId);
             return availRooms;
@@ -136,6 +136,7 @@
         setSelectedBuilding(building);
         map.flyTo([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], 18, { duration: MAPANIMATIONDURATION });
         await tick(); // Wait for the UI to update with the new building selection, which will update the searchableRooms list
+        await tick();
         if (searchableRooms.length > 0) {
             searchBox.focus();
         }
