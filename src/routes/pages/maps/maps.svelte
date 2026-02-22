@@ -8,6 +8,8 @@
     import * as gis from "./gis";
     import type { BuildingInfo, Department, Rooms } from "./types";
     import { trash, caretDown, close, layersOutline, gridOutline, peopleOutline, backspaceOutline, backspace, mapOutline, navigate } from "ionicons/icons";
+    import buildingIcon from "./icons/building.svg"
+    import buildingVague from "./icons/building_vague.svg"
     import MapFooter from "./MapFooter.svelte";
 	import { FuseResult } from "fuse.js";
     import markerIcon from '$lib/assets/marker.png';
@@ -354,8 +356,8 @@
                     <ul class="autocomplete" transition:slide={{ duration: 200 }}>
                         {#each searchResults as { item } (item.roomId)}
                             <li on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
-                                {#if item.hasGis}<span class="gis-indicator">📍</span>{/if}
-                                {item.roomName} - <i class="building-name">{item.bldName}</i>
+                                <!-- {#if item.hasGis}<span class="gis-indicator">📍</span>{/if} -->
+                                {item.roomName} - <i class="building-name"><ion-icon class:hasGis={item.hasGis} icon={item.hasGis? buildingIcon : buildingVague}/> {item.bldName}</i>
                             </li>
                         {/each}
                     </ul>
@@ -712,6 +714,10 @@
     #bottom-meta ion-chip {
         --color: var(--ion-color-dark);
         margin: 0;
+    }
+
+    .hasGis {
+        color: var(--ion-color-success)
     }
 
     @media (min-width: 768px) {
