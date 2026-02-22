@@ -371,6 +371,7 @@
                  />
                  {#if deptSearchResults.length > 0 && allowShowingDeptResults}
                     <ul class="autocomplete departments" transition:slide={{ duration: 200 }}>
+                        <li on:mousedown={() => {setSelectedDepartment(undefined);deptSearchResults=[]}} aria-hidden>{$t('maps.all_departments')}</li>
                         {#each deptSearchResults as { item } (item.unitID)}
                             <li on:mousedown={() => {setSelectedDepartment(item);deptSearchResults=[]}} aria-hidden>
                                 {getLocale()=="el" ? item.name : item.nameEn}
