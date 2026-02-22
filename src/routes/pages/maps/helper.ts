@@ -69,6 +69,22 @@ export function createRoomSearch(rooms: RoomWithBuilding[]): Fuse<RoomWithBuildi
 	});
 }
 
+export function createDeptSearch(departments: Department[]): Fuse<Department> {
+    return new Fuse(departments, { 
+		keys: ["name", "nameEn"],
+		ignoreDiacritics: true,
+		threshold: 0.4
+	});
+}
+
+export function createBuildingSearch(buildings: BuildingInfo[]): Fuse<BuildingInfo>{
+	return new Fuse(buildings, {
+		keys: ["name"],
+		ignoreDiacritics: true,
+		threshold: 0.4
+	})
+}
+
 export function markRoomsWithGis(rooms: RoomWithBuilding[], gisIds: Set<string>): RoomWithBuilding[] {
     return rooms.map(room => ({ ...room, hasGis: gisIds.has(room.roomId) }));
 }
