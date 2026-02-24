@@ -1,8 +1,6 @@
 <script lang='ts'>
     import { sadOutline } from 'ionicons/icons';
-    import { logOut } from '$src/routes/personalInfo/personalInfo.svelte';
-    import { resetPersistedStores } from "$src/routes/persistedStoreDeclarations.js";
-    import { Preferences } from "@capacitor/preferences";
+    import { logOut } from '$lib/globalFunctions/logOut';
     import Dexie from 'dexie';
     import { t } from '$lib/i18n';
     export let errorMsg: string;

@@ -1,25 +1,13 @@
-<script context="module" lang="ts">
-	import { goto } from '$app/navigation';
-	import { invalidateAuth } from '$lib/authentication/authValidator';
-
-	// Log out function - exported for use in other components
-	export async function logOut() {
-		await invalidateAuth();
-		console.log("[src/routes/pages/personalInfo/+page.svelte] Navigating to login");
-		await goto('/login');
-	}
-</script>
-
 <script lang="ts">
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { webmailLoggedIn } from '$components/webmailLogin/userCredsFlagStore';
 	import { neoUniversisGet, universisGet } from '$lib/dataService';
 	import { locale, locales, t } from '$lib/i18n';
-	import { Capacitor } from '@capacitor/core';
+	import { logOut } from '$lib/globalFunctions/logOut';
 	import IonPage from 'ionic-svelte/components/IonPage.svelte';
 	import InfoItem from './infoItem.svelte';
 	import PersonSkeleton from './personSkeleton.svelte';
-	import Settings from './settings.svelte';
+	import Settings from './settings.svelte';	
 	import SubPageHeader from '$components/shared/subPageHeader.svelte';
 
 	// Keep personal info
