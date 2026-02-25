@@ -37,7 +37,8 @@ export async function fetchRoomsForBuildings(buildingIds: Set<string>): Promise<
     if (!response.ok){
         throw new Error(`Error fetching rooms: ${response.statusText}`);
     } else {
-        return response.json();
+		const responseObject: Record<string, Rooms["rooms"]> = await response.json()
+        return responseObject;
     }
 }
 

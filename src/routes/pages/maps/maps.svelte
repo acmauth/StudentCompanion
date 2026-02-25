@@ -16,7 +16,6 @@
 
     // Constants
     const MAPANIMATIONDURATION = 0.35; // seconds
-    const OFFSETS = {Y: 0.0026, X: 0.0017};
 
 
     // Canvas options
@@ -136,7 +135,7 @@
 
     async function mapMarkerSelect(building: BuildingInfo) {
         setSelectedBuilding(building);
-        map.flyTo([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], 18, { duration: MAPANIMATIONDURATION });
+        map.flyTo([parseFloat(building.latY), parseFloat(building.longX)], 18, { duration: MAPANIMATIONDURATION });
         await tick(); // Wait for the UI to update with the new building selection, which will update the searchableRooms list
         await tick();
         if (searchableRooms.length > 0) {
@@ -213,7 +212,7 @@
         buildings.forEach(b => {
             if (b.latY && b.longX) {
                 const marker = L.marker(
-                    [b.latY + OFFSETS.Y, b.longX + OFFSETS.X],
+                    [parseFloat(b.latY), parseFloat(b.longX)],
                     {title: b.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]})}
                 ).on('click', () => mapMarkerSelect(b)).bindPopup(`<span>${b.name}</span>`);
                 
@@ -238,8 +237,8 @@
 
     async function displayRoom(room: helpers.RoomWithBuilding) {
         const bldInfo = (await api.getBuildingInfo(room.bldId)).buildingInfo;
-        room.X = bldInfo.longX
-        room.Y = bldInfo.latY
+        room.X = parseFloat(bldInfo.longX)
+        room.Y = parseFloat(bldInfo.latY)
 
         activeRoom = room;
         if (!map || !selectedFeatureLayerGroup) return;
@@ -253,9 +252,9 @@
         if (!room.hasGis) {
             const building = buildings.find(b => b.bldId === room.bldId);
             if (building && building.latY && building.longX) {
-                L.marker([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], { title: building.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]}) })
+                L.marker([parseFloat(building.latY), parseFloat(building.longX)], { title: building.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]}) })
                     .addTo(selectedFeatureLayerGroup)
-                map.flyTo([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], 18, { duration: MAPANIMATIONDURATION });
+                map.flyTo([parseFloat(building.latY), parseFloat(building.longX)], 18, { duration: MAPANIMATIONDURATION });
             } else {
                 alert(`Room "${room.roomName}" has no location data available.`);
             }
@@ -356,9 +355,8 @@
                     <ul class="autocomplete" transition:slide={{ duration: 200 }}>
                         {#each searchResults as { item } (item.roomId)}
                             <li class="ion-activatable" on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
-                                <!-- {#if item.hasGis}<span class="gis-indicator">📍</span>{/if} -->
                                 <ion-ripple-effect></ion-ripple-effect>
-                                {item.roomName} - <i class="building-name"><ion-icon class:hasGis={item.hasGis} icon={item.hasGis? buildingIcon : buildingVague}/> {item.bldName}</i>
+                                {item.roomName} - <i class="building-name"><ion-icon class:hasGis={item.hasGis} icon={item.hasGis? buildingIcon : buildingVague}/>{item.bldId} {item.bldName}</i>
                             </li>
                         {/each}
                     </ul>
@@ -399,7 +397,7 @@
                         {#each buildingSearchResults as { item } }
                             <li class="ion-activatable" on:mousedown={() => {setSelectedBuilding(item);buildingSearchResults=[]}} aria-hidden>
                                 <ion-ripple-effect/>
-                                {getLocale()=="el" ? item.name : item.name}
+                                {getLocale()=="el" ? item.name : item.name} <i class="building-name">- {item.bldId}</i>
                             </li>
                         {/each}
                     </ul>
@@ -428,7 +426,7 @@
                     <ion-icon icon={gridOutline}></ion-icon>
                     <ion-label>{activeRoom.roomType}</ion-label>
                 </ion-chip>
-                <a href="https://www.google.com/maps?q={activeRoom.Y + OFFSETS.Y},{activeRoom.X + OFFSETS.X}">
+                <a href="https://www.google.com/maps?q={activeRoom.Y},{activeRoom.X}">
                     <ion-chip color="primary">
                         <ion-icon icon={navigate}></ion-icon>
                         <ion-label>{$t("maps.open_in_gmaps")}</ion-label>

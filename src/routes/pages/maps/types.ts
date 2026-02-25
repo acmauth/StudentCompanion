@@ -5,8 +5,10 @@ export interface BuildingInfo {
 	name: string;
 	locationName: string;
 	bldId: string;
-	longX: number;
-	latY: number;
+	longX: string;
+	latY: string;
+	longXgis: number;
+	latYgis: number;
 }
 
 export interface Floor {
