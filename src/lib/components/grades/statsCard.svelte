@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import Chart from 'chart.js/auto';
 	import { afterUpdate, onMount } from 'svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
@@ -25,6 +25,13 @@
 	 * @type {null | undefined}
 	 */
 	export let subjectsJSON;
+
+	interface Registration {
+		id: number;
+		semester: number;
+		classes: {id: string;finalGrade: number;coefficient: number;isPassed: number;registration: number;course: string}[];
+	}
+	export let registrationsInDegree: Registration[]
 
 	/**
 	 * @type {Chart<"line", number[], string>}
@@ -91,6 +98,12 @@
 		} catch (error) {
 			console.error(error);
 		}
+	}
+
+	function calculateGpaPerSemester(registrationsInDegree: Registration[]){
+		const averages = [];
+		let currentCoefficientSum = 0;
+		let currentSum = 0;
 	}
 
 	async function gatherData() {
