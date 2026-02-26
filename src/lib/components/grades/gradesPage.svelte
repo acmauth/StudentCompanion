@@ -106,13 +106,13 @@
 		const registration_options = "$select=id,semester,classes&$expand=classes($select=id,finalGrade,coefficient,isPassed,course;$filter=isPassed eq 1)&$orderBy=semester&$top=-1"
 		const all_registrations: Registration[] = (await neoUniversisGet(`students/me/registrations?${registration_options}`, { lifetime: 1200 })).value
 
-		const calculateGrade_options = "$select=id,course,calculateGrade,isPassed,courseTitle&$calculateGrade eq 0,isPassed eq 1&$top=-1"
+		const calculateGrade_options = "$select=id,course,calculateGrade,isPassed,courseTitle&$filter=calculateGrade eq 0,isPassed eq 1&$top=-1"
 		const nonCalculatedGrades: {"id": string;"course": string;"calculateGrade": 0;"isPassed": 1;}[] = (await neoUniversisGet(`students/me/courses?${calculateGrade_options}`, { lifetime: 1200 })).value
 		
 		const disallowed_courses = new Set(nonCalculatedGrades.map(item => item.course))
 		registrationsInDegree = all_registrations.map(registration => ({
 			...registration,
-			classes: registration.classes.filter(class_instance => !disallowed_courses.has(class_instance.course))
+			classes: registration.classes.filter(class_instance => !disallowed_courses.has(class_instance.course) && class_instance.isPassed == 1)
 		}))
 
 	}	
