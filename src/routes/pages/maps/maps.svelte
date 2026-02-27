@@ -1,20 +1,21 @@
 <script lang="ts">
 	import { t, getLocale } from "$src/lib/i18n";
     import type Fuse from "fuse.js";
-    import { fetchBuildings, fetchRoomsForBuildings, flattenRooms, createRoomSearch, markRoomsWithGis, fetchDepartments, fetchAvailableBuildings, getOrdinalSuffix, type RoomWithBuilding } from "./helper";
+    import * as helpers from "./helper";
     import * as api from "./functions"
     import { onMount, onDestroy, tick } from "svelte";
     import { slide, fly } from "svelte/transition";
     import * as gis from "./gis";
     import type { BuildingInfo, Department, Rooms } from "./types";
     import { trash, caretDown, close, layersOutline, gridOutline, peopleOutline, backspaceOutline, backspace, mapOutline, navigate } from "ionicons/icons";
+    import buildingIcon from "./icons/building.svg"
+    import buildingVague from "./icons/building_vague.svg"
     import MapFooter from "./MapFooter.svelte";
 	import { FuseResult } from "fuse.js";
     import markerIcon from '$lib/assets/marker.png';
 
     // Constants
     const MAPANIMATIONDURATION = 0.35; // seconds
-    const OFFSETS = {Y: 0.0026, X: 0.0017};
 
 
     // Canvas options
@@ -25,9 +26,7 @@
     let markerClusterGroup: any;
 
     //control state
-    let departmentDropdownOpen = false;
-    let buildingDropdownOpen = false;
-    let activeRoom: RoomWithBuilding|undefined = undefined;
+    let activeRoom: helpers.RoomWithBuilding|undefined = undefined;
     // activeRoom = {"faculty":"ΣΧΟΛΗ ΓΕΩΠΟΝΙΚΗ","bldName":"ΓΕΩΠΟΝΙΑΣ ΚΑΙ ΔΑΣΟΛΟΓΙΑΣ ΚΤΙΡΙΟ Β","school":"Σχολή Γεωπονίας, Δασολογίας και Φυσικού Περιβάλλοντος","floor":"O01","isMezz":false,"roomType":"Αμφιθέατρο","roomCode":"A02","roomName":"ΑΜΦΙΘΕΑΤΡΟ Β","roomId":"001-004-O01-0-A02","capacity":"176","bldId":"19","hasGis":false};
     
     //stateful variables
@@ -39,18 +38,23 @@
     let buildings: BuildingInfo[] = [];
     let buildingsRooms: Record<string, Rooms["rooms"]> = {};
     let departments: Department[] = [];
-    let allRooms: RoomWithBuilding[] = []; // flat list of all rooms with building info, used for search and display - Loaded once and kept in memory for fast access
-    // let searchableRooms: RoomWithBuilding[] = []; // Filtered list of rooms that are actually searchable based on current building/department selection
-    // let fuse: Fuse<RoomWithBuilding>|undefined = undefined;
+    let allRooms: helpers.RoomWithBuilding[] = []; // flat list of all rooms with building info, used for search and display - Loaded once and kept in memory for fast access
+    let deptSearchQuery = "";
+    let buildingSearchQuery = "";
+    let allowShowingDeptResults = false;
+    let allowShowingBuildingResults = false;
     
     // derived variables
     $: buildingIds = new Set(buildings.map(b => b.bldId))
-    $: faculties = [...new Set(allRooms.map(r => r.faculty).filter(Boolean))].sort();
     $: searchableRooms = updateSearchableRooms(selectedDepartment, selectedBuilding, buildings);
-    $: fuse = createRoomSearch(searchableRooms);
+    $: fuse = helpers.createRoomSearch(searchableRooms);
+    $: deptFuse = helpers.createDeptSearch(departments);
+    $: buildingFuse = helpers.createBuildingSearch(buildings);
     $: searchResults = fuzzySearchResults(searchQuery);
+    $: deptSearchResults = fuzzyDeptSearchResults(deptSearchQuery);
+    $: buildingSearchResults = fuzzyBuildingSearchResults(buildingSearchQuery);
 
-    function updateSearchableRooms(selectedDepartment: Department|undefined, selectedBuilding: BuildingInfo|undefined, buildings: BuildingInfo[]): RoomWithBuilding[] {
+    function updateSearchableRooms(selectedDepartment: Department|undefined, selectedBuilding: BuildingInfo|undefined, buildings: BuildingInfo[]): helpers.RoomWithBuilding[] {
         if (selectedBuilding) {
             const availRooms = allRooms.filter(r => r.bldId === selectedBuilding.bldId);
             return availRooms;
@@ -62,37 +66,53 @@
     }
 
     async function setSelectedDepartment(department: Department|undefined) {
+        await clearActiveRoom();
         selectedDepartment = department;
-        buildings = await fetchAvailableBuildings(department);
+        deptSearchQuery = department? department.name : "";
+        buildings = await helpers.fetchAvailableBuildings(department);
     }
 
     async function setSelectedBuilding(building: BuildingInfo|undefined) {
+        await clearActiveRoom();
         selectedBuilding = building;
+        buildingSearchQuery = building? building.name : "";
     }
 
-    function fuzzySearchResults(searchQuery: string): FuseResult<RoomWithBuilding>[] {
+    function fuzzySearchResults(searchQuery: string): FuseResult<helpers.RoomWithBuilding>[] {
         if (!fuse || !searchQuery) return searchableRooms.map((room, i) => ({ item: room, refIndex: i, score: 0 }));
         const results = fuse.search(searchQuery);
         return results;
     }
-    
+
+    function fuzzyDeptSearchResults(deptSearchQuery: string): FuseResult<Department>[]{
+        if (!deptFuse || !deptSearchQuery) return departments.map((dept, i) => ({item: dept, refIndex: i, score:0}))
+        const results = deptFuse.search(deptSearchQuery);
+        return results;
+    }
+
+    function fuzzyBuildingSearchResults(buildingSearchQuery: string): FuseResult<BuildingInfo>[]{
+        if (!buildingFuse || !buildingSearchQuery) return buildings.map((buildingInfo, i) => ({item: buildingInfo, refIndex: i, score:0}))
+        const results = buildingFuse.search(buildingSearchQuery);
+        return results;
+    }
+
     async function loadBuildings() {
-        buildings = await fetchBuildings();
+        buildings = await helpers.fetchBuildings();
     }
 
     async function loadDepartments() {
-        departments = await fetchDepartments();
+        departments = await helpers.fetchDepartments();
     }
 
     async function loadRooms() {
         isLoading = true;
         const [roomsData, gisSpaceIds] = await Promise.all([
-            fetchRoomsForBuildings(buildingIds),
+            helpers.fetchRoomsForBuildings(buildingIds),
             gis.getAllSpaceIds()
         ]);
         buildingsRooms = roomsData;
-        allRooms = markRoomsWithGis(flattenRooms(buildingsRooms), gisSpaceIds);
-        fuse = createRoomSearch(allRooms);
+        allRooms = helpers.markRoomsWithGis(helpers.flattenRooms(buildingsRooms), gisSpaceIds);
+        fuse = helpers.createRoomSearch(allRooms);
         isLoading = false;
     }
 
@@ -102,7 +122,7 @@
         }
         else if (floorCode.startsWith("O")){
             const floorNumber = parseInt(floorCode.slice(1));
-            const ordinal = getOrdinalSuffix(floorNumber);
+            const ordinal = helpers.getOrdinalSuffix(floorNumber);
             return isMezz 
                 ? $t('maps.floor.above_mezzanine', { floor: floorNumber, ordinal }) 
                 : $t('maps.floor.above', { floor: floorNumber, ordinal });
@@ -115,8 +135,9 @@
 
     async function mapMarkerSelect(building: BuildingInfo) {
         setSelectedBuilding(building);
-        map.flyTo([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], 18, { duration: MAPANIMATIONDURATION });
+        map.flyTo([parseFloat(building.latY), parseFloat(building.longX)], 18, { duration: MAPANIMATIONDURATION });
         await tick(); // Wait for the UI to update with the new building selection, which will update the searchableRooms list
+        await tick();
         if (searchableRooms.length > 0) {
             searchBox.focus();
         }
@@ -191,7 +212,7 @@
         buildings.forEach(b => {
             if (b.latY && b.longX) {
                 const marker = L.marker(
-                    [b.latY + OFFSETS.Y, b.longX + OFFSETS.X],
+                    [parseFloat(b.latY), parseFloat(b.longX)],
                     {title: b.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]})}
                 ).on('click', () => mapMarkerSelect(b)).bindPopup(`<span>${b.name}</span>`);
                 
@@ -214,10 +235,10 @@
 		}
 	});
 
-    async function displayRoom(room: RoomWithBuilding) {
+    async function displayRoom(room: helpers.RoomWithBuilding) {
         const bldInfo = (await api.getBuildingInfo(room.bldId)).buildingInfo;
-        room.X = bldInfo.longX
-        room.Y = bldInfo.latY
+        room.X = parseFloat(bldInfo.longX)
+        room.Y = parseFloat(bldInfo.latY)
 
         activeRoom = room;
         if (!map || !selectedFeatureLayerGroup) return;
@@ -231,9 +252,9 @@
         if (!room.hasGis) {
             const building = buildings.find(b => b.bldId === room.bldId);
             if (building && building.latY && building.longX) {
-                L.marker([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], { title: building.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]}) })
+                L.marker([parseFloat(building.latY), parseFloat(building.longX)], { title: building.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]}) })
                     .addTo(selectedFeatureLayerGroup)
-                map.flyTo([building.latY + OFFSETS.Y, building.longX + OFFSETS.X], 18, { duration: MAPANIMATIONDURATION });
+                map.flyTo([parseFloat(building.latY), parseFloat(building.longX)], 18, { duration: MAPANIMATIONDURATION });
             } else {
                 alert(`Room "${room.roomName}" has no location data available.`);
             }
@@ -285,10 +306,19 @@
         }
     }
 
+    async function clearActiveRoom(){
+        activeRoom = undefined;
+        selectedFeatureLayerGroup?.clearLayers();
+        searchResults = [];
+        await tick();
+    }
+
     async function clearDisplay() {
         searchQuery = "";
-        buildingDropdownOpen = false;
-        departmentDropdownOpen = false;
+        deptSearchQuery = "";
+        allowShowingDeptResults = false;
+        buildingSearchQuery = "";
+        allowShowingBuildingResults = false;
         await setSelectedDepartment(undefined);
         await setSelectedBuilding(undefined);
         selectedFeatureLayerGroup?.clearLayers();
@@ -302,76 +332,77 @@
         
     <div id="map-wrapper" bind:this={mapContainer}></div>
     <div id="top-controls">
-        <div class="search-container" on:focusout={() => {searchResults=[];}} on:focusin={() => {searchResults=fuzzySearchResults(searchQuery);}}>
+        <div class="search-container">
             <div id="search-row-wrapper">
-                <input id="searchbox" placeholder={$t('maps.search_placeholder')} class:disabled={searchableRooms.length === 0} autocomplete="off" bind:value={searchQuery} bind:this={searchBox} />
+                <input class="searchbox"
+                on:focusout={() => {searchResults=[];}}
+                on:focusin={() => {searchResults=fuzzySearchResults(searchQuery);}}
+                placeholder={activeRoom? activeRoom.roomName : $t('maps.search_placeholder')}
+                class:disabled={searchableRooms.length === 0}
+                autocomplete="off"
+                bind:value={searchQuery}
+                bind:this={searchBox} />
                 <div 
                     id="trashcan" 
                     on:click={clearDisplay} 
                     aria-hidden 
                     class="ion-activatable"
-                    class:disabled={!searchQuery && !selectedDepartment && !selectedBuilding}
-                >
+                    class:disabled={!activeRoom && !selectedDepartment && !selectedBuilding}>
                     <ion-ripple-effect></ion-ripple-effect>
                     <ion-icon icon={backspace}></ion-icon>
                 </div>
                 {#if searchResults.length > 0}
-                <ul class="autocomplete" transition:slide={{ duration: 200 }}>
-                    {#each searchResults as { item } (item.roomId)}
-                        <li on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
-                            {#if item.hasGis}<span class="gis-indicator">📍</span>{/if}
-                            {item.roomName} - <i class="building-name">{item.bldName}</i>
-                        </li>
-                    {/each}
-                </ul>
-            {/if}
-            </div>
-
-            <div class="debug-buttons" style="display:none;">
-                <span>{isLoading ? $t('maps.loading') : ""}</span>
-                <button on:click={loadBuildings}>{$t('maps.load_buildings')}</button>
-                <button on:click={loadRooms} disabled={buildingIds.size === 0}>{$t('maps.load_rooms')}</button>
-            </div>
-            <div class="filter-row-wrapper">
-                <div class="filter ion-activatable" class:disabled={!!selectedBuilding} on:click={() => {departmentDropdownOpen = !departmentDropdownOpen}} aria-hidden>
-                    <ion-ripple-effect></ion-ripple-effect>
-                    <span>{selectedDepartment ? (getLocale()=="el" ? selectedDepartment.name : selectedDepartment.nameEn) : $t('maps.all_departments')}</span>
-                    <ion-icon icon={caretDown}></ion-icon>
-                </div>
-            </div>
-            <div class="filter-row-wrapper">
-                <div class="filter ion-activatable" on:click={() => {buildingDropdownOpen = !buildingDropdownOpen}} aria-hidden>
-                    <ion-ripple-effect></ion-ripple-effect>
-                    <span>{selectedBuilding?.name || $t('maps.all_buildings')}</span>
-                    <ion-icon icon={caretDown}></ion-icon>
-                </div>
-            </div>
-            {#if departmentDropdownOpen}
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <div class="dropdown-backdrop" on:click={() => departmentDropdownOpen = false}></div>
-                <div id="department-select" class="filter-dropdown" transition:slide={{ duration: 200 }}>
-                    <ul class="autocomplete">
-                        <li on:click={async () => {departmentDropdownOpen=false; await setSelectedDepartment(undefined); }} aria-hidden>{$t('maps.all_departments')}</li>
-                        {#each departments as department}
-                            <li on:click={async () => {departmentDropdownOpen=false; await setSelectedDepartment(department); }} aria-hidden>{getLocale()=="el" ? department.name : department.nameEn}</li>
+                    <ul class="autocomplete" transition:slide={{ duration: 200 }}>
+                        {#each searchResults as { item } (item.roomId)}
+                            <li class="ion-activatable" on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
+                                <ion-ripple-effect></ion-ripple-effect>
+                                {item.roomName} - <i class="building-name"><ion-icon class:hasGis={item.hasGis} icon={item.hasGis? buildingIcon : buildingVague}/>{item.bldId} {item.bldName}</i>
+                            </li>
                         {/each}
                     </ul>
-                </div>
-            {/if}
-            {#if buildingDropdownOpen}
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <div class="dropdown-backdrop" on:click={() => buildingDropdownOpen = false}></div>
-                <div id="building-select" class="filter-dropdown" transition:slide={{ duration: 200 }}>
-                    <ul class="autocomplete">
-                        <li on:click={async () => { buildingDropdownOpen=false; await setSelectedBuilding(undefined);}} aria-hidden>{$t('maps.all_buildings')}</li>
-                        {#each buildings as building}
-                            <li on:click={async () => { buildingDropdownOpen=false; await setSelectedBuilding(building);}} aria-hidden>{building.name}</li>
+                {/if}
+            </div>
+            <div class="searchable-filter-row-wrapper departments">
+                <input class="filter-search searchbox"
+                    placeholder={selectedDepartment ? (getLocale()=="el" ? selectedDepartment.name : selectedDepartment.nameEn) : $t('maps.all_departments')}
+                    bind:value={deptSearchQuery}
+                    autocomplete="off"
+                    class:disabled={!!selectedBuilding}
+                    on:focusout={() => {deptSearchResults=[];allowShowingDeptResults=false;}}
+                    on:focusin={() => {deptSearchResults=fuzzyDeptSearchResults(deptSearchQuery);allowShowingDeptResults=true;}}
+                 />
+                 {#if deptSearchResults.length > 0 && allowShowingDeptResults}
+                    <ul class="autocomplete departments" transition:slide={{ duration: 200 }}>
+                        <li class="ion-activatable" on:mousedown={() => {setSelectedDepartment(undefined);deptSearchResults=[]}} aria-hidden><ion-ripple-effect/>{$t('maps.all_departments')}</li>
+                        {#each deptSearchResults as { item } (item.unitID)}
+                            <li class="ion-activatable" on:mousedown={() => {setSelectedDepartment(item);deptSearchResults=[]}} aria-hidden>
+                                <ion-ripple-effect/>
+                                {getLocale()=="el" ? item.name : item.nameEn}
+                            </li>
                         {/each}
                     </ul>
-                </div>
-            {/if}
+                {/if}
+            </div>
+            <div class="searchable-filter-row-wrapper buildings">
+                <input class="filter-search searchbox"
+                    placeholder={selectedBuilding ? (getLocale()=="el" ? selectedBuilding.name : selectedBuilding.name) : $t('maps.all_buildings')}
+                    bind:value={buildingSearchQuery}
+                    autocomplete="off"
+                    on:focusout={() => {buildingSearchResults=[];allowShowingBuildingResults=false;}}
+                    on:focusin={() => {buildingSearchResults=fuzzyBuildingSearchResults(buildingSearchQuery);allowShowingBuildingResults=true;}}
+                 />
+                 {#if buildingSearchResults.length > 0 && allowShowingBuildingResults}
+                    <ul class="autocomplete buildings" transition:slide={{ duration: 200 }}>
+                        <li class="ion-activatable" on:mousedown={() => {setSelectedBuilding(undefined); buildingSearchResults=[]}} aria-hidden><ion-ripple-effect/>{$t('maps.all_buildings')}</li>
+                        {#each buildingSearchResults as { item } }
+                            <li class="ion-activatable" on:mousedown={() => {setSelectedBuilding(item);buildingSearchResults=[]}} aria-hidden>
+                                <ion-ripple-effect/>
+                                {getLocale()=="el" ? item.name : item.name} <i class="building-name">- {item.bldId}</i>
+                            </li>
+                        {/each}
+                    </ul>
+                {/if}
+            </div>
         </div>
     </div>
     {#if activeRoom}
@@ -395,7 +426,7 @@
                     <ion-icon icon={gridOutline}></ion-icon>
                     <ion-label>{activeRoom.roomType}</ion-label>
                 </ion-chip>
-                <a href="https://www.google.com/maps?q={activeRoom.Y + OFFSETS.Y},{activeRoom.X + OFFSETS.X}">
+                <a href="https://www.google.com/maps?q={activeRoom.Y},{activeRoom.X}">
                     <ion-chip color="primary">
                         <ion-icon icon={navigate}></ion-icon>
                         <ion-label>{$t("maps.open_in_gmaps")}</ion-label>
@@ -459,32 +490,6 @@
         color: var(--ion-color-medium);
     }
 
-    .filter-row-wrapper {
-        margin-top: 0.5rem;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
-        justify-content: space-between;
-        gap: 0.5rem;
-    }
-
-    .filter {
-        position: relative;
-        padding: 8px 16px;
-        font-size: 1rem;
-        border: 1px solid var(--ion-border-color, #ccc);
-        border-radius: 50rem;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        overflow: hidden;
-        cursor: pointer;
-        background: var(--app-color-map-input);
-        color: var(--app-color-map-input-text);
-    }
-
     .disabled {
         opacity: 0.4;
         pointer-events: none;
@@ -522,7 +527,7 @@
         transition: all 0.3s ease;
     }
 
-    #searchbox {
+    .searchbox {
         flex: 1;
         padding: 8px 16px;
         font-size: 1rem;
@@ -532,19 +537,24 @@
         color: var(--app-color-map-input-text);
     }
 
-    #searchbox::placeholder {
+    .searchbox::placeholder {
         color: var(--ion-color-medium);
     }
 
-    .debug-buttons {
-        display: flex;
-        flex-direction: row;
+    .searchable-filter-row-wrapper {
+        width: 100%;
+    }
+    .searchable-filter-row-wrapper .searchbox {
+        width: 100%;
     }
 
     .search-container {
         position: relative;
         display: inline-block;
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     .autocomplete {
@@ -566,11 +576,11 @@
     }
 
 
-    #department-select {
+    .searchable-filter-row-wrapper.departments {
         anchor-name: --department-select;
     }
 
-    #building-select {
+    .searchable-filter-row-wrapper.buildings {
         anchor-name: --building-select;
     }
 
@@ -578,12 +588,17 @@
         top: anchor(--search-row bottom) !important;
     }
 
-    #department-select .autocomplete {
+    .searchable-filter-row-wrapper .autocomplete.departments {
         top: anchor(--department-select bottom) !important;
     }
 
-    #building-select .autocomplete {
+    .searchable-filter-row-wrapper .autocomplete.buildings {
         top: anchor(--building-select bottom) !important;
+    }
+
+    li {
+        position: relative;
+        overflow: hidden;
     }
 
     .autocomplete li {
@@ -705,6 +720,10 @@
     #bottom-meta ion-chip {
         --color: var(--ion-color-dark);
         margin: 0;
+    }
+
+    .hasGis {
+        color: var(--ion-color-success)
     }
 
     @media (min-width: 768px) {

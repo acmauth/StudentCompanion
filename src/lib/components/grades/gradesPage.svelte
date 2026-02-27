@@ -1,10 +1,8 @@
 <script lang="ts">
   import ErrorLandingCard from "$components/errorLanding/ErrorLandingCard.svelte";
-  import { Capacitor } from "@capacitor/core";
   import GradesSkeleton from "./gradesSkeleton.svelte";
   import Flipper from "$components/shared/Flipper.svelte";
   import Grades from '$lib/components/grades/grades.svelte';
-  import 'js-circle-progress'
   import Chips from '$lib/components/grades/chips.svelte';
   import DegreeCalculatorCard from '$components/degreeCalculator/card.svelte';
   import Stats from '$lib/components/grades/statsCard.svelte';
@@ -30,8 +28,15 @@
 		$flipped = false;
 	});
 
+	interface Registration {
+		id: number;
+		semester: number;
+		classes: {id: string;finalGrade: number;coefficient: number;isPassed: number;registration: number;course: string}[];
+	}
+
 	let courseBySemester = writable([]);
 	let filteredSubjects = writable([]);
+	let registrationsInDegree: Registration[];
 
 	const fuseOptions = {
 		keys: ['course', 'courseTitle'],
@@ -97,6 +102,21 @@
 		return semesters;
 	}
 
+	async function gatherProgressionData(){
+		const registration_options = "$select=id,semester,classes&$expand=classes($select=id,finalGrade,coefficient,isPassed,course;$filter=isPassed eq 1)&$orderBy=semester&$top=-1"
+		const all_registrations: Registration[] = (await neoUniversisGet(`students/me/registrations?${registration_options}`, { lifetime: 1200 })).value
+
+		const calculateGrade_options = "$select=id,course,calculateGrade,isPassed,courseTitle&$filter=calculateGrade eq 0,isPassed eq 1&$top=-1"
+		const nonCalculatedGrades: {"id": string;"course": string;"calculateGrade": 0;"isPassed": 1;}[] = (await neoUniversisGet(`students/me/courses?${calculateGrade_options}`, { lifetime: 1200 })).value
+		
+		const disallowed_courses = new Set(nonCalculatedGrades.map(item => item.course))
+		registrationsInDegree = all_registrations.map(registration => ({
+			...registration,
+			classes: registration.classes.filter(class_instance => !disallowed_courses.has(class_instance.course) && class_instance.isPassed == 1)
+		}))
+
+	}	
+
 	async function gatherData() {
 		subjects = (await neoUniversisGet('students/me/courses?$top=-1', { lifetime: 600 })).value;
 
@@ -104,6 +124,7 @@
 
 		await getSubjects(subjectsJSON);
 		await gatherGrades(subjectsJSON);
+		await gatherProgressionData();
 	}
 
 	// Filter the results based on the searchQuery
@@ -163,7 +184,7 @@
   
 	  {#if !searchQuery.length}
 		  <Flipper reactToHeight bind:flipped={$flipped}>
-			  <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} slot="front" />
+			  <Stats flip={flip} searchQuery = {searchQuery} subjects={subjects} passedSubjects={passedSubjects} subjectsJSON = {subjectsJSON} registrationsInDegree={registrationsInDegree} slot="front" />
 			  <DegreeCalculatorCard flip={flip} slot="back"/>
 		  </Flipper>
 	  {/if}
