@@ -13,9 +13,13 @@ async function showToast(toast: ToastOptions) {
 
 async function checkCredsValidity(username: string, password: string) {
     if (!username || !password) return false;
+    
+    if (username.includes("@"))
+        username = username.substring(0, username.indexOf("@"))
+        
     if (await webmailCheckCredentials(username, password)){    
         webmailLoggedIn.set(true);
-        userCreds.set({ username, password });
+        userCreds.set({ username: username, password: password });
         return true;
     }
     return false;
