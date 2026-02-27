@@ -3,6 +3,9 @@ PODS:
     - CapacitorCordova
   - CapacitorApp (7.1.0):
     - Capacitor
+  - CapacitorBarcodeScanner (2.2.6):
+    - Capacitor
+    - OSBarcodeLib (= 2.0.1)
   - CapacitorBrowser (7.0.2):
     - Capacitor
   - CapacitorClipboard (7.0.2):
@@ -29,10 +32,12 @@ PODS:
   - CapawesomeCapacitorAppUpdate (7.2.0):
     - Capacitor
   - mailcore2-ios (0.6.4)
+  - OSBarcodeLib (2.0.1)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
+  - "CapacitorBarcodeScanner (from `../../node_modules/@capacitor/barcode-scanner`)"
   - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
   - "CapacitorClipboard (from `../../node_modules/@capacitor/clipboard`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
@@ -51,12 +56,15 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - mailcore2-ios
+    - OSBarcodeLib
 
 EXTERNAL SOURCES:
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
     :path: "../../node_modules/@capacitor/app"
+  CapacitorBarcodeScanner:
+    :path: "../../node_modules/@capacitor/barcode-scanner"
   CapacitorBrowser:
     :path: "../../node_modules/@capacitor/browser"
   CapacitorClipboard:
@@ -87,6 +95,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Capacitor: 358dd1c3fdd71d969547b17e159fd8a7736cb45f
   CapacitorApp: 26587c2ce485d88ddb39adb21cac64f8e481afe3
+  CapacitorBarcodeScanner: 2d699fe5b8731cdfa3db03a4062e68b9a75c5c72
   CapacitorBrowser: 22541e48442de44dc629c214388290d6eecc6ae9
   CapacitorClipboard: 7e227702976d4435a5a40df54f65e154d0dfc1f3
   CapacitorCordova: bf648a636f3c153f652d312ae145fb508b6ffced
@@ -101,7 +110,8 @@ SPEC CHECKSUMS:
   CapacitorToast: 166611aea815418fc08894b77a915773e3d059d5
   CapawesomeCapacitorAppUpdate: 9fb16b07faaa1c86468c794e39bfedb822a1a446
   mailcore2-ios: 3ff0be2fa553d4da9c11d39c11d51863c768f24f
+  OSBarcodeLib: 57987d2eb1f916f701f4554e20e349b3cb83f023
 
-PODFILE CHECKSUM: 2a1682b778b35ef1ed8342983c9e999ca587fc7e
+PODFILE CHECKSUM: 6d80e0c407b6beb092e4e3a864d6ea7529da48af
 
 COCOAPODS: 1.16.2
