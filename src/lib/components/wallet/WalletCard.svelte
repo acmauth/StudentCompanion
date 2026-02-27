@@ -8,8 +8,8 @@
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { goto } from '$app/navigation';
-	import { flip } from 'svelte/animate';
 	import { onMount } from 'svelte';
+	import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHintALLOption } from '@capacitor/barcode-scanner';
 
 	export let reactToHeight: boolean = true;
 	export let departmentName: string = '';
@@ -21,9 +21,9 @@
 
 	// Card flip state
 	let isFlipped = false;
-	let addQRAlertOpen = false;
+	let addQRModalOpen = false; // fallback manual-input modal
 	let qrDisplayModalOpen = false;
-	let qr_value: string | null = null;
+	let qr_input_value: string = '';
 	let gymQRPressed = false;
 	let schoolQRPressed = false;
 	let currentQRData = '';
@@ -38,6 +38,55 @@
 	function removeCurrentQR() {
 		$qrStore = $qrStore.filter((item) => item.title !== currentQRTitle);
 		qrDisplayModalOpen = false;
+	}
+
+	function saveQR(value: string) {
+		if (!value || value.trim() === '') return;
+		if (gymQRPressed) {
+			$qrStore = $qrStore.concat([{ title: 'gym', data: value }]);
+		} else if (schoolQRPressed) {
+			$qrStore = $qrStore.concat([{ title: 'school', data: value }]);
+		}
+	}
+
+	async function scanQRCode() {
+		try {
+			const result = await CapacitorBarcodeScanner.scanBarcode({
+				hint: CapacitorBarcodeScannerTypeHintALLOption.ALL
+			});
+			if (result?.ScanResult && result.ScanResult.trim() !== '') {
+				saveQR(result.ScanResult);
+			} else {
+				// Scanner returned empty result — open fallback input
+				openFallbackModal();
+			}
+		} catch (_) {
+			// Scanner unavailable or user cancelled — open fallback input
+			openFallbackModal();
+		}
+	}
+
+	function openFallbackModal() {
+		qr_input_value = '';
+		addQRModalOpen = true;
+	}
+
+	async function handleManualAdd() {
+		if (!qr_input_value || qr_input_value.trim() === '') {
+			await showToast({
+				color: 'danger',
+				duration: 2500,
+				message: $t('wallet.emptyQRError'),
+				mode: 'ios',
+				translucent: true,
+				layout: 'stacked',
+				positionAnchor: 'bottom',
+				cssClass: 'custom-toast'
+			});
+			return;
+		}
+		saveQR(qr_input_value);
+		addQRModalOpen = false;
 	}
 
 	function toggleCardFlip() {
@@ -152,7 +201,7 @@
 							aria-hidden
 						/>
 					{:else}
-						<img src={student_id} alt="student id" on:click={()=>{addQRAlertOpen=true; gymQRPressed=false; schoolQRPressed = true;}} aria-hidden/>
+						<img src={student_id} alt="student id" on:click={()=>{ gymQRPressed=false; schoolQRPressed=true; scanQRCode(); }} aria-hidden/>
 					{/if}
 					<p class="wallet-label">{$t("homepage.schoolQR")}</p>
 				</div>
@@ -167,7 +216,7 @@
 							aria-hidden
 						/>
 					{:else}
-						<img src={gym_id} alt="gym id" on:click={()=>{addQRAlertOpen=true; gymQRPressed=true; schoolQRPressed = false;}} aria-hidden>
+						<img src={gym_id} alt="gym id" on:click={()=>{ gymQRPressed=true; schoolQRPressed=false; scanQRCode(); }} aria-hidden>
 					{/if}
 					<p class="wallet-label">{$t("homepage.gymQR")}</p>
 				</div>
@@ -207,56 +256,35 @@
 	</div>
 </ion-modal>
 
-<!-- Add QR Alert -->
-<ion-alert
-	is-open={addQRAlertOpen}
-	on:ionAlertWillDismiss={() => {qr_value = "";}}
-	mode="ios"
-	header="{$t('wallet.addQRTitle')}"
-	message="{$t('wallet.addQRMessage')}"
-	inputs={[
-		{
-			id: 'qr-input',
-			name: 'qr',
-			type: 'number',
-			placeholder: '20' + Math.floor(1000000000 + Math.random() * 9000000000).toString(),
-			value: qr_value
-		}
-	]}
-	buttons={[
-		{
-			text: $t('wallet.cancel'),
-			role: 'cancel',
-			handler: () => {
-				addQRAlertOpen = false;
-			}
-		},
-		{
-			text: $t('wallet.add'),
-			handler: async (alertData) => {
-				if (!alertData.qr || alertData.qr.trim() === '') {
-					await showToast({
-						color: 'danger',
-						duration: 2500,
-						message: $t('wallet.emptyQRError'),
-						mode: 'ios',
-						translucent: true,
-						layout: 'stacked',
-						positionAnchor: 'bottom',
-						cssClass: 'custom-toast'
-					});
-					return false;
-				}
-				if (gymQRPressed) {
-					$qrStore = $qrStore.concat([{title:"gym", data: alertData.qr}]);
-				} else if (schoolQRPressed) {
-					$qrStore = $qrStore.concat([{title:"school", data: alertData.qr}]);
-				}
-				addQRAlertOpen = false;
-			}
-		}
-	]}
-></ion-alert>
+<!-- Add QR Fallback Modal (shown when the barcode scanner is unavailable or fails) -->
+<ion-modal
+	is-open={addQRModalOpen}
+	on:ionModalDidDismiss={() => { addQRModalOpen = false; }}
+	class="add-qr-modal">
+	<div class="add-qr-modal-content">
+		<h3 class="add-qr-title">{$t('wallet.addQRTitle')}</h3>
+		<p class="add-qr-message">{$t('wallet.addQRMessage')}</p>
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<ion-input
+			type="text"
+			mode="ios"
+			fill="outline"
+			placeholder="{'20' + Math.floor(1000000000 + Math.random() * 9000000000).toString()}"
+			value={qr_input_value}
+			on:ionInput={(e) => { qr_input_value = e.detail.value ?? ''; }}
+		></ion-input>
+		<div class="modal-buttons">
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<ion-button aria-hidden expand="block" mode="ios" color="dark" on:click={() => { addQRModalOpen = false; }} class="cancel-button">
+				{$t('wallet.cancel')}
+			</ion-button>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			<ion-button aria-hidden expand="block" mode="ios" color="primary" on:click={handleManualAdd} class="remove-button">
+				{$t('wallet.add')}
+			</ion-button>
+		</div>
+	</div>
+</ion-modal>
 
 <style>
 	.personal-card {
@@ -430,6 +458,38 @@
 		font-size: 0.875rem;
 		color: var(--ion-text-color);
 		margin: 0;
+	}
+
+	/* Add QR Fallback Modal Styles */
+	.add-qr-modal {
+		--width: 90%;
+		--height: auto;
+		--border-radius: 1.5rem;
+		--backdrop-opacity: 0.6;
+	}
+
+	.add-qr-modal-content {
+		padding: 2rem 1.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
+		background: var(--app-color-map-input);
+		border-radius: 1.5rem;
+	}
+
+	.add-qr-title {
+		margin: 0;
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: var(--ion-text-color);
+		text-align: center;
+	}
+
+	.add-qr-message {
+		margin: 0;
+		font-size: 0.875rem;
+		color: var(--ion-color-medium);
+		text-align: center;
 	}
 
 	/* QR Display Modal Styles */

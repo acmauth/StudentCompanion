@@ -9,7 +9,7 @@
 	import Logo from '$lib/assets/Logo_head.png';
 	import UniversityLogo from '$lib/assets/authLogo.png';
 	import { t, changeLocale } from '$lib/i18n';
-  	import { invalidateAuth } from '$lib/authentication/authValidator';
+  	import { invalidateAuth } from '$lib/globalFunctions/logOut';
 
   // Initialize OIDC client
   const authClient = new OIDCClient(Config.auth);
