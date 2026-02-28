@@ -22,6 +22,7 @@ type OIDCClientConfig = {
   isMobile?: boolean ;         // Whether running in a mobile environment
   // Optional: custom storage (defaults to sessionStorage/localStorage)
   storage?: Storage;
+  isIOS: boolean | undefined;
   isProduction: boolean;
 };
 
@@ -42,6 +43,7 @@ class OIDCClient {
       // Optional: custom storage (defaults to sessionStorage/localStorage)
       storage: config.storage || window.sessionStorage,
       isProduction: config.isProduction,
+      isIOS: config.isIOS
     };
     
     // Build URLs with realm if provided
@@ -127,6 +129,9 @@ class OIDCClient {
   async buildAuthUrl() {
     // const state = this.generateRandomString();
     const state = encodeURIComponent(btoa(`{"production":${this.config.isProduction}}`));
+    let native_type = undefined;
+    if (this.config.isMobile && this.config.isIOS)
+      native_type = encodeURIComponent((btoa(`{"ios":${this.config.isMobile && this.config.isIOS}}`)));
     const codeVerifier = this.generateRandomString();
     const codeChallenge = await this.generateCodeChallenge(codeVerifier);
 
@@ -142,6 +147,7 @@ class OIDCClient {
       params.append('scope', this.config.scope);
     }
     params.append('state', state);
+    if (native_type) params.append('native_type', native_type);
     params.append('code_challenge', codeChallenge);
     params.append('code_challenge_method', 'S256');
 

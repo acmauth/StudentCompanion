@@ -3,12 +3,13 @@ import { getLocale } from '$lib/i18n';
 
 const isMobile = Capacitor.isNativePlatform();
 const isProduction = process.env.NODE_ENV === 'production';
+const isIOS = Capacitor.getPlatform() === 'ios';
 
 const appConfig = {
     isMobile: isMobile,
     isProduction: isProduction,
     isDevelopment: !isProduction,
-    isIOS: Capacitor.getPlatform() === 'ios',
+    isIOS: isIOS,
     isWeb: !isMobile,
     isAndroid: Capacitor.getPlatform() === 'android',
     auth: {
@@ -22,7 +23,8 @@ const appConfig = {
         isMobile: isMobile,
         // Use proxy for web
         tokenUrl: isMobile ? undefined : 'https://applink.aristomate.auth.gr/api/auth/token',
-        isProduction: isProduction
+        isProduction: isProduction,
+        isIOS: isIOS
     },
     universis: {
         api: 'https://universis-api.it.auth.gr/api'
