@@ -3,13 +3,12 @@ import { getLocale } from '$lib/i18n';
 
 const isMobile = Capacitor.isNativePlatform();
 const isProduction = process.env.NODE_ENV === 'production';
-const isIOS = Capacitor.getPlatform() === 'ios';
 
 const appConfig = {
     isMobile: isMobile,
     isProduction: isProduction,
     isDevelopment: !isProduction,
-    isIOS: isIOS,
+    isIOS: Capacitor.getPlatform() === 'ios',
     isWeb: !isMobile,
     isAndroid: Capacitor.getPlatform() === 'android',
     auth: {
@@ -18,11 +17,7 @@ const appConfig = {
         logoutUrl: 'https://oauth2.it.auth.gr/auth/realms/universis/protocol/openid-connect/logout',
         realm: 'universis',
         clientId: 'aristomate',
-        // iOS: use custom URL scheme (reliable from SFSafariViewController)
-        // Android/Web: use Universal Links / HTTPS redirect
-        redirectUri: isIOS
-            ? 'app.aristomate.gr://authsso/callback'
-            : 'https://applink.aristomate.auth.gr/authsso/callback',
+        redirectUri: 'https://applink.aristomate.auth.gr/authsso/callback',
         scope: 'students:read offline_access openid',
         isMobile: isMobile,
         // Use proxy for web
