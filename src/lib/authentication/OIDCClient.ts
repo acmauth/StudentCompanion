@@ -128,10 +128,8 @@ class OIDCClient {
   // Build authorization URL
   async buildAuthUrl() {
     // const state = this.generateRandomString();
-    const state = encodeURIComponent(btoa(`{"production":${this.config.isProduction}}`));
-    let native_type = undefined;
-    if (this.config.isMobile && this.config.isIOS)
-      native_type = encodeURIComponent((btoa(`{"ios":${this.config.isMobile && this.config.isIOS}}`)));
+    const isIos = !!(this.config?.isMobile && this.config?.isIOS);
+    const state = encodeURIComponent(btoa(`{"production":${this.config.isProduction}, "ios":${isIos}`));
     const codeVerifier = this.generateRandomString();
     const codeChallenge = await this.generateCodeChallenge(codeVerifier);
 
@@ -147,7 +145,6 @@ class OIDCClient {
       params.append('scope', this.config.scope);
     }
     params.append('state', state);
-    if (native_type) params.append('native_type', native_type);
     params.append('code_challenge', codeChallenge);
     params.append('code_challenge_method', 'S256');
 
