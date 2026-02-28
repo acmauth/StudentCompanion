@@ -3,7 +3,7 @@ import { getLocale } from '$lib/i18n';
 
 const isMobile = Capacitor.isNativePlatform();
 const isProduction = process.env.NODE_ENV === 'production';
-const isIOS = Capacitor.getPlatform() === 'ios';
+const isIOS = isMobile && Capacitor.getPlatform() === 'ios';
 
 const appConfig = {
     isMobile: isMobile,
