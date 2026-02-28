@@ -129,7 +129,7 @@ class OIDCClient {
   async buildAuthUrl() {
     // const state = this.generateRandomString();
     const isIos = !!(this.config?.isMobile && this.config?.isIOS);
-    const state = encodeURIComponent(btoa(`{"production":${this.config.isProduction}, "ios":${isIos}`));
+    const state = encodeURIComponent(btoa(`{"production":${this.config.isProduction}, "ios":${isIos}}`));
     const codeVerifier = this.generateRandomString();
     const codeChallenge = await this.generateCodeChallenge(codeVerifier);
 

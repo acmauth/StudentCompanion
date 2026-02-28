@@ -41,5 +41,16 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>This app uses the camera to scan barcodes for your student and gym cards.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>app.aristomate.gr</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app.aristomate.gr</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
