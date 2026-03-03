@@ -1,4 +1,5 @@
 import type { Event } from '$lib/components/calendar/event/Event';
+import { Capacitor } from '@capacitor/core';
 import { EventRepeatType } from '$lib/components/calendar/event/Event';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { cutId, calcNotifDate, calcNotifId } from './notificationFunctions';
@@ -10,18 +11,24 @@ import { get } from 'svelte/store';
 
 // schedules a notification at a specific date
 export async function schedule(event: Event, notifyDate: Date, id: number){
-    try{        
-        await LocalNotifications.schedule({notifications: [{
+    try{     
+        const notification: any = {  
             title: event.title,
             body: event.description ? event.description : `${get(t)("event.notification.descriptionPlaceholder")} ${getEventTypeValue(event.type, getLocale())}`,
             id: id,
-            largeIcon: "res://drawable/logo.",
-            smallIcon: "res://drawable/logo",
             schedule: {
                 at: notifyDate,
                 allowWhileIdle: true
             }
-        }]});
+        };
+        
+        // largeIcon and smallIcon are Android-only parameters
+        if (Capacitor.getPlatform() === 'android') {
+            notification.largeIcon = "res://drawable/logo.";
+            notification.smallIcon = "res://drawable/logo";
+        }
+        
+        await LocalNotifications.schedule({notifications: [notification]});
 
     }catch(ex){
         console.log(JSON.stringify(ex));

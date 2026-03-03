@@ -6,7 +6,10 @@ const isNative = Capacitor.isNativePlatform();
 export default async function initializeNotifications() {
     if (isNative){
         await registerNotifications();
-        await NotificationService.initialize();
+        // Android-specific notification initialization
+        if (Capacitor.getPlatform() === 'android') {
+            await NotificationService.initialize();
+        }
     }
     else {
         return;
@@ -23,5 +26,13 @@ const registerNotifications = async () => {
     if (permStatus.receive !== 'granted') {
       throw new Error('User denied permissions!');
     }
-
+    // For iOS, create default notification channel
+    if (Capacitor.getPlatform() === 'ios') {
+        await PushNotifications.createChannel({
+            id: 'default',
+            name: 'Default',
+            importance: 4,
+            visibility: 1,
+        });
+    }
   }
