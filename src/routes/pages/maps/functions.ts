@@ -4,7 +4,7 @@ import appConfig from "$src/app.config";
 const BASEURL = appConfig.map.ws_ext_endpoint;
 
 export async function getBuildings(): Promise<apitypes.Buildings> {
-    const response = await fetch(`${BASEURL}/getBuildings`);
+    const response = await fetch(`${BASEURL}/getBuildings2`);
     if (!response.ok) {
         throw new Error(`Error fetching buildings: ${response.statusText}`);
     }
@@ -14,7 +14,7 @@ export async function getBuildings(): Promise<apitypes.Buildings> {
 
 export async function getUnitBuildings(unitID: string): Promise<apitypes.Buildings> {
     // unitID is the shortname for the school/unit, e.g., "eng" for Engineering and "csd" for Computer Science Department
-    const response = await fetch(`${BASEURL}/getBuildings/${unitID}`);
+    const response = await fetch(`${BASEURL}/getBuildings2/${unitID}`);
     if (!response.ok) {
         throw new Error(`Error fetching building data: ${response.statusText}`);
     }
@@ -22,17 +22,17 @@ export async function getUnitBuildings(unitID: string): Promise<apitypes.Buildin
     return data;
 }
 
-export async function getBuildingInfo(pykaBldId: string): Promise<apitypes.BuildingInfo> {
+export async function getBuildingInfo(pykaBldId: string): Promise<apitypes.BuildingInfoNested> {
     const response = await fetch(`${BASEURL}/getBuildingInfo/${pykaBldId}`);
     if (!response.ok) {
         throw new Error(`Error fetching building info: ${response.statusText}`);
     }
-    const data: apitypes.BuildingInfo = await response.json();
+    const data: apitypes.BuildingInfoNested = await response.json();
     return data;
 }
 
 export async function getRooms(pykaBldId: string): Promise<apitypes.Rooms> {
-    const response = await fetch(`${BASEURL}/getRooms/${pykaBldId}`);
+    const response = await fetch(`${BASEURL}/getRooms2/${pykaBldId}`);
     if (!response.ok) {
         throw new Error(`Error fetching rooms: ${response.statusText}`);
     }
