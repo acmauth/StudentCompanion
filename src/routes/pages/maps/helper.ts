@@ -7,11 +7,11 @@ import appConfig from "$src/app.config";
 const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
 
 
-export type RoomWithBuilding = Rooms["rooms"][number] & { bldId: string; hasGis?: boolean; isMezz: string; X: number; Y:number };
+export type RoomWithBuilding = Rooms["rooms"][number] & { authBldId: string; hasGis?: boolean; X?: number; Y?:number };
 
 export async function fetchBuildings(): Promise<BuildingInfo[]> {
     const { buildings } = await authApi.getBuildings();
-    return buildings.filter(b => b.bldId != null && b.gisBldId != null).sort((a, b) => (a.name?? '').localeCompare(b.name ?? ''));
+    return buildings.filter(b => b.authBldId != null && b.gisBldId != null).sort((a, b) => (a.name?? '').localeCompare(b.name ?? ''));
 }
 
 export async function fetchDepartments(): Promise<Department[]> {
@@ -43,8 +43,8 @@ export async function fetchRoomsForBuildings(buildingIds: Set<string>): Promise<
 }
 
 export function flattenRooms(roomsByBuilding: Record<string, Rooms["rooms"]>): RoomWithBuilding[] {
-    const flat = Object.entries(roomsByBuilding).flatMap(([bldId, rooms]) =>
-        rooms.map(room => ({ ...room, bldId, isMezz: room.isMezz }))
+    const flat = Object.entries(roomsByBuilding).flatMap(([authBldId, rooms]) =>
+        rooms.map(room => ({ ...room, authBldId }))
     );
     return [...new Map(flat.map(r => [`${r.roomId},${r.roomName}`, r])).values()];
 }
