@@ -41,7 +41,7 @@
 		now = $t('menu.breakfast');
 		next = $t('menu.lunch');
 		defaultSlideIndex = 0; // Show breakfast
-	} else if (hours >= 10 && hours < 12) {
+	} else if ((hours >= 10 && mins >=30) && hours < 12) {
 		message = $t('menu.morning_closed');
 		color = 'danger';
 		now = $t('menu.lunch');
