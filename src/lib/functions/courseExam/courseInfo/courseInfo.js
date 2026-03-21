@@ -42,6 +42,7 @@ export async function courseInformation(courseID) {
     season = "";
     registrationType = 0;
     isPassed = 0;
+    let courseSyllabusInfo = {content: null, eudoxus: null};
     try {
 
 
@@ -90,6 +91,16 @@ export async function courseInformation(courseID) {
                         if (!weeklyHours && classes.courseClass.weekHours) {
                             weeklyHours = classes.courseClass.weekHours;
                         }
+                        
+                        try {
+                            const syllabus_info = await fetch(`https://courses.auth.gr/services/course-catalogue/v1p1/qa/CourseOutlines/${classes.courseClass.identifier}?$top=1&$skip=0&$count=false`) 
+                            if (syllabus_info.ok) {
+                                const {content, eudoxus} = await syllabus_info.json();
+                                courseSyllabusInfo = {content, eudoxus}
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
                     }
                     if (flag)
                         break;
@@ -115,7 +126,8 @@ export async function courseInformation(courseID) {
             "period": period,
             "season": season,
             "registrationType": registrationType,
-            "isPassed": isPassed
+            "isPassed": isPassed,
+            "syllabusInfo" : courseSyllabusInfo
         };
 
 
