@@ -45,7 +45,7 @@
     let allowShowingBuildingResults = false;
     
     // derived variables
-    $: buildingIds = new Set(buildings.map(b => b.bldId))
+    $: buildingIds = new Set(buildings.map(b => b.authBldId))
     $: searchableRooms = updateSearchableRooms(selectedDepartment, selectedBuilding, buildings);
     $: fuse = helpers.createRoomSearch(searchableRooms);
     $: deptFuse = helpers.createDeptSearch(departments);
@@ -56,10 +56,10 @@
 
     function updateSearchableRooms(selectedDepartment: Department|undefined, selectedBuilding: BuildingInfo|undefined, buildings: BuildingInfo[]): helpers.RoomWithBuilding[] {
         if (selectedBuilding) {
-            const availRooms = allRooms.filter(r => r.bldId === selectedBuilding.bldId);
+            const availRooms = allRooms.filter(r => r.authBldId === selectedBuilding.authBldId);
             return availRooms;
         } else if (selectedDepartment) {
-            return allRooms.filter(r => !!buildings.find(b => b.bldId === r.bldId));
+            return allRooms.filter(r => !!buildings.find(b => b.authBldId === r.authBldId));
         } else {
             return allRooms;
         }
@@ -236,7 +236,7 @@
 	});
 
     async function displayRoom(room: helpers.RoomWithBuilding) {
-        const bldInfo = (await api.getBuildingInfo(room.bldId)).buildingInfo;
+        const bldInfo = (await api.getBuildingInfo(room.authBldId)).buildingInfo;
         room.X = parseFloat(bldInfo.longX)
         room.Y = parseFloat(bldInfo.latY)
 
@@ -250,7 +250,7 @@
 
         // If room doesn't have GIS, fall back to building coordinates
         if (!room.hasGis) {
-            const building = buildings.find(b => b.bldId === room.bldId);
+            const building = buildings.find(b => b.authBldId === room.authBldId);
             if (building && building.latY && building.longX) {
                 L.marker([parseFloat(building.latY), parseFloat(building.longX)], { title: building.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]}) })
                     .addTo(selectedFeatureLayerGroup)
@@ -356,7 +356,7 @@
                         {#each searchResults as { item } (item.roomId)}
                             <li class="ion-activatable" on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
                                 <ion-ripple-effect></ion-ripple-effect>
-                                {item.roomName} - <i class="building-name"><ion-icon class:hasGis={item.hasGis} icon={item.hasGis? buildingIcon : buildingVague}/>{item.bldId} {item.bldName}</i>
+                                {item.roomName} - <i class="building-name"><ion-icon class:hasGis={item.hasGis} icon={item.hasGis? buildingIcon : buildingVague}/>{item.authBldId} {item.bldName}</i>
                             </li>
                         {/each}
                     </ul>
@@ -397,7 +397,7 @@
                         {#each buildingSearchResults as { item } }
                             <li class="ion-activatable" on:mousedown={() => {setSelectedBuilding(item);buildingSearchResults=[]}} aria-hidden>
                                 <ion-ripple-effect/>
-                                {getLocale()=="el" ? item.name : item.name} <i class="building-name">- {item.bldId}</i>
+                                {getLocale()=="el" ? item.name : item.name} <i class="building-name">- {item.authBldId}</i>
                             </li>
                         {/each}
                     </ul>
@@ -408,13 +408,13 @@
     {#if activeRoom}
         <div id="bottom-controls" transition:fly={{ y: 200, duration: MAPANIMATIONDURATION * 1000 }}>
             <ion-icon id="bottom-close" icon={close} on:click={clearDisplay} aria-hidden />
-            <span id="bottom-faculty">{activeRoom.faculty}</span>
+            <!-- <span id="bottom-faculty">{activeRoom.faculty}</span> -->
             <h2 id="bottom-room-name">{activeRoom.roomName}</h2>
             <span id="bottom-building-name">{activeRoom.bldName}</span>
             <div id="bottom-meta">
                 <ion-chip>
                     <ion-icon icon={layersOutline}></ion-icon>
-                    <ion-label>{floorDecode(activeRoom.floor, activeRoom.isMezz)}</ion-label>
+                    <ion-label>{floorDecode(activeRoom.floor, '0')}</ion-label>
                 </ion-chip>
                 {#if activeRoom.capacity}
                     <ion-chip>
@@ -627,28 +627,6 @@
         background: var(--ion-color-light);
     }
 
-    .filter-dropdown {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        z-index: 1001;
-    }
-
-    .filter-dropdown .autocomplete {
-        position: relative;
-        top: 0;
-    }
-
-    .dropdown-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1000;
-    }
-
     #map-wrapper {
         position: fixed;
         width: 100%;
@@ -686,14 +664,6 @@
         align-items: center;
         gap: 0.35rem;
         text-align: center;
-    }
-
-    #bottom-faculty {
-        font-size: 0.75rem;
-        color: var(--ion-color-medium);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 0.25rem;
     }
 
     #bottom-room-name {

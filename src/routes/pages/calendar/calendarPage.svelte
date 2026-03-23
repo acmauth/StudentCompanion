@@ -34,13 +34,13 @@
          id: new Date().getTime(),
             title: "",
             slot: {
-                start: new Date(activeDate.getTime()).setHours(new Date().getHours(), new Date().getMinutes()),
-                end: new Date(new Date(activeDate.getTime()).getTime() + 3600000),
+                start: new Date(activeDate.getTime()),
+                end: new Date(activeDate.getTime() + 3600000),
             },
             type: EventType.TASK,
             description: "",
             repeat: EventRepeatType.NEVER,
-            repeatUntil: new Date(new Date(activeDate.getTime()).getTime() + 3600000),
+            repeatUntil: new Date(activeDate.getTime() + 3600000),
             repeatInterval: 1,
             notify: false,
             notifyTime: 1

@@ -13,10 +13,19 @@
     export let onDelete: (event: Event) => void;
     export let onClose: () => void;
 
-    let tmpEvent: Event = { ...event };
+    let tmpEvent: Event = JSON.parse(JSON.stringify(event));
+    let lastEventId: number | undefined = event?.id;
+
+    // When the parent passes a different event, clone it into tmpEvent.
+    // This triggers the {#key} block to recreate EventDetails with fresh ion-datetime elements.
+    $: if (event && event.id !== lastEventId) {
+        lastEventId = event.id;
+        tmpEvent = JSON.parse(JSON.stringify(event));
+    }
 
     function handleModalPresent() {
         tmpEvent = JSON.parse(JSON.stringify(event));
+        lastEventId = event?.id;
     }
 
     function handleBreakpointChange(e: CustomEvent) {
@@ -88,7 +97,9 @@
             </ion-button>
         </ion-buttons>
     </ion-toolbar>
-    <EventDetails bind:copyEvent={tmpEvent} />
+    {#key tmpEvent?.id}
+        <EventDetails bind:copyEvent={tmpEvent} />
+    {/key}
 </ion-modal>
 
 <style>

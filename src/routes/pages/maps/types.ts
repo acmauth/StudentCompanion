@@ -1,14 +1,16 @@
 export interface BuildingInfo {
-	locationId: string;
+	authBldId: string; // Kodikos ktiriou maps
 	gisBldId: string;
-	faculty: string;
 	name: string;
 	locationName: string;
-	bldId: string;
 	longX: string;
 	latY: string;
-	longXgis: number;
-	latYgis: number;
+	longXgis: string;
+	latYgis: string;
+}
+
+export interface BuildingInfoNested {
+	buildingInfo: BuildingInfo
 }
 
 export interface Floor {
@@ -19,7 +21,6 @@ export interface Floor {
 export interface Room {
 	roomId: string;
 	floor: string;
-	isMezz: string;
 	school: string;
 	roomType: string;
 	roomCode: string;
@@ -42,11 +43,8 @@ export interface Buildings {
 };
 
 export interface RoomDetail {
-	faculty: string;
 	bldName: string;
-	school: string;
 	floor: string;
-	isMezz: string;
 	roomType: string;
 	roomCode: string;
 	roomName: string;
