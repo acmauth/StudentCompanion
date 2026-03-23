@@ -31,18 +31,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-
-import studentCompanionUI.ionic.io.ElearningDataServiceLogic;
-import studentCompanionUI.ionic.io.ElearningScraperLogic;
 import studentCompanionUI.ionic.io.MainActivity;
 import studentCompanionUI.ionic.io.R;
-import studentCompanionUI.ionic.io.UniversisScraperLogic;
 import studentCompanionUI.ionic.io.WebmailInboxScraperLogic;
 
 class AristomateNotification {
@@ -69,6 +60,10 @@ public class NotificationService extends Worker {
         createNotificationChannels();
     }
 
+    private static final String TOKEN_ENDPOINT = "https://applink.aristomate.auth.gr/api/auth/token";
+    private static final String CLIENT_ID = "aristomate";
+    private static final long EXPIRY_BUFFER_SECONDS = 180;
+
     @NonNull
     @Override
     public Result doWork() {
@@ -77,7 +72,6 @@ public class NotificationService extends Worker {
         long lastTimestamp = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getLong("lastTimestamp", System.currentTimeMillis());
         Log.d("Notification Content doWork()", "Last timestamp: " + lastTimestamp / 1000); //1714122356
         var notifications = gatherNotifications((long) lastTimestamp / 1000);
-//        var notifications = gatherNotifications((long) 0);
 
 
         Log.d("Notification Content doWork()", "Notifications gathered: " + notifications.length);
@@ -220,8 +214,7 @@ public class NotificationService extends Worker {
     private AristomateNotification[] getUniversisMessages(long timestamp){
         try {
 
-            JSONObject loginStore = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("loginStore",""));
-            String token = loginStore.getString("access_token");
+            String token = getValidAccessToken();
 
             Session session = new Session();
             BasicResponse api_result = session.get("https://universis-api.it.auth.gr/api/Students/me/messages?$orderby=dateReceived desc, dateCreated desc&$top=3")
@@ -263,12 +256,13 @@ public class NotificationService extends Worker {
 
     private AristomateNotification[] getUniversisRecentGrades(long timestamp) {
         try {
+            String token = getValidAccessToken();
+
+            
             DateTimeFormatter comp_formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
             String lastTimestampString = comp_formatter.format(Instant.ofEpochSecond(timestamp).atZone(ZoneOffset.UTC));
             String Request_URI = "https://universis-api.it.auth.gr/api/students/me/grades?$expand=course($expand=gradeScale,locale)&$filter=gradeModified gt '" + lastTimestampString + "'&$top=-1&$count=false";
             
-            JSONObject loginStore = new JSONObject(this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE).getString("loginStore",""));
-            String token = loginStore.getString("access_token");
 
             Session session = new Session();
             BasicResponse api_result = session.get(Request_URI)
@@ -357,6 +351,84 @@ public class NotificationService extends Worker {
         catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+
+    // -------------------------------------------------------------------------
+    // Token management
+    // -------------------------------------------------------------------------
+    private String getValidAccessToken() throws Exception {
+        SharedPreferences prefs = this.context.getSharedPreferences("CapacitorStorage", Context.MODE_PRIVATE);
+        String loginStoreRaw = prefs.getString("loginStore", "");
+
+        if (loginStoreRaw == null || loginStoreRaw.isEmpty()) {
+            throw new IllegalStateException("loginStore is missing from SharedPreferences");
+        }
+
+        JSONObject loginStore = new JSONObject(loginStoreRaw);
+
+        long expiresAt = loginStore.getLong("expires_at") / 1000L;
+        long nowSeconds = System.currentTimeMillis() / 1000L;
+
+        if (nowSeconds < expiresAt - EXPIRY_BUFFER_SECONDS) {
+            // Token is still valid.
+            return loginStore.getString("access_token");
+        }
+
+        // Token is expired (or expiring very soon) — refresh it.
+        String refreshToken = loginStore.getString("refresh_token");
+        JSONObject refreshed = performTokenRefresh(refreshToken);
+
+
+        // Merge the new values back into the stored loginStore object.
+        // The OIDC server may or may not rotate the refresh token; handle both cases.
+        loginStore.put("access_token", refreshed.getString("access_token"));
+        if (refreshed.has("id_token")) {
+            loginStore.put("id_token", refreshed.getString("id_token"));
+        }
+        if (refreshed.has("refresh_token")) {
+            loginStore.put("refresh_token", refreshed.getString("refresh_token"));
+        }
+
+        // expires_in
+        long expiresIn = refreshed.getLong("expires_in");
+        long newExpiresAt = (nowSeconds + expiresIn) * 1000L;
+        loginStore.put("expires_at", String.valueOf(newExpiresAt));
+
+        // Updating capacitor persisted store
+        prefs.edit().putString("loginStore", loginStore.toString()).apply();
+
+        return loginStore.getString("access_token");
+    }
+
+
+    private JSONObject performTokenRefresh(String refreshToken) throws Exception {
+        String body = "grant_type=refresh_token"
+                + "&refresh_token=" + refreshToken
+                + "&client_id=" + CLIENT_ID;
+
+        Session session = new Session();
+        BasicResponse response = session
+                .post(TOKEN_ENDPOINT)
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .body(body)
+                .execute();
+
+        int statusCode = response.statusCode();
+        if (statusCode < 200 || statusCode >= 300) {
+            throw new RuntimeException(
+                    "Token refresh failed — HTTP " + statusCode + ": " + response.text());
+        }
+
+        JSONObject json = new JSONObject(response.text());
+
+        if (json.has("error")) {
+            throw new RuntimeException(
+                    "Token refresh error: " + json.optString("error")
+                            + " — " + json.optString("error_description"));
+        }
+
+        return json;
     }
 
 }
