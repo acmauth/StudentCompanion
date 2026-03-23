@@ -2,9 +2,10 @@
 	import { afterUpdate, onMount } from 'svelte';
 	import Chart from 'chart.js/auto';
 	import { t } from '$lib/i18n';
+	import DOMPurify from 'dompurify';
 
 	/**
-	 * @type {{ title: any; code: any; courseType: any; teacher: string; ects: any; grade: number; formattedGrade: number; semester: any; season: any; weeklyHours: any; period: any; registrationType: number; isPassed: number;}}
+	 * @type {{ title: any; code: any; courseType: any; teacher: string; ects: any; grade: number; formattedGrade: number; semester: any; season: any; weeklyHours: any; period: any; registrationType: number; isPassed: number; syllabusInfo: {content: null|string;eudoxus: null|string;}}}
 	 */
 	export let course;
 	/**
@@ -119,6 +120,9 @@
 			console.log('Πρόβλημα εμφάνισης', error);
 		}
 	});
+
+	$: sanitizedSyllabus = course.syllabusInfo.content ? DOMPurify.sanitize(course.syllabusInfo.content, { SANITIZE_NAMED_PROPS: true }) : '';
+	$: sanitizedEudoxus = course.syllabusInfo.eudoxus ? DOMPurify.sanitize(course.syllabusInfo.eudoxus, { SANITIZE_NAMED_PROPS: true }) : '';
 </script>
 
 <ion-card>
@@ -176,6 +180,26 @@
 					</ion-accordion>
 				</ion-accordion-group>
 			{/if}
+			{#if course.syllabusInfo.content}
+					<ion-accordion-group class="accordion" expand="compact">
+						<ion-accordion value="first">
+							<ion-item slot="header" color="white">
+								<ion-label>{$t("course.syllabus")}</ion-label>
+							</ion-item>
+								<p slot="content" style="white-space: pre-line;">{@html sanitizedSyllabus}</p>
+						</ion-accordion>
+					</ion-accordion-group>
+				{/if}
+				{#if course.syllabusInfo.eudoxus}
+					<ion-accordion-group class="accordion" expand="compact">
+						<ion-accordion value="first">
+							<ion-item slot="header" color="white">
+								<ion-label>{$t("course.eudoxus")}</ion-label>
+							</ion-item>
+								<p slot="content" style="white-space: pre-line;">{@html sanitizedEudoxus}</p>
+						</ion-accordion>
+					</ion-accordion-group>
+				{/if}
 			
 		</ion-list>
 	</ion-card-content>

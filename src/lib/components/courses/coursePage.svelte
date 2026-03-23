@@ -20,7 +20,8 @@
 		period: '',
 		season: '',
 		registrationType: 0,
-		isPassed: 0
+		isPassed: 0,
+		syllabusInfo: {content: null, eudoxus: null}
 	};
 
 	let stats = {
@@ -72,6 +73,7 @@
 				if (result.period) {
 					course.period = result.period;
 				}
+				course.syllabusInfo = result.syllabusInfo
 			}
 
 			// Fetch statistics
