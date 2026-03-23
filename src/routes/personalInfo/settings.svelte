@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Modal, { getModal } from '$components/language/Modal.svelte';
+	import Modal from '$components/language/Modal.svelte';
 	import { navController } from '$components/shared/StackedNav';
 	import { webmailLoggedIn } from '$components/webmailLogin/userCredsFlagStore';
 	import { userCreds } from '$stores/credentials.store';
@@ -23,6 +23,7 @@
 	 * @type {any}
 	 */
 	export let logOut;
+	let languageModalOpen = false;
 
 	onMount(() => {
 		checkAppMode();
@@ -175,6 +176,7 @@
 		</ion-item>
 
 		<CredentialLoginItem />
+		<Modal bind:isOpen={languageModalOpen}/>
 
 		{#if Capacitor.isNativePlatform()}
 			<ion-item button on:click={launchNativenotificationSettings} aria-hidden>
@@ -186,7 +188,7 @@
 
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<ion-item button on:click={() => getModal().open()}>
+		<ion-item button on:click={() => languageModalOpen = true}>
 			<ion-icon size="small" icon={allIonicIcons.language} />
 			<ion-label class="ion-padding-start">{$t('settings.language')}</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
