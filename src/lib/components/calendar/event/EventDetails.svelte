@@ -106,7 +106,7 @@
                         aria-hidden
                     >
                         <ion-icon icon={navigateCircle}></ion-icon>
-                        <ion-label style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 10rem; display: block;">{copyEvent.location}eeeeeeeeeeeeeeeeeee</ion-label>
+                        <ion-label style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 10rem; display: block;">{copyEvent.location}</ion-label>
                     </ion-chip>
                 {:else}
                     <ion-input

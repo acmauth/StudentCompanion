@@ -340,6 +340,7 @@ public class NotificationService extends Worker {
                 Date notificationDate = (Date) candidateNotification.get("date");
 
                 ZonedDateTime dateReceived = Instant.ofEpochMilli(notificationDate.getTime()).atZone(ZoneOffset.UTC);
+                System.out.println("Timestamp: " + timestamp);
                 long timeReceived = dateReceived.toEpochSecond();
                 if (timeReceived > timestamp){
                     webmailNotifications.add(new AristomateNotification(notificationSender,notificationSubject,notificationSender, dateReceived.toEpochSecond(), "Webmail"));
