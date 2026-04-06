@@ -18,7 +18,6 @@
 	import About from './about.svelte';
 	import Faq from './faq.svelte';
 	import { darkMode } from '$lib/globalFunctions/darkMode';
-	import { clearWebmailCredentials } from '$lib/functions/iosBackgroundCredentials';
 
 	/**
 	 * @type {any}
@@ -158,8 +157,7 @@
 		// Clear stored credentials
 		userCreds.set({ username: '', password: '' });
         webmailLoggedIn.set(false);
-		// Clear credentials from iOS background fetch storage
-		clearWebmailCredentials();
+		
 	}
 </script>
 
