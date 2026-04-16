@@ -14,6 +14,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(WebmailInboxScraperDefinition.class);
         registerPlugin(NotificationServiceDefinition.class);
         registerPlugin(RefresherServiceDefinition.class);
+        registerPlugin(AppLauncherPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

@@ -1,22 +1,19 @@
-import { userCreds, userTokens, useAlternativeLogin } from "$stores/credentials.store";
+import { userCreds, userTokens } from "$stores/credentials.store";
+import { loginStore } from '$lib/authentication/loginStore';
+import type { LoginTokens } from '$lib/authentication/loginStore';
 import { get } from "svelte/store";
 import reauthenticate from "../-universis/authenticator-deprecated/reauthenticate.js";
 import { Network } from '@capacitor/network';
-import { Preferences } from "@capacitor/preferences";
-import Dexie from "dexie";
 import OIDCClient from "./OIDCClient.js";
 import { Capacitor } from "@capacitor/core";
 import Config from "$src/app.config";
 
+
+
 const isMobile = Capacitor.isNativePlatform();
 const authClient = new OIDCClient(Config.auth);
 
-// Do we wanna log out? Let's clear our path
-export function invalidateAuth(){
-    localStorage.clear();
-    Preferences.clear();
-    Dexie.delete('cachedData');
-}
+
 
 export async function judgeAuth() {
     /*
@@ -28,14 +25,7 @@ export async function judgeAuth() {
     */
     const onLineStatus = (await Network.getStatus()).connected;
 
-    if (!get(useAlternativeLogin)){
-        return authClient.isAuthenticated();
-    } else {
-        const userCredsValue = get(userCreds);
-        if (!userCredsValue.username || !userCredsValue.password) return false;  // If we don't have any credentials, we're not logged in
-        if (!onLineStatus) return true;                                          // If we're offline, there is no way to check if we're logged in, so we assume we are and use cached data
-        return await getLoginStatus();
-    };
+    return authClient.isAuthenticated() || !onLineStatus;
 }
 
 

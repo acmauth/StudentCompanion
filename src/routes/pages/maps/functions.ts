@@ -1,0 +1,59 @@
+import type * as apitypes from "./types";
+import appConfig from "$src/app.config";
+
+const BASEURL = appConfig.map.ws_ext_endpoint;
+
+export async function getBuildings(): Promise<apitypes.Buildings> {
+    const response = await fetch(`${BASEURL}/getBuildings2`);
+    if (!response.ok) {
+        throw new Error(`Error fetching buildings: ${response.statusText}`);
+    }
+    const data: apitypes.Buildings = await response.json();
+    return data;
+}
+
+export async function getUnitBuildings(unitID: string): Promise<apitypes.Buildings> {
+    // unitID is the shortname for the school/unit, e.g., "eng" for Engineering and "csd" for Computer Science Department
+    const response = await fetch(`${BASEURL}/getBuildings2/${unitID}`);
+    if (!response.ok) {
+        throw new Error(`Error fetching building data: ${response.statusText}`);
+    }
+    const data: apitypes.Buildings = await response.json();
+    return data;
+}
+
+export async function getBuildingInfo(pykaBldId: string): Promise<apitypes.BuildingInfoNested> {
+    const response = await fetch(`${BASEURL}/getBuildingInfo/${pykaBldId}`);
+    if (!response.ok) {
+        throw new Error(`Error fetching building info: ${response.statusText}`);
+    }
+    const data: apitypes.BuildingInfoNested = await response.json();
+    return data;
+}
+
+export async function getRooms(pykaBldId: string): Promise<apitypes.Rooms> {
+    const response = await fetch(`${BASEURL}/getRooms2/${pykaBldId}`);
+    if (!response.ok) {
+        throw new Error(`Error fetching rooms: ${response.statusText}`);
+    }
+    const data: apitypes.Rooms = await response.json();
+    return data;
+}
+
+export async function getRoomInfo(roomId: string): Promise<apitypes.RoomDetail> {
+    const response = await fetch(`${BASEURL}/getRoomInfo/${roomId}`);
+    if (!response.ok) {
+        throw new Error(`Error fetching room details: ${response.statusText}`);
+    }
+    const data: apitypes.RoomDetail = await response.json();
+    return data;
+}
+
+export async function getUnits(): Promise<apitypes.Units> {
+    const response = await fetch(`${BASEURL}/open/getUnits/school`);
+    if (!response.ok) {
+        throw new Error(`Error fetching units: ${response.statusText}`);
+    }
+    const data: apitypes.Units = await response.json();
+    return data;
+}

@@ -1,154 +1,107 @@
-<script>
+<script lang="ts">
 	import Chart from 'chart.js/auto';
 	import { afterUpdate, onMount } from 'svelte';
 	import { averages } from '$lib/functions/gradeAverages/averages';
-	import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
 	import * as allIonicIcons from 'ionicons/icons';
 	import Chip from '$components/shared/Chips.svelte';
 	import { t } from '$lib/i18n';
 
-	/**
-	 * @type {any}
-	 */
 	export let subjects;
-	/**
-	 * @type {any}
-	 */
 	export let passedSubjects;
 	export let searchQuery;
-	/**
-	 * @type {any}
-	 */
 	export let flip;
+	export let subjectsJSON: null | undefined;
 
-	/**
-	 * @type {null | undefined}
-	 */
-	export let subjectsJSON;
-
-	/**
-	 * @type {Chart<"line", number[], string>}
-	 */
-
-	let primaryColor;
-	let gradeFill;
-
-	if (document.body.classList.contains('dark')) {
-		primaryColor = getComputedStyle(document.body)
-			.getPropertyValue('--app-color-grade-graph')
-			.trim();
-		gradeFill = getComputedStyle(document.body)
-			.getPropertyValue('--app-color-grade-graph-fill')
-			.trim();
-	} else {
-		primaryColor = getComputedStyle(document.documentElement)
-			.getPropertyValue('--app-color-grade-graph')
-			.trim();
-		gradeFill = getComputedStyle(document.documentElement)
-			.getPropertyValue('--app-color-grade-graph-fill')
-			.trim();
+	interface Registration {
+		id: number;
+		semester: number;
+		classes: { id: string; finalGrade: number; coefficient: number; isPassed: number; registration: number; course: string }[];
+	}
+	interface AveragesResult {
+		avg: number;
+		weighted_avg: number;
+		grades: never[];
+		ects: number;
 	}
 
-	/**
-	 * @type {Chart<"line", never[], never>}
-	 */
-	let chart;
+
+	export let registrationsInDegree: Registration[];
+
+	const root = document.body.classList.contains('dark') ? document.body : document.documentElement;
+	const primaryColor = getComputedStyle(root).getPropertyValue('--app-color-grade-graph').trim();
+	const gradeFill = getComputedStyle(root).getPropertyValue('--app-color-grade-graph-fill').trim();
+
+	let chart: Chart<'line', any, any>;
+	let chartElement: HTMLCanvasElement;
 	let gradesObject = {
 		average: 0,
 		weightedAverage: 0,
 		grades: [],
 		ects: 0,
-		averagesPerSemester: [],
-		semester: []
 	};
 
-	/**
-	 * @param {any} subjectsJSON
-	 */
-	async function processAverages(subjectsJSON) {
-		try {
-			const result = await averages(subjectsJSON);
-			gradesObject.average = result.avg;
-			gradesObject.weightedAverage = result.weighted_avg;
-			gradesObject.grades = result.grades;
-			gradesObject.ects = result.ects;
-		} catch (error) {
-			console.error(error);
-		}
-	}
+	function calculateGpaPerSemester(registrationsInDegree: Registration[]): Record<number, string> {
+		const semesterAverages: Record<number, string> = {};
 
-	/**
-	 * @param {null | undefined} subjectsJSON
-	 */
-	async function processAveragesPerSemester(subjectsJSON) {
-		try {
-			const result = await averagesPerSemester(subjectsJSON);
-			gradesObject.averagesPerSemester = result;
+		registrationsInDegree.forEach((registration) => {
+			const coefficientSum = registration.classes.reduce((sum, c) => sum + c.coefficient, 0);
+			const weightedSum = registration.classes.reduce((sum, c) => sum + c.coefficient * c.finalGrade, 0);
 
-			for (let i = 1; i <= result.length + 1; i++) {
-				gradesObject.semester[i - 1] = i;
+			if (coefficientSum > 0) {
+				semesterAverages[registration.semester] = ((10 * weightedSum) / coefficientSum).toFixed(2);
 			}
-		} catch (error) {
-			console.error(error);
-		}
-	}
+		});
 
-	async function gatherData() {
-		await processAverages(subjectsJSON);
-		await processAveragesPerSemester(subjectsJSON);
+		return semesterAverages;
 	}
 
 	onMount(async () => {
-		await gatherData();
+		try {
+			const avgResult: AveragesResult = await averages(subjectsJSON)
+
+			gradesObject.average = avgResult.avg;
+			gradesObject.weightedAverage = avgResult.weighted_avg;
+			gradesObject.grades = avgResult.grades;
+			gradesObject.ects = avgResult.ects;
+		} catch (error) {
+			console.error(error);
+		}
 	});
 
 	afterUpdate(() => {
-		if (chart) {
-			chart.destroy();
-		}
-		if (!searchQuery.length) {
-			chart = new Chart(document.getElementById('gradeChart'), {
-				type: 'line',
-				data: {
-					labels: gradesObject.semester,
-					datasets: [
-						{
-							data: gradesObject.averagesPerSemester,
-							fill: {
-								target: 'origin',
-								above: gradeFill
-							},
-							tension: 0.4,
-							borderColor: primaryColor, // Set the color here
-							backgroundColor: 'primaryColor' // Optionally set the fill color
-						}
-					]
+		if (chart) chart.destroy();
+
+		if (searchQuery.length || !chartElement) return;
+
+		chart = new Chart(chartElement, {
+			type: 'line',
+			data: {
+				datasets: [
+					{
+						data: calculateGpaPerSemester(registrationsInDegree),
+						fill: { target: 'origin', above: gradeFill },
+						tension: 0.4,
+						borderColor: primaryColor,
+						backgroundColor: 'primaryColor'
+					}
+				]
+			},
+			options: {
+				responsive: true,
+				scales: {
+					y: { beginAtZero: false, grid: { display: false } },
+					x: { grid: { display: false } }
 				},
-				options: {
-					responsive: true,
-					scales: {
-						y: {
-							beginAtZero: false,
-							grid: {
-								display: false
-							}
-						}
-					},
-					plugins: {
-						legend: {
-							display: false
-						},
-						title: {
-							display: true,
-							text: $t('progress.average_evolution'),
-							font: {
-								size: 15
-							}
-						}
+				plugins: {
+					legend: { display: false },
+					title: {
+						display: true,
+						text: $t('progress.average_evolution'),
+						font: { size: 15 }
 					}
 				}
-			});
-		}
+			}
+		});
 	});
 </script>
 
@@ -160,35 +113,24 @@
 	</ion-card-header>
 	<ion-card-content>
 		{#if !subjects}
-			<ion-text>
-				{$t('progress.no_courses_found')}
-			</ion-text>
+			<ion-text>{$t('progress.no_courses_found')}</ion-text>
 		{:else}
 			<circle-progress max={subjects} value={passedSubjects} />
 		{/if}
 		<ion-list>
 			<ion-item>
 				<ion-label>{$t('progress.grade_ects')}</ion-label>
-				<ion-text>
-					<h2>{gradesObject.weightedAverage}</h2>
-				</ion-text>
+				<ion-text><h2>{gradesObject.weightedAverage}</h2></ion-text>
 			</ion-item>
 			<ion-item>
 				<ion-label>{$t('progress.grade_simple')}</ion-label>
-				<ion-text>
-					<h2>{gradesObject.average}</h2>
-				</ion-text>
+				<ion-text><h2>{gradesObject.average}</h2></ion-text>
 			</ion-item>
-
 			<ion-item lines="none" class="ion-padding-bottom">
 				<ion-label>ECTS</ion-label>
-				<ion-text>
-					<h2>{gradesObject.ects}</h2>
-				</ion-text>
+				<ion-text><h2>{gradesObject.ects}</h2></ion-text>
 			</ion-item>
-
-			<canvas id="gradeChart" />
-
+			<canvas id="gradeChart" bind:this={chartElement} />
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<Chip chipIcon={allIonicIcons.calculator} text={$t('progress.average_prediction')} {flip} />
@@ -210,10 +152,12 @@
 		stroke-width: 10;
 		stroke: var(--app-color-progress-value);
 	}
+
 	circle-progress::part(circle) {
 		stroke-width: 10;
 		stroke: var(--app-color-progress-circle);
 	}
+
 	circle-progress::part(text) {
 		font-weight: bold;
 		fill: var(--app-color-primary-dark);

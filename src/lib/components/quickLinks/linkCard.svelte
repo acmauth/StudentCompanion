@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
 	export let linktitle = '';
 	export let linkaddress = '';
-	export let imagelink = '';
+	export let imagelink: string | null = null;
 
 	function goToLinkaddress() {
 		window.open(linkaddress, '_blank');
@@ -12,10 +12,12 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <ion-card button on:click={goToLinkaddress}>
 	<ion-item lines="none">
-		<ion-thumbnail slot="start">
+		{#if imagelink}
+			<ion-thumbnail slot="start">
 			<!-- svelte-ignore a11y-missing-attribute -->
-			<img src={imagelink} />
-		</ion-thumbnail>
+				<img src={imagelink} />
+			</ion-thumbnail>
+		{/if}
 		<ion-label class="ion-text-wrap">
 			<ion-text color="primary">
 				<h2><b>{linktitle}</b></h2>

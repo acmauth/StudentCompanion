@@ -3,13 +3,13 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import OIDCClient from '$lib/authentication/OIDCClient';
-	import { Capacitor } from '@capacitor/core';
 	import { App } from '@capacitor/app';
 	import { handleLogin, handleCallback, handleLogout } from './login';
 	import Config from "$src/app.config"
 	import Logo from '$lib/assets/Logo_head.png';
 	import UniversityLogo from '$lib/assets/authLogo.png';
 	import { t, changeLocale } from '$lib/i18n';
+  	import { invalidateAuth } from '$lib/globalFunctions/logOut';
 
   // Initialize OIDC client
   const authClient = new OIDCClient(Config.auth);
@@ -19,11 +19,29 @@
   let userInfo: any = null;
   let isAuthenticated = false;
   let pageLoaded = false;
+  let showRetry = false;
+  let retryTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function startCallbackTimeout() {
+    if (retryTimer) clearTimeout(retryTimer);
+    retryTimer = setTimeout(() => {
+      if (loading) showRetry = true;
+    }, 8000);
+  }
+
+  async function tryAgain() {
+    if (retryTimer) clearTimeout(retryTimer);
+    showRetry = false;
+    loading = false;
+    await invalidateAuth();
+    goto('/login');
+  }
 
   async function onLoginClick() {
     loading = true;
     try {
       await handleLogin();
+	  loading = false;
     } catch (err) {
       loading = false;
     }
@@ -50,7 +68,9 @@
 
     // Handle callback from OAuth server (web)
     if ($page.url.searchParams.has('code') || $page.url.searchParams.has('error')) {
-      await handleCallback($page.url.href, loading);
+		loading = true;
+		startCallbackTimeout();
+      	await handleCallback($page.url.href);
     }
 
     // Handle callback from deep link (mobile)
@@ -58,11 +78,15 @@
       App.addListener('appUrlOpen', async (event) => {
         if (event.url.includes('authsso/callback')) {
 		  console.log('[routes/login] Handling deep link callback:', event.url);
-          await handleCallback(event.url, loading);
+		  loading = true;
+		  startCallbackTimeout();
+          await handleCallback(event.url);
         }
       });
     }
   });
+
+
 
 </script>
 
@@ -81,14 +105,6 @@
 				<h1 class="welcome-title">{@html $t('login.welcome')}</h1>
 				<p class="welcome-subtitle">{$t('login.subtitle')}</p>
 
-				<!-- Loading Overlay -->
-				{#if loading}
-					<div class="loading-panel">
-						<ion-spinner class="loginSpinner" />
-						<p class="loginP">{$t('login.waitMessage')}</p>
-					</div>
-				{/if}
-
 				{#if error}
 					<div class="error">
 						<strong>Error:</strong> {error}
@@ -96,13 +112,19 @@
 				{/if}
 
 				<!-- Login Button -->
-				<ion-button class="login-button" on:click={onLoginClick} expand="block" disabled={loading}>
+				<ion-button class="login-button" on:click={onLoginClick} expand="block" disabled={loading} aria-hidden>
 					{#if loading}
 						<ion-spinner name="crescent" class="button-spinner" />
 					{:else}
 						{$t('login.connection')}
 					{/if}
 				</ion-button>
+
+				{#if showRetry}
+					<ion-button aria-hidden class="retry-button" on:click={tryAgain} expand="block" fill="outline">
+						{$t('login.tryAgain')}
+					</ion-button>
+				{/if}
 			</div>
 
 			<!-- Footer -->
@@ -342,44 +364,19 @@
 		height: 24px;
 	}
 
-	.loading-panel {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.7);
-		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
-		z-index: 1000;
-		animation: fadeIn 0.2s ease-out;
-	}
-
-	@keyframes fadeIn {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-
-	ion-spinner.loginSpinner {
-		--color: white;
-		width: 48px;
-		height: 48px;
-		margin-bottom: 16px;
-	}
-
-	p.loginP {
-		color: white;
-		margin: 0;
-		font-size: 16px;
+	.retry-button {
+		--color: rgba(255, 255, 255, 0.85);
+		--border-color: rgba(255, 255, 255, 0.5);
+		--border-radius: 14px;
+		--padding-top: 14px;
+		--padding-bottom: 14px;
+		font-size: 15px;
 		font-weight: 500;
+		width: auto;
+		min-width: 200px;
+		margin-top: 12px;
+		text-transform: none;
+		letter-spacing: 0.3px;
 	}
 
 	.error {

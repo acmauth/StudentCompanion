@@ -1,10 +1,10 @@
 import { alertController, toastController } from 'ionic-svelte';
-import sisAuthenticator from "$lib/-universis/authenticator-deprecated/core";
 import type { ToastOptions } from '@ionic/core';
-import { userCreds, useAlternativeLogin } from '$stores/credentials.store';
-import { userCredsFlag as autheticationFlag } from '$components/webmailLogin/userCredsFlagStore';
+import { webmailLoggedIn } from '$components/webmailLogin/userCredsFlagStore';
+import { userCreds } from '$stores/credentials.store';
 import { t } from "$lib/i18n";
 import { get } from 'svelte/store';
+import { webmailCheckCredentials } from '$lib/-webmail/dataService/core';
 
 async function showToast(toast: ToastOptions) {
     const toast_ = await toastController.create(toast);
@@ -12,11 +12,14 @@ async function showToast(toast: ToastOptions) {
 }
 
 async function checkCredsValidity(username: string, password: string) {
-    const authResult = await sisAuthenticator(username, password);
-    if (authResult.error == null && authResult.token) {
-        userCreds.set({ username, password });
-        useAlternativeLogin.set(true);
-        autheticationFlag.set(true);
+    if (!username || !password) return false;
+    
+    if (username.includes("@"))
+        username = username.substring(0, username.indexOf("@"))
+        
+    if (await webmailCheckCredentials(username, password)){    
+        webmailLoggedIn.set(true);
+        userCreds.set({ username: username, password: password });
         return true;
     }
     return false;

@@ -29,13 +29,16 @@
 		<div class="ion-padding-start ion-padding-vertical semester">
 			{#if semesterId <= 24}
 				<ion-text class="title"
-					><b>{getSemester(semesterId, getLocale())} {$t('progress.semester')}</b></ion-text
+					><b>{getSemester(semesterId, getLocale())} {$t('progress.semester')}</b
+					></ion-text
 				>
 			{:else}
 				<ion-text class="title"><b>{semesterName}</b></ion-text>
 			{/if}
 			{#if semesterAverage}
-				<ion-text class="subtitle">{$t('progress.semesterAverage')}: {semesterAverage}</ion-text>
+				<ion-text class="subtitle"
+					>{$t('progress.semesterAverage')}: {semesterAverage}</ion-text
+				>
 			{:else}
 				<ion-text class="subtitle">{$t('progress.semesterAverage')}: -</ion-text>
 			{/if}
@@ -48,15 +51,23 @@
 				{#if course.childCourses && course.childCourses.length > 0}
 					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
-					<ion-item on:click={() => navigateToCourse(course)} lines="none" class="ion-no-padding">
+					<ion-item
+						on:click={() => navigateToCourse(course)}
+						lines="none"
+						class="ion-no-padding"
+					>
 						<div class="containerFlex">
 							<div class="titlesFlex">
-								<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
+								<ion-label class="ion-text-wrap courseTitle"
+									>{course.courseTitle}</ion-label
+								>
 
 								{#if course.examPeriod !== null}
 									<ion-label class="examPeriod">
 										{#if course.examPeriod && course.gradeYear}
 											{course.examPeriod.name} {course.gradeYear.name}
+										{:else if course.registrationType === 1}
+											{$t('progress.exempted')}
 										{:else}
 											{$t('progress.declared')}
 										{/if}
@@ -82,12 +93,16 @@
 					<ion-item lines="none" class="ion-no-padding">
 						<div class="containerFlex">
 							<div class="titlesFlex">
-								<ion-label class="ion-text-wrap courseTitle">{course.courseTitle}</ion-label>
+								<ion-label class="ion-text-wrap courseTitle"
+									>{course.courseTitle}</ion-label
+								>
 
 								{#if course.examPeriod !== null}
 									<ion-label class="examPeriod">
 										{#if course.examPeriod && course.gradeYear}
 											{course.examPeriod.name} {course.gradeYear.name}
+										{:else if course.registrationType === 1}
+											{$t('progress.exempted')}
 										{:else}
 											{$t('progress.declared')}
 										{/if}
@@ -117,7 +132,11 @@
 					<div class="children" class:open={childrenOpen[index]}>
 						{#each course.childCourses as childCourse}
 							<!-- Card content for child course -->
-							<ion-item href={`/courses/${course.course}`} lines="none" class="ion-no-padding">
+							<ion-item
+								on:click={() => navigateToCourse(childCourse)}
+								lines="none"
+								class="ion-no-padding"
+							>
 								<div class="containerFlex">
 									<div class="titlesFlex">
 										<ion-label class="ion-text-wrap courseTitle"
@@ -126,7 +145,10 @@
 										{#if childCourse.examPeriod !== null}
 											<ion-label class="examPeriod">
 												{#if childCourse.examPeriod && childCourse.gradeYear}
-													{childCourse.examPeriod.name} {childCourse.gradeYear.name}
+													{childCourse.examPeriod.name}
+													{childCourse.gradeYear.name}
+												{:else if childCourse.registrationType === 1}
+													{$t('progress.exempted')}
 												{:else}
 													{$t('progress.declared')}
 												{/if}

@@ -1,4 +1,5 @@
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { Capacitor } from '@capacitor/core';
 import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
 import { get } from 'svelte/store';
 import { t, getLocale} from "$lib/i18n";
@@ -10,6 +11,11 @@ import { handleChangedPermission } from './exactAlarmPermissionStore';
  * @returns A Promise<boolean> indicating if the permission is granted
  */
 export async function checkExactAlarmPermission(): Promise<boolean> {
+			// iOS doesn't require exact alarm permission
+		if (Capacitor.getPlatform() !== 'android') {
+			return true;
+		}
+		
 		const exactAlarm = await LocalNotifications.checkExactNotificationSetting();
 		
 		if (exactAlarm.exact_alarm !== 'granted') {
@@ -23,6 +29,11 @@ export async function checkExactAlarmPermission(): Promise<boolean> {
  * @returns A Promise<boolean> indicating if the permission was granted after the request
  */
 async function requestExactAlarmPermission(){
+		// iOS doesn't require exact alarm permission
+		if (Capacitor.getPlatform() !== 'android') {
+			return true;
+		}
+		
 		const userConfirmed = confirm(get(t)("event.exact_alarm.permissionCOnfirmation"));
 
 		if (userConfirmed){
@@ -62,6 +73,11 @@ async function requestNotificationPermission(): Promise<boolean> {
 
 // handles check and request permission, and prompts user to settings
 export async function handleNotificationPermission() {
+	// iOS doesn't require exact alarm permission
+	if (Capacitor.getPlatform() !== 'android') {
+		return true;
+	}
+	
 	const hasPermission = await checkNotificationPermission();
 	
 	if (!hasPermission) {

@@ -4,6 +4,7 @@
 	import { navigating, page } from '$app/stores';
 	import { Keyboard } from '@capacitor/keyboard';
 	import { goto } from '$app/navigation';
+	import { navController } from "./StackedNav"
 
 	export let ionTabsDidChange = () => {};
 	export let ionTabsWillChange = () => {};
@@ -21,6 +22,7 @@
 
 	// we need relative path for the goto to function properly and to allow for relative tab definitions
 	const { pathname } = $page.url;
+	const searchParams = $page.url.searchParams;
 	const cleanedPath = pathname.replace(/\/+$/, ''); // Strip trailing slashes, so we can get the last part of the path correctly. (e.g. /pages/homepage/ -> /pages/homepage)
 	const pathSplit = cleanedPath.split('/');
 	let currentTabName = pathSplit[pathSplit.length - 1]; // we don't want to use at(-1) because of old browsers
@@ -31,7 +33,7 @@
 		tabs.forEach(async (tab) => {
 			if ($navigating.to.url.pathname.includes(relativePath + tab.tab)) {
 				currentTabName = tab.tab;
-				await goto($navigating.to.url.pathname);
+				await goto($navigating.to.url);
 				controller.select(tab.tab);
 				moveTabBarLine(tab.tab);
 			}
@@ -55,8 +57,9 @@
 	});
 
 	const tabBarClick = async (selectedTab) => {
-		moveTabBarLine(selectedTab);
+		// moveTabBarLine(selectedTab);
 		currentTabName = selectedTab;
+		navController.popToRoot(); // Resetting the stack to the root of the selected tab
 		await goto(relativePath + selectedTab);
 		controller.select(selectedTab);
 	};
@@ -143,19 +146,43 @@
 		font-size: x-large;
 	}
 
-	ion-tab-button {
-		transition: all 0.3s ease;
+	ion-tab-bar {
+		display: flex;
+		justify-content: stretch;
+		align-items: stretch;
+		width: 100%;
 	}
 
+	ion-tab-button {
+		transition: all 0.3s ease;
+		flex: 1 1 0;
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		max-width: none;
+	}
+/* 
 	.tabBarLine2 {
+		display: none;
 		background-color: var(--app-color-primary-dark);
 		height: 4px;
 		border-radius: 2rem;
 		position: absolute;
 		transition: 0.4s ease-in-out;
 		bottom: calc(var(--ion-safe-area-bottom) + 10px);
-		/* z-index: 1000; */
 		left: 0;
 		width: 1rem;
+	} */
+
+	ion-label {
+		text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		width: 100%;
+		font-weight: bold;
+		/* font-size: smaller; */
 	}
 </style>

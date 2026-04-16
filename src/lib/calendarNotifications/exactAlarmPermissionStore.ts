@@ -30,7 +30,7 @@ async function permissionIsTheSame():Promise<boolean>{
         const previousPermission = previousExactAlarmPermission();
         return currentPermission == previousPermission;
     }catch(ex){
-        console.log("check exact alarm permission doesn't work on web");
+        // console.log("check exact alarm permission doesn't work on web");
     }
     return true;
 }

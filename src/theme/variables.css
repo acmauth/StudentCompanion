@@ -2,9 +2,14 @@
   http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
-
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+  font-family: 'Roboto', sans-serif;
+}
 :root {
   /** primary **/
+  
+  --ion-background-color :#f5f5f5;
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #ffffff;
@@ -37,7 +42,7 @@
   --ion-color-success-tint: #42d77d;
 
   /** warning **/
-  --ion-color-warning: #ffcdb1;
+  --ion-color-warning: #cfac01;
   --ion-color-warning-rgb: 255, 196, 9;
   --ion-color-warning-contrast: #000000;
   --ion-color-warning-contrast-rgb: 0, 0, 0;
@@ -219,7 +224,6 @@
   }
 
 }
-
 
 
 body.dark {

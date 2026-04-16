@@ -1,11 +1,15 @@
-import type { Event } from './event/Event';
+import { EventRepeatType, EventType, type Event } from './event/Event';
 import { isCurrentDay } from './CalendarFunctions';
 import { getLocale } from '$src/lib/i18n';
+import { universisGet } from '$src/lib/dataService';
+import { EventStore } from '$lib/components/calendar/event/EventStore';
+
 
 export interface DayObject {
     day: number;
     isCurrentMonth: boolean;
     hasEvents: boolean;
+    eventCount: number;
 }
 
 export interface SelectedDay {
@@ -42,14 +46,15 @@ export function buildCalendarWeeks(
 
     // Fill previous month's days
     for (let i = firstDay - 1; i >= 0; i--) {
-        week.push({ day: prevMonthDays - i, isCurrentMonth: false, hasEvents: false });
+        week.push({ day: prevMonthDays - i, isCurrentMonth: false, hasEvents: false, eventCount: 0 });
     }
 
     // Fill current month's days
     for (let d = 1; d <= daysInMonth; d++) {
         const dateToCheck = new Date(year, month, d);
-        const hasEventOnDay = events.some((event) => isCurrentDay(event, dateToCheck));
-        week.push({ day: d, isCurrentMonth: true, hasEvents: hasEventOnDay });
+        const eventsOnDay = events.filter((event) => isCurrentDay(event, dateToCheck));
+        const hasEventOnDay = eventsOnDay.length > 0;
+        week.push({ day: d, isCurrentMonth: true, hasEvents: hasEventOnDay, eventCount: eventsOnDay.length });
         if (week.length === 7) {
             tempWeeks.push(week);
             week = [];
@@ -60,7 +65,7 @@ export function buildCalendarWeeks(
     if (week.length > 0) {
         let nextDay = 1;
         while (week.length < 7) {
-            week.push({ day: nextDay++, isCurrentMonth: false, hasEvents: false });
+            week.push({ day: nextDay++, isCurrentMonth: false, hasEvents: false, eventCount: 0 });
         }
         tempWeeks.push(week);
     }
@@ -138,3 +143,72 @@ export function getPreviousMonth(month: number, year: number): { month: number; 
     }
     return { month: month - 1, year };
 }
+
+
+export async function fetchUniversisEvents() {
+        // console.log("Fetching courses events from Universis...");
+        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1'))?.value;
+        // console.log(fetchedExams);
+        await EventStore.loadFromStorage();
+ 
+        if (fetchedExams) {
+            EventStore.update(events => {
+                const updated = [...events];
+                for (const exam of fetchedExams) {
+                    const existingIndex = updated.findIndex(x => x.id == exam.id);
+                    const mapped = {
+                        id: exam.id,
+                        title: exam.courseExam.name,
+                        type: EventType.TEST,
+                        repeat: EventRepeatType.NEVER,
+                        notify: false,
+                        location: exam.location?.description,
+                        locationCode: exam.location?.alternateName,
+                        slot: {
+                            start: new Date(exam.startDate),
+                            end: new Date(exam.endDate)
+                        }
+                    };
+                    if (existingIndex === -1) {
+                        updated.push(mapped);
+                    } else {
+                        updated[existingIndex] = { ...updated[existingIndex], ...mapped };
+                    }
+                }
+                return updated;
+            });
+        }
+
+
+        let fetchedClasses = (await universisGet('students/me/teachingEvents?$top=-1&$expand=location,performer'))?.value;
+        // console.log(fetchedClasses);
+
+        if (fetchedClasses) {
+            EventStore.update(events => {
+                const updated = [...events];
+                for (const classEvent of fetchedClasses) {
+                    const existingIndex = updated.findIndex(x => x.id == classEvent.id);
+                    const mapped = {
+                        id: classEvent.id,
+                        title: classEvent.name,
+                        type: EventType.CLASS,
+                        professor: classEvent.performer?.alternateName,
+                        repeat: EventRepeatType.NEVER,
+                        notify: false,
+                        location: classEvent.location?.description,
+                        locationCode: classEvent.location?.alternateName,
+                        slot: {
+                            start: new Date(classEvent.startDate),
+                            end: new Date(classEvent.endDate)
+                        }
+                    };
+                    if (existingIndex === -1) {
+                        updated.push(mapped);
+                    } else {
+                        updated[existingIndex] = { ...updated[existingIndex], ...mapped };
+                    }
+                }
+                return updated;
+            });
+        }
+    }

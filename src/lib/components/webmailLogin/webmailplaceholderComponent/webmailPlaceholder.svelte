@@ -1,16 +1,11 @@
 <script>
     import darkIcon from "./icon_dark.png";
     import lightIcon from "./icon_light.png";
-	import { userCredsFlag as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
+	import { webmailLoggedIn as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
 	import { showLoginAlert } from "../credentialLogin";
-	import Config from "$src/app.config";
-
-    let inlineModalOpen = false;
-    let breakpoints = [0, 0.5, 1];
-
 </script>
 
-{#if !$autheticationFlag && (Config.isAndroid || Config.isDevelopment)}
+{#if !$autheticationFlag}
     <ion-card href="" aria-hidden on:click ={showLoginAlert}>
         <div class="mainContents">
             <img src={darkIcon} alt="Dark Icon" class="icon darkIcon"/>

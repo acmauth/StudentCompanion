@@ -31,8 +31,9 @@
 		// Due to the fact that start/end slots of an event object refer to the date of their first instance (e.g. a weekly event), 
 		// an event must be marked as past iff either it the active date is previous than today or if it's today and the start time 
 		// of the event is past the current time.
-		if (new Date(activeDate).getDate() < new Date().getDate()
-			|| new Date(activeDate).getDate() == new Date().getDate() && new Date().getTime() >=  new Date(new Date(eventItem.slot.start).setDate(new Date().getDate())).getTime()) {
+		if (new Date().getTime() >=  new Date(new Date(eventItem.slot.start)).getTime()) {
+			// include in the above condition:
+			// new Date(activeDate).getDate() < new Date().getDate() || new Date(activeDate).getDate() == new Date().getDate() &&
 			isPastDate = true;
 		}
 		isTest = eventItem.type == EventType.TEST;
@@ -54,7 +55,9 @@
 				</div>
 				<div class="eventContent">
 					<ion-label class="eventHeader {isPastDate? 'pastDate' : null}">{eventItem.title}</ion-label>
-					{#if eventItem.description}
+					{#if eventItem.location}
+						<ion-label class="eventSubheader {isPastDate? 'pastDate' : null}">{eventItem.location}</ion-label>
+					{:else if eventItem.description}
 						<ion-label class="eventSubheader {isPastDate? 'pastDate' : null}">{eventItem.description}</ion-label>
 					{/if}
 				</div>

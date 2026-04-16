@@ -1,7 +1,5 @@
 package studentCompanionUI.ionic.io.notifications;
 
-import static studentCompanionUI.ionic.io.ElearningScraperLogic.scrape;
-
 import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;

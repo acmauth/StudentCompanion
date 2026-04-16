@@ -1,72 +1,55 @@
 <script lang="ts">
     import type {Event} from '$components/calendar/event/Event';
-    import {EventType, EventRepeatType , getEventTypeValue, getEventRepeatTypeValue, getEventRepeatTypeCycleValue} from '$components/calendar/event/Event';
+    import {EventType, EventRepeatType, getEventTypeValue, getEventRepeatTypeValue, getEventRepeatTypeCycleValue} from '$components/calendar/event/Event';
     import type { DatetimeChangeEventDetail } from '@ionic/core';
-    import { t, getLocale} from "$lib/i18n";
+    import { t, getLocale } from "$lib/i18n";
+    import { navigateCircle } from 'ionicons/icons';
+    import { goto } from '$app/navigation';
 
     export let copyEvent: Event;
-    let templateStartTime: string, templateEndTime: string;
-    let templateRepeatUntil: string;
-    
 
-    $: {
-        let start: Date = new Date(copyEvent.slot.start);
-        let end: Date = new Date(copyEvent.slot.end);
-        let repeatUntil: Date = new Date(copyEvent.repeatUntil);
-                
-        try{
-            templateStartTime = start.getFullYear() + "-" +
-                                (String(start.getMonth() + 1)).padStart(2, '0') + "-" +
-                                String(start.getDate()).padStart(2, '0') + "T" +
-                                String(start.getHours()).padStart(2, '0') + ":" +
-                                String(start.getMinutes()).padStart(2, '0');
+    function toLocalISOString(date: Date): string {
+        const offset = -date.getTimezoneOffset();
+        const sign = offset >= 0 ? '+' : '-';
+        const absOffset = Math.abs(offset);
+        const pad = (n: number) => String(n).padStart(2, '0');
+        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T` +
+               `${pad(date.getHours())}:${pad(date.getMinutes())}` +
+               `${sign}${pad(Math.floor(absOffset / 60))}:${pad(absOffset % 60)}`;
+    }
 
-            templateEndTime = end.getFullYear() + "-" +
-                                (String(end.getMonth() + 1)).padStart(2, '0') + "-" +
-                                String(end.getDate()).padStart(2, '0') + "T" +
-                                String(end.getHours()).padStart(2, '0') + ":" +
-                                String(end.getMinutes()).padStart(2, '0');
-            if(copyEvent.repeat != "NEVER") {
-                templateRepeatUntil = repeatUntil.getFullYear() + "-" +
-                                    (String(repeatUntil.getMonth() + 1)).padStart(2, '0') + "-" +
-                                    String(repeatUntil.getDate()).padStart(2, '0') + "T" +
-                                    String(repeatUntil.getHours()).padStart(2, '0') + ":" +
-                                    String(repeatUntil.getMinutes()).padStart(2, '0');
-            } else {
-                templateRepeatUntil = templateEndTime;
-            }
-        } catch(e) {
-            console.log(e); 
-            templateStartTime = new Date().toISOString();
-            templateEndTime = new Date(new Date().getTime() + 3600000).toISOString();
-            templateRepeatUntil = templateEndTime;
-            copyEvent.repeatInterval = 1;
-        }
-        if (copyEvent.repeat != "NEVER") { 
-            copyEvent.repeatInterval = parseInt(String(copyEvent.repeatInterval ?? 1));
-            copyEvent.repeatUntil = new Date(String(templateRepeatUntil));
-        }
+    function safeDate(value: any, fallback?: Date): Date {
+        const d = new Date(value);
+        return isNaN(d.getTime()) ? (fallback ?? new Date()) : d;
+    }
 
-    };
+    // These are only used as initial values — ion-datetime reads them once on mount.
+    // The {#key} in EventModal ensures this component is recreated when the event changes.
+    const templateStartTime = toLocalISOString(safeDate(copyEvent.slot.start));
+    const templateEndTime = toLocalISOString(safeDate(copyEvent.slot.end, new Date(Date.now() + 3600000)));
+    const templateRepeatUntil = copyEvent.repeat !== EventRepeatType.NEVER && copyEvent.repeatUntil
+        ? toLocalISOString(safeDate(copyEvent.repeatUntil))
+        : templateEndTime;
 
-    function UpdateStartTime(event) {
-        copyEvent.slot.start=new Date(String(event.detail.value))
+    $: if (copyEvent.repeat !== EventRepeatType.NEVER) {
+        copyEvent.repeatInterval = parseInt(String(copyEvent.repeatInterval ?? 1));
+    }
+
+    function updateStartTime(event: any) {
+        copyEvent.slot.start = new Date(String(event.detail.value));
         if (new Date(copyEvent.slot.end).getTime() < copyEvent.slot.start.getTime()) {
-            copyEvent.slot.end = new Date(new Date(copyEvent.slot.start).getTime() + 3600000); 
-            templateEndTime = copyEvent.slot.end.toISOString();
+            copyEvent.slot.end = new Date(copyEvent.slot.start.getTime() + 3600000);
         }
     }
 
-    function UpdateEndTime(event: CustomEvent<DatetimeChangeEventDetail> & { target: HTMLIonDatetimeElement; }) {
-        let end = new Date(String(event.detail.value));
-        if (end.getTime() < new Date(copyEvent.slot.start).getTime()) {
-            copyEvent.slot.end = new Date(new Date(copyEvent.slot.start).getTime() + 3600000); 
-            templateEndTime = copyEvent.slot.end.toISOString();
+    function updateEndTime(event: CustomEvent<DatetimeChangeEventDetail> & { target: HTMLIonDatetimeElement }) {
+        const newEnd = new Date(String(event.detail.value));
+        if (newEnd.getTime() < new Date(copyEvent.slot.start).getTime()) {
+            copyEvent.slot.end = new Date(new Date(copyEvent.slot.start).getTime() + 3600000);
         } else {
-            copyEvent.slot.end = end;
+            copyEvent.slot.end = newEnd;
         }
     }
-
 </script>
 
 
@@ -90,7 +73,7 @@
             <ion-label>{$t('event.start')}</ion-label>
             <ion-datetime-button datetime="start"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                <ion-datetime id="start" locale={getLocale()} presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateStartTime(event)} value="{templateStartTime}" max="2500-12-31T23:59"></ion-datetime>
+                <ion-datetime id="start" locale={getLocale()} presentation="date-time" hour-cycle="h23" on:ionChange={updateStartTime} value={templateStartTime} max="2500-12-31T23:59"></ion-datetime>
             </ion-modal>
         </ion-item>
             
@@ -98,11 +81,11 @@
             <ion-label>{$t('event.end')}</ion-label>    
             <ion-datetime-button datetime="end"></ion-datetime-button>
             <ion-modal keep-contents-mounted={true}>
-                    <ion-datetime id="end" locale={getLocale()} presentation="date-time" minute-values="0,15,30,45" hour-cycle="h23" on:ionChange={(event)=>UpdateEndTime(event)} value="{templateEndTime}" max="2500-12-31T23:59"></ion-datetime>
+                    <ion-datetime id="end" locale={getLocale()} presentation="date-time" hour-cycle="h23" on:ionChange={updateEndTime} value={templateEndTime} max="2500-12-31T23:59"></ion-datetime>
             </ion-modal>
         </ion-item>
         
-        <div style="padding:10px;"/>
+        <!-- <div style="padding:10px;"/> -->
 
         <ion-item>
             <ion-select label={$t('event.type')} interface="popover" value={copyEvent.type} on:ionChange={(event)=>copyEvent.type=event.detail.value} label-placement="floating">
@@ -112,19 +95,35 @@
             </ion-select>
         </ion-item>
 
+        <ion-item>
+            <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                {#if copyEvent.location && copyEvent.locationCode}
+                    <ion-label>{$t('event.location')}</ion-label>
+                    <ion-chip
+                        outline
+                        style="cursor: pointer; flex-shrink: 1; min-width: 0;"
+                        on:click={() => { if (copyEvent.locationCode) goto("/pages/maps?roomid=" + copyEvent.locationCode);}}
+                        aria-hidden
+                    >
+                        <ion-icon icon={navigateCircle}></ion-icon>
+                        <ion-label style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 10rem; display: block;">{copyEvent.location}</ion-label>
+                    </ion-chip>
+                {:else}
+                    <ion-input
+                        label={$t('event.location')}
+                        label-placement="floating"
+                        id="location"
+                        type="text"
+                        value={copyEvent.location || null}
+                        contenteditable="true"
+                        spellcheck={true}
+                        on:ionChange={(event)=>copyEvent.location=event.detail.value?? "" }
+                    />
+                {/if}
+            </div>
+        </ion-item>
+
         {#if copyEvent.type == EventType.CLASS}
-            <ion-item>
-                <ion-input
-                    label={$t('event.class')}
-                    label-placement="floating"
-                    id="location"
-                    type="text"
-                    value={copyEvent.location || null}
-                    contenteditable="true"
-                    spellcheck={true}
-                    on:ionChange={(event)=>copyEvent.location=event.detail.value?? "" }
-                />
-            </ion-item>
             <ion-item>
                 <ion-input
                     label={$t('event.professor')}

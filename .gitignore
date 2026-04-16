@@ -12,8 +12,6 @@ vite.config.ts.timestamp-*
 package-lock.json
 /.env
 .temp
-ios
-ios/*
 src/debug/*
 visit-log.csv
 pnpm-lock.yaml
@@ -31,6 +29,8 @@ android/.externalNativeBuild/
 android/.cxx/
 android/*.apk
 android/output.json
+
+.metals
 
 pnpm-lock.yaml
 

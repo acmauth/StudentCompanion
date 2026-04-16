@@ -16,6 +16,7 @@ export interface Event {
     title: string;
     slot: EventTimeSlot;
     location?: string ;
+    locationCode?: string;
     description: string;
     professor?: string,
     type: EventType;
