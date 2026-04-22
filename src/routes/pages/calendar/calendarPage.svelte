@@ -235,18 +235,18 @@
             })}
         </h3>
         {#if eventList.length > 0}
-        <div class="events-list">
-            {#each eventList as eventItem}
-                <EventCard
-                {eventItem}
-                bind:selectedEvent
-                bind:modalOpen
-                bind:deleteModalOpen
-                bind:activeDate
-                />
-            {/each}
+            <div class="events-list">
+                {#each eventList as eventItem}
+                    <EventCard
+                    {eventItem}
+                    bind:selectedEvent
+                    bind:modalOpen
+                    bind:deleteModalOpen
+                    bind:activeDate
+                    />
+                {/each}
             </div>
-            {:else}
+        {:else}
             <p class="no-events">
                 {$t('schedule.no_events_day')}
             </p>
@@ -341,7 +341,8 @@
         gap: 0.5rem;
         overflow-y: auto;
         flex: 1;
-        padding: 0 1.25rem 1.25rem 1.25rem;
+        margin-bottom: 3rem;
+        padding: 0 1.25rem calc(1.25rem + 56px + env(safe-area-inset-bottom, 0px)) 1.25rem;
     }
     .no-events {
         text-align: center;
