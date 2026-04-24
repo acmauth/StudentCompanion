@@ -1,76 +1,76 @@
-    apply plugin: 'com.android.application'
-    
-    android {
-        packagingOptions {
-            resources.excludes.add("META-INF/*")
-        }
-        namespace "studentCompanionUI.ionic.io"
-        compileSdkVersion 35
-        defaultConfig {
-            applicationId "app.aristomate.gr"
-            minSdkVersion rootProject.ext.minSdkVersion
-            targetSdkVersion 35
-            versionCode 57
-            versionName '2.1.5 Enjoy the silence'
-            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-            aaptOptions {
-                 // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-                 // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
-                ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
-            }
-        }
-        buildTypes {
-            release {
-                minifyEnabled false
-                proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            }
-        }
-        lint {
-            baseline = file("lint-baseline.xml")
-            abortOnError false
-        }
-    
+apply plugin: 'com.android.application'
+
+android {
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
     }
-    
-    repositories {
-        flatDir{
-            dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
-            dirs '../../node_modules/@capacitor/background-runner/android/src/main/libs', 'libs'
+    namespace "studentCompanionUI.ionic.io"
+    compileSdkVersion 35
+    defaultConfig {
+        applicationId "app.aristomate.gr"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion 35
+        versionCode 57
+        versionName '2.1.5 Enjoy the silence'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+                // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+                // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
-        maven {
-            url "https://jitpack.io"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        mavenCentral()
     }
-    
-    dependencies {
-        implementation fileTree(include: ['*.jar'], dir: 'libs')
-        implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
-        implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
-        implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
-        implementation "androidx.core:core:$androidxCoreVersion"
-        implementation project(':capacitor-android')
-        testImplementation "junit:junit:$junitVersion"
-        androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
-        androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
-        implementation project(':capacitor-cordova-android-plugins')
-        implementation 'org.jsoup:jsoup:1.17.1' // Dependency for web scraping
-        implementation 'com.squareup.okhttp3:okhttp:4.11.0' // Dependency for web scraping
-        implementation 'com.github.fracpete:requests4j:0.2.4' // Dependency for web requests, similar to python's requests lib
-        implementation 'commons-net:commons-net:3.10.0'
-        implementation 'com.sun.mail:javax.mail:1.6.2'
-        implementation 'androidx.work:work-runtime:2.7.0'
-    //    implementation "com.google.android.play:app-update:$androidPlayAppUpdateVersion"
-    //    implementation "com.google.android.gms:play-services-base:$androidPlayServicesBaseVersion"
+    lint {
+        baseline = file("lint-baseline.xml")
+        abortOnError false
     }
-    
-    apply from: 'capacitor.build.gradle'
-    
-    try {
-        def servicesJSON = file('google-services.json')
-        if (servicesJSON.text) {
-            apply plugin: 'com.google.gms.google-services'
-        }
-    } catch(Exception e) {
-        logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+        dirs '../../node_modules/@capacitor/background-runner/android/src/main/libs', 'libs'
     }
+    maven {
+        url "https://jitpack.io"
+    }
+    mavenCentral()
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation "androidx.core:core:$androidxCoreVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+    implementation 'org.jsoup:jsoup:1.17.1' // Dependency for web scraping
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0' // Dependency for web scraping
+    implementation 'com.github.fracpete:requests4j:0.2.4' // Dependency for web requests, similar to python's requests lib
+    implementation 'commons-net:commons-net:3.10.0'
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+    implementation 'androidx.work:work-runtime:2.7.0'
+//    implementation "com.google.android.play:app-update:$androidPlayAppUpdateVersion"
+//    implementation "com.google.android.gms:play-services-base:$androidPlayServicesBaseVersion"
+}
+
+apply from: 'capacitor.build.gradle'
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}
