@@ -1,6 +1,6 @@
 <script>
 	// @ts-nocheck
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { navigating, page } from '$app/stores';
 	import { Keyboard } from '@capacitor/keyboard';
 	import { goto } from '$app/navigation';
@@ -54,6 +54,27 @@
 		setTimeout(() => {
 			moveTabBarLine(currentTabName);
 		}, 500);
+
+		// update CSS variable for footer/tabbar height so pages can account for it
+		function updateFooterHeight() {
+			const tabBarEl = document.querySelector('.tabbarmain') || ionTabBarElement?.shadowRoot?.querySelector('ion-tab-bar') || ionTabBarElement;
+			const height = tabBarEl ? Math.ceil(tabBarEl.getBoundingClientRect().height) : 0;
+			document.documentElement.style.setProperty('--app-footer-height', height + 'px');
+		}
+
+		updateFooterHeight();
+
+		const resizeListener = () => updateFooterHeight();
+		window.addEventListener('resize', resizeListener);
+
+		// watch for DOM changes that might change tab bar height
+		const mo = new MutationObserver(() => updateFooterHeight());
+		if (ionTabBarElement) mo.observe(ionTabBarElement, { attributes: true, childList: true, subtree: true });
+
+		onDestroy(() => {
+			window.removeEventListener('resize', resizeListener);
+			mo.disconnect();
+		});
 	});
 
 	const tabBarClick = async (selectedTab) => {

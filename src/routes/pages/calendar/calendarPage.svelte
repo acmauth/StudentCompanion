@@ -245,6 +245,7 @@
                     bind:activeDate
                     />
                 {/each}
+                <div class="events-spacer" aria-hidden="true"></div>
             </div>
         {:else}
             <p class="no-events">
@@ -341,8 +342,17 @@
         gap: 0.5rem;
         overflow-y: auto;
         flex: 1;
-        margin-bottom: 3rem;
-        padding: 0 1.25rem calc(1.25rem + 56px + env(safe-area-inset-bottom, 0px)) 1.25rem;
+        /* margin-bottom: 3rem; */
+        padding: 0 1.25rem calc(1.25rem + var(--app-footer-height, 56px) + env(safe-area-inset-bottom, 0px)) 1.25rem;
+        -webkit-overflow-scrolling: touch;
+        touch-action: auto;
+        scroll-padding-bottom: calc(var(--app-footer-height, 56px) + env(safe-area-inset-bottom, 0px));
+    }
+
+    .events-spacer {
+        flex: 0 0 auto;
+        height: calc(var(--app-footer-height, 56px) + env(safe-area-inset-bottom, 0px) + 1rem);
+        pointer-events: none;
     }
     .no-events {
         text-align: center;
