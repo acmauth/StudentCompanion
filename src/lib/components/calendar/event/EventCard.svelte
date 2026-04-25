@@ -69,10 +69,9 @@
 				</div>
 				<div>
 					{#if eventItem.slot.end && new Date(eventItem.slot.end).getTime() != new Date(eventItem.slot.start).getTime()}
+						&nbsp;-&nbsp;{new Date(eventItem.slot.end).toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit', hour12: false })}
 						{#if new Date(eventItem.slot.end).getDay() - new Date(eventItem.slot.start).getDay() != 0}
-							&nbsp;-*
-						{:else}
-							&nbsp;-&nbsp;{new Date(eventItem.slot.end).toLocaleTimeString('el-GR', { hour: '2-digit', minute: '2-digit', hour12: false })}
+							*
 						{/if}
 					{/if}
 				</div>
