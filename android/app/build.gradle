@@ -10,12 +10,12 @@ android {
         applicationId "app.aristomate.gr"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 35
-        versionCode 57
-        versionName '2.1.5 Enjoy the silence'
+        versionCode 59
+        versionName '2.1.7 Only'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
-             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+                // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+                // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
@@ -35,7 +35,7 @@ android {
 repositories {
     flatDir{
         dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
-		dirs '../../node_modules/@capacitor/background-runner/android/src/main/libs', 'libs'
+        dirs '../../node_modules/@capacitor/background-runner/android/src/main/libs', 'libs'
     }
     maven {
         url "https://jitpack.io"

@@ -36,12 +36,12 @@
 
 	// Determine cafeteria status based on current time
 	// Now we stay on today's menu all day until midnight
-	if ((hours == 8 && mins >= 30) || (hours > 8 && hours < 10)) {
+	if ((hours == 8 && mins >= 30) || (hours == 10 && mins < 30) || (hours == 9)) {
 		message = $t('menu.morning_open');
 		now = $t('menu.breakfast');
 		next = $t('menu.lunch');
 		defaultSlideIndex = 0; // Show breakfast
-	} else if ((hours >= 10 && mins >=30) && hours < 12) {
+	} else if ((hours == 10 && mins >=30) || (hours == 11)) {
 		message = $t('menu.morning_closed');
 		color = 'danger';
 		now = $t('menu.lunch');
