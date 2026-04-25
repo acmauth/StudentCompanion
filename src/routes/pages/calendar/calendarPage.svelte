@@ -5,7 +5,7 @@
     import EventCard from '$lib/components/calendar/event/EventCard.svelte';
     import EventModal from '$lib/components/calendar/event/EventModal.svelte';
     import CalendarGrid from '$lib/components/calendar/CalendarGrid.svelte';
-    import { isCurrentDay } from '$lib/components/calendar/CalendarFunctions';
+    import { isCurrentDay, isInactiveDate } from '$lib/components/calendar/CalendarFunctions';
     import type { Event } from '$lib/components/calendar/event/Event';
     import { EventRepeatType, EventType } from '$lib/components/calendar/event/Event';
     import { scheduleNotification } from '$src/lib/calendarNotifications/scheduleNotifications';
@@ -47,7 +47,7 @@
     }
 
     $: eventList = $EventStore
-        .filter((item) => isCurrentDay(item, activeDate))
+        .filter((item) => isCurrentDay(item, activeDate) && !isInactiveDate(activeDate, item))
         .sort((a, b) =>
             new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1
         );
@@ -150,17 +150,20 @@
 
     function addInactiveDateToEvent(event: Event | null) {
         if (event === null) return;
+  
+        if (event.repeat === EventRepeatType.NEVER) {
+            handleEventDelete(event);
+            deleteEventNotifications(event);
+            return;
+        }
+        
         const index = $EventStore.findIndex(x => x.id === event.id);
         $EventStore[index].inactiveDates = $EventStore[index].inactiveDates?.concat(activeDate.getTime()) ?? [activeDate.getTime()];
-        $EventStore = $EventStore;
+        
         buildCalendar();
         deleteModalOpen = false;
         
-        if (event.repeat !== EventRepeatType.NEVER) {
-            deleteSingleEventNotification(event);
-        } else {
-            deleteEventNotifications(event);
-        }
+        deleteSingleEventNotification(event);
     }
 
     //uncomment to clear events on each mount (for debugging)
