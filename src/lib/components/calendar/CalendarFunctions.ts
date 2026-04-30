@@ -104,3 +104,23 @@ export function isCurrentDay(event: Event, active: Date): boolean {
 
     return false;
 }
+
+// checking if the date1:Date and date2:milliscs are in the same day, month and year 
+function isSameDay(date1: Date, date2: Date): boolean {
+    return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate()
+      );
+}
+
+// checking if a certain date is deleted for an event
+export function isInactiveDate(date: Date, event: Event): boolean {
+    const inactiveDates = event.inactiveDates;
+    for (const inactiveDate of inactiveDates || []) {
+        if (isSameDay(date, new Date(inactiveDate))) {
+            return true;
+        }
+    }
+    return false;
+}

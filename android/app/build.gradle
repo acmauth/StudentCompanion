@@ -10,8 +10,8 @@ android {
         applicationId "app.aristomate.gr"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion 35
-        versionCode 59
-        versionName '2.1.7 Only'
+        versionCode 60
+        versionName '2.1.8 Lonely'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
                 // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
