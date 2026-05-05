@@ -9,6 +9,7 @@
   import contributors from "$lib/components/personalInfo/contributors.json";
   import { t, locale, locales} from "$lib/i18n";
   import SubPageHeader from '$shared/subPageHeader.svelte';
+  import IonPage from 'ionic-svelte/components/IonPage.svelte';
   import { construct } from 'ionicons/icons';
 
   interface Contributor {
@@ -51,7 +52,7 @@
 
 </script>
 
-
+<IonPage>
 <SubPageHeader title={$t("about.title")} stackedNav/>
 <ion-content class="ion-padding">
 <div>
@@ -121,6 +122,7 @@
 </div>
 </div>
 </ion-content>
+</IonPage>
 
 <style>
   
@@ -128,10 +130,10 @@
   padding: 20px;
 }
 
-.section {
+/* .section {
   margin-bottom: 30px;
   align-items: flex-start;
-}
+} */
 
 .section-title {
   color: var(--ion-color-primary);
@@ -164,5 +166,9 @@
   transform: scale(1.2);
 }
 
+ion-content {
+		--padding-end: 0.6rem;
+		--padding-start: 0.6rem;
+}
+
 </style>
-  
