@@ -6,7 +6,7 @@
 	import CredentialLoginItem from '$components/webmailLogin/CredentialLoginItem.svelte';
 	import cog_solid from '$customIcons/cog-solid.svg';
 	import launchNativenotificationSettings from '$lib/functions/nativeSettings/launchNotificationSettings';
-	import { checkAppMode, toggleDarkTheme } from '$lib/globalFunctions/darkMode';
+	import { checkAppMode, toggleDarkTheme, autoDarkMode, toggleAutoDarkMode, darkMode } from '$lib/globalFunctions/darkMode';
 	import { t } from '$lib/i18n';
 	import { Capacitor } from '@capacitor/core';
 	import { AppUpdate, AppUpdateAvailability } from '@capawesome/capacitor-app-update';
@@ -17,7 +17,6 @@
 	import { onMount } from 'svelte';
 	import About from './about.svelte';
 	import Faq from './faq.svelte';
-	import { darkMode } from '$lib/globalFunctions/darkMode';
 
 	/**
 	 * @type {any}
@@ -165,11 +164,23 @@
 	<!-- svelte-ignore a11y-no-static-element-interactions -->
 	<ion-card-content>
 		<ion-item>
+			<ion-icon size="small" icon={allIonicIcons.contrast} />
+			<ion-toggle
+				id="autoThemeToggle"
+				class="ion-padding-start"
+				checked={$autoDarkMode}
+				on:ionChange={async () => await toggleAutoDarkMode()}
+			>
+				Auto Dark Mode
+			</ion-toggle>
+		</ion-item>
+		<ion-item>
 			<ion-icon size="small" icon={allIonicIcons.brush} />
 			<ion-toggle
 				id="themeToggle"
 				class="ion-padding-start"
 				checked={$darkMode}
+				disabled={$autoDarkMode}
 				on:ionChange={async () => await toggleDarkTheme()}
 			>
 				Dark Mode
