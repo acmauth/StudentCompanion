@@ -4,6 +4,9 @@
     import { getMetroInfo } from '$lib/metroScraper/scraper';
     import { onMount } from "svelte";
     import { darkMode } from '$src/lib/globalFunctions/darkMode';
+    import { registerPlugin } from '@capacitor/core';
+
+    const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
 
     $: isDarkMode = $darkMode;
 
@@ -16,7 +19,7 @@
     async function handleTransportAppClick() {
 		const packageName = 'com.amco.city.thessaloniki';
 		const iosAppStoreUrl = 'https://apps.apple.com/gr/app/oseth-bus/id6748433667';
-		const fallbackUrl = 'https://telematics.oasth.gr/en/#main';
+		const fallbackUrl = 'https://oseth.com.gr/el/anazitisi-dromologion-leoforeion/';
 		//@ts-ignore
 		const ua = navigator.userAgent || navigator.vendor || window.opera;
 		const isAndroid = /android/i.test(ua);
