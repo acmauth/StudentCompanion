@@ -18,11 +18,8 @@
 	import About from './about.svelte';
 	import Faq from './faq.svelte';
 	import { darkMode } from '$lib/globalFunctions/darkMode';
+	import { logOut } from '$lib/globalFunctions/logOut';
 
-	/**
-	 * @type {any}
-	 */
-	export let logOut;
 	let languageModalOpen = false;
 
 	onMount(() => {
