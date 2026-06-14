@@ -1,14 +1,17 @@
 <script lang="ts">
-	export let filteredSubjects: any = {};
-	export let semesterId: any = {};
-	export let semesterAverage: any = {};
-	export let semesterName: string;
+	import type { course } from '$lib/types/courseType';
 	import AppCard from '$shared/AppCard.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
 	import Course from '$components/courses/coursePage.svelte';
+	import CourseRow from './courseRow.svelte';
 	import { navController } from '$components/shared/StackedNav';
 	import { getSemester } from '$components/courses/getSemester';
 	import { t, getLocale } from '$lib/i18n';
+
+	export let filteredSubjects: course[] = [];
+	export let semesterId: string;
+	export let semesterAverage: string;
+	export let semesterName: string;
 
 	let childrenOpen: boolean[] = [];
 
@@ -16,7 +19,7 @@
 		childrenOpen[index] = !childrenOpen[index];
 	}
 
-	export function navigateToCourse(course: { childCourses: string | any[]; id: any }) {
+	function navigateToCourse(course: course) {
 		if (!(course.childCourses && course.childCourses.length > 0))
 			navController.push(Course, { id: course.course });
 	}
@@ -27,7 +30,7 @@
 <div class="container">
 	{#if filteredSubjects.length > 0}
 		<div class="ion-padding-start ion-padding-vertical semester">
-			{#if semesterId <= 24}
+			{#if Number(semesterId) <= 24}
 				<ion-text class="title"
 					><b>{getSemester(semesterId, getLocale())} {$t('progress.semester')}</b
 					></ion-text
@@ -56,73 +59,11 @@
 						lines="none"
 						class="ion-no-padding"
 					>
-						<div class="containerFlex">
-							<div class="titlesFlex">
-								<ion-label class="ion-text-wrap courseTitle"
-									>{course.courseTitle}</ion-label
-								>
-
-								{#if course.examPeriod !== null}
-									<ion-label class="examPeriod">
-										{#if course.examPeriod && course.gradeYear}
-											{course.examPeriod.name} {course.gradeYear.name}
-										{:else if course.registrationType === 1}
-											{$t('progress.exempted')}
-										{:else}
-											{$t('progress.declared')}
-										{/if}
-									</ion-label>
-								{:else}
-									<ion-label class="examPeriod">-</ion-label>
-								{/if}
-							</div>
-							{#if course.grade !== null && !isNaN(course.grade)}
-								{#if course.grade * 10 >= 5}
-									<ion-text class="success gradeNumber">
-										<h2>{course.formattedGrade}</h2>
-									</ion-text>
-								{:else}
-									<ion-text class="danger gradeNumber">
-										<h2>{course.formattedGrade}</h2>
-									</ion-text>
-								{/if}
-							{/if}
-						</div>
+						<CourseRow {course} />
 					</ion-item>
 				{:else}
 					<ion-item lines="none" class="ion-no-padding">
-						<div class="containerFlex">
-							<div class="titlesFlex">
-								<ion-label class="ion-text-wrap courseTitle"
-									>{course.courseTitle}</ion-label
-								>
-
-								{#if course.examPeriod !== null}
-									<ion-label class="examPeriod">
-										{#if course.examPeriod && course.gradeYear}
-											{course.examPeriod.name} {course.gradeYear.name}
-										{:else if course.registrationType === 1}
-											{$t('progress.exempted')}
-										{:else}
-											{$t('progress.declared')}
-										{/if}
-									</ion-label>
-								{:else}
-									<ion-label class="examPeriod">-</ion-label>
-								{/if}
-							</div>
-							{#if course.grade !== null && !isNaN(course.grade)}
-								{#if course.grade * 10 >= 5}
-									<ion-text class="success gradeNumber">
-										<h2>{course.formattedGrade}</h2>
-									</ion-text>
-								{:else}
-									<ion-text class="danger gradeNumber">
-										<h2>{course.formattedGrade}</h2>
-									</ion-text>
-								{/if}
-							{/if}
-						</div>
+						<CourseRow {course} />
 					</ion-item>
 				{/if}
 
@@ -137,38 +78,7 @@
 								lines="none"
 								class="ion-no-padding"
 							>
-								<div class="containerFlex">
-									<div class="titlesFlex">
-										<ion-label class="ion-text-wrap courseTitle"
-											>{childCourse.courseTitle}</ion-label
-										>
-										{#if childCourse.examPeriod !== null}
-											<ion-label class="examPeriod">
-												{#if childCourse.examPeriod && childCourse.gradeYear}
-													{childCourse.examPeriod.name}
-													{childCourse.gradeYear.name}
-												{:else if childCourse.registrationType === 1}
-													{$t('progress.exempted')}
-												{:else}
-													{$t('progress.declared')}
-												{/if}
-											</ion-label>
-										{:else}
-											<ion-label class="examPeriod">-</ion-label>
-										{/if}
-									</div>
-									{#if childCourse.grade !== null && !isNaN(childCourse.grade)}
-										{#if childCourse.grade * 10 >= 5}
-											<ion-text class="success gradeNumber">
-												<h2>{childCourse.formattedGrade}</h2>
-											</ion-text>
-										{:else}
-											<ion-text class="danger gradeNumber">
-												<h2>{childCourse.formattedGrade}</h2>
-											</ion-text>
-										{/if}
-									{/if}
-								</div>
+								<CourseRow course={childCourse} />
 							</ion-item>
 						{/each}
 					</div>
@@ -192,22 +102,6 @@
 		min-width: 100%;
 	}
 
-	.gradeNumber h2 {
-		margin: 0 !important;
-		margin-right: -0.5rem !important;
-		margin-left: 0.5rem !important;
-	}
-
-	h2 {
-		font-size: 1.5rem;
-		font-weight: bold;
-	}
-
-	.courseTitle {
-		font-size: 1rem;
-		margin-right: 0.5rem;
-	}
-
 	.title {
 		font-size: 1.5rem;
 	}
@@ -224,50 +118,11 @@
 		height: 1rem;
 	}
 
-	.containerFlex {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		min-width: 100%;
-		padding: 0.5rem;
-		/* padding-left: 0.7rem; */
-	}
-
-	.titlesFlex {
-		display: flex;
-		flex-direction: column;
-		align-items: start;
-	}
-
 	.semester {
 		display: flex;
 		flex-direction: column;
 		align-items: start;
 		gap: 0.5rem !important;
-	}
-
-	.success {
-		color: var(--app-color-green-dark);
-	}
-
-	.danger {
-		color: var(--app-color-orange-dark);
-	}
-
-	.examPeriod {
-		font-size: 0.8rem;
-		color: grey;
-	}
-
-	.semester {
-		display: flex;
-		flex-direction: column;
-		align-items: start;
-		gap: 1rem;
-	}
-
-	.examPeriod {
-		font-size: 0.8rem;
 	}
 
 	.children {

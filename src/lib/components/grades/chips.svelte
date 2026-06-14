@@ -1,13 +1,11 @@
 <script lang="ts">
-	export let coursesBySemester: any = {};
-	export let semesterId: any = {};
-
 	import { getSemester } from '$components/courses/getSemester';
 	import { t, getLocale } from '$lib/i18n';
+	import type { course } from '$lib/types/courseType';
 
-	/**
-	 * @param {string} semId
-	 */
+	export let coursesBySemester: { [key: string]: course[] } = {};
+	let semesterId = '';
+
 	function handleClick(semId: string) {
 			semesterId = semId;
 			const element = document.getElementById(semesterId);

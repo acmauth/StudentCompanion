@@ -1,6 +1,6 @@
 <script>
 /**
-	 * @type {boolean}
+	 * @type {() => void}
 	 */
  export let flip;
  /**
