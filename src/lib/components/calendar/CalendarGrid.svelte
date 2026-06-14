@@ -163,9 +163,6 @@
         transition: background 0.15s ease;
         font-weight: 500;
     }
-    .header .month-title {
-        background: var(--ion-color-light);
-    }
 
     .header ion-icon {
         font-size: 1.15rem;
