@@ -200,7 +200,6 @@
         gap: 0.15rem;
     }
     .day.selectable {
-        background: var(--ion-color-light);
         cursor: pointer;
         transform: scale(1.05);
     }
