@@ -12,6 +12,8 @@
   import { flipped } from "./flipstore"; 
   import { averagesPerSemester } from '$lib/functions/gradeAverages/averagesPerSemester';
   import { writable } from 'svelte/store';
+  import type { Writable } from 'svelte/store';
+  import type { course } from '$lib/types/courseType';
   import Fuse from 'fuse.js';
   import { onMount } from 'svelte';
   import { t } from "$lib/i18n";
@@ -34,8 +36,14 @@
 		classes: {id: string;finalGrade: number;coefficient: number;isPassed: number;registration: number;course: string}[];
 	}
 
-	let courseBySemester = writable([]);
-	let filteredSubjects = writable([]);
+	interface SemesterGroup {
+		semesterId: string;
+		average: string;
+		courses: course[];
+	}
+
+	let semesterGroups: Writable<SemesterGroup[]> = writable([]);
+	let filteredSubjects: Writable<SemesterGroup[]> = writable([]);
 	let registrationsInDegree: Registration[];
 
 	const fuseOptions = {
@@ -47,17 +55,8 @@
 	let searchQuery = '';
 	let subjects = 0;
 	let passedSubjects = 0;
-	let coursesBySemester = {};
-	let subjectsJSON: number | null | undefined;
-
-	/**
-	 * @type {string}
-	 */
-	let semesterId: any;
-
-	/**
-	 * @param {{ target: { value: string; }; }} event
-	 */
+	let coursesBySemester: { [key: string]: course[] } = {};
+	let subjectsJSON: course[] = [];
 
 	// Search
 	function handleChange(event: { target: { value: string } }) {
@@ -69,25 +68,22 @@
 		$flipped = !$flipped;
 	}
 
-	async function getSubjects(subjectsJSON: any) {
-		coursesBySemester = await coursesPerSemester(subjectsJSON);
-		// @ts-ignore
-		passedSubjects = subjects
-			.filter((/** @type {{ grade: number; }} */ course) => course.grade * 10 >= 5)
-			.filter(/** @type {{parentCourse: string;}} */ (course) => course.parentCourse === null);
+	async function getSubjects(courses: course[]) {
+		coursesBySemester = await coursesPerSemester(courses);
+		const passed = courses
+			.filter((course) => course.grade * 10 >= 5)
+			.filter((course) => course.parentCourse == null);
 
-		// @ts-ignore
-		subjects = subjects.length;
-		// @ts-ignore
-		passedSubjects = passedSubjects.length;
+		subjects = courses.length;
+		passedSubjects = passed.length;
 	}
 
-	async function gatherGrades(subjectsJSON: any) {
+	async function gatherGrades(subjectsJSON: course[]) {
 		const courses = await coursesPerSemester(subjectsJSON);
 		const semesterAverage = await averagesPerSemester(subjectsJSON);
 
 		// keep semester id, average, and courses in an array
-		const semesters = Object.keys(courses).map((key) => {
+		const semesters: SemesterGroup[] = Object.keys(courses).map((key) => {
 			return {
 				semesterId: key,
 				average: semesterAverage[key] ? semesterAverage[key] : '-',
@@ -95,32 +91,30 @@
 			};
 		});
 
-		semesters.sort((a, b) => a.semesterId - b.semesterId);
+		semesters.sort((a, b) => Number(a.semesterId) - Number(b.semesterId));
 
-		courseBySemester.set(semesters);
+		semesterGroups.set(semesters);
 
 		return semesters;
 	}
 
 	async function gatherProgressionData(){
-		const registration_options = "$select=id,semester,classes&$expand=classes($select=id,finalGrade,coefficient,isPassed,course;$filter=isPassed eq 1)&$orderBy=semester&$top=-1"
-		const all_registrations: Registration[] = (await neoUniversisGet(`students/me/registrations?${registration_options}`, { lifetime: 1200 })).value
+		const registrationOptions = "$select=id,semester,classes&$expand=classes($select=id,finalGrade,coefficient,isPassed,course;$filter=isPassed eq 1)&$orderBy=semester&$top=-1"
+		const allRegistrations: Registration[] = (await neoUniversisGet(`students/me/registrations?${registrationOptions}`, { lifetime: 1200 })).value
 
-		const calculateGrade_options = "$select=id,course,calculateGrade,isPassed,courseTitle&$filter=calculateGrade eq 0,isPassed eq 1&$top=-1"
-		const nonCalculatedGrades: {"id": string;"course": string;"calculateGrade": 0;"isPassed": 1;}[] = (await neoUniversisGet(`students/me/courses?${calculateGrade_options}`, { lifetime: 1200 })).value
-		
-		const disallowed_courses = new Set(nonCalculatedGrades.map(item => item.course))
-		registrationsInDegree = all_registrations.map(registration => ({
+		const calculateGradeOptions = "$select=id,course,calculateGrade,isPassed,courseTitle&$filter=calculateGrade eq 0,isPassed eq 1&$top=-1"
+		const nonCalculatedGrades: { id: string; course: string; calculateGrade: 0; isPassed: 1 }[] = (await neoUniversisGet(`students/me/courses?${calculateGradeOptions}`, { lifetime: 1200 })).value
+
+		const disallowedCourses = new Set(nonCalculatedGrades.map(item => item.course))
+		registrationsInDegree = allRegistrations.map(registration => ({
 			...registration,
-			classes: registration.classes.filter(class_instance => !disallowed_courses.has(class_instance.course) && class_instance.isPassed == 1)
+			classes: registration.classes.filter(classInstance => !disallowedCourses.has(classInstance.course) && classInstance.isPassed == 1)
 		}))
 
-	}	
+	}
 
 	async function gatherData() {
-		subjects = (await neoUniversisGet('students/me/courses?$top=-1', { lifetime: 600 })).value;
-
-		subjectsJSON = subjects;
+		subjectsJSON = (await neoUniversisGet('students/me/courses?$top=-1', { lifetime: 600 })).value;
 
 		await getSubjects(subjectsJSON);
 		await gatherGrades(subjectsJSON);
@@ -130,12 +124,12 @@
 	// Filter the results based on the searchQuery
 
 	$: {
-		const courses = $courseBySemester;
+		const courses = $semesterGroups;
 		if (searchQuery.length === 0) {
 			filteredSubjects.set(courses);
 		} else {
-			const subjects = courses.reduce((acc, curr) => acc.concat(curr.courses), []);
-			const fuse = new Fuse(subjects, fuseOptions);
+			const allCourses = courses.reduce<course[]>((acc, curr) => acc.concat(curr.courses), []);
+			const fuse = new Fuse(allCourses, fuseOptions);
 			const searchResults = fuse.search(searchQuery);
 
 			const filtered = courses.map((semester) => {
@@ -170,7 +164,7 @@
 			/>
 
 			{#if Object.entries(coursesBySemester).length > 0}
-				<Chips {coursesBySemester} {semesterId} />
+				<Chips {coursesBySemester} />
 			{/if}
 		</ion-toolbar>
 
@@ -188,12 +182,8 @@
 			  <DegreeCalculatorCard flip={flip} slot="back"/>
 		  </Flipper>
 	  {/if}
-		  
-		  
-		  
-		  <Grades semesterId = {semesterId} searchQuery = {searchQuery} filteredSubjects = {filteredSubjects} />
-  
-		  {:catch error}
+		  <Grades filteredSubjects = {filteredSubjects} />
+		{:catch error}
 				  <ErrorLandingCard errorMsg={error.message} />
 	  {/await}
   </ion-content>
