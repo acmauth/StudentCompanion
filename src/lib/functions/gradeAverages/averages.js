@@ -2,6 +2,9 @@ import { neoUniversisGet } from "$lib/dataService";
 
 
 // This code runs when the component is mounted to the DOM
+/**
+ * @param {import('$lib/types/courseType').course[] | null} subjectsJSON
+ */
 export async function averages(subjectsJSON = null) {
 
 	let courses;
@@ -30,8 +33,6 @@ export async function averages(subjectsJSON = null) {
 	let ects_sum = 0;
 	let ects_list = [];
 	let ects_sum_countable = 0;
-
-	let grades = {};
 
 	// Extract the grades and course codes from the exams
 	for (const c of passed_courses) {

@@ -1,10 +1,15 @@
 <script lang="ts">
+	import type { Writable } from 'svelte/store';
+	import type { course } from '$lib/types/courseType';
 	import Card from './gradeCard.svelte';
 
-	export let searchQuery;
-	export let semesterId;
-	export let filteredSubjects;
-	
+	interface SemesterGroup {
+		semesterId: string;
+		average: string;
+		courses: course[];
+	}
+
+	export let filteredSubjects: Writable<SemesterGroup[]>;
  </script>
   
 
