@@ -7,6 +7,7 @@
 	import { register } from 'swiper/element/bundle';
 	import { navController } from '$components/shared/StackedNav';
 	import PersonalInfo from '$src/routes/personalInfo/personalInfo.svelte';
+	import Avatarpage from '$src/routes/test/avatar.svelte'
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
@@ -165,7 +166,7 @@
 		<div id="scrolled_content">
 			<div class="personal-section">
 				<div class="info-container">
-					<div class="header ion-activatable" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
+					<div class="header ion-activatable" on:click={() => {navController.push(Avatarpage);}} aria-hidden>
 						<ion-ripple-effect/>
 						<div class="welcome">
 							{#if gender === 'Α'}
