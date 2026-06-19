@@ -5,12 +5,13 @@
 	import * as allIonicIcons from 'ionicons/icons';
 	import Chip from '$components/shared/Chips.svelte';
 	import { t } from '$lib/i18n';
+	import type { course } from '$lib/types/courseType';
 
-	export let subjects;
-	export let passedSubjects;
-	export let searchQuery;
-	export let flip;
-	export let subjectsJSON: null | undefined;
+	export let subjects: number;
+	export let passedSubjects: number;
+	export let searchQuery: string;
+	export let flip: () => void;
+	export let subjectsJSON: course[];
 
 	interface Registration {
 		id: number;
@@ -20,7 +21,7 @@
 	interface AveragesResult {
 		avg: number;
 		weighted_avg: number;
-		grades: never[];
+		grades: number[];
 		ects: number;
 	}
 
@@ -33,7 +34,7 @@
 
 	let chart: Chart<'line', any, any>;
 	let chartElement: HTMLCanvasElement;
-	let gradesObject = {
+	let gradesObject: { average: number; weightedAverage: number; grades: number[]; ects: number } = {
 		average: 0,
 		weightedAverage: 0,
 		grades: [],
