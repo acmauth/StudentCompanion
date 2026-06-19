@@ -77,7 +77,7 @@ export async function averages(subjectsJSON = null) {
 	// Calculate the weighted average
 	// w_avg = Number((w_sum / ects_sum_countable).toFixed(3)).toFixed(2);
 
-	grades = {
+	const grades = {
 		"grades": g_grades,
 		"avg": g_avg,
 		"weighted_avg": w_avg,
