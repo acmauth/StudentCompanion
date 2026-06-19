@@ -7,7 +7,7 @@
 	import { register } from 'swiper/element/bundle';
 	import { navController } from '$components/shared/StackedNav';
 	import PersonalInfo from '$src/routes/personalInfo/personalInfo.svelte';
-	import Avatarpage from '$src/routes/test/avatar.svelte'
+	import Avatarpage from '$src/routes/test/avatarEditor.svelte'
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
