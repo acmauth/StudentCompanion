@@ -106,11 +106,14 @@
 
     async function loadRooms() {
         isLoading = true;
-        const [roomsData, gisSpaceIds] = await Promise.all([
-            helpers.fetchRoomsForBuildings(buildingIds),
-            gis.getAllSpaceIds()
-        ]);
-        buildingsRooms = roomsData;
+        let gisSpaceIds: Set<string>;
+        try {
+            gisSpaceIds = await gis.getAllSpaceIds();
+        } catch (e) {
+            console.warn("GIS service unavailable, room locations will not be shown:", e);
+            gisSpaceIds = new Set();
+        }
+        buildingsRooms = await helpers.fetchRoomsForBuildings(buildingIds);
         allRooms = helpers.markRoomsWithGis(helpers.flattenRooms(buildingsRooms), gisSpaceIds);
         fuse = helpers.createRoomSearch(allRooms);
         isLoading = false;
