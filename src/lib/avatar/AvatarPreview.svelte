@@ -1,9 +1,11 @@
 <script lang="ts">
 	import type { AvatarConfig } from './types';
 	import { composeAvatar } from './compose';
+	import { avatarStore } from '$src/routes/test/avatarStore';
+	import { get } from 'svelte/store';
 
 	// let { config, size = 280 }: { config: AvatarConfig; size?: number } = $props();
-	export let config: AvatarConfig
+	export let config: AvatarConfig// = get(avatarStore)
 	export let size = 280
 
 	$:  svg = composeAvatar(config);

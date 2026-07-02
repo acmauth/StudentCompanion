@@ -26,6 +26,8 @@
 	import { locale } from '$lib/i18n';
 	import { StatusBar, Style } from '@capacitor/status-bar';
 	import AdBanner from './ad_banner.svelte';
+	import AvatarPreview from '$src/lib/avatar/AvatarPreview.svelte';
+	import { avatarStore } from '$src/routes/test/avatarStore';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -71,7 +73,6 @@
 	}
 
 	let givenName = '';
-	let gender = '';
 	let numPassedSubjects = 0;
 	let numSubjects = 0;
 	let average = 0;
@@ -119,7 +120,6 @@
 
 
 		givenName = expandedLocale === '' ? personalData.person.givenName : personalData.person.locale.givenName;
-		gender = personalData.person.gender;
 		departmentName = expandedLocale === '' ? personalData.department?.name || 'Αδυναμία φόρτωσης' : personalData.department?.locale.name || 'Αδυναμία φόρτωσης';
 		studyLevel = expandedLocale === '' ? personalData.studyProgram?.studyLevel?.name : personalData.studyProgram?.studyLevel?.locale.name || 'Αδυναμία φόρτωσης' ;
 		actualSemester = personalData.actualSemester || null;
@@ -169,11 +169,7 @@
 					<div class="header ion-activatable" on:click={() => {navController.push(Avatarpage);}} aria-hidden>
 						<ion-ripple-effect/>
 						<div class="welcome">
-							{#if gender === 'Α'}
-							<img class="avatar" alt="man" src={man} />
-							{:else}
-							<img class="avatar" alt="woman" src={woman} />
-							{/if}
+								<AvatarPreview size={48} config={$avatarStore}/>
 							<div>
 								<h5 class="h5">{$t('homepage.greeting')}, <span><b>{getVocativeCase(givenName)}!</b></span></h5>
 								<h5 class="h6">{studentStatus}</h5>

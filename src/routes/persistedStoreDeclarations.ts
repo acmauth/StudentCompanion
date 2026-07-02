@@ -8,6 +8,7 @@ import { scheduledNotifications } from "$lib/calendarNotifications/notifications
 import { loginStore } from "$src/lib/authentication/loginStore";
 import { webmailLoggedIn } from "$components/webmailLogin/userCredsFlagStore";
 import { darkMode } from "$src/lib/globalFunctions/darkMode";
+import { avatarStore } from "$src/routes/test/avatarStore"
 
 const persistedStores: CapacitorPersistedStore<any>[] = [
     darkMode,
@@ -19,7 +20,8 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
     qrStore,
     userTokens,
     webmailLoggedIn,
-    loginStore
+    loginStore,
+    avatarStore
     // Add new stores here
 ];
 

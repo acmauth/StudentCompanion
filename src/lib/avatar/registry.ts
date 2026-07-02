@@ -61,18 +61,20 @@ function defaultColors(): AvatarConfig['colors'] {
 export function defaultConfig(): AvatarConfig {
 	return {
 		style: 'circle',
-		clothing: 'shirtCrewNeck',
+		clothing: 'hoodie',
 		clothingGraphic: first('clothingGraphic'),
 		mouth: 'smile',
 		nose: 'default',
 		eyes: 'default',
 		eyebrows: 'default',
-		top: 'shortFlat',
+		top: 'shaggyMullet',
 		facialHair: null,
 		accessories: null,
 		colors: defaultColors()
 	};
 }
+
+// {"style":"circle","clothing":"hoodie","clothingGraphic":"bat","mouth":"smile","nose":"default","eyes":"default","eyebrows":"default","top":"shaggyMullet","facialHair":null,"accessories":null,"colors":{"skin":"#edb98a","hair":"#2c1b18","hat":"#262e33","clothes":"#3c4f5c","accessories":"#262e33","facialHair":"#2c1b18","background":"#ffdfbf"}}
 
 const pick = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 const pickColor = (key: ColorKey): string => pick(palettes[key]);
