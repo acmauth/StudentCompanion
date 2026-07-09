@@ -2,7 +2,7 @@
 	import type { course } from '$lib/types/courseType';
 	import AppCard from '$shared/AppCard.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
-	import Course from '$components/courses/coursePage.svelte';
+	import Course from '$components/courses/coursePageNew.svelte';
 	import CourseRow from './courseRow.svelte';
 	import { navController } from '$components/shared/StackedNav';
 	import { getSemester } from '$components/courses/getSemester';
