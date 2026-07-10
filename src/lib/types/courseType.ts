@@ -1,3 +1,11 @@
+export type ExamStatistics = GradeBucket[]
+
+export type GradeBucket = {
+  examGrade: number,
+  isPassed: 1 | 0
+  total: number
+}
+
 export type AcademicPeriodType = {
     id: number;
     identifier: number | null;
@@ -13,6 +21,24 @@ export type AcademicPeriodType = {
     modifiedBy: number | null;
 };
 
+export type InstructorType = {
+    id: number;
+    familyName: string;
+    givenName: string;
+    category: string;
+    department: string;
+    locale: {
+        id: number;
+        object: number;
+        inLanguage: string;
+        familyName: string;
+        givenName: string;
+        category: string;
+        expertise: string | null;
+        specialty: string | null;
+    } | null;
+};
+
 export type NewCourseType = {
     id: string;
     course: {
@@ -25,7 +51,7 @@ export type NewCourseType = {
         isEnabled: number;
         isShared: number;
         gradeScale: number;
-        instructor: number | null;
+        instructor: InstructorType | null;
         isCalculatedInScholarship: number;
         units: number | null;
         courseUrl: string | null;
@@ -126,23 +152,7 @@ export type NewCourseType = {
         instructors: {
             id: string;
             courseExam: number;
-            instructor: {
-                id: number;
-                familyName: string;
-                givenName: string;
-                category: string;
-                department: string;
-                locale: {
-                    id: number;
-                    object: number;
-                    inLanguage: string;
-                    familyName: string;
-                    givenName: string;
-                    category: string;
-                    expertise: string | null;
-                    specialty: string | null;
-                } | null;
-            };
+            instructor: InstructorType;
             dateModified: string | null;
         }[];
     } | null;
