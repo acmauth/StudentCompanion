@@ -48,10 +48,20 @@
     }
     .backIcon {
         font-size: 2rem;
+        flex-shrink: 0;
     }
     .headerTitle {
         display: flex;
         flex-direction: column;
         align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    .headerTitle ion-title,
+    .headerTitle ion-subtitle {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 </style>
