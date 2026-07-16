@@ -272,6 +272,8 @@ export default {
 		"course.title": "Πληροφορίες",
 		"course.syllabus": "Περιεχόμενα",
 		"course.eudoxus": "Συγγράματα",
+		"course.comparison": "Σύγκριση",
+		"course.results": "Αποτελέσματα",
 		"credential.header": "Είναι ασφαλή τα στοιχεία μου;",
 		"credential.subheader": "Πάντα!",
 		'credential.title': 'Σύνδεση Webmail',
@@ -596,6 +598,8 @@ export default {
 		'course.title': 'Information',
 		"course.syllabus": "Syllabus",
 		"course.eudoxus": "Textbooks",
+		'course.comparison': 'Comparison',
+		'course.results': 'Results',
 		'credential.header': 'Is my data safe?',
 		'credential.subheader': 'Always!',
 		'credential.message':

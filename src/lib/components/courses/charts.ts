@@ -69,9 +69,9 @@ export function gradeGaugeChart(canvas: HTMLCanvasElement, {grade, isPassed, for
 
 export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: ExamStatistics) {
         const barColorPassed = "#004C96";
-        const barColorFailed = "#797979"
-        const trackColorPassed = "#E6ECF6";
-        const trackColorFailed = "#EEEEEE";
+        const barColorFailed = "#A2A7AF"
+        const trackColorPassed = "#DAE5F7";
+        const trackColorFailed = "#C9CDD5";
         const labelColor = "#9aa0ac";
 
         // Aggregate the buckets into one total per integer grade (0..MAX_GRADE).
@@ -131,7 +131,7 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
                     backgroundColor: barColors,
                     borderRadius: 100,        // clamped to half the bar width -> rounded ends
                     borderSkipped: false,     // round the base too, not just the top
-                    barPercentage: 0.6,
+                    barPercentage: 0.75,
                     categoryPercentage: 0.85,
                 }]
             },
