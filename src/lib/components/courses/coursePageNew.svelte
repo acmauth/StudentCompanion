@@ -7,13 +7,14 @@
     import CoursesSkeleton from "./coursesSkeleton.svelte";
     import trophyOutline from "./trophy-outline.svg"
 	import { getOrdinalSuffix } from '$src/routes/pages/maps/helper';
+    import { gradeGaugeChart, gradeDistributionChart } from './charts';
+    
 
     export let id: string;
 
     let courseDetails: NewCourseType|null = null;
     let statistics: ExamStatistics|null = null;
     let topTen: number;
-    const MAX_GRADE = 10;
 
     function localize(Greek: string, English: string|null|undefined) {
         if (!English){
@@ -24,174 +25,6 @@
         } else {
             return Greek;
         }
-    }
-
-
-    function gradeGauge(canvas: HTMLCanvasElement, {grade, isPassed, formattedGrade}: {grade: number, isPassed: boolean, formattedGrade: string}) {
-        let current = grade;
-
-        let colors = isPassed? {
-            fill: "#0e6b0e",
-            background: "#e3f2e3"
-        }: {
-            fill: "#6b0e0e",
-            background: "#f2e3e3"
-        }
-
-        const centerText = {
-            id: 'centerText',
-            afterDraw(chart: Chart<'doughnut'>) {
-                const { ctx, chartArea } = chart;
-                const x = (chartArea.left + chartArea.right) / 2;
-                const y = chartArea.bottom - 16; // near bottom, since it's a half-circle
-                ctx.save();
-                ctx.font = 'bold 64px sans-serif';
-                ctx.fillStyle = colors.fill;
-                ctx.textAlign = 'center';
-                ctx.fillText(`${formattedGrade}`, x, y);
-                ctx.restore();
-            }
-        };
-
-        const chart = new Chart(canvas, {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [current, MAX_GRADE - current],
-                    backgroundColor: [colors.fill, colors.background],
-                    borderWidth: 0,
-                    borderRadius: 20,       // rounded ends, like your screenshot
-                }]
-            },
-            options: {
-                circumference: 227,
-                rotation: -113.5,
-                cutout: '85%',
-                aspectRatio: 2,
-                devicePixelRatio: window.devicePixelRatio * 2,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: false },
-                }
-            },
-            plugins: [centerText]
-        });
-
-        return {
-            update(next: number) {
-                current = next;
-                chart.data.datasets[0].data = [current, MAX_GRADE - current];
-                chart.update();
-            },
-            destroy() {
-                chart.destroy();
-            }
-        };
-    }
-
-
-    function gradeDistribution(canvas: HTMLCanvasElement, statistics: ExamStatistics) {
-        const barColor = "#6c63ff";
-        const trackColor = "#ededf5";
-        const labelColor = "#9aa0ac";
-
-        // Aggregate the buckets into one total per integer grade (0..MAX_GRADE).
-        function toCounts(stats: ExamStatistics): number[] {
-            const counts = new Array(MAX_GRADE + 1).fill(0);
-            for (const bucket of stats) {
-                const grade = Math.round(bucket.examGrade);
-                if (grade >= 0 && grade <= MAX_GRADE) {
-                    counts[grade] += bucket.total;
-                }
-            }
-            return counts;
-        }
-
-        // roundRect isn't available on older webviews, so trace the path by hand.
-        function topRoundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
-            r = Math.min(r, w / 2, h);
-            ctx.beginPath();
-            ctx.moveTo(x, y + h);
-            ctx.lineTo(x, y + r);
-            ctx.arcTo(x, y, x + r, y, r);
-            ctx.lineTo(x + w - r, y);
-            ctx.arcTo(x + w, y, x + w, y + r, r);
-            ctx.lineTo(x + w, y + h);
-            ctx.closePath();
-        }
-
-        // Light "track" behind every bar, spanning the full height of the plot.
-        const trackBars = {
-            id: 'trackBars',
-            beforeDatasetsDraw(chart: Chart<'bar'>) {
-                const { ctx, chartArea } = chart;
-                ctx.save();
-                ctx.fillStyle = trackColor;
-                for (const bar of chart.getDatasetMeta(0).data) {
-                    const width = (bar as unknown as { width: number }).width;
-                    topRoundedRect(ctx, bar.x - width / 2, chartArea.top, width, chartArea.bottom - chartArea.top, width / 2);
-                    ctx.fill();
-                }
-                ctx.restore();
-            }
-        };
-
-        let counts = toCounts(statistics);
-
-        const chart = new Chart(canvas, {
-            type: 'bar',
-            data: {
-                labels: Array.from({ length: MAX_GRADE + 1 }, (_, i) => i),
-                datasets: [{
-                    data: counts,
-                    backgroundColor: barColor,
-                    borderRadius: 100,        // clamped to half the bar width -> rounded tops
-                    borderSkipped: 'start',   // keep the base square, only round the top
-                    barPercentage: 0.6,
-                    categoryPercentage: 0.85,
-                }]
-            },
-            options: {
-                aspectRatio: 1.8,
-                devicePixelRatio: window.devicePixelRatio * 2,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        displayColors: false,
-                        callbacks: {
-                            label: (item) => ` ${item.parsed.y}`
-                        }
-                    },
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        border: { display: false },
-                        ticks: { color: labelColor, font: { size: 13, weight: 'bold' } },
-                    },
-                    y: {
-                        beginAtZero: true,
-                        max: Math.max(...counts, 2),
-                        grid: { display: false },
-                        border: { display: false },
-                        ticks: { color: labelColor, count: 3, precision: 0, font: { size: 13, weight: 'bold' } },
-                    },
-                },
-            },
-            plugins: [trackBars]
-        });
-
-        return {
-            update(next: ExamStatistics) {
-                counts = toCounts(next);
-                chart.data.datasets[0].data = counts;
-                chart.options.scales!.y!.max = Math.max(...counts, 2);
-                chart.update();
-            },
-            destroy() {
-                chart.destroy();
-            }
-        };
     }
 
 
@@ -235,6 +68,18 @@
 
         return examStatistics
     }
+
+    async function fetchCourseSyllabusEudoxus(courseID: string): Promise<{syllabus: any, eudoxus: any}>{
+        // Thanks @Panagiotis Skoulis!
+        const syllabus_info = await fetch(`https://courses.auth.gr/services/course-catalogue/v1p1/qa/CourseOutlines/${encodeURI(courseID)}?$top=1&$skip=0&$count=false`)
+        if (syllabus_info.ok) {
+            const {syllabus, eudoxus} = await syllabus_info.json();
+            return {syllabus, eudoxus}
+        }
+        else {
+            throw "Couldn't retrieve course Syllabus info"
+        }
+    }
     
 
 </script>
@@ -250,34 +95,63 @@
         <SubPageHeader title={localize(courseDetails.courseTitle, courseDetails.course.locale?.name)} stackedNav />
 
         <div class="course_view">  
+            <!-- Grade Gauge -->
             {#if courseDetails.grade !== null}
                 <div class="grade-gauge">
-                    <canvas use:gradeGauge={{grade: courseDetails.grade*10, isPassed: !!courseDetails.isPassed, formattedGrade: courseDetails.formattedGrade}}></canvas>
+                    <canvas use:gradeGaugeChart={{grade: courseDetails.grade*10, isPassed: !!courseDetails.isPassed, formattedGrade: courseDetails.formattedGrade}}></canvas>
                 </div>
             {/if}
+
+            <!-- Gamification chip -->
             {#if topTen < 10}
-                <ion-chip color="success"><ion-icon src={trophyOutline} class="font-size: 34px"></ion-icon>Βρίσκεσαι στο 10% των καλύτερων βαθμών</ion-chip>
+                <ion-chip color="success"><ion-icon src={trophyOutline} style="font-size:1rem"></ion-icon>Βρίσκεσαι στο 10% των καλύτερων βαθμών</ion-chip>
             {/if}
+
             <div class="course_overview">
+                <!-- Course Code -->
                 <ion-chip color="primary">#{courseDetails.course.displayCode}</ion-chip>
+                <!-- Course Hours -->
                 {#if courseDetails.hours}
                     <ion-chip color="primary">{courseDetails.hours} <span class="label">Εβδ. Ώρες</span></ion-chip>
                 {/if}
-                <ion-chip color="primary">{courseDetails.ects} <span class="label">ECTS</span></ion-chip>
-                <ion-chip color="primary">{localize(`${courseDetails.semester.alternateName}ο`, getOrdinalSuffix(Number(courseDetails.semester.alternateName)))} <span class="label">Εξάμηνο</span></ion-chip>
-                <ion-chip color="primary">{localize(courseDetails.courseType.abbreviation, courseDetails.courseType.locale?.abbreviation)} <span class="label">Τύπος</span></ion-chip>
+                <!-- Course ECTS -->
+                <ion-chip color="primary">
+                    {courseDetails.ects} <span class="label">ECTS</span>
+                </ion-chip>
+                <!-- Course Semester -->
+                <ion-chip color="primary">
+                    {localize(`${courseDetails.semester.alternateName}ο`, getOrdinalSuffix(Number(courseDetails.semester.alternateName)))} <span class="label">Εξάμηνο</span>
+                </ion-chip>
+                <!-- Course Type -->
+                <ion-chip color="primary">
+                    {localize(courseDetails.courseType.abbreviation, courseDetails.courseType.locale?.abbreviation)} <span class="label">Τύπος</span>
+                </ion-chip>
+                <!-- Course Period -->
                 {#if courseDetails.lastRegistrationPeriod.name}
-                    <ion-chip color="primary">{localize(courseDetails.lastRegistrationPeriod.name, courseDetails.lastRegistrationPeriod.alternateName)} <span class="label">Περίοδος</span></ion-chip>
+                    <ion-chip color="primary">
+                        {localize(courseDetails.lastRegistrationPeriod.name, courseDetails.lastRegistrationPeriod.alternateName)} <span class="label">Περίοδος</span>
+                    </ion-chip>
                 {/if}
+                <!-- Course Calculated? -->
                 {#if !courseDetails.calculateGrade}
                     <ion-chip color="warning">Δεν υπολογίζεται στον Μ.Ο.</ion-chip>
                 {/if}
                 <!-- Maybe show category -->
                 {#if courseDetails.course.instructor}
-                    <ion-chip color="warning">{localize(courseDetails.course.instructor?.givenName, courseDetails.course.instructor?.locale?.givenName)} {localize(courseDetails.course.instructor?.familyName, courseDetails.course.instructor?.locale?.familyName)}</ion-chip>
+                    <ion-chip color="warning">
+                        {localize(courseDetails.course.instructor?.givenName, courseDetails.course.instructor?.locale?.givenName)} {localize(courseDetails.course.instructor?.familyName, courseDetails.course.instructor?.locale?.familyName)}
+                    </ion-chip>
                 {/if}
             </div>
         </div>
+        <ion-accordion>
+            {#await fetchCourseSyllabusEudoxus(courseDetails.id)}
+                Loading...
+            {:then CourseSyllabusEudoxus} 
+                <p>{CourseSyllabusEudoxus.syllabus}</p>
+                <p>{CourseSyllabusEudoxus.eudoxus}</p>
+            {/await}
+        </ion-accordion>
 
         {#if courseDetails.gradeExam && courseDetails.gradeExam.id}
             {#await fetchExamStatistics(courseDetails.gradeExam.id)}
@@ -288,7 +162,7 @@
                 {#if examStatistics.length}
                     <div class="grade-distribution">
                         <span class="chart-title">{$t('course.dist')}</span>
-                        <canvas use:gradeDistribution={examStatistics}></canvas>
+                        <canvas use:gradeDistributionChart={examStatistics}></canvas>
                     </div>
                 {/if}
             {:catch error}
@@ -312,16 +186,6 @@
 		margin: 0 auto;
 	}
 
-	.grade-distribution {
-		display: block;
-		max-width: 32rem;
-		margin: 0.5rem auto 1rem;
-		padding: 0.75rem 1rem 1rem;
-		border-radius: 1rem;
-		background: var(--ion-card-background, var(--ion-background-color));
-		box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
-	}
-
 	.grade-distribution .chart-title {
 		display: block;
 		margin-bottom: 0.5rem;
@@ -335,7 +199,7 @@
         flex-wrap: wrap;
         width: 100%;
         column-gap: 1rem;
-        row-gap: .5rem;
+        row-gap: .35rem;
         align-items: center;
         justify-content: center;
         justify-content: safe center;
