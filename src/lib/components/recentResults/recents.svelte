@@ -2,7 +2,6 @@
     import { gatherRecentGrades } from "./gatherRecentGrades"
     import { gatherNotifications } from "$components/notifications/notifications";
     import RecentsDisplay from "./recentsDisplay.svelte";
-	import Card from "$components/degreeCalculator/card.svelte";
 
     export let maxCards = 6;
 

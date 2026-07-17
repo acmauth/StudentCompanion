@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { courseAdded } from '$lib/components/degreeCalculator/courseStore.ts';
+	import { courseAdded } from '$components/degreeCalculator/customCourses';
 	export let flipped: boolean;
 	export let reactToHeight: boolean = false;
 
@@ -13,9 +13,9 @@
 	let frontChild: HTMLElement;
 	let backChild: HTMLElement;
 
-	$: courseAdded.subscribe(() => {
-		updateHeight(flipClass);
-	});
+	// Auto-subscription, so the subscription is torn down with the component. A
+	// manual .subscribe() here would leak one listener per reactive re-run.
+	$: $courseAdded, updateHeight(flipClass);
 
 	// This function updates the height of the flip card when it's toggled.
 	const updateHeight = (status: Boolean) => {

@@ -3,12 +3,12 @@
 	import AppCard from '$shared/AppCard.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
 	import Course from '$components/courses/coursePage.svelte';
-	import CourseRow from './courseRow.svelte';
+	import CourseRow from './CourseRow.svelte';
 	import { navController } from '$components/shared/StackedNav';
-	import { getSemester } from '$components/grades/getSemester';
+	import { getSemester } from './helpers';
 	import { t, getLocale } from '$lib/i18n';
 
-	export let filteredSubjects: course[] = [];
+	export let courses: course[] = [];
 	export let semesterId: string;
 	export let semesterAverage: string;
 	export let semesterName: string;
@@ -28,7 +28,7 @@
 <span class="scroll" id={semesterId} />
 
 <div class="container">
-	{#if filteredSubjects.length > 0}
+	{#if courses.length > 0}
 		<div class="ion-padding-start ion-padding-vertical semester">
 			{#if Number(semesterId) <= 24}
 				<ion-text class="title"
@@ -47,7 +47,7 @@
 			{/if}
 		</div>
 
-		{#each filteredSubjects as course, index}
+		{#each courses as course, index}
 			<AppCard id={index} onClick={() => navigateToCourse(course)} padding>
 				<!-- Card content for course -->
 				<!-- Checking if course has children courses or not, so we can render the href links accordingly. Rest of the content stays the same -->

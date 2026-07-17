@@ -4,16 +4,14 @@
 	import { inputUpdate } from '../../functions/degreeCalculator/inputUpdate.js';
 	import { t } from '$lib/i18n';
 
-	import CoursesSkeleton from '$components/degreeCalculator/coursesSkeleton.svelte';
-	import AvGrades from '$components/degreeCalculator/avGrades.svelte';
-	import Course from '$components/degreeCalculator/course.svelte';
+	import CoursesSkeleton from './CoursesSkeleton.svelte';
+	import GradeSummary from './GradeSummary.svelte';
+	import UnpassedCourseRow from './UnpassedCourseRow.svelte';
 	import Chip from '$components/shared/Chips.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
-	import CustomCourse from './customCourse.svelte';
-	import { icon } from 'leaflet';
-	import { next } from 'cheerio/lib/api/traversing.js';
+	import CustomCourseRow from './CustomCourseRow.svelte';
 	import { fade } from 'svelte/transition';
-	import { courseAdded, customCourses } from './courseStore.ts';
+	import { courseAdded, customCourses } from './customCourses';
 	import { get } from 'svelte/store';
 	export let flip;
 
@@ -35,7 +33,10 @@
 
 	let not_passed_all_courses = false;
 
-	let nextId = 0; // Define a separate variable to track IDs
+	// Seeded past the highest persisted id. Restarting from 0 would hand a fresh
+	// course the same id as one restored from localStorage, and the duplicate then
+	// breaks both deletion and the getElementById lookups keyed on it.
+	let nextId = get(customCourses).reduce((max, course) => Math.max(max, Number(course.id) + 1), 0);
 
 	async function universis() {
 		not_passed_all_courses = await main(unpassed_courses, sums, degree_grade);
@@ -95,7 +96,7 @@
 				{#if not_passed_all_courses}
 					{#each unpassed_courses as course}
 						<div class="courses-box">
-							<Course
+							<UnpassedCourseRow
 								course_title={course.title}
 								course_semester_id={course.semester_id}
 								course_semester_name={course.semester_name}
@@ -116,10 +117,10 @@
 					{/each}
 				{/if}
 
-				{#each $customCourses as course, index}
+				{#each $customCourses as course (course.id)}
 					<div transition:fade class="custom-courses-box">
 						<!-- Render new custom courses -->
-						<CustomCourse {clickInput} {gradeInput} {course} {deleteCustomCourse} />
+						<CustomCourseRow {clickInput} {gradeInput} {course} {deleteCustomCourse} />
 					</div>
 				{/each}
 			</div>
@@ -132,7 +133,7 @@
 					<ion-text class="course-name ion-padding-end">{$t('customCourse.title')}</ion-text>
 				</div>
 
-				<AvGrades {degree_grade} />
+				<GradeSummary {degree_grade} />
 
 				<Chip chipIcon={allIonicIcons.cellular} text={$t('progress.title')} {flip} />
 			</div>
