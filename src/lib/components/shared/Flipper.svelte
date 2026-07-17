@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { courseAdded } from '$components/degreeCalculator/customCourses';
+	import { onMount } from 'svelte';
+
 	export let flipped: boolean;
 	export let reactToHeight: boolean = false;
 
@@ -13,9 +14,18 @@
 	let frontChild: HTMLElement;
 	let backChild: HTMLElement;
 
-	// Auto-subscription, so the subscription is torn down with the component. A
-	// manual .subscribe() here would leak one listener per reactive re-run.
-	$: $courseAdded, updateHeight(flipClass);
+	// Re-measure whenever either face changes size, rather than having the
+	// content tell us it grew. This catches every cause — content loading in, a
+	// row being removed — and runs after layout, so the height read is settled.
+	onMount(() => {
+		if (!reactToHeight) return;
+
+		const observer = new ResizeObserver(() => updateHeight(flipClass));
+		observer.observe(frontChild);
+		observer.observe(backChild);
+
+		return () => observer.disconnect();
+	});
 
 	// This function updates the height of the flip card when it's toggled.
 	const updateHeight = (status: Boolean) => {
@@ -24,9 +34,10 @@
 			// The height relative to the rest of the page is dictated by the main container, so we
 			// set it's height to the height of the front or back child, depending on the status of the flip.
 			// So if we're flipped, use the back child, otherwise the front
-			flipContainer.style.height = status
-				? `${backChild.clientHeight}px`
-				: `${frontChild.clientHeight}px`;
+			const height = `${status ? backChild.clientHeight : frontChild.clientHeight}px`;
+
+			// Writing only on a real change keeps the observer from re-entering.
+			if (flipContainer.style.height !== height) flipContainer.style.height = height;
 		}
 	};
 
