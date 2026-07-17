@@ -1,10 +1,7 @@
-// 'chart.js/auto' registers every controller as a side effect, and is the only
-// auto-import in the app — $components/courses/charts.ts imports the bare
-// 'chart.js' and registers nothing, so it relies on this module being loaded.
 // Kept out of ./helpers.ts on purpose: chart.js is ~200KB and cannot be
 // tree-shaken past a side-effecting import, so anything importing getSemester
 // from helpers would drag the whole of it in.
-import Chart from 'chart.js/auto';
+import { Chart } from '$lib/chart';
 import type { Registration } from '$types/grades';
 
 /** Weighted average per semester, keyed by semester id. */
