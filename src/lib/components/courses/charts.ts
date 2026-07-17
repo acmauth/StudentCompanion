@@ -72,6 +72,8 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
         const barColorFailed = "#A2A7AF"
         const trackColorPassed = "#DAE5F7";
         const trackColorFailed = "#C9CDD5";
+        const trackColorPassedDark = "#1C2731";
+        const trackColorFailedDark = "#303030";
         const labelColor = "#9aa0ac";
 
         // Aggregate the buckets into one total per integer grade (0..MAX_GRADE).
@@ -103,15 +105,20 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
             grade < PASS_THRESHOLD ? barColorFailed : barColorPassed);
         const trackColors = Array.from({ length: MAX_GRADE + 1 }, (_, grade) =>
             grade < PASS_THRESHOLD ? trackColorFailed : trackColorPassed);
+        const trackColorsDark = Array.from({ length: MAX_GRADE + 1 }, (_, grade) =>
+            grade < PASS_THRESHOLD ? trackColorFailedDark : trackColorPassedDark);
 
-        // Light "track" behind every bar, spanning the full height of the plot.
+        // Muted "track" behind every bar, spanning the full height of the plot.
+        // The palette is resolved per draw rather than once, so a redraw after a
+        // theme toggle picks up the right one.
         const trackBars = {
             id: 'trackBars',
             beforeDatasetsDraw(chart: Chart<'bar'>) {
                 const { ctx, chartArea } = chart;
+                const tracks = document.body.classList.contains('dark') ? trackColorsDark : trackColors;
                 ctx.save();
                 chart.getDatasetMeta(0).data.forEach((bar, i) => {
-                    ctx.fillStyle = trackColors[i];
+                    ctx.fillStyle = tracks[i];
                     const width = (bar as unknown as { width: number }).width;
                     roundedRect(ctx, bar.x - width / 2, chartArea.top, width, chartArea.bottom - chartArea.top, width / 2);
                     ctx.fill();
@@ -158,7 +165,7 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
                         max: Math.max(...counts, 2),
                         grid: { display: false },
                         border: { display: false },
-                        ticks: { color: labelColor, count: 4, precision: 0, font: { size: 14, weight: 'bold' } },
+                        ticks: { color: labelColor, count: 4, precision: 1, font: { size: 14, weight: 'bold' } },
                     },
                 },
             },

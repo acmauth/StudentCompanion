@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getSemester } from '$components/courses/getSemester';
+	import { getSemester } from '$components/grades/getSemester';
 	import { t, getLocale } from '$lib/i18n';
 	import type { course } from '$lib/types/courseType';
 

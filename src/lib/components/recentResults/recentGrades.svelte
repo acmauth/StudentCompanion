@@ -1,6 +1,6 @@
 <script>
 	import { navController } from "$components/shared/StackedNav";
-  import Course from "$components/courses/coursePageNew.svelte";
+  import Course from "$components/courses/coursePage.svelte";
 	import timeSinceDate from "$src/lib/globalFunctions/getTimeSinceDate";
 	import { getLocale } from "$src/lib/i18n";
   import { school } from 'ionicons/icons';
