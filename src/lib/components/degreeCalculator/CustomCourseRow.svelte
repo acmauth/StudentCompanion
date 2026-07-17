@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as allIonicIcons from 'ionicons/icons';
 	import { t } from '$lib/i18n';
-	import { isFailing } from '$lib/functions/degreeCalculator/degreeGrade';
+	import { isFailing } from './degreeGrade';
 	import type { CustomCourse } from './customCourses';
 
 	export let course: CustomCourse;
