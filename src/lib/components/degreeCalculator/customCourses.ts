@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
-import { normalizeGradeInput } from '$lib/functions/degreeCalculator/degreeGrade';
-import type { GradeEntry } from '$lib/functions/degreeCalculator/degreeGrade';
+import { normalizeGradeInput } from './degreeGrade';
+import type { GradeEntry } from './degreeGrade';
 
 /** Bumped whenever a course is added, so Flipper can re-measure its height. */
 export const courseAdded = writable(0);

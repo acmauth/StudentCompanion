@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { t } from '$lib/i18n';
-	import CoursesSkeleton from './CoursesSkeleton.svelte';
 	import GradeSummary from './GradeSummary.svelte';
 	import UnpassedCourseRow from './UnpassedCourseRow.svelte';
 	import CustomCourseRow from './CustomCourseRow.svelte';
@@ -10,20 +9,28 @@
 	import { get } from 'svelte/store';
 	import { courseAdded, customCourses } from './customCourses';
 	import type { CustomCourse } from './customCourses';
-	import { fetchDegreeData } from '$lib/functions/degreeCalculator/fetchDegreeData';
-	import type { UnpassedCourse } from '$lib/functions/degreeCalculator/fetchDegreeData';
+	import { fetchDegreeData } from './fetchDegreeData';
+	import type { UnpassedCourse } from './fetchDegreeData';
 	import {
 		applyGradeInput,
 		clearGradeInput,
 		computeDegreeGrade,
 		isFailing,
 		normalizeCoefficient
-	} from '$lib/functions/degreeCalculator/degreeGrade';
-	import type { PassedSums } from '$lib/functions/degreeCalculator/degreeGrade';
+	} from './degreeGrade';
+	import type { PassedSums } from './degreeGrade';
 
 	// Optional: the standalone /degreeCalculator route renders the card with
 	// nothing to flip back to.
 	export let flip: () => void = () => {};
+
+	// Placeholder rows standing in for the courses while they load.
+	const SKELETON_ROWS = Array.from({ length: 4 });
+	const SKELETON_TITLE = 'ΜΑΘΗΜΑ ΧΧΧΧΧΧ ΧΧΧΧΧΧΧΧ ΧΧΧΧΧΧ';
+	const SKELETON_GRADE = {
+		based: { value: 0, stringed: '0.00' },
+		simple: { value: 0, stringed: '0.00' }
+	};
 
 	let unpassedCourses: UnpassedCourse[] = [];
 	let passedSums: PassedSums = {
@@ -95,7 +102,10 @@
 	<ion-card-subtitle>{$t('progress.average_prediction_desc')}</ion-card-subtitle>
 
 	{#await load()}
-		<CoursesSkeleton />
+		{#each SKELETON_ROWS as _}
+			<UnpassedCourseRow course_title={SKELETON_TITLE} course_semester_id={-1} course_semester_name="" />
+		{/each}
+		<GradeSummary degree_grade={SKELETON_GRADE} />
 	{:then}
 		<div class="container">
 			<div class="scrollable-content ion-padding-vertical">
