@@ -2,10 +2,10 @@
 	import type { course } from '$lib/types/courseType';
 	import AppCard from '$shared/AppCard.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
-	import Course from '$components/courses/coursePageNew.svelte';
+	import Course from '$components/courses/coursePage.svelte';
 	import CourseRow from './courseRow.svelte';
 	import { navController } from '$components/shared/StackedNav';
-	import { getSemester } from '$components/courses/getSemester';
+	import { getSemester } from '$components/grades/getSemester';
 	import { t, getLocale } from '$lib/i18n';
 
 	export let filteredSubjects: course[] = [];
