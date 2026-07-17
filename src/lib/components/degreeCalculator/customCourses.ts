@@ -2,9 +2,6 @@ import { writable } from 'svelte/store';
 import { normalizeGradeInput } from './degreeGrade';
 import type { GradeEntry } from './degreeGrade';
 
-/** Bumped whenever a course is added, so Flipper can re-measure its height. */
-export const courseAdded = writable(0);
-
 export type CustomCourse = GradeEntry & {
 	id: number;
 	title: string;

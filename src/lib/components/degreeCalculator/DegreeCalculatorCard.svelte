@@ -7,7 +7,7 @@
 	import * as allIonicIcons from 'ionicons/icons';
 	import { fade } from 'svelte/transition';
 	import { get } from 'svelte/store';
-	import { courseAdded, customCourses } from './customCourses';
+	import { customCourses } from './customCourses';
 	import type { CustomCourse } from './customCourses';
 	import { fetchDegreeData } from './fetchDegreeData';
 	import type { UnpassedCourse } from './fetchDegreeData';
@@ -87,7 +87,6 @@
 			...courses,
 			{ id: nextId++, title: '', coefficient: '', grade: '', lastGrade: '', gradeNumber: null }
 		]);
-		courseAdded.update((n) => n + 1);
 	}
 
 	function deleteCustomCourse(id: number) {
