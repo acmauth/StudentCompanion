@@ -1,5 +1,5 @@
 import type { ExamStatistics } from "$types/courseType";
-import { Chart } from "chart.js";
+import { Chart } from "$lib/chart";
 
 const MAX_GRADE = 10;
 const PASS_THRESHOLD = 5
