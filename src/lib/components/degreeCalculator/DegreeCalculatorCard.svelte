@@ -1,84 +1,91 @@
 <script lang="ts">
-	//@ts-nocheck
-	import { main } from '../../functions/degreeCalculator/main.js';
-	import { inputUpdate } from '../../functions/degreeCalculator/inputUpdate.js';
 	import { t } from '$lib/i18n';
-
 	import CoursesSkeleton from './CoursesSkeleton.svelte';
 	import GradeSummary from './GradeSummary.svelte';
 	import UnpassedCourseRow from './UnpassedCourseRow.svelte';
+	import CustomCourseRow from './CustomCourseRow.svelte';
 	import Chip from '$components/shared/Chips.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
-	import CustomCourseRow from './CustomCourseRow.svelte';
 	import { fade } from 'svelte/transition';
-	import { courseAdded, customCourses } from './customCourses';
 	import { get } from 'svelte/store';
-	export let flip;
+	import { courseAdded, customCourses } from './customCourses';
+	import type { CustomCourse } from './customCourses';
+	import { fetchDegreeData } from '$lib/functions/degreeCalculator/fetchDegreeData';
+	import type { UnpassedCourse } from '$lib/functions/degreeCalculator/fetchDegreeData';
+	import {
+		applyGradeInput,
+		clearGradeInput,
+		computeDegreeGrade,
+		isFailing,
+		normalizeCoefficient
+	} from '$lib/functions/degreeCalculator/degreeGrade';
+	import type { PassedSums } from '$lib/functions/degreeCalculator/degreeGrade';
 
-	let unpassed_courses: {
-		title: string;
-		id: string;
-		semester_id: number;
-		semester_name: string;
-		grade: number;
-		input_grade: string;
-		coefficient: number;
-	}[] = [];
+	// Optional: the standalone /degreeCalculator route renders the card with
+	// nothing to flip back to.
+	export let flip: () => void = () => {};
 
-	// Define the degree_grade object to store the average grades for the custom courses
-	let degree_grade = { based: { value: 0, stringed: '' }, simple: { value: 0, stringed: '' } };
+	let unpassedCourses: UnpassedCourse[] = [];
+	let passedSums: PassedSums = {
+		based: { grade_sum: 0, coefficient: 0 },
+		simple: { grade_sum: 0, passed: 0 }
+	};
 
-	// Define the sums object to store the sum of the grades and coefficients for the custom courses
-	let sums = { based: { grade_sum: 0, coefficient: 0 }, simple: { grade_sum: 0, passed: 0 } };
+	// Seeded past the highest persisted id, so a new course can't collide with a
+	// restored one.
+	let nextId = get(customCourses).reduce((max, course) => Math.max(max, course.id + 1), 0);
 
-	let not_passed_all_courses = false;
-
-	// Seeded past the highest persisted id. Restarting from 0 would hand a fresh
-	// course the same id as one restored from localStorage, and the duplicate then
-	// breaks both deletion and the getElementById lookups keyed on it.
-	let nextId = get(customCourses).reduce((max, course) => Math.max(max, Number(course.id) + 1), 0);
-
-	async function universis() {
-		not_passed_all_courses = await main(unpassed_courses, sums, degree_grade);
+	async function load() {
+		const data = await fetchDegreeData();
+		passedSums = data.passedSums;
+		unpassedCourses = data.unpassedCourses;
 	}
 
-	/** @param { { target: { value: string; }; } } element */
-	function clickInput(element: { target: { value: string } }) {
-		element.target.value = '';
-		inputUpdate(unpassed_courses, sums, degree_grade, $customCourses);
-		degree_grade = degree_grade;
+	// The single source of truth for what's displayed: derived from the entries
+	// rather than accumulated into them.
+	$: degreeGrade = computeDegreeGrade(passedSums, [...unpassedCourses, ...$customCourses]);
+
+	function onUnpassedGrade(course: UnpassedCourse) {
+		applyGradeInput(course);
+		unpassedCourses = unpassedCourses;
 	}
 
-	function gradeInput(customCourse = null) {
-		$customCourses.forEach((course) => {
-			if (course.coefficient) {
-				// Ensure it's a number and within range
-				course.coefficient = course.coefficient
-					.toString()
-					.replace(/\D/g, '') // Remove non-numeric characters
-					.slice(0, 2); // Limit to 2 digits
-			}
-		});
-
-		inputUpdate(unpassed_courses, sums, degree_grade, $customCourses);
-		degree_grade = degree_grade;
+	function onUnpassedClear(course: UnpassedCourse) {
+		clearGradeInput(course);
+		unpassedCourses = unpassedCourses;
 	}
 
-	// Handle the input change for the custom courses
+	function onCustomGrade(course: CustomCourse) {
+		applyGradeInput(course);
+		// Reassign through the store so the change is persisted and picked up.
+		customCourses.update((courses) => courses);
+	}
+
+	function onCustomClear(course: CustomCourse) {
+		clearGradeInput(course);
+		customCourses.update((courses) => courses);
+	}
+
+	function onCustomCoefficient(course: CustomCourse) {
+		course.coefficient = normalizeCoefficient(course.coefficient);
+		customCourses.update((courses) => courses);
+	}
+
+	function onCustomTitle() {
+		customCourses.update((courses) => courses);
+	}
+
 	function addCourse() {
-		// Add new custom course and reassign as a new array
 		customCourses.update((courses) => [
 			...courses,
-			{ id: nextId++, title: '', coefficient: '', grade: '' }
+			{ id: nextId++, title: '', coefficient: '', grade: '', lastGrade: '', gradeNumber: null }
 		]);
 		courseAdded.update((n) => n + 1);
 	}
 
-	const deleteCustomCourse = (id) => {
+	function deleteCustomCourse(id: number) {
 		customCourses.update((courses) => courses.filter((course) => course.id !== Number(id)));
-		inputUpdate(unpassed_courses, sums, degree_grade, get(customCourses));
-		degree_grade = degree_grade;
-	};
+	}
 </script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -87,40 +94,46 @@
 	<ion-card-title>{$t('progress.average_prediction_full')}</ion-card-title>
 	<ion-card-subtitle>{$t('progress.average_prediction_desc')}</ion-card-subtitle>
 
-	{#await universis()}
+	{#await load()}
 		<CoursesSkeleton />
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
 	{:then}
 		<div class="container">
 			<div class="scrollable-content ion-padding-vertical">
-				{#if not_passed_all_courses}
-					{#each unpassed_courses as course}
-						<div class="courses-box">
-							<UnpassedCourseRow
-								course_title={course.title}
-								course_semester_id={course.semester_id}
-								course_semester_name={course.semester_name}
-							/>
+				{#each unpassedCourses as course (course.id)}
+					<div class="courses-box">
+						<UnpassedCourseRow
+							course_title={course.title}
+							course_semester_id={course.semester_id}
+							course_semester_name={course.semester_name}
+						/>
 
-							<div class="input-box">
-								<input
-									type="text"
-									inputmode="decimal"
-									id={course.id}
-									class="inputCustom"
-									on:click={clickInput}
-									placeholder="5.00"
-									on:input={() => gradeInput()}
-								/>
-							</div>
+						<div class="input-box">
+							<input
+								type="text"
+								inputmode="decimal"
+								id={`grade-${course.id}`}
+								class="inputCustom"
+								class:invalid={isFailing(course)}
+								bind:value={course.grade}
+								on:click={() => onUnpassedClear(course)}
+								placeholder="5.00"
+								on:input={() => onUnpassedGrade(course)}
+							/>
 						</div>
-					{/each}
-				{/if}
+					</div>
+				{/each}
 
 				{#each $customCourses as course (course.id)}
 					<div transition:fade class="custom-courses-box">
 						<!-- Render new custom courses -->
-						<CustomCourseRow {clickInput} {gradeInput} {course} {deleteCustomCourse} />
+						<CustomCourseRow
+							{course}
+							{deleteCustomCourse}
+							onGrade={onCustomGrade}
+							onClear={onCustomClear}
+							onCoefficient={onCustomCoefficient}
+							onTitle={onCustomTitle}
+						/>
 					</div>
 				{/each}
 			</div>
@@ -133,7 +146,7 @@
 					<ion-text class="course-name ion-padding-end">{$t('customCourse.title')}</ion-text>
 				</div>
 
-				<GradeSummary {degree_grade} />
+				<GradeSummary degree_grade={degreeGrade} />
 
 				<Chip chipIcon={allIonicIcons.cellular} text={$t('progress.title')} {flip} />
 			</div>
@@ -235,6 +248,10 @@
 		box-sizing: border-box;
 		outline: none;
 		background-color: #0000;
+	}
+
+	.inputCustom.invalid {
+		border-color: red;
 	}
 
 	::placeholder {
