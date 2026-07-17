@@ -1,4 +1,7 @@
 <script>
+    import { getSemester } from '$components/grades/helpers';
+    import { t, getLocale } from '$lib/i18n';
+
     /** @type { string } */
     export let course_title;
     /** @type { number } */
@@ -13,7 +16,7 @@
     <div> <ion-text class="course-name">{course_title}</ion-text> </div>
 
     {#if course_semester_id <= 24}
-    <div> <p class="course-semester">{course_semester_id}ο Εξάμηνο</p> </div>
+    <div> <p class="course-semester">{getSemester(course_semester_id, getLocale())} {$t('progress.semester')}</p> </div>
     {:else}
     <div> <p class="course-semester">{course_semester_name}</p> </div>
     {/if}

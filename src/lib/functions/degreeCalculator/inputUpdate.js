@@ -23,16 +23,16 @@ export function inputUpdate(unpassed_courses, sums, degree_grade, customCourses 
 
 			if (numberCheck(customCourse)) continue;
 
-			course = checkPrecision(customCourse);
+			const checked = checkPrecision(customCourse);
 
-			if (course.grade < 5 && input_element != null) {
+			if (checked.grade < 5 && input_element != null) {
 				input_element.style.borderColor = 'red';
 				continue;
 			}
 
-			sums_guess.based.grade_sum += Number(course.grade) * Number(course.coefficient);
-			sums_guess.based.coefficient += Number(course.coefficient);
-			sums_guess.simple.grade_sum += Number(course.grade);
+			sums_guess.based.grade_sum += Number(checked.grade) * Number(checked.coefficient);
+			sums_guess.based.coefficient += Number(checked.coefficient);
+			sums_guess.simple.grade_sum += Number(checked.grade);
 			sums_guess.simple.passed++;
 		}
 	}
