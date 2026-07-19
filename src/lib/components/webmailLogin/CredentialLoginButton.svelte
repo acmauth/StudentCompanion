@@ -4,17 +4,20 @@
     import { t } from "$lib/i18n";
     import { Keyboard } from "@capacitor/keyboard";
 	import { showLoginAlert } from "./credentialLogin";
+    import appConfig from '$src/app.config';
 
 	let loginModalOpen = false;
     let modalCard: any;
 
-    Keyboard.addListener('keyboardWillShow', ev => {
-        modalCard.setCurrentBreakpoint(0.9);
-    });
+    if (appConfig.isMobile){
+        Keyboard.addListener('keyboardWillShow', ev => {
+            modalCard.setCurrentBreakpoint(0.9);
+        });
 
-    Keyboard.addListener('keyboardWillHide', () => {
-        modalCard.setCurrentBreakpoint(0.5)
-    });
+        Keyboard.addListener('keyboardWillHide', () => {
+            modalCard.setCurrentBreakpoint(0.5)
+        });
+    }
 </script>
 
 {#if $autheticationFlag == false}

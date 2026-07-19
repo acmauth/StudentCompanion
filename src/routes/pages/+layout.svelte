@@ -14,27 +14,28 @@
 	// Routes
 	$: bottomNav = [
 		{
-			label: $t('navigation.maps'),
+			// WARNING: Translated labels cause race condition!!!!
+			// label: $t('navigation.maps'),
 			icon: map,
 			tab: 'maps'
 		},
 		{
-			label: $t('navigation.club'),
+			// label: $t('navigation.club'),
 			icon: restaurant,
 			tab: 'menu'
 		},
 		{
-			label: $t('navigation.home'),
+			// label: $t('navigation.home'),
 			icon: home_solid,
 			tab: 'homepage'
 		},
 		{
-			label: $t('navigation.progress'),
+			// label: $t('navigation.progress'),
 			icon: statsChart,
 			tab: 'grades'
 		},
 		{
-			label: $t('navigation.calendar'),
+			// label: $t('navigation.calendar'),
 			icon: calendarClear,
 			tab: 'calendar'
 		}

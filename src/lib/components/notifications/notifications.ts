@@ -145,7 +145,6 @@ export async function gatherNotifications(options?: options){
     // const universisNotifications = filteredNotifications.universis;
     const universisNotifications = await getUniversisMessages(options.refresh);
 
-    console.log(JSON.stringify(webmailNotifications));
 
     let notifications = elearningNotifications.concat(webmailNotifications)
                         .filter((notification, index, self) => {
