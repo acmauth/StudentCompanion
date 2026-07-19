@@ -25,6 +25,7 @@
 	import { locale } from '$lib/i18n';
 	import { StatusBar, Style } from '@capacitor/status-bar';
 	import AdBanner from './ad_banner.svelte';
+	import AchievementsPage from '$src/routes/achievementsPage/achievements.svelte';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -209,6 +210,11 @@
 					<div class="service-button ion-activatable" on:click={openCapacitorSite} aria-hidden>
 						<ion-icon icon={barbellOutline} class="service-button-icon"></ion-icon>
 						<span class="service-button-label">{$t('homepage.gym')}</span>
+						<ion-ripple-effect></ion-ripple-effect>
+					</div>
+					<div class="service-button ion-activatable" on:click={() => {navController.push(AchievementsPage);}} aria-hidden>
+						<ion-icon icon={barbellOutline} class="service-button-icon"></ion-icon>
+						<span class="service-button-label">{$t('homepage.achievements')}</span>
 						<ion-ripple-effect></ion-ripple-effect>
 					</div>
 				</div>

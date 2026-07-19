@@ -2,6 +2,7 @@ import { menu } from 'ionicons/icons';
 
 export default {
 	el: {
+		"homepage.achievements": "Επιτεύγματα",
 		"navigation.home": "Αρχική",
 		"navigation.progress": "Πρόοδος",
 		"navigation.calendar": "Ατζέντα",
@@ -274,6 +275,7 @@ export default {
 		"recentgrades.nonews": "Δεν υπάρχουν νέα."
 	},
 	en: {
+		'homepage.achievements': 'Achievements',
 		'navigation.home': 'Home',
 		'navigation.progress': 'Progress',
 		'navigation.calendar': 'Agenda',
