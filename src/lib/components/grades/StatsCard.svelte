@@ -42,24 +42,29 @@
 		</ion-card-subtitle>
 	</ion-card-header>
 	<ion-card-content>
+		<div class="stat_card_contents">
 		{#if !subjects}
 			<ion-text>{$t('progress.no_courses_found')}</ion-text>
 		{:else}
 			<circle-progress max={subjects} value={passedSubjects} />
 		{/if}
-		<ion-list>
-			<ion-item>
-				<ion-label>{$t('progress.grade_ects')}</ion-label>
-				<ion-text><h2>{gradesObject.weightedAverage}</h2></ion-text>
-			</ion-item>
-			<ion-item>
-				<ion-label>{$t('progress.grade_simple')}</ion-label>
-				<ion-text><h2>{gradesObject.average}</h2></ion-text>
-			</ion-item>
-			<ion-item lines="none" class="ion-padding-bottom">
-				<ion-label>ECTS</ion-label>
-				<ion-text><h2>{gradesObject.ects}</h2></ion-text>
-			</ion-item>
+			<div class="stat_tiles">
+				<div class="stat_tile ion-activatable ripple-parent">
+					<ion-ripple-effect/>
+					<span class="stat_value">{gradesObject.weightedAverage}</span>
+					<span class="stat_label">{$t('progress.grade_ects')}</span>
+				</div>
+				<div class="stat_tile ion-activatable ripple-parent">
+					<ion-ripple-effect/>
+					<span class="stat_value">{gradesObject.average}</span>
+					<span class="stat_label">{$t('progress.grade_simple')}</span>
+				</div>
+				<div class="stat_tile ion-activatable ripple-parent">
+					<ion-ripple-effect/>
+					<span class="stat_value">{gradesObject.ects}</span>
+					<span class="stat_label">ECTS</span>
+				</div>
+			</div>
 			<canvas
 				id="gradeChart"
 				use:gradeEvolutionChart={{
@@ -67,14 +72,50 @@
 					title: $t('progress.average_evolution')
 				}}
 			/>
-			<!-- svelte-ignore a11y-no-static-element-interactions -->
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			 </div>
 			<Chip chipIcon={allIonicIcons.calculator} text={$t('progress.average_prediction')} {flip} />
-		</ion-list>
 	</ion-card-content>
 </ion-card>
 
 <style>
+
+	.stat_card_contents {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.stat_tiles {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.stat_tile {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.25rem;
+		padding: 0.9rem 0.4rem;
+		border-radius: 1rem;
+		background: var(--app-color-degree-chip);
+		text-align: center;
+        position: relative;
+        overflow: hidden;
+	}
+
+	.stat_value {
+		font-size: 1.4rem;
+		font-weight: bold;
+		color: var(--app-color-degree-chip-text);
+	}
+
+	.stat_label {
+		font-size: 0.75rem;
+		color: var(--ion-color-medium);
+	}
+
 	ion-text {
 		color: var(--app-color-primary-dark-variation);
 	}
