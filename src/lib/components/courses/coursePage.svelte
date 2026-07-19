@@ -4,8 +4,9 @@
     import { t, getLocale } from "$src/lib/i18n";
 	import { NewCourseType, ExamStatistics } from "$types/courseType";
     import CoursesSkeleton from "./coursesSkeleton.svelte";
+    import ExamStatsSkeleton from "./examStatsSkeleton.svelte";
     import trophyOutline from "./trophy-outline.svg"
-    import { caretDown } from "ionicons/icons";
+    import { caretDown, personCircleOutline } from "ionicons/icons";
 	import { getOrdinalSuffix } from '$src/routes/pages/maps/helper';
     import { gradeGaugeChart, gradeDistributionChart } from './charts';
 	import DOMPurify from 'dompurify';
@@ -96,12 +97,12 @@
 
         // Thanks @Panagiotis Skoulis!
         const syllabus_info = await fetch(`https://courses.auth.gr/services/course-catalogue/v1p1/qa/CourseOutlines/${encodeURI(classIdentifier)}?$top=1&$skip=0&$count=false`)
-        if (syllabus_info.ok) {
+        if (syllabus_info.status == 200) {
             const {content, eudoxus} = await syllabus_info.json();
             return {syllabus: content, eudoxus}
         }
         else {
-            throw "Couldn't retrieve course Syllabus info"
+            return {syllabus: false, eudoxus: false}
         }
     }
 
@@ -131,6 +132,8 @@
     {:then courseDetails}
         <SubPageHeader title={localize(courseDetails.courseTitle, courseDetails.course.locale?.name)} stackedNav />
 
+        <div class="page_contents">
+            
         <div class="course_view" in:fly={{ y: 8, duration: ANIMDURATION }}>
             <!-- Grade Gauge -->
             {#if courseDetails.grade !== null}
@@ -182,33 +185,56 @@
                 <!-- Maybe show category -->
                 {#if courseDetails.course.instructor}
                     <ion-chip color="warning">
+                        <ion-icon src={personCircleOutline} style="margin: 0;"/>
                         {localize(courseDetails.course.instructor?.givenName, courseDetails.course.instructor?.locale?.givenName)} {localize(courseDetails.course.instructor?.familyName, courseDetails.course.instructor?.locale?.familyName)}
                     </ion-chip>
                 {/if}
             </div>
         </div>
-        <div>
-            {#await fetchCourseSyllabusEudoxus(id) then CourseSyllabusEudoxus}
-                {#if CourseSyllabusEudoxus.syllabus}
-                    <ion-accordion-group class="accordion" expand="compact" in:fade={{ duration: ANIMDURATION }}>
+        <div class="syllabus_eudoxus_accordions">
+            {#await fetchCourseSyllabusEudoxus(id)}
+                <ion-accordion-group class="accordion" expand="compact" in:fade={{ duration: ANIMDURATION }}>
                         <ion-accordion value="first">
-                            <ion-item slot="header" color="white">
-                                <ion-label>{$t("course.syllabus")}<ion-label/>
-                            </ion-item>
-                                <p slot="content" style="white-space: pre-line;">{@html sanitize(CourseSyllabusEudoxus.syllabus)}</p>
-                        </ion-accordion>
+                                <ion-item slot="header">
+                                    <ion-label>{$t("course.syllabus")}<ion-label/>
+                                </ion-item>
+                                    <p slot="content" style="white-space: pre-line;">{$t("maps.loading")}</p>
+                            </ion-accordion>
                     </ion-accordion-group>
-                {/if}
-                {#if CourseSyllabusEudoxus.eudoxus}
                     <ion-accordion-group class="accordion" expand="compact" in:fade={{ duration: ANIMDURATION, delay: STAGGER }}>
                             <ion-accordion value="first">
-                                <ion-item slot="header" color="white">
-								<ion-label>{$t("course.eudoxus")}</ion-label>
+                                <ion-item slot="header">
+								    <ion-label>{$t("course.eudoxus")}</ion-label>
                                 </ion-item>
-                                    <p slot="content" style="white-space: pre-line;">{@html sanitize(CourseSyllabusEudoxus.eudoxus)}</p>
+                                    <p slot="content" style="white-space: pre-line;">{$t("maps.loading")}</p>
                             </ion-accordion>
                         </ion-accordion-group>
-                {/if}
+            {:then CourseSyllabusEudoxus}
+                    <ion-accordion-group class="accordion" expand="compact" in:fade={{ duration: ANIMDURATION }}>
+                        <ion-accordion value="first">
+                                <ion-item slot="header">
+                                    <ion-label>{$t("course.syllabus")}<ion-label/>
+                                </ion-item>
+                                {#if CourseSyllabusEudoxus.syllabus}
+                                    <p slot="content" style="white-space: pre-line;">{@html sanitize(CourseSyllabusEudoxus.syllabus)}</p>
+                                {:else}
+                                    <p slot="content" style="white-space: pre-line;">{$t("course.no_syllabus")}</p>
+                                {/if}
+                            </ion-accordion>
+                    </ion-accordion-group>
+                    <ion-accordion-group class="accordion" expand="compact" in:fade={{ duration: ANIMDURATION, delay: STAGGER }}>
+                            <ion-accordion value="first">
+                                <ion-item slot="header">
+								    <ion-label>{$t("course.eudoxus")}</ion-label>
+                                </ion-item>
+                                {#if CourseSyllabusEudoxus.eudoxus}
+                                    <p slot="content" style="white-space: pre-line;">{@html sanitize(CourseSyllabusEudoxus.eudoxus)}</p>
+                                {:else}
+                                    <p slot="content" style="white-space: pre-line;">{$t("course.no_eudoxus")}</p>
+                                {/if}
+                            </ion-accordion>
+                        </ion-accordion-group>
+
             {:catch error}
                 <!-- Printing nothing if this fails -->
                 <!-- <p>{error.message}</p> -->
@@ -216,19 +242,24 @@
         </div>
 
         {#if courseDetails.gradeExam && courseDetails.gradeExam.id}
-            {#await fetchExamStatistics(courseDetails.gradeExam.id)}
-                <ion-progress-bar type="indeterminate" />
-            {:then examStatistics}
-                <div class="stats_section" in:fly={{ y: 8, duration: ANIMDURATION }}>
-                    <!-- Section header -->
-                    <div class="stats_header">
-                        <span class="stats_title">{$t('course.stats')}</span>
-                        <span class="stats_subtitle">{courseDetails.gradeExam.description}</span>
-                    </div>
+            <div class="stats_section" in:fly={{ y: 8, duration: ANIMDURATION }}>
+                <!-- Section header (known as soon as courseDetails resolves, no need to wait) -->
+                <div class="stats_header">
+                    <span class="stats_title">{$t('course.stats')}</span>
+                    <span class="stats_subtitle">{courseDetails.gradeExam.description}</span>
+                </div>
 
+            {#await fetchExamStatistics(courseDetails.gradeExam.id)}
+                <!-- Distribution chart placeholder -->
+                <div class="grade-distribution">
+                    <span class="chart-title">{$t('course.dist')}</span>
+                    <ion-skeleton-text animated style="width: 100%; aspect-ratio: 1.8; border-radius: 0.75rem; margin: 0;"></ion-skeleton-text>
+                </div>
+                <ExamStatsSkeleton />
+            {:then examStatistics}
                     {#if examStatistics.length}
                         <!-- Distribution chart -->
-                        <div class="grade-distribution">
+                        <div class="grade-distribution" in:fade={{ duration: ANIMDURATION }}>
                             <span class="chart-title">{$t('course.dist')}</span>
                             <canvas use:gradeDistributionChart={examStatistics}></canvas>
                         </div>
@@ -238,7 +269,7 @@
 
                     {#if examStatistics.length}
                         {#await produceStatistics(courseDetails, examStatistics)}
-                            <ion-progress-bar type="indeterminate" />
+                            <ExamStatsSkeleton />
                         {:then insights}
                             <!-- Aggregate stat tiles -->
                             <div class="stat_tiles" in:fade={{ duration: ANIMDURATION, delay: STAGGER }}>
@@ -325,11 +356,13 @@
                             <div style="display:block; width: 0; height: 2rem;"></div>
                         {/await}
                     {/if}
-                </div>
             {:catch error}
 		        <p>{error.message}</p>
             {/await}
+            </div>
         {/if}
+
+        </div>
 
     {:catch error}
 		<p>{error.message}</p>
@@ -341,6 +374,42 @@
 		--padding-end: 1.5rem;
 		--padding-start: 1.5rem;
 	}
+
+    .page_contents{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .syllabus_eudoxus_accordions{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    ion-accordion {
+        background: var(--ion-color-light-shade);
+        border: 1px solid var(--ion-color-light-shade);
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+    /* Matches ion-accordion's own look, so the loading state occupies the same
+       footprint as the header that replaces it. */
+    .accordion_skeleton {
+        background: var(--ion-color-light-shade);
+        border: 1px solid var(--ion-color-light-shade);
+        border-radius: 1rem;
+        overflow: hidden;
+    }
+
+
+    ion-accordion [slot='content'] {
+        background-color: var(--ion-background-color);
+        color: var(--ion-text-color);
+        padding: 1rem;
+        margin: 0;
+     }
 
 	.grade-gauge {
 		max-width: 16rem;
