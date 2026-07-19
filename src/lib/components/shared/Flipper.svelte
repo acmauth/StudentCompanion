@@ -34,7 +34,16 @@
 			// The height relative to the rest of the page is dictated by the main container, so we
 			// set it's height to the height of the front or back child, depending on the status of the flip.
 			// So if we're flipped, use the back child, otherwise the front
-			const height = `${status ? backChild.clientHeight : frontChild.clientHeight}px`;
+			const measured = status ? backChild.clientHeight : frontChild.clientHeight;
+
+			// Ionic puts .ion-page-hidden (display: none) on a page once another
+			// one is stacked over it, so both faces measure 0 while we're covered.
+			// Writing that would collapse the card, and the shorter content clamps
+			// the scroll position of the page underneath — which then comes back
+			// scrolled somewhere else. Keep the last real height instead.
+			if (measured === 0) return;
+
+			const height = `${measured}px`;
 
 			// Writing only on a real change keeps the observer from re-entering.
 			if (flipContainer.style.height !== height) flipContainer.style.height = height;
