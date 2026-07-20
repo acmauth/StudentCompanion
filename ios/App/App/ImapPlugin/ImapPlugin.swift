@@ -37,6 +37,7 @@ public class ImapPlugin: CAPPlugin, CAPBridgedPlugin {
             session.username = username
             session.password = password
             session.connectionType = .TLS
+            session.isVoIPEnabled = false
 
             let fetchOp = session.fetchMessagesByNumberOperation(
                 withFolder: "INBOX",

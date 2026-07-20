@@ -5,6 +5,7 @@
 	import { Keyboard } from '@capacitor/keyboard';
 	import { goto } from '$app/navigation';
 	import { navController } from "./StackedNav"
+	import appConfig from '$src/app.config';
 
 	export let ionTabsDidChange = () => {};
 	export let ionTabsWillChange = () => {};
@@ -99,13 +100,15 @@
 	}
 
 	// Keyboard listener to hide the tab bar line when the keyboard is open
-	Keyboard.addListener('keyboardWillShow', () => {
-		tabBarLine.style.display = 'none';
-	});
-
-	Keyboard.addListener('keyboardWillHide', () => {
-		tabBarLine.style.display = 'block';
-	});
+	if (appConfig.isMobile){
+		Keyboard.addListener('keyboardWillShow', () => {
+			tabBarLine.style.display = 'none';
+		});
+		
+		Keyboard.addListener('keyboardWillHide', () => {
+			tabBarLine.style.display = 'block';
+		});
+	}
 </script>
 
 <ion-tabs
@@ -131,7 +134,9 @@
 						tabBarClick(tab.tab);
 					}}
 				>
-					<ion-label class="tabbarlabel">{tab.label}</ion-label>
+					{#if tab.label}
+						<ion-label class="tabbarlabel">{tab.label}</ion-label>
+					{/if}
 					{#if tab.tab !== currentTabName && tab.iconUnselected}
 						<ion-icon icon={tab.iconUnselected} class="tabbaricons" />
 					{:else}

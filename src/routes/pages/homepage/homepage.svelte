@@ -25,6 +25,7 @@
 	import { locale } from '$lib/i18n';
 	import { StatusBar, Style } from '@capacitor/status-bar';
 	import AdBanner from './ad_banner.svelte';
+    import appConfig from '$src/app.config';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -142,17 +143,18 @@
 	
 	async function handleScroll(event: CustomEvent) {
 		const scrollTop = event.detail.scrollTop;
-
-		if (scrollTop > SCROLL_THRESHOLD && !isStatusBarHidden) {
-			await StatusBar.hide();
-			isStatusBarHidden = true;
-		} else if (scrollTop <= SCROLL_THRESHOLD && isStatusBarHidden) {
-			await StatusBar.show();
-			isStatusBarHidden = false;
+		if (appConfig.isMobile){
+			if (scrollTop > SCROLL_THRESHOLD && !isStatusBarHidden) {
+				await StatusBar.hide();
+				isStatusBarHidden = true;
+			} else if (scrollTop <= SCROLL_THRESHOLD && isStatusBarHidden) {
+				await StatusBar.show();
+				isStatusBarHidden = false;
+			}
 		}
 	}
 
-	$: StatusBar.setStyle({ style: Style.Dark });
+	$: if (appConfig.isMobile){StatusBar.setStyle({ style: Style.Dark })};
 
 </script>
 

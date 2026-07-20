@@ -32,7 +32,7 @@
 	<input
 		id={`ects-${course.id}`}
 		class="ects"
-		placeholder={$t('customCourse.coefficient')}
+		placeholder={'ECTS'}
 		inputmode={'numeric'}
 		on:focus={() => (course.coefficient = '')}
 		on:click={clickInput}

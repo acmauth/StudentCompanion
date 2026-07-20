@@ -61,7 +61,7 @@ Aristomate interfaces with the university's API systems, so after installation a
 
 At this stage, we do not require contributions. Thank you for your interest!
 
-## Meet the team ✨
+## Meet the Founding team ✨
 <!-- 
     Apostolos Halis
     Christos Balaktsis
@@ -76,26 +76,35 @@ At this stage, we do not require contributions. Thank you for your interest!
     <tbody>
         <tr>
             <td align="center" valign="top" width="25%">
-                <a href="https://github.com/TolisSth">
-                    <img src="https://avatars.githubusercontent.com/u/93685610?v=4?s=100" width="100px;" alt="Apostolos Halis"/>
-                    <br />
-                    <sub><b>Apostolos Halis</b></sub>
-                </a>
-            </td>
-            <td align="center" valign="top" width="25%">
                 <a href="https://github.com/balaktsisc">
                     <img src="https://avatars.githubusercontent.com/u/74056421?v=4?s=100" width="100px;" alt="Christos Balaktsis"/>
                     <br />
-                    <sub><b>Christos Balaktsis</b></sub>
+                    <sub><b>🔧 Christos Balaktsis</b></sub>
                 </a>
             </td>
             <td align="center" valign="top" width="25%">
                 <a href="https://github.com/dangelidou">
                     <img src="https://avatars.githubusercontent.com/u/115474360?v=4?s=100" width="100px;" alt="Dimitra Angelidou"/>
                     <br />
-                    <sub><b>Dimitra Angelidou</b></sub>
+                    <sub><b>🔧 Dimitra Angelidou</b></sub>
                 </a>
             </td>
+            <td align="center" valign="top" width="25%">
+                <a href="https://github.com/neron-png">
+                    <img src="https://avatars.githubusercontent.com/u/18248043?v=4?s=100" width="100px;" alt="Neron Panagiotopoulos"/>
+                    <br />
+                    <sub><b>🔧 Neron Panagiotopoulos</b></sub>
+                </a>
+            </td>
+            <td align="center" valign="top" width="25%">
+                <a href="https://github.com/TolisSth">
+                    <img src="https://avatars.githubusercontent.com/u/93685610?v=4?s=100" width="100px;" alt="Apostolos Halis"/>
+                    <br />
+                    <sub><b>Apostolos Halis</b></sub>
+                </a>
+            </td>
+            </tr>
+            <tr>
             <td align="center" valign="top" width="25%">
                 <a href="https://github.com/Kostaga">
                     <img src="https://avatars.githubusercontent.com/u/59094550?v=4?s=100" width="100px;" alt="Konstantinos Agathopoulos"/>
@@ -103,8 +112,6 @@ At this stage, we do not require contributions. Thank you for your interest!
                     <sub><b>Konstantinos Agathopoulos</b></sub>
                 </a>
             </td>
-            </tr>
-            <tr>
             <td align="center" valign="top" width="25%">
                 <a href="https://github.com/VirtualVirtuosoV1">
                     <img src="https://avatars.githubusercontent.com/u/110724304?v=4?s=100" width="100px;" alt="Michalis Karypidis"/>
@@ -117,13 +124,6 @@ At this stage, we do not require contributions. Thank you for your interest!
                     <img src="https://avatars.githubusercontent.com/u/75997814?v=4?s=100" width="100px;" alt="Myrto Gkogkou"/>
                     <br />
                     <sub><b>Myrto Gkogkou</b></sub>
-                </a>
-            </td>
-            <td align="center" valign="top" width="25%">
-                <a href="https://github.com/neron-png">
-                    <img src="https://avatars.githubusercontent.com/u/18248043?v=4?s=100" width="100px;" alt="Neron Panagiotopoulos"/>
-                    <br />
-                    <sub><b>Neron Panagiotopoulos</b></sub>
                 </a>
             </td>
             </td>
