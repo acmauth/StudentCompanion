@@ -5,13 +5,13 @@ android {
         resources.excludes.add("META-INF/*")
     }
     namespace "studentCompanionUI.ionic.io"
-    compileSdkVersion 35
+    compileSdkVersion 36
     defaultConfig {
         applicationId "app.aristomate.gr"
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion 35
-        versionCode 62
-        versionName '2.1.10 Flying Whales'
+        targetSdkVersion 36
+        versionCode 63
+        versionName '2.2.0 Break'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
                 // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
