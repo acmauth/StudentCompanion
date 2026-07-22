@@ -19,9 +19,6 @@
 			},
 			"Keyboard": {
 				"resizeOnFullScreen": false
-			},
-			"EdgeToEdge": {
-				"backgroundColor": "#ffffff"
 			}
 		  },
 		  "server": {
