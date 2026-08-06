@@ -8,9 +8,11 @@ import { scheduledNotifications } from "$lib/calendarNotifications/notifications
 import { loginStore } from "$src/lib/authentication/loginStore";
 import { webmailLoggedIn } from "$components/webmailLogin/userCredsFlagStore";
 import { darkMode } from "$src/lib/globalFunctions/darkMode";
+import { darkMode, autoDarkMode } from "$src/lib/globalFunctions/darkMode";
 
 const persistedStores: CapacitorPersistedStore<any>[] = [
     darkMode,
+    autoDarkMode,
     toggles,
     userCreds,
     dismissedItems,
