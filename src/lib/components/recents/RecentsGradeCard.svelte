@@ -1,24 +1,16 @@
-<script>
+<script lang="ts">
 	import { navController } from "$components/shared/StackedNav";
   import Course from "$components/courses/coursePage.svelte";
 	import timeSinceDate from "$src/lib/globalFunctions/getTimeSinceDate";
 	import { getLocale } from "$src/lib/i18n";
   import { school } from 'ionicons/icons';
 
-  /**
-   * @type any
-   */
-  export let subject;
+  export let subject: any;
 
-  /**
-	 * @param {{ childCourses: string | any[]; course: any; }} course
-	 */
-   export function navigateToCourse(course) {
-	    if (!(course.childCourses && course.childCourses.length > 0)) 
+  export function navigateToCourse(course: any) {
+	    if (!(course.childCourses && course.childCourses.length > 0))
 		  navController.push(Course, {id: course.id});
   }
-
-
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -37,7 +29,7 @@
         </div>
       </div>
       <div class="right-col">
-        <span class="grade-value {subject.examGrade * 10 >= 5 ? 'success' : 'danger'}">
+        <span class="grade-pill {subject.examGrade * 10 >= 5 ? 'success' : 'danger'}">
           {subject.formattedGrade}
         </span>
       </div>
@@ -45,12 +37,16 @@
   </div>
 </a>
 
-
 <style>
   .card-link {
     text-decoration: none;
     display: block;
     width: 100%;
+    transition: opacity 0.15s ease;
+  }
+
+  .card-link:active {
+    opacity: 0.7;
   }
 
   .grade-card {
@@ -68,22 +64,28 @@
   .left-col {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex: 1;
     overflow: hidden;
   }
 
   .icon-wrapper {
-    background: var(--ion-color-step-50, #f4f5f8);
-    color: var(--ion-color-medium);
-    border-radius: 12px;
-    width: 40px;
-    height: 40px;
+    background: rgba(var(--ion-color-primary-rgb), 0.12);
+    color: var(--ion-color-primary);
+    border-radius: 10px;
+    width: 36px;
+    height: 36px;
+    box-sizing: border-box;
+    padding: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 18px;
     flex-shrink: 0;
+  }
+
+  .icon-wrapper ion-icon {
+    display: block;
   }
 
   .course-details {
@@ -113,10 +115,13 @@
     align-items: center;
   }
 
-  .grade-value {
-    font-size: 1.4rem;
+  .grade-pill {
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1;
+    padding: 0.3rem 0.65rem;
+    border-radius: 0.7rem;
+    background: rgba(128, 128, 128, 0.1);
   }
 
   .success {

@@ -25,6 +25,7 @@
 	let today = date.getDay();
 	// Convert from Sunday=0, Monday=1 to Monday=0, Sunday=6
 	today = today === 0 ? 6 : today - 1;
+	let today_weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
 
 	const hours = date.getHours();
 	const mins = date.getMinutes();
@@ -33,7 +34,19 @@
 	let next = ''; // Next meal
 	let color = 'success';
 	let menuDate = '';
+	let closedForHolidays = false;
 
+	// Seasonal emoji shown when the cafeteria is closed for holidays
+	const month = date.getMonth(); // 0 = January, 11 = December
+	let seasonalEmoji = '🏖️';
+	if (month === 6 || month === 7) {
+		seasonalEmoji = '🏖️'; // July - August
+	} else if (month === 11 || month === 0) {
+		seasonalEmoji = '🎄'; // December - January
+	} else if (month === 2 || month === 3 || month === 4) {
+		seasonalEmoji = '🐰'; // March - May
+	}
+		
 	// Determine cafeteria status based on current time
 	// Now we stay on today's menu all day until midnight
 	if ((hours == 8 && mins >= 30) || (hours == 10 && mins < 30) || (hours == 9)) {
@@ -170,6 +183,7 @@
 		}, 100);
 	}
 
+	$: closedForHolidays = message === $t('menu.closedForHolidays');
 </script>
 
 <ion-page>
@@ -202,35 +216,40 @@
 				</h2> -->
 
 				<div style="margin: 0 0.6rem 0rem 0.6rem; margin-bottom: 5rem;">
+					{#if !closedForHolidays}
 					<ion-card>
-						<ion-card-content class="swiper-card-content">
-							<swiper-container
-							init="false"
-							pagination="true"
-							pagination-clickable="true"
-							space-between="20"
-						>
-							<!-- Breakfast Slide -->
-							<swiper-slide>
-								<div class="meal-slide">
-									<div class="formatted-menu">{@html breakfastData}</div>
-								</div>
-							</swiper-slide>
-							<!-- Lunch Slide -->
-							<swiper-slide>
-								<div class="meal-slide">
-									<div class="formatted-menu">{@html lunchData}</div>
-								</div>
-							</swiper-slide>
-							<!-- Dinner Slide -->
-							<swiper-slide>
-								<div class="meal-slide">
-									<div class="formatted-menu">{@html dinnerData}</div>
-								</div>
-							</swiper-slide>
-						</swiper-container>
-					</ion-card-content>
-				</ion-card>
+							<ion-card-content class="swiper-card-content">
+								<swiper-container
+								init="false"
+								pagination="true"
+								pagination-clickable="true"
+								space-between="20">
+									<!-- Breakfast Slide -->
+									<swiper-slide>
+										<div class="meal-slide">
+											<div class="formatted-menu">{@html breakfastData}</div>
+										</div>
+									</swiper-slide>
+									<!-- Lunch Slide -->
+									<swiper-slide>
+										<div class="meal-slide">
+											<div class="formatted-menu">{@html lunchData}</div>
+										</div>
+									</swiper-slide>
+									<!-- Dinner Slide -->
+									<swiper-slide>
+										<div class="meal-slide">
+											<div class="formatted-menu">{@html dinnerData}</div>
+										</div>
+									</swiper-slide>
+								</swiper-container>
+							</ion-card-content>
+						</ion-card>
+					{:else}
+						<div class="ion-text-center seasonal-emoji">
+							{seasonalEmoji}
+						</div>
+					{/if}
 			<!-- </div> -->
 
 				<!-- &nbsp; -->
@@ -238,44 +257,44 @@
 				<h2 class="ion-padding">
 					{$t('menu.week')}
 				</h2>
-				<ion-accordion-group expand="inset">
-					<ion-accordion value="first">
+				<ion-accordion-group expand="inset" value={closedForHolidays? undefined: today_weekday.toLowerCase()}>
+					<ion-accordion value="monday">
 						<ion-item slot="header">
 							<ion-label>{$t('menu.monday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[0]}</div>
 					</ion-accordion>
-					<ion-accordion value="second">
+					<ion-accordion value="tuesday">
 						<ion-item slot="header">
 							<ion-label>{$t('menu.tuesday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[1]}</div>
 					</ion-accordion>
-					<ion-accordion value="third">
+					<ion-accordion value="wednesday">
 						<ion-item slot="header">
 							<ion-label>{$t('menu.wednesday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[2]}</div>
 					</ion-accordion>
-					<ion-accordion value="fourth">
+					<ion-accordion value="thursday">
 						<ion-item slot="header">
 							<ion-label>{$t('menu.thursday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[3]}</div>
 					</ion-accordion>
-					<ion-accordion value="fifth">
+					<ion-accordion value="friday">
 						<ion-item slot="header">
 							<ion-label>{$t('menu.friday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[4]}</div>
 					</ion-accordion>
-					<ion-accordion value="sixth">
+					<ion-accordion value="saturday">
 						<ion-item slot="header">
 							<ion-label>{$t('menu.saturday')}</ion-label>
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[5]}</div>
 					</ion-accordion>
-					<ion-accordion value="seventh">
+					<ion-accordion value="sunday">
 						<ion-item slot="header">
 							<ion-label>{$t('menu.sunday')}</ion-label>
 						</ion-item>
@@ -293,6 +312,13 @@
 <style>
 	.swiper-card-content {
 		padding: 0 !important;
+	}
+
+	.seasonal-emoji {
+		font-size: 6rem;
+		line-height: 1;
+		margin: 2rem 0;
+		padding: 2rem;
 	}
 	
 	h2 {

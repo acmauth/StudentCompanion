@@ -8,8 +8,13 @@
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHintALLOption } from '@capacitor/barcode-scanner';
+	import 'js-circle-progress'
+	import ProgressCircle from '$components/shared/ProgressCircle.svelte';
+	import ProgressGauge from '$components/shared/ProgressGauge.svelte';
+	import { neoUniversisGet } from '$src/lib/dataService';
+
 
 	export let reactToHeight: boolean = true;
 	export let departmentName: string = '';
@@ -28,6 +33,12 @@
 	let schoolQRPressed = false;
 	let currentQRData = '';
 	let currentQRTitle = '';
+
+	interface Registration {
+		id: number;
+		semester: number;
+		classes: {id: string;finalGrade: number;coefficient: number;isPassed: number;registration: number;course: string}[];
+	}
 
 	function openQRDisplay(title: string, data: string) {
 		currentQRTitle = title;
@@ -98,6 +109,42 @@
 		toast_.present();
 	}
 
+	async function estimateProgressTrend() {
+		const registration_options = "$select=id,semester,classes&$expand=classes($select=id,finalGrade,coefficient,isPassed,course;$filter=isPassed eq 1)&$orderBy=semester&$top=-1"
+		const all_registrations: Registration[] = (await neoUniversisGet(`students/me/registrations?${registration_options}`, { lifetime: 1200 })).value
+
+		const calculateGrade_options = "$select=id,course,calculateGrade,isPassed,courseTitle&$filter=calculateGrade eq 0,isPassed eq 1&$top=-1"
+		const nonCalculatedGrades: {"id": string;"course": string;"calculateGrade": 0;"isPassed": 1;}[] = (await neoUniversisGet(`students/me/courses?${calculateGrade_options}`, { lifetime: 1200 })).value
+		
+		const disallowed_courses = new Set(nonCalculatedGrades.map(item => item.course))
+		const registrationsInDegree = all_registrations.map(registration => ({
+			...registration,
+			classes: registration.classes.filter(class_instance => !disallowed_courses.has(class_instance.course) && class_instance.isPassed == 1)
+		}))
+
+		// Step 1: compute weighted average per semester
+		const semesterAverages = registrationsInDegree.map(registration => {
+			const totalWeight = registration.classes.reduce((sum, c) => sum + c.coefficient, 0);
+			const weightedSum = registration.classes.reduce((sum, c) => sum + c.finalGrade * c.coefficient, 0);
+			return {
+				semester: registration.semester,
+				average: totalWeight > 0 ? weightedSum / totalWeight : 0
+			};
+		});
+
+		// Step 2: compare n to n-1
+		const progression = semesterAverages.map((current, index) => {
+			if (index === 0) return { semester: current.semester, trend: null }; // no previous
+			const previous = semesterAverages[index - 1];
+			return {
+				semester: current.semester,
+				average: current.average,
+				trend: current.average > previous.average ? "up" : current.average == previous.average ? "stable" : "down" //  up, down, stable
+			};
+		});
+		return progression[progression.length - 2].trend ; // return the trend of the last semester
+	}
+
 	let flipClass = false;
 	$: flipClass = isFlipped;
 
@@ -120,22 +167,27 @@
 		}
 	};
 
-	// Initialise height once after first browser layout so the CSS transition
-	// has a pixel value to animate FROM on the very first flip.
-	onMount(() => {
+	let trend = null;
+	let resizeObserver: ResizeObserver;
+
+	onMount(async() => {
 		if (reactToHeight) {
-			requestAnimationFrame(() => {
-				if (flipContainer && frontChild) {
-					flipContainer.style.height = `${frontChild.clientHeight}px`;
-				}
-			});
+			resizeObserver = new ResizeObserver(() => updateHeight(flipClass));
+			if (frontChild) resizeObserver.observe(frontChild);
+			if (backChild) resizeObserver.observe(backChild);
 		}
+		trend = await estimateProgressTrend();
+	});
+
+	onDestroy(() => {
+		resizeObserver?.disconnect();
 	});
 
 	// When the flip class changes, update the height of the flip card.
 	// Check if we should update the height of the flip card when it's toggled.
 	// Sometimes we don't want to do this, that's why it's optional.
 	$: if (reactToHeight) updateHeight(flipClass);
+	$: passedPct = numSubjects > 0 ? Math.round((numPassedSubjects / numSubjects) * 100) : 0;
 </script>
 
 <div class="flip-container" class:flipClass aria-hidden bind:this={flipContainer}>
@@ -159,20 +211,8 @@
 			</div>
 
 			<div class="stats-container" on:click={()=>{goto("/pages/grades")}} aria-hidden>
-				<div class="stat-card">
-					<div class="stat-header-horizontal">
-						<span class="stat-label">{$t('homepage.passed')}</span>
-						<span class="stat-value">{Math.round((numPassedSubjects > 0 ? numPassedSubjects / numSubjects : 0) * 100)}%</span>
-					</div>
-					<ion-progress-bar class="progress-bar" value="{numPassedSubjects > 0 ? numPassedSubjects / numSubjects : 0}"></ion-progress-bar>
-				</div>
-				<div class="stat-card">
-					<div class="stat-header-horizontal">
-						<span class="stat-label">{$t('homepage.average')}</span>
-						<span class="stat-value">{average.toFixed(2)}</span>
-					</div>
-					<ion-progress-bar class="progress-bar" value="{average / 10}"></ion-progress-bar>
-				</div>
+				<ProgressCircle value={passedPct} rightValue="{passedPct}%" rightDesc={$t('homepage.passed')} />
+				<ProgressGauge value={(average / 10) * 100} rightValue="{(average).toFixed(2)}" rightDesc={$t('homepage.average')} centerLabel={""} trend={trend} />
 			</div>
 		</div>
 
@@ -180,8 +220,6 @@
 		<div class="back personal-card card-back ion-activatable" bind:this={backChild}>
 			<ion-ripple-effect/>
 			<div class="card-header wallet-header" aria-hidden>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 				<h3 class="department-name" on:click={toggleCardFlip}>{$t('homepage.wallet')}</h3>
 				<div class="wallet-icon-container" on:click={toggleCardFlip} aria-hidden>
 					<ion-icon icon={wallet} class="wallet-icon"></ion-icon>
@@ -287,6 +325,14 @@
 </ion-modal>
 
 <style>
+	:global(body.dark) .card-front{
+		background: var(--app-color-primary) !important;
+	}
+
+	:global(body.dark) .card-back{
+		background: var(--app-color-primary) !important;
+	}
+
 	.personal-card {
 		background: var(--app-color-map-input);
 		border-radius: 1.3rem;
@@ -372,43 +418,10 @@
 	.stats-container {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 2rem;
-		padding-bottom: 0.5rem;
+		gap: 0.1rem;
 	}
 
-	.stat-card {
-		border-radius: 0.875rem;
-		padding: 0rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.stat-header-horizontal {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	.stat-label {
-		font-size: 0.85rem;
-		font-weight: 500;
-		color: var(--ion-color-medium);
-	}
-
-	.stat-value {
-		font-size: 1.5rem;
-		font-weight: 700;
-		color: var(--ion-text-color);
-	}
-
-	.progress-bar {
-		--progress-background: var(--ion-color-primary);
-		background: var(--ion-color-light-shade);
-		height: 0.7rem;
-		border-radius: 10px;
-	}
-
+	
 	.wallet-container {
 		display: flex;
 		justify-content: space-around;

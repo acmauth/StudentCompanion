@@ -1,6 +1,6 @@
 import type CapacitorPersistedStore from "$lib/storage/capacitorPersistedStore";
 import { toggles } from "./notifications/notificationToggles";
-import { dismissedItems } from "$components/recentResults/dismissedItems";
+import { dismissedItems } from "$components/recents/dismissedItems";
 import { EventStore } from "$components/calendar/event/EventStore";
 import { qrStore } from "$components/wallet/qrStore";
 import { userCreds, userTokens } from "$stores/credentials.store";

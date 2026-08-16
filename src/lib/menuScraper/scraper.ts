@@ -10,7 +10,7 @@ export async function getMenu() {
         const apiUrl = `${Config.menu.apiBase}?locale=${getLocale()}`;
 
         const response = await axios.get(apiUrl, { timeout: 5000 });
-        console.log(getLocale(), "Menu API URL:", apiUrl, "Response:", response.data);
+        // console.log(getLocale(), "Menu API URL:", apiUrl, "Response:", response.data);
         let days = response.data?.menu?.days;
         const club_open = response.data?.club_open;
 

@@ -26,7 +26,7 @@
             {$t('errorPage.homeButton')}
         </ion-button>
 
-        <ion-button mode='ios' expand="block" fill="outline" href="mailto:aristomate@auth.acm.org?subject={$t('errorPage.reportButton')} - Error {errorStatus}&body=Περιγραφή προβλήματος:%0D%0A%0D%0AError: {errorStatus}%0D%0AMessage: {errorMessage}%0D%0AURL: {$page.url}" class="report-button">
+        <ion-button mode='ios' expand="block" fill="outline" href="mailto:aristomate@auth.gr?subject={$t('errorPage.reportButton')} - Error {errorStatus}&body=Περιγραφή προβλήματος:%0D%0A%0D%0AError: {errorStatus}%0D%0AMessage: {errorMessage}%0D%0AURL: {$page.url}" class="report-button">
             <ion-icon slot="start" icon={mailOutline}></ion-icon>
             {$t('errorPage.reportButton')}
         </ion-button>
