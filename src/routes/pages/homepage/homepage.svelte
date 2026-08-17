@@ -9,7 +9,7 @@
 	import { navController } from '$components/shared/StackedNav';
 	import PersonalInfo from '$src/routes/pages/homepage/personal_info/personalInfo.svelte';
 	import RecentItems from '$components/recents/RecentsList.svelte';
-	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
+	import HomepageSkeleton from '$src/routes/pages/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
@@ -185,7 +185,7 @@
 					<div class="header ion-activatable" on:click={() => { isProfileExpanded = !isProfileExpanded;}} aria-hidden>
 						<!-- <ion-ripple-effect/> -->
 						<div class="welcome">
-							<h5 style="color: var(--ion-color-medium) !important; padding-left: 0.2rem;"><span style="font-size: 0.8em;">{greeting},</span> <br/> <span style="color: var(--ion-color-dark-tint);"><b>{getVocativeCase(givenName)} {getVocativeCase(familyName)}!</b></span>
+							<h5 style="color: var(--ion-color-medium) !important; padding-left: 0.2rem;"><span style="font-size: 0.8em;">{greeting},</span> <br/> <span style="color: var(--ion-color-dark-tint);"><b>{getVocativeCase(givenName)} {getVocativeCase(familyName)}</b></span>
 							</h5>
 						</div>
 						
