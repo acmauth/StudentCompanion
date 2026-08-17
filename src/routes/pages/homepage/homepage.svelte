@@ -25,10 +25,7 @@
 	import { Browser } from '@capacitor/browser';
 	import { locale } from '$lib/i18n';
 	import AdBanner from './ad_banner.svelte';
-	import { slide } from 'svelte/transition';
-	import { cubicOut } from 'svelte/easing';
-	import authlogo from '$lib/assets/auth_white.png';
-	import appConfig from '$src/app.config';
+	import { getHomepageCache, setHomepageCache } from './homepageCache';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -124,7 +121,8 @@
 		let expandedLocale = locale == 'el' ? '' : '($expand=locale)';
 
 		let personalData = await neoUniversisGet(
-			'Students/me?$expand=studyProgram($expand=studyLevel'+expandedLocale+'), department'+expandedLocale + (expandedLocale !== '' ? ', person' +expandedLocale : '')
+			'Students/me?$expand=studyProgram($expand=studyLevel'+expandedLocale+'), department'+expandedLocale + (expandedLocale !== '' ? ', person' +expandedLocale : ''),
+			{ lifetime: 86000 }
 		);
 
 
@@ -144,7 +142,7 @@
 			: personalData.person.locale?.familyName ?? personalData.person.familyName;
 		username = personalData.person.email.split('@')[0];
 
-		let subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
+		let subjects = (await neoUniversisGet('students/me/courses?$top=-1', { lifetime: 600 })).value;
 
 		let passedSubjects = subjects.filter(
 			(course: { isPassed: number }) => course.isPassed == 1
@@ -153,8 +151,27 @@
 		numSubjects = subjects?.length;
 		numPassedSubjects = passedSubjects?.length;
 
-		averages().then((result) => {
-			average = (result as { weighted_avg: number }).weighted_avg;
+		const averagesResult = await averages();
+		average = (averagesResult as { weighted_avg: number }).weighted_avg;
+
+		setHomepageCache({
+			givenName,
+			gender,
+			numPassedSubjects,
+			numSubjects,
+			average,
+			departmentName,
+			studyLevel,
+			actualSemester,
+			studentStatus,
+			aem,
+			apm,
+			inscriptionYear,
+			birthDate,
+			email,
+			username,
+			familyName,
+			locale
 		});
 	}
 
@@ -168,16 +185,54 @@
 		greeting = $t('homepage.goodevening');
 	}
 
+	// Render instantly from the last known data (if any) while getInfo()
+	// silently refreshes in the background; only show the skeleton when
+	// there's nothing cached yet, or the locale changed since it was cached.
+	const cachedHomepageData = getHomepageCache();
+	let loading = !cachedHomepageData || cachedHomepageData.locale !== $locale;
+	let loadError: any = null;
 
+	if (cachedHomepageData) {
+		givenName = cachedHomepageData.givenName;
+		gender = cachedHomepageData.gender;
+		numPassedSubjects = cachedHomepageData.numPassedSubjects;
+		numSubjects = cachedHomepageData.numSubjects;
+		average = cachedHomepageData.average;
+		departmentName = cachedHomepageData.departmentName;
+		studyLevel = cachedHomepageData.studyLevel;
+		actualSemester = cachedHomepageData.actualSemester;
+		studentStatus = cachedHomepageData.studentStatus;
+		aem = cachedHomepageData.aem;
+		apm = cachedHomepageData.apm;
+		inscriptionYear = cachedHomepageData.inscriptionYear;
+		birthDate = cachedHomepageData.birthDate;
+		email = cachedHomepageData.email;
+		username = cachedHomepageData.username;
+		familyName = cachedHomepageData.familyName;
+	}
 
+	async function refreshInfo(locale: string) {
+		try {
+			await getInfo(locale);
+			loadError = null;
+		} catch (err) {
+			loadError = err;
+		} finally {
+			loading = false;
+		}
+	}
+
+	$: refreshInfo($locale);
 </script>
 
 <ion-page>
 
 	<ion-content id="homepage_content" fullscreen={false} >
-		{#await getInfo($locale)}
+		{#if loadError}
+		<ErrorLandingCard errorMsg={loadError} />
+		{:else if loading}
 		<HomepageSkeleton />
-		{:then}
+		{:else}
 		<div id="scrolled_content">
 		<!-- {isProfileExpanded ? 'expanded-personal-section' : ''} -->
 			<div class="personal-section">
@@ -330,10 +385,8 @@
 		</div>
 
 	</div>
-	
-	{:catch error}
-	<ErrorLandingCard errorMsg={error} />
-	{/await}
+
+	{/if}
 </ion-content>
 </ion-page>
 
