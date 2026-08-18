@@ -2,7 +2,7 @@
     import SubPageHeader from "$components/shared/subPageHeader.svelte";
 	import { neoUniversisGet } from "$src/lib/dataService";
     import { t, getLocale } from "$src/lib/i18n";
-	import { NewCourseType, ExamStatistics } from "$types/courseType";
+	import type { NewCourseType, ExamStatistics, InstructorType, StudentCourseClass, StudentRegistration } from "$types/courseType";
     import CoursesSkeleton from "./coursesSkeleton.svelte";
     import ExamStatsSkeleton from "./examStatsSkeleton.svelte";
     import trophyOutline from "./trophy-outline.svg"
@@ -15,9 +15,7 @@
 
     export let id: string;
 
-    // Sections resolve from separate requests, so each one fades in as it lands
-    // instead of popping. Honour the OS reduced-motion setting by collapsing
-    // every duration to 0.
+    
     const reducedMotion = typeof window !== 'undefined'
         && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const ANIMDURATION = reducedMotion ? 0 : 250; // ms
@@ -25,7 +23,12 @@
 
     let courseDetails: NewCourseType|null = null;
     let statistics: ExamStatistics|null = null;
+    let instructors: InstructorType[] = [];
     let topTen: number;
+
+    
+    const courseIdLiteral = encodeURIComponent(`'${decodeURIComponent(id).replace(/'/g, "''")}'`);
+    const studentClassPromise = fetchStudentClass();
 
     function localize(Greek: string, English: string|null|undefined) {
         if (!English){
@@ -47,17 +50,56 @@
     }
 
 
-    async function fetchCourseContents(): Promise<NewCourseType>{
-        
-        const decodedCourseID = decodeURIComponent(id);
-        // OData escapes a single quote inside a string literal by doubling it
-        const courseIdLiteral = encodeURIComponent(`'${decodedCourseID.replace(/'/g, "''")}'`);
+    
+    async function fetchStudentClass(): Promise<StudentCourseClass|null>{
 
-        const courseObj: NewCourseType = (await neoUniversisGet(
-            `Students/me/courses?$filter=course/id eq ${courseIdLiteral}&$expand=course($expand=locale,instructor($select=InstructorSummary)),courseType($expand=locale),gradeExam($expand=instructors($expand=instructor($select=InstructorSummary)))&$orderby=semester%20desc,gradeYear%20desc&$top=-1&$count=false`,
-            // {forceFresh: true}
-        )).value[0]
+        // Nothing here is load-bearing enough to fail the page over — losing it
+        // costs the staff chips and the syllabus, not the grade.
+        try {
+            const registrations: StudentRegistration[] = (await neoUniversisGet(
+                `Students/me/registrations?$filter=classes/courseClass/course/id eq ${courseIdLiteral}&$expand=classes($filter=course/id eq ${courseIdLiteral};$expand=courseType($expand=locale),courseClass($expand=course($expand=locale),instructors($expand=instructor($select=InstructorSummary))))&$top=-1&$count=false`
+            ))?.value ?? [];
+
+            // A repeated course appears in several registrations; the newest one
+            // holds the staff that taught it most recently.
+            return registrations
+                .sort((a, b) =>
+                    (b.registrationYear?.id - a.registrationYear?.id)
+                    || (b.registrationPeriod?.id - a.registrationPeriod?.id))
+                .flatMap(registration => registration.classes ?? [])[0] ?? null;
+        } catch (error) {
+            console.error("Could not resolve the registration for", id, error);
+            return null;
+        }
+    }
+
+    
+    function gatherInstructors(course: NewCourseType, studentClass: StudentCourseClass|null): InstructorType[]{
+        const staff = (studentClass?.courseClass?.instructors ?? []).map(entry => entry.instructor);
+        const examBoard = (course.gradeExam?.instructors ?? []).map(entry => entry.instructor);
+        const found = staff.length ? staff : examBoard.length ? examBoard : [course.course.instructor];
+
+        // The same person can be listed twice when a class runs in sections
+        const seen = new Set<number>();
+        return found.filter((instructor): instructor is InstructorType => {
+            if (!instructor || seen.has(instructor.id)) return false;
+            seen.add(instructor.id);
+            return true;
+        });
+    }
+
+    async function fetchCourseContents(): Promise<NewCourseType>{
+
+        const [courseObj, studentClass] = await Promise.all([
+            neoUniversisGet(
+                `Students/me/courses?$filter=course/id eq ${courseIdLiteral}&$expand=course($expand=locale,instructor($select=InstructorSummary)),courseType($expand=locale),gradeExam($expand=instructors($expand=instructor($select=InstructorSummary)))&$orderby=semester%20desc,gradeYear%20desc&$top=-1&$count=false`,
+                // {forceFresh: true}
+            ).then(response => response.value[0] as NewCourseType),
+            studentClassPromise
+        ]);
+
         courseDetails = courseObj;
+        instructors = gatherInstructors(courseObj, studentClass);
 
         return courseObj;
     }
@@ -86,14 +128,13 @@
         return examStatistics
     }
 
-    async function fetchCourseSyllabusEudoxus(courseID: string): Promise<{syllabus: any, eudoxus: any}>{
+    async function fetchCourseSyllabusEudoxus(): Promise<{syllabus: any, eudoxus: any}>{
 
-        const decodedCourseID = decodeURIComponent(courseID);
-        const courseIdLiteral = encodeURIComponent(`'${decodedCourseID.replace(/'/g, "''")}'`);
 
-        const classIdentifier: string = (await neoUniversisGet(
-            `Students/me/classes?$filter=course/id eq ${courseIdLiteral}&$select=courseClass&$expand=courseClass&$top=1`
-        )).value[0]?.courseClass?.identifier;
+        const classIdentifier = (await studentClassPromise)?.courseClass?.identifier;
+        if (!classIdentifier){
+            return {syllabus: false, eudoxus: false}
+        }
 
         // Thanks @Panagiotis Skoulis!
         const syllabus_info = await fetch(`https://courses.auth.gr/services/course-catalogue/v1p1/qa/CourseOutlines/${encodeURI(classIdentifier)}?$top=1&$skip=0&$count=false`)
@@ -182,17 +223,25 @@
                 {#if !courseDetails.calculateGrade}
                     <ion-chip color="warning">{$t('course.not_calculated')}</ion-chip>
                 {/if}
-                <!-- Maybe show category -->
-                {#if courseDetails.course.instructor}
-                    <ion-chip color="warning">
-                        <ion-icon src={personCircleOutline} style="margin: 0;"/>
-                        {localize(courseDetails.course.instructor?.givenName, courseDetails.course.instructor?.locale?.givenName)} {localize(courseDetails.course.instructor?.familyName, courseDetails.course.instructor?.locale?.familyName)}
-                    </ion-chip>
-                {/if}
             </div>
+
+            
+            {#if instructors.length}
+                <div class="instructors" in:fade={{ duration: ANIMDURATION, delay: STAGGER }}>
+                    <span class="instructors_label">{$t('course.professors')}</span>
+                    <div class="instructor_chips">
+                        {#each instructors as instructor (instructor.id)}
+                            <ion-chip color="warning">
+                                <ion-icon src={personCircleOutline} style="margin: 0;"/>
+                                {localize(instructor.givenName, instructor.locale?.givenName)} {localize(instructor.familyName, instructor.locale?.familyName)}
+                            </ion-chip>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
         </div>
         <div class="syllabus_eudoxus_accordions">
-            {#await fetchCourseSyllabusEudoxus(id)}
+            {#await fetchCourseSyllabusEudoxus()}
                 <ion-accordion-group class="accordion" expand="compact" in:fade={{ duration: ANIMDURATION }}>
                         <ion-accordion value="first">
                                 <ion-item slot="header">
@@ -653,6 +702,32 @@
         flex-wrap: wrap;
         width: 100%;
         column-gap: 1rem;
+        row-gap: .35rem;
+        align-items: center;
+        justify-content: center;
+        justify-content: safe center;
+    }
+
+    
+    .instructors {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.15rem;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+
+    .instructors_label {
+        color: var(--ion-color-medium);
+        font-size: 0.85rem;
+    }
+
+    .instructor_chips {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        column-gap: 0.5rem;
         row-gap: .35rem;
         align-items: center;
         justify-content: center;

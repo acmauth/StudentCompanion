@@ -21,6 +21,16 @@
 		ects: 0
 	};
 
+	/**
+	 * js-circle-progress measures its stroke width in a microtask, before our ::part
+	 * styles are guaranteed to resolve, and never measures again. Redraw once the
+	 * element is actually in the document so the radius accounts for stroke-width: 10.
+	 */
+	function remeasureRadius(node: HTMLElement & { updateGraph?: () => void }) {
+		const frame = requestAnimationFrame(() => node.updateGraph?.());
+		return { destroy: () => cancelAnimationFrame(frame) };
+	}
+
 	onMount(async () => {
 		try {
 			const avgResult: AveragesResult = await averages(subjectsJSON);
@@ -46,7 +56,7 @@
 		{#if !subjects}
 			<ion-text>{$t('progress.no_courses_found')}</ion-text>
 		{:else}
-			<circle-progress max={subjects} value={passedSubjects} />
+			<circle-progress use:remeasureRadius max={subjects} value={passedSubjects} />
 		{/if}
 			<div class="stat_tiles">
 				<div class="stat_tile ion-activatable ripple-parent">
@@ -123,6 +133,7 @@
 	circle-progress::part(base) {
 		width: 120px;
 		height: auto;
+		overflow: visible;
 	}
 
 	circle-progress::part(value) {
