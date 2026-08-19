@@ -1,10 +1,20 @@
-<script>
+<script lang="ts">
 	import * as allIonicIcons from 'ionicons/icons';
-	export let clickInput;
-	export let gradeInput;
-	export let course;
-	export let deleteCustomCourse;
 	import { t } from '$lib/i18n';
+	import { isFailing } from './degreeGrade';
+	import type { CustomCourse } from './customCourses';
+
+	export let course: CustomCourse;
+	export let deleteCustomCourse: (id: number) => void;
+	export let onGrade: (course: CustomCourse) => void;
+	export let onClear: (course: CustomCourse) => void;
+	export let onCoefficient: (course: CustomCourse) => void;
+	export let onTitle: (course: CustomCourse) => void;
+
+	function setTitle(value: unknown) {
+		course.title = String(value ?? '');
+		onTitle(course);
+	}
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -25,8 +35,8 @@
 		class="course-name ion-padding-end"
 		placeholder={$t('customCourse.title')}
 		value={course.title}
-		on:focus={() => (course.title = '')}
-		on:ionInput={(e) => (course.title = e.target.value)}
+		on:focus={() => setTitle('')}
+		on:ionInput={(e) => setTitle(e.target.value)}
 	/>
 
 	<input
@@ -34,26 +44,29 @@
 		class="ects"
 		placeholder={'ECTS'}
 		inputmode={'numeric'}
-		on:focus={() => (course.coefficient = '')}
-		on:click={clickInput}
+		on:focus={() => {
+			course.coefficient = '';
+			onCoefficient(course);
+		}}
 		bind:value={course.coefficient}
-		on:input={() => gradeInput(course)}
+		on:input={() => onCoefficient(course)}
 		maxlength="2"
 	/>
 </div>
 
 <div class="input-box">
 	<input
-		id={course.id}
+		id={`custom-grade-${course.id}`}
 		type="text"
 		inputmode="decimal"
 		class="inputCustom"
+		class:invalid={isFailing(course)}
 		name="grade"
-		on:focus={() => (course.grade = '')}
-		on:click={clickInput}
+		on:focus={() => onClear(course)}
+		on:click={() => onClear(course)}
 		bind:value={course.grade}
 		placeholder="5.00"
-		on:input={() => gradeInput(course)}
+		on:input={() => onGrade(course)}
 	/>
 </div>
 
@@ -103,6 +116,10 @@
 		box-sizing: border-box;
 		outline: none;
 		background-color: #0000;
+	}
+
+	.inputCustom.invalid {
+		border-color: red;
 	}
 
 	::placeholder {

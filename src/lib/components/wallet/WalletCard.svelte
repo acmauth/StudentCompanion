@@ -569,6 +569,7 @@
 		perspective: 700px;
 		transition: height 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
 		-webkit-transition: height 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+		min-height: 100px;
 	}
 
 	/* When flipClass is active, rotate the whole contents of flipper 180 */

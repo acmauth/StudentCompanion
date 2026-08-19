@@ -1,3 +1,258 @@
+export type ExamStatistics = GradeBucket[]
+
+export type GradeBucket = {
+  examGrade: number,
+  isPassed: 1 | 0
+  total: number
+}
+
+export type AcademicPeriodType = {
+    id: number;
+    identifier: number | null;
+    additionalType: string | null;
+    alternateName: string | null;
+    description: string | null;
+    image: string | null;
+    name: string | null;
+    url: string | null;
+    dateCreated: string | null;
+    dateModified: string | null;
+    createdBy: number | null;
+    modifiedBy: number | null;
+};
+
+export type InstructorType = {
+    id: number;
+    familyName: string;
+    givenName: string;
+    category: string;
+    department: string;
+    locale: {
+        id: number;
+        object: number;
+        inLanguage: string;
+        familyName: string;
+        givenName: string;
+        category: string;
+        expertise: string | null;
+        specialty: string | null;
+    } | null;
+};
+
+export type NewCourseType = {
+    id: string;
+    course: {
+        id: string;
+        displayCode: string;
+        department: string;
+        courseArea: number | null;
+        name: string;
+        subtitle: string | null;
+        isEnabled: number;
+        isShared: number;
+        gradeScale: number;
+        instructor: InstructorType | null;
+        isCalculatedInScholarship: number;
+        units: number | null;
+        courseUrl: string | null;
+        notes: string | null;
+        replacedByCourse: string | null;
+        replacedCourse: string | null;
+        maxNumberOfRemarking: number | null;
+        parentCourse: string | null;
+        coursePartPercent: number | null;
+        calculatedCoursePart: number;
+        courseStructureType: number;
+        courseSector: number | null;
+        courseCategory: number | null;
+        ects: number;
+        isLocal: number;
+        dateModified: string | null;
+        calculatedInRegistration: number;
+        metadata: string | null;
+        locale: {
+            id: string;
+            object: string;
+            inLanguage: string;
+            name: string | null;
+        } | null;
+    };
+    student: number;
+    gradeYear: AcademicPeriodType;
+    gradePeriod: AcademicPeriodType;
+    courseTitle: string;
+    semester: AcademicPeriodType;
+    specialty: number;
+    units: number;
+    coefficient: number;
+    grade: number | null;
+    gradePeriodDescription: string | null;
+    courseType: {
+        id: number;
+        name: string;
+        abbreviation: string;
+        obligatoryType: number;
+        locale: {
+            id: number;
+            object: number;
+            inLanguage: string;
+            name: string;
+            abbreviation: string;
+        } | null;
+    };
+    calculateUnits: number;
+    calculateGrade: number;
+    registrationType: number;
+    notes: string | null;
+    programGroup: number | null;
+    groupPercent: number | null;
+    parentCourse: string | null;
+    coursePercent: number | null;
+    calculated: number;
+    examPeriod: {
+        id: number;
+        name: string;
+        isLate: number;
+        alternateName: string;
+        periods: number;
+    } | null;
+    hours: number | null;
+    ects: number;
+    lastRegistrationYear: AcademicPeriodType;
+    lastRegistrationPeriod: AcademicPeriodType;
+    percentileRank: number | null;
+    courseStructureType: {
+        id: number;
+        name: string;
+        isComplete: number;
+    };
+    isPassed: number;
+    dateModified: string | null;
+    repeated: number;
+    formattedGrade: string | null;
+    gradeExam: {
+        id: number;
+        course: string;
+        year: number;
+        examPeriod: number;
+        description: string;
+        notes: string | null;
+        isLate: number;
+        examDate: string | null;
+        status: number;
+        isCalculated: number;
+        decimalDigits: number;
+        name: string;
+        resultDate: string | null;
+        numberOfGradedStudents: number;
+        completedByUser: number | null;
+        dateCompleted: string | null;
+        dateModified: string | null;
+        gradeScale: number;
+        instructors: {
+            id: string;
+            courseExam: number;
+            instructor: InstructorType;
+            dateModified: string | null;
+        }[];
+    } | null;
+    studyProgramSpecialty: string | null;
+    metadata: string | null;
+    locale: {
+        id: number;
+        object: string;
+        inLanguage: string;
+        courseTitle: string | null;
+        notes: string | null;
+    } | null;
+};
+
+
+export type CourseDetails = NewCourseType['course'];
+
+
+export type CourseClassCourse = Omit<CourseDetails, 'instructor'> & {
+    instructor: number | null;
+};
+
+export type CourseClassInstructor = {
+    id: string;
+    courseClass: string;
+    instructor: InstructorType;
+    allowEdit: number;
+    teachingHours: number | null;
+    dateModified: string | null;
+};
+
+
+export type CourseClassType = {
+    id: string;
+    course: CourseClassCourse;
+    year: number;
+    period: number;
+    status: number;
+    statusModified: string | null;
+    maxNumberOfStudents: number | null;
+    minNumberOfStudents: number | null;
+    weekHours: number | null;
+    totalHours: number | null;
+    absenceLimit: number | null;
+    numberOfStudents: number | null;
+    title: string;
+    mustRegisterSection: number;
+    department: string;
+    dateModified: string | null;
+    /** Key the external courses.auth.gr catalogue is indexed by. */
+    identifier: string;
+    instructors: CourseClassInstructor[];
+};
+
+/** One course inside a registration (Students/me/registrations?$expand=classes). */
+export type StudentCourseClass = {
+    id: string;
+    registration: number;
+    courseClass: CourseClassType;
+    student: number;
+    finalGrade: number | null;
+    registrationType: number;
+    absences: number | null;
+    examPeriod: number | null;
+    autoRegistered: number;
+    examGrade: number | null;
+    section: number | null;
+    status: number;
+    units: number | null;
+    coefficient: number | null;
+    hours: number | null;
+    semester: number;
+    courseType: NewCourseType['courseType'];
+    ects: number;
+    percentileRank: number | null;
+    dateModified: string | null;
+    course: string;
+    isPassed: number;
+    formattedGrade: string | null;
+    sectionName: string | null;
+    studentDepartment: string;
+};
+
+export type StudentRegistration = {
+    id: number;
+    student: number;
+    registrationYear: AcademicPeriodType;
+    registrationPeriod: AcademicPeriodType;
+    registrationDate: string | null;
+    registrationModifiedDate: string | null;
+    registrationType: number;
+    status: AcademicPeriodType;
+    semester: number;
+    hasFees: number;
+    paid: number;
+    notes: string | null;
+    dateModified: string | null;
+    classes: StudentCourseClass[];
+};
+
 export type course = {
     "id": "string",
     "courseTitle": "string",
