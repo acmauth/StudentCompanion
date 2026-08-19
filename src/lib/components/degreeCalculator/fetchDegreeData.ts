@@ -18,11 +18,8 @@ export type DegreeData = {
 	passedSums: PassedSums;
 };
 
-/**
- * Splits the student's courses into what already counts towards the degree and
- * what is still outstanding. The API reports grades on a 0-1 scale, hence the
- * factor of 10 on the passed totals.
- */
+
+//Fetching data and scaling to 10
 export async function fetchDegreeData(): Promise<DegreeData> {
 	const passedSums: PassedSums = {
 		based: { grade_sum: 0, coefficient: 0 },

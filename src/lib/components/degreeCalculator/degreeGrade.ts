@@ -1,7 +1,7 @@
-/** A grade is entered on a 0-10 scale and must reach this to count. */
+
 export const PASS_THRESHOLD = 5;
 
-/** Running totals over the courses the student has already passed. */
+
 export type PassedSums = {
 	based: { grade_sum: number; coefficient: number };
 	simple: { grade_sum: number; passed: number };
@@ -12,7 +12,7 @@ export type DegreeGrade = {
 	simple: { value: number; stringed: string };
 };
 
-/** Anything the student can type a predicted grade into. */
+
 export type GradeEntry = {
 	/** Text currently shown in the input. */
 	grade: string;

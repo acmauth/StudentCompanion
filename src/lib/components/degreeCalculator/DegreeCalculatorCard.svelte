@@ -38,8 +38,7 @@
 		simple: { grade_sum: 0, passed: 0 }
 	};
 
-	// Seeded past the highest persisted id, so a new course can't collide with a
-	// restored one.
+
 	let nextId = get(customCourses).reduce((max, course) => Math.max(max, course.id + 1), 0);
 
 	async function load() {
@@ -48,8 +47,6 @@
 		unpassedCourses = data.unpassedCourses;
 	}
 
-	// The single source of truth for what's displayed: derived from the entries
-	// rather than accumulated into them.
 	$: degreeGrade = computeDegreeGrade(passedSums, [...unpassedCourses, ...$customCourses]);
 
 	function onUnpassedGrade(course: UnpassedCourse) {
@@ -178,14 +175,14 @@
 	}
 
 	.columnFlex {
-		flex-shrink: 0; /* Prevent this section from shrinking */
+		flex-shrink: 0;
 	}
 
 	ion-card {
 		display: flex;
 		flex-direction: column;
 		z-index: 1;
-		overflow: hidden; /* Prevent card from overflowing */
+		overflow: hidden; 
 	}
 
 	ion-card-title {

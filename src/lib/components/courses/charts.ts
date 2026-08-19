@@ -20,7 +20,7 @@ export function gradeGaugeChart(canvas: HTMLCanvasElement, {grade, isPassed, for
             afterDraw(chart: Chart<'doughnut'>) {
                 const { ctx, chartArea } = chart;
                 const x = (chartArea.left + chartArea.right) / 2;
-                const y = chartArea.bottom - 16; // near bottom, since it's a half-circle
+                const y = chartArea.bottom - 16; 
                 ctx.save();
                 ctx.font = 'bold 64px sans-serif';
                 ctx.fillStyle = colors.fill;
@@ -37,7 +37,7 @@ export function gradeGaugeChart(canvas: HTMLCanvasElement, {grade, isPassed, for
                     data: [current, MAX_GRADE - current],
                     backgroundColor: [colors.fill, colors.background],
                     borderWidth: 0,
-                    borderRadius: 20,       // rounded ends, like your screenshot
+                    borderRadius: 20,       
                 }]
             },
             options: {
@@ -76,7 +76,7 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
         const trackColorFailedDark = "#303030";
         const labelColor = "#9aa0ac";
 
-        // Aggregate the buckets into one total per integer grade (0..MAX_GRADE).
+        // Bucketing
         function toCounts(stats: ExamStatistics): number[] {
             const counts = new Array(MAX_GRADE + 1).fill(0);
             for (const bucket of stats) {
@@ -88,7 +88,7 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
             return counts;
         }
 
-        // roundRect isn't available on older webviews, so trace the path by hand.
+        // Roundrect shape
         function roundedRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
             r = Math.min(r, w / 2, h / 2);
             ctx.beginPath();
@@ -100,7 +100,7 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
             ctx.closePath();
         }
 
-        // Each integer grade below the pass threshold uses the "failed" colors.
+        // Each integer grade below the pass threshold uses the "failed" colours.
         const barColors = Array.from({ length: MAX_GRADE + 1 }, (_, grade) =>
             grade < PASS_THRESHOLD ? barColorFailed : barColorPassed);
         const trackColors = Array.from({ length: MAX_GRADE + 1 }, (_, grade) =>
@@ -108,9 +108,8 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
         const trackColorsDark = Array.from({ length: MAX_GRADE + 1 }, (_, grade) =>
             grade < PASS_THRESHOLD ? trackColorFailedDark : trackColorPassedDark);
 
-        // Muted "track" behind every bar, spanning the full height of the plot.
-        // The palette is resolved per draw rather than once, so a redraw after a
-        // theme toggle picks up the right one.
+        // Track behind every bar, spanning the full height of the plot.
+        // Updates to dark mode
         const trackBars = {
             id: 'trackBars',
             beforeDatasetsDraw(chart: Chart<'bar'>) {
@@ -137,7 +136,7 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
                     data: counts,
                     backgroundColor: barColors,
                     borderRadius: 100,        // clamped to half the bar width -> rounded ends
-                    borderSkipped: false,     // round the base too, not just the top
+                    borderSkipped: false,     // round base
                     barPercentage: 0.75,
                     categoryPercentage: 0.85,
                 }]

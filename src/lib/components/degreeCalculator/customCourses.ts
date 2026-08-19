@@ -7,11 +7,7 @@ export type CustomCourse = GradeEntry & {
 	title: string;
 };
 
-/**
- * Courses saved before lastGrade/gradeNumber existed only stored `grade`, and
- * stored it as a number once it had been through the old input handling. Read
- * that back through the mask so restored courses land in a consistent state.
- */
+
 function restore(stored: string | null): CustomCourse[] {
 	if (!stored) return [];
 
@@ -39,7 +35,7 @@ function restore(stored: string | null): CustomCourse[] {
 
 export const customCourses = writable<CustomCourse[]>(restore(localStorage.getItem('customCourses')));
 
-// Subscribe to store changes and persist them
+
 customCourses.subscribe((value) => {
 	localStorage.setItem('customCourses', JSON.stringify(value));
 });

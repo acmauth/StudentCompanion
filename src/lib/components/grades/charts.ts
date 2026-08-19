@@ -1,6 +1,3 @@
-// Kept out of ./helpers.ts on purpose: chart.js is ~200KB and cannot be
-// tree-shaken past a side-effecting import, so anything importing getSemester
-// from helpers would drag the whole of it in.
 import { Chart } from '$lib/chart';
 import type { Registration } from '$types/grades';
 
@@ -27,7 +24,6 @@ type GradeChartParams = { registrations: Registration[]; title: string };
 
 /**
  * Svelte action drawing how the weighted average evolves across semesters.
- * Built once and updated in place, mirroring $components/courses/charts.ts.
  */
 export function gradeEvolutionChart(
 	canvas: HTMLCanvasElement,
