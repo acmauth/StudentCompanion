@@ -21,6 +21,9 @@
 	let showingCachedData = false;
 	let dataLoaded = false;
 
+	// Weekday keys (index order matches cafeteriaData/cafeteriaDates and menu.<day> i18n keys)
+	const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
 	// Meal tabs shown above the swiper (index order matches the swiper slide order)
 	const mealTabs = ['breakfast', 'lunch', 'dinner'];
 	const mealIcons = [allIonicIcons.cafeOutline, allIonicIcons.restaurantOutline, allIonicIcons.moonOutline];
@@ -216,6 +219,13 @@
 		return false;
 	}
 
+	function formatDate(date: Date){
+		//Format date object into dd/mm/yyyy
+		return  String(date.getDate()).padStart(2, '0') + '/' +
+				String(date.getMonth() + 1).padStart(2, '0') + '/' +
+				date.getFullYear();
+	}
+
 	// Initialize data on mount
 	async function initializeData() {
 		const hasCachedData = await loadCachedData();
@@ -359,55 +369,15 @@
 					{$t('menu.week')}
 				</h2>
 				<ion-accordion-group expand="inset" value={closedForHolidays? undefined: todayKey}>
-					<ion-accordion value="monday">
-						<ion-item slot="header">
-							<ion-label>{$t('menu.monday')}{#if cafeteriaDates[0]}<span class="day-date">{cafeteriaDates[0]}</span>{/if}</ion-label>
-							{#if todayKey === 'monday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
-						</ion-item>
-						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[0]}</div>
-					</ion-accordion>
-					<ion-accordion value="tuesday">
-						<ion-item slot="header">
-							<ion-label>{$t('menu.tuesday')}{#if cafeteriaDates[1]}<span class="day-date">{cafeteriaDates[1]}</span>{/if}</ion-label>
-							{#if todayKey === 'tuesday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
-						</ion-item>
-						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[1]}</div>
-					</ion-accordion>
-					<ion-accordion value="wednesday">
-						<ion-item slot="header">
-							<ion-label>{$t('menu.wednesday')}{#if cafeteriaDates[2]}<span class="day-date">{cafeteriaDates[2]}</span>{/if}</ion-label>
-							{#if todayKey === 'wednesday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
-						</ion-item>
-						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[2]}</div>
-					</ion-accordion>
-					<ion-accordion value="thursday">
-						<ion-item slot="header">
-							<ion-label>{$t('menu.thursday')}{#if cafeteriaDates[3]}<span class="day-date">{cafeteriaDates[3]}</span>{/if}</ion-label>
-							{#if todayKey === 'thursday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
-						</ion-item>
-						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[3]}</div>
-					</ion-accordion>
-					<ion-accordion value="friday">
-						<ion-item slot="header">
-							<ion-label>{$t('menu.friday')}{#if cafeteriaDates[4]}<span class="day-date">{cafeteriaDates[4]}</span>{/if}</ion-label>
-							{#if todayKey === 'friday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
-						</ion-item>
-						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[4]}</div>
-					</ion-accordion>
-					<ion-accordion value="saturday">
-						<ion-item slot="header">
-							<ion-label>{$t('menu.saturday')}{#if cafeteriaDates[5]}<span class="day-date">{cafeteriaDates[5]}</span>{/if}</ion-label>
-							{#if todayKey === 'saturday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
-						</ion-item>
-						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[5]}</div>
-					</ion-accordion>
-					<ion-accordion value="sunday">
-						<ion-item slot="header">
-							<ion-label>{$t('menu.sunday')}{#if cafeteriaDates[6]}<span class="day-date">{cafeteriaDates[6]}</span>{/if}</ion-label>
-							{#if todayKey === 'sunday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
-						</ion-item>
-						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[6]}</div>
-					</ion-accordion>
+					{#each weekDays as day, i}
+						<ion-accordion value={day}>
+							<ion-item slot="header">
+								<ion-label>{$t('menu.' + day)}{#if cafeteriaDates[i]}<span class="day-date">{cafeteriaDates[i]}</span>{/if}</ion-label>
+								{#if cafeteriaDates[i] == formatDate(new Date())}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
+							</ion-item>
+							<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[i]}</div>
+						</ion-accordion>
+					{/each}
 				</ion-accordion-group>
 				</div>
 			{/if}

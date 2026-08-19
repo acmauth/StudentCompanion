@@ -86,8 +86,6 @@
 	let username = '';
 	let familyName = '';
 
-	// Toggle state
-	let isProfileExpanded = false;
 
 	async function handleCampusSafetyClick() {
 		const packageName = 'gr.auth.android.incidentmanager';
@@ -234,11 +232,10 @@
 		<HomepageSkeleton />
 		{:else}
 		<div id="scrolled_content">
-		<!-- {isProfileExpanded ? 'expanded-personal-section' : ''} -->
 			<div class="personal-section">
 				<div class="info-container">
-					<div class="header ion-activatable" on:click={() => { isProfileExpanded = !isProfileExpanded;}} aria-hidden>
-						<!-- <ion-ripple-effect/> -->
+					<div class="header ion-activatable" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
+						<ion-ripple-effect/>
 						<div class="welcome">
 							<h5 style="color: var(--ion-color-medium) !important; padding-left: 0.2rem;"><span style="font-size: 0.8em;">{greeting},</span> <br/> <span style="color: var(--ion-color-dark-tint);"><b>{getVocativeCase(givenName)}</b></span>
 							</h5>
@@ -437,7 +434,7 @@
 		align-items: center;
 		flex: 1;
 		overflow: hidden;
-		/* border-radius: 50px; */
+		border-radius: 16px;
 		position: relative;
 	}
 
