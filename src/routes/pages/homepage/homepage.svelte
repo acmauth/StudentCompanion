@@ -388,13 +388,6 @@
 </ion-page>
 
 <style>
-	:global(ion-tabs):has(#homepage_content) :global(ion-toolbar){
-		padding-top: var(--ion-safe-area-top) !important;
-	}
-	
-	:global(ion-tabs):has(#homepage_content){
-		padding-top: 0px !important;
-	}
 
 	ion-content {
 		--padding-start: 1.5rem;

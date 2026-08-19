@@ -167,7 +167,7 @@
 
 <style>
 	.tabbaricons {
-		font-size: 1.3rem;
+		font-size: x-large;
 	}
 
 	ion-tab-bar {
@@ -175,7 +175,6 @@
 		justify-content: stretch;
 		align-items: stretch;
 		width: 100%;
-		height: calc(44px + var(--ion-safe-area-bottom));
 	}
 
 	ion-tab-button {
