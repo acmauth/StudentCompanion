@@ -12,6 +12,7 @@
 	register();
 
 	let cafeteriaData: string[] = [];
+	let cafeteriaDates: (string | null)[] = [];
 	let breakfastData: string = '';
 	let lunchData: string = '';
 	let dinnerData: string = '';
@@ -19,6 +20,80 @@
 	let defaultSlideIndex: number = 0;
 	let showingCachedData = false;
 	let dataLoaded = false;
+
+	// Meal tabs shown above the swiper (index order matches the swiper slide order)
+	const mealTabs = ['breakfast', 'lunch', 'dinner'];
+	const mealIcons = [allIonicIcons.cafeOutline, allIonicIcons.restaurantOutline, allIonicIcons.moonOutline];
+	let activeMealKey = mealTabs[0];
+
+
+	const TIME_RANGE_RE = /\d{1,2}[:.]\d{2}\s*[–—-]\s*\d{1,2}[:.]\d{2}/;
+
+	function markHoursParagraphs(html: string): string {
+		if (!html || typeof DOMParser === 'undefined') return html;
+		try {
+			const doc = new DOMParser().parseFromString(html, 'text/html');
+			doc.body.querySelectorAll('p').forEach((p) => {
+				const text = (p.textContent || '').trim();
+				const isCandidate = p.previousElementSibling?.tagName === 'H2' || TIME_RANGE_RE.test(text);
+				if (!isCandidate) return;
+				const match = text.match(TIME_RANGE_RE);
+				if (match) {
+					p.textContent = match[0];
+					p.classList.add('menu-hours');
+				} else {
+					p.remove();
+				}
+			});
+			return doc.body.innerHTML;
+		} catch {
+			return html;
+		}
+	}
+
+	// The "full" day HTML leads with its own date line (e.g. "📅 29/06/2026").
+	// Pull that out so it can sit next to the weekday name in the accordion
+	// header instead of being hidden inside the collapsed content.
+	const DATE_RE = /\d{1,2}[\/.\-]\d{1,2}[\/.\-]\d{2,4}/;
+
+	function extractLeadingDate(html: string): { date: string | null; html: string } {
+		if (!html || typeof DOMParser === 'undefined') return { date: null, html };
+		try {
+			const doc = new DOMParser().parseFromString(html, 'text/html');
+			const first = doc.body.firstElementChild;
+			const match = first?.tagName === 'P' ? (first.textContent || '').match(DATE_RE) : null;
+			if (!match) return { date: null, html };
+			first!.remove();
+			return { date: match[0], html: doc.body.innerHTML };
+		} catch {
+			return { date: null, html };
+		}
+	}
+
+	// Runs both cleanup passes on a day's "full" HTML.
+	function prepareDayHtml(full: string): { date: string | null; html: string } {
+		const { date, html } = extractLeadingDate(full);
+		return { date, html: markHoursParagraphs(html) };
+	}
+
+	// Applies prepareDayHtml() across a week and assigns both cafeteriaData and
+	// cafeteriaDates together, so Svelte only sees one update per array.
+	function applyWeekHtml(days: { full: string }[]) {
+		const prepared = days.map((day) => prepareDayHtml(day.full));
+		cafeteriaData = prepared.map((p) => p.html);
+		cafeteriaDates = prepared.map((p) => p.date);
+	}
+
+	// Switch the swiper to the tapped meal tab
+	function handleSegmentChange(key: string | number | undefined) {
+		if (typeof key !== 'string') return;
+		activeMealKey = key;
+		const idx = mealTabs.indexOf(key);
+		const swiperEl = document.querySelector('swiper-container') as any;
+		if (idx >= 0 && swiperEl?.swiper) {
+			swiperEl.swiper.slideTo(idx);
+		}
+	}
 
 	// Determine today's index (0 for Monday, 6 for Sunday)
 	const date = new Date();
@@ -110,10 +185,10 @@
 
 
 		// menuData is an array of day objects (Monday=0, Sunday=6)
-		cafeteriaData = menuData.map(day => day.full);
-		breakfastData = menuData[today]?.breakfast || '';
-		lunchData = menuData[today]?.lunch || '';
-		dinnerData = menuData[today]?.dinner || '';
+		applyWeekHtml(menuData);
+		breakfastData = markHoursParagraphs(menuData[today]?.breakfast || '');
+		lunchData = markHoursParagraphs(menuData[today]?.lunch || '');
+		dinnerData = markHoursParagraphs(menuData[today]?.dinner || '');
 		menuDate = '';
 
 		// if it's undefined then cached data is returned
@@ -128,10 +203,10 @@
 		const cachedMenu = await getMenuFromCache();
 		
 		if (cachedMenu && cachedMenu.length > 0) {
-			cafeteriaData = cachedMenu.map(day => day.full);
-			breakfastData = cachedMenu[today]?.breakfast || '';
-			lunchData = cachedMenu[today]?.lunch || '';
-			dinnerData = cachedMenu[today]?.dinner || '';
+			applyWeekHtml(cachedMenu);
+			breakfastData = markHoursParagraphs(cachedMenu[today]?.breakfast || '');
+			lunchData = markHoursParagraphs(cachedMenu[today]?.lunch || '');
+			dinnerData = markHoursParagraphs(cachedMenu[today]?.dinner || '');
 			menuDate = '';
 
 			showingCachedData = true;
@@ -144,7 +219,7 @@
 	// Initialize data on mount
 	async function initializeData() {
 		const hasCachedData = await loadCachedData();
-		
+
 		if (!hasCachedData) {
 			// No cached data, fetch from API
 			await getMenuData();
@@ -166,6 +241,7 @@
 				// Update existing swiper
 				swiperEl.swiper.update();
 				swiperEl.swiper.slideTo(defaultSlideIndex);
+				activeMealKey = mealTabs[defaultSlideIndex];
 			} else if (swiperEl) {
 				// Initialize swiper with custom configuration
 				const swiperParams = {
@@ -176,14 +252,27 @@
 					initialSlide: defaultSlideIndex,
 					autoHeight: true, // Enable auto-height to adjust to content
 				};
-				
+
 				Object.assign(swiperEl, swiperParams);
 				swiperEl.initialize();
+				activeMealKey = mealTabs[defaultSlideIndex];
+			}
+
+			// Keep the meal segment control in sync when the user swipes manually
+			if (swiperEl && !swiperEl.__mealSyncBound) {
+				swiperEl.__mealSyncBound = true;
+				swiperEl.addEventListener('swiperslidechange', (e: any) => {
+					const idx = e.detail?.[0]?.activeIndex;
+					if (typeof idx === 'number' && mealTabs[idx]) {
+						activeMealKey = mealTabs[idx];
+					}
+				});
 			}
 		}, 100);
 	}
 
 	$: closedForHolidays = message === $t('menu.closedForHolidays');
+	$: todayKey = today_weekday.toLowerCase();
 </script>
 
 <ion-page>
@@ -199,25 +288,36 @@
 		{:then}
 			<!-- Data loaded successfully -->
 			{#if dataLoaded}
-				<div class="ion-text-center">
+				<div class="status-wrap">
 					{#if showingCachedData}
-						<ion-chip class="ion-padding" color="warning">
-							<ion-icon icon={allIonicIcons.cloudOfflineOutline} /> &nbsp; {$t('menu.showingCachedData') || 'Showing cached data'}
-						</ion-chip>
+						<div class="status-card status-warning">
+							<ion-icon icon={allIonicIcons.cloudOfflineOutline} />
+							<span class="status-message">{$t('menu.showingCachedData') || 'Showing cached data'}</span>
+						</div>
 					{:else}
-						<ion-chip class="ion-padding" {color}>
-							<ion-icon icon={allIonicIcons.timeOutline} /> &nbsp; {message}
-						</ion-chip>
+						<div class="status-card status-{color}">
+							<ion-icon icon={color === 'success' ? allIonicIcons.checkmarkCircleOutline : allIonicIcons.closeCircleOutline} />
+							<span class="status-message">{message}</span>
+						</div>
 					{/if}
 				</div>
-
-				<!-- <h2 class="ion-padding" style="margin-top:0.1rem;">
-					{title}
-				</h2> -->
 
 				<div style="margin: 0 0.6rem 0rem 0.6rem; margin-bottom: 5rem;">
 					{#if !closedForHolidays}
 					<ion-card>
+							<div class="meal-tabs">
+								<ion-segment value={activeMealKey} mode="ios" on:ionChange={(e) => handleSegmentChange(e.detail.value)}>
+									{#each mealTabs as tabKey, i}
+										<ion-segment-button value={tabKey}>
+											<ion-icon icon={mealIcons[i]} />
+											<ion-label>{$t(`menu.${tabKey}`)}</ion-label>
+											{#if i === defaultSlideIndex}
+												<span class="now-dot" aria-label={$t('menu.now')} />
+											{/if}
+										</ion-segment-button>
+									{/each}
+								</ion-segment>
+							</div>
 							<ion-card-content class="swiper-card-content">
 								<swiper-container
 								init="false"
@@ -246,8 +346,9 @@
 							</ion-card-content>
 						</ion-card>
 					{:else}
-						<div class="ion-text-center seasonal-emoji">
-							{seasonalEmoji}
+						<div class="empty-state">
+							<div class="empty-state-emoji">{seasonalEmoji}</div>
+							<!-- <p class="empty-state-message">{message}</p> -->
 						</div>
 					{/if}
 			<!-- </div> -->
@@ -257,46 +358,53 @@
 				<h2 class="ion-padding">
 					{$t('menu.week')}
 				</h2>
-				<ion-accordion-group expand="inset" value={closedForHolidays? undefined: today_weekday.toLowerCase()}>
+				<ion-accordion-group expand="inset" value={closedForHolidays? undefined: todayKey}>
 					<ion-accordion value="monday">
 						<ion-item slot="header">
-							<ion-label>{$t('menu.monday')}</ion-label>
+							<ion-label>{$t('menu.monday')}{#if cafeteriaDates[0]}<span class="day-date">{cafeteriaDates[0]}</span>{/if}</ion-label>
+							{#if todayKey === 'monday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[0]}</div>
 					</ion-accordion>
 					<ion-accordion value="tuesday">
 						<ion-item slot="header">
-							<ion-label>{$t('menu.tuesday')}</ion-label>
+							<ion-label>{$t('menu.tuesday')}{#if cafeteriaDates[1]}<span class="day-date">{cafeteriaDates[1]}</span>{/if}</ion-label>
+							{#if todayKey === 'tuesday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[1]}</div>
 					</ion-accordion>
 					<ion-accordion value="wednesday">
 						<ion-item slot="header">
-							<ion-label>{$t('menu.wednesday')}</ion-label>
+							<ion-label>{$t('menu.wednesday')}{#if cafeteriaDates[2]}<span class="day-date">{cafeteriaDates[2]}</span>{/if}</ion-label>
+							{#if todayKey === 'wednesday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[2]}</div>
 					</ion-accordion>
 					<ion-accordion value="thursday">
 						<ion-item slot="header">
-							<ion-label>{$t('menu.thursday')}</ion-label>
+							<ion-label>{$t('menu.thursday')}{#if cafeteriaDates[3]}<span class="day-date">{cafeteriaDates[3]}</span>{/if}</ion-label>
+							{#if todayKey === 'thursday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[3]}</div>
 					</ion-accordion>
 					<ion-accordion value="friday">
 						<ion-item slot="header">
-							<ion-label>{$t('menu.friday')}</ion-label>
+							<ion-label>{$t('menu.friday')}{#if cafeteriaDates[4]}<span class="day-date">{cafeteriaDates[4]}</span>{/if}</ion-label>
+							{#if todayKey === 'friday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[4]}</div>
 					</ion-accordion>
 					<ion-accordion value="saturday">
 						<ion-item slot="header">
-							<ion-label>{$t('menu.saturday')}</ion-label>
+							<ion-label>{$t('menu.saturday')}{#if cafeteriaDates[5]}<span class="day-date">{cafeteriaDates[5]}</span>{/if}</ion-label>
+							{#if todayKey === 'saturday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[5]}</div>
 					</ion-accordion>
 					<ion-accordion value="sunday">
 						<ion-item slot="header">
-							<ion-label>{$t('menu.sunday')}</ion-label>
+							<ion-label>{$t('menu.sunday')}{#if cafeteriaDates[6]}<span class="day-date">{cafeteriaDates[6]}</span>{/if}</ion-label>
+							{#if todayKey === 'sunday'}<ion-badge class="today-badge">{$t('menu.today')}</ion-badge>{/if}
 						</ion-item>
 						<div class="formatted-menu-acc" slot="content">{@html cafeteriaData[6]}</div>
 					</ion-accordion>
@@ -314,13 +422,123 @@
 		padding: 0 !important;
 	}
 
-	.seasonal-emoji {
-		font-size: 6rem;
-		line-height: 1;
-		margin: 2rem 0;
-		padding: 2rem;
+	.empty-state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin: 1.5rem 0.6rem 2rem 0.6rem;
+		padding: 2.5rem 1.5rem;
+		border-radius: 1.25rem;
+		background: var(--ion-color-light);
 	}
-	
+
+	.empty-state-emoji {
+		font-size: 4.5rem;
+		line-height: 1;
+		width: 6.5rem;
+		height: 6.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		background: rgba(var(--ion-color-primary-rgb), 0.1);
+		margin-bottom: 1.25rem;
+	}
+
+	.empty-state-message {
+		margin: 0;
+		text-align: center;
+		color: var(--ion-color-medium);
+		font-size: 0.95rem;
+	}
+
+	.status-wrap {
+		display: flex;
+		justify-content: center;
+		padding: 0.75rem 0.9rem 0;
+		margin-bottom: 1rem;
+	}
+
+	.status-card {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.6rem;
+		max-width: 32rem;
+		padding: 0.6rem 0.9rem;
+		border-radius: 1rem;
+	}
+
+	.status-card ion-icon {
+		font-size: 1.35rem;
+		flex-shrink: 0;
+	}
+
+	.status-message {
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+
+	.status-success {
+		background: rgba(var(--ion-color-success-rgb), 0.12);
+		color: var(--ion-color-success);
+	}
+
+	.status-danger {
+		background: rgba(var(--ion-color-danger-rgb), 0.12);
+		color: var(--ion-color-danger);
+	}
+
+	.status-warning {
+		background: rgba(var(--ion-color-warning-rgb), 0.16);
+		color: var(--ion-color-warning-shade);
+	}
+
+	.status-warning .status-message {
+		font-weight: 500;
+		font-size: 0.85rem;
+	}
+
+	.meal-tabs {
+		padding: 0.6rem 0.6rem 0.5rem;
+		border-bottom: 1px solid rgba(var(--ion-color-medium-rgb), 0.15);
+	}
+
+	ion-segment-button {
+		--indicator-color: rgba(var(--ion-color-primary-rgb), 0.12);
+		min-height: 3.1rem;
+		position: relative;
+	}
+
+	ion-segment-button ion-icon {
+		font-size: 1.15rem;
+	}
+
+	.now-dot {
+		position: absolute;
+		top: 0.4rem;
+		right: 0.6rem;
+		width: 0.45rem;
+		height: 0.45rem;
+		border-radius: 50%;
+		background: var(--ion-color-success);
+	}
+
+	.today-badge {
+		margin-inline-start: 0.5rem;
+		font-size: 0.65rem;
+		border-radius: 999px;
+		--background: rgba(var(--ion-color-primary-rgb), 0.15);
+		--color: var(--ion-color-primary);
+	}
+
+	.day-date {
+		margin-left: 0.5rem;
+		font-size: 0.75rem;
+		font-weight: 400;
+		color: var(--ion-color-medium);
+	}
+
 	h2 {
 		color: var(--ion-color-medium);
 		justify-self: center;
@@ -358,6 +576,91 @@
 		margin: 0;
 	}
 
+	/* The meal name is already shown by the ion-segment tabs, so the API's own
+	   heading inside each swiper slide would just be a redundant repeat. */
+	:global(.meal-slide .formatted-menu > h2:first-of-type) {
+		display: none;
+	}
+
+	/* The weekly accordion shows all three meals concatenated, so its headings
+	   stay visible but get a lighter accent instead of a full-width rule. */
+	:global(.formatted-menu-acc h2) {
+		border-bottom: none !important;
+		padding-bottom: 0.3rem !important;
+		margin-top: 1.4rem !important;
+	}
+
+	:global(.formatted-menu-acc h2:first-of-type) {
+		margin-top: 0 !important;
+	}
+/* 
+	:global(.formatted-menu-acc h2::after) {
+		content: '';
+		display: block;
+		width: 2.5rem;
+		height: 3px;
+		border-radius: 2px;
+		background: var(--ion-color-primary);
+		margin: 0.4rem auto 0;
+	} */
+
+	/* Section labels ("FIRST DISH", "SALAD", ...) as pill badges. Targeted by
+	   tag, not text, since the API returns the labels in whichever locale is active. */
+	:global(.formatted-menu h3),
+	:global(.formatted-menu-acc h3) {
+		background: rgba(var(--ion-color-primary-rgb), 0.12) !important;
+		color: var(--ion-color-primary) !important;
+		border-radius: 0.6rem !important;
+		padding: 0.35rem 0.75rem !important;
+		display: flex !important;
+		width: fit-content !important;
+		margin: 1.1rem 0 0.6rem 0 !important;
+		font-size: 0.78rem !important;
+		letter-spacing: 0.03em;
+	}
+
+	/* Distribution-hours paragraphs, tagged client-side by markHoursParagraphs()
+	   (the API sometimes splits the hours across more than one <p>, so this is
+	   matched by content - "is it just a time range?" - not just by position). */
+	:global(.formatted-menu p.menu-hours),
+	:global(.formatted-menu-acc p.menu-hours) {
+		background: rgba(var(--ion-color-medium-rgb), 0.15) !important;
+		color: var(--ion-color-medium) !important;
+		border-left: none;
+		display: flex !important;
+		width: fit-content !important;
+		align-items: center;
+		gap: 0.35rem;
+		border-radius: 999px;
+		padding: 0.3rem 0.75rem !important;
+		font-style: normal !important;
+		font-size: 0.78rem !important;
+		margin: 0 0 0.6rem 0 !important;
+	}
+
+	:global(.formatted-menu p.menu-hours::before),
+	:global(.formatted-menu-acc p.menu-hours::before) {
+		content: '🕐';
+		font-size: 0.85em;
+	}
+
+	/* "selection from" style notes (marked up with <em> by the API) become a small label. */
+	:global(.formatted-menu p:has(em)),
+	:global(.formatted-menu-acc p:has(em)) {
+		background: transparent !important;
+		border-left: none;
+		padding: 0 0 0.2rem 0.1rem !important;
+		margin: 0.6rem 0 0.2rem 0 !important;
+		color: var(--ion-color-medium) !important;
+		font-size: 0.75rem !important;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+
+	:global(.formatted-menu p:has(em) em),
+	:global(.formatted-menu-acc p:has(em) em) {
+		font-style: normal;
+	}
 
 	:global(.meal-title) {
 		font-size: 1.3rem;
