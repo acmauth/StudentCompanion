@@ -7,13 +7,20 @@ const PASS_THRESHOLD = 5
 export function gradeGaugeChart(canvas: HTMLCanvasElement, {grade, isPassed, formattedGrade}: {grade: number, isPassed: boolean, formattedGrade: string}) {
         let current = grade;
 
-        let colors = isPassed? {
+        let colors = isPassed ? {
             fill: "#0e6b0e",
-            background: "#e3f2e3"
-        }: {
+            fillDark: "#29C467",       // lighter green so it's legible on dark bg
+            background: "#e3f2e3",
+            backgroundDark: "#143a23"
+        } : {
             fill: "#6b0e0e",
-            background: "#f2e3e3"
+            fillDark: "#f87171",
+            background: "#f2e3e3",
+            backgroundDark: "#331c1c"
         }
+
+        const isDark = document.body.classList.contains('dark');
+
 
         const centerText = {
             id: 'centerText',
@@ -23,7 +30,7 @@ export function gradeGaugeChart(canvas: HTMLCanvasElement, {grade, isPassed, for
                 const y = chartArea.bottom - 16; 
                 ctx.save();
                 ctx.font = 'bold 64px sans-serif';
-                ctx.fillStyle = colors.fill;
+                ctx.fillStyle = isDark ? colors.fillDark : colors.fill;
                 ctx.textAlign = 'center';
                 ctx.fillText(`${formattedGrade}`, x, y);
                 ctx.restore();
@@ -35,7 +42,7 @@ export function gradeGaugeChart(canvas: HTMLCanvasElement, {grade, isPassed, for
             data: {
                 datasets: [{
                     data: [current, MAX_GRADE - current],
-                    backgroundColor: [colors.fill, colors.background],
+                    backgroundColor: [isDark ? colors.fillDark : colors.fill, isDark ? colors.backgroundDark : colors.background],
                     borderWidth: 0,
                     borderRadius: 20,       
                 }]

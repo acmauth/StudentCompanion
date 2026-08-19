@@ -6,11 +6,12 @@
     import CoursesSkeleton from "./coursesSkeleton.svelte";
     import ExamStatsSkeleton from "./examStatsSkeleton.svelte";
     import trophyOutline from "./trophy-outline.svg"
-    import { caretDown, personCircleOutline } from "ionicons/icons";
+    import { caretDown, personCircleOutline, personCircle, personCircleSharp } from "ionicons/icons";
 	import { getOrdinalSuffix } from '$src/routes/pages/maps/helper';
     import { gradeGaugeChart, gradeDistributionChart } from './charts';
 	import DOMPurify from 'dompurify';
 	import { fade, fly } from 'svelte/transition';
+	import AppCard from "$components/shared/AppCard.svelte";
 
 
     export let id: string;
@@ -193,6 +194,8 @@
             {#if topTen < 10}
                 <ion-chip color="success"><ion-icon src={trophyOutline} style="font-size:1rem"></ion-icon>{$t('course.top10Percent')}</ion-chip>
             {/if}
+            
+            <ion-card style="margin: 0px; padding: 1rem;">
 
             <div class="course_overview">
                 <!-- Course Code -->
@@ -225,20 +228,22 @@
                 {/if}
             </div>
 
-            
+            <hr>
             {#if instructors.length}
                 <div class="instructors" in:fade={{ duration: ANIMDURATION, delay: STAGGER }}>
                     <span class="instructors_label">{$t('course.professors')}</span>
                     <div class="instructor_chips">
                         {#each instructors as instructor (instructor.id)}
-                            <ion-chip color="warning">
-                                <ion-icon src={personCircleOutline} style="margin: 0;"/>
+                            <div class="instructor">
+                                <ion-icon src={personCircleSharp} style="margin: 0; font-size: 1.5rem;"/>
                                 {localize(instructor.givenName, instructor.locale?.givenName)} {localize(instructor.familyName, instructor.locale?.familyName)}
-                            </ion-chip>
+                            </div>
                         {/each}
                     </div>
                 </div>
             {/if}
+
+            </ion-card>
         </div>
         <div class="syllabus_eudoxus_accordions">
             {#await fetchCourseSyllabusEudoxus()}
@@ -423,6 +428,23 @@
 		--padding-end: 1.5rem;
 		--padding-start: 1.5rem;
 	}
+
+    hr {
+        stroke-width: 5px;
+        background-color: var(--ion-color-light-shade);
+    }
+
+    ion-card {
+        box-shadow: none;
+        border-width: 1px;
+        /* border-color: var(--ion-color-light-shade); */
+    }
+
+    .instructor {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
 
     .page_contents{
         display: flex;
