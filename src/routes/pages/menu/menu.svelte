@@ -171,16 +171,21 @@
 
 	title = $t('menu.todaysMenu');
 
+	// Applies the club-open status to the status message/color shown above the menu
+	function applyClubOpenStatus(isClubOpen: boolean | undefined) {
+		if (isClubOpen != undefined && !isClubOpen) {
+			message = $t('menu.closedForHolidays');
+			color = 'danger';
+		}
+	}
+
 	// Fetch and process menu data
 	async function getMenuData() {
 		const menuAPIresponse = await getMenu();
 		const menuData = menuAPIresponse.days;
 		const isClubOpen = menuAPIresponse.club_open;
 
-		if (isClubOpen != undefined && !isClubOpen) {
-			message = $t('menu.closedForHolidays');
-			color = 'danger';
-		}
+		applyClubOpenStatus(isClubOpen);
 
 		if (typeof menuData === 'string') {
 			throw new Error(menuData);
@@ -203,14 +208,19 @@
 
 	// Load cached data immediately on mount
 	async function loadCachedData() {
-		const cachedMenu = await getMenuFromCache();
-		
+		const cached = await getMenuFromCache();
+		const cachedMenu = cached?.menu;
+
 		if (cachedMenu && cachedMenu.length > 0) {
 			applyWeekHtml(cachedMenu);
 			breakfastData = markHoursParagraphs(cachedMenu[today]?.breakfast || '');
 			lunchData = markHoursParagraphs(cachedMenu[today]?.lunch || '');
 			dinnerData = markHoursParagraphs(cachedMenu[today]?.dinner || '');
 			menuDate = '';
+
+			// Apply the club-open status that was cached alongside the menu so a
+			// holiday closure doesn't flash an open menu before the fresh fetch lands
+			applyClubOpenStatus(cached?.clubOpen);
 
 			showingCachedData = true;
 			dataLoaded = true;
