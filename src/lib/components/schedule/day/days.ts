@@ -1,3 +1,5 @@
+import { removeDiacritics } from '$lib/globalFunctions/removeDiacritics';
+
 interface Day {
     en: string;
     el: string;
@@ -46,8 +48,4 @@ export function getDayByIndex(index: number, lang: string = "en", upperCase?: bo
   } else {
     return abbreviatedDay;
   }
-}
-
-function removeDiacritics(str: string): string {
-  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }

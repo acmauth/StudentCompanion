@@ -27,9 +27,11 @@
 
 	// Get personal details and department details
 
-	async function getPersonalInfo() {
+	async function getPersonalInfo(locale: string) {
+		let expandedLocale = locale == 'el' ? '' : '($expand=locale)';
+
 		let personalData = await neoUniversisGet(
-			'Students/me?$expand=studyProgram($expand=studyLevel), department',
+			'Students/me?$expand=studyProgram($expand=studyLevel' + expandedLocale + '), department' + expandedLocale + (expandedLocale !== '' ? ', person' + expandedLocale : ''),
 			{ lifetime: 86000 }
 		);
 
@@ -39,12 +41,20 @@
 		birthDate = personalData.person.birthDate.slice(0, 10);
 		email = personalData.person.email;
 		username = email.split('@')[0];
-		familyName = personalData.person.familyName;
-		givenName = personalData.person.givenName;
+		familyName = expandedLocale === ''
+			? personalData.person.familyName
+			: personalData.person.locale?.familyName ?? personalData.person.familyName;
+		givenName = expandedLocale === ''
+			? personalData.person.givenName
+			: personalData.person.locale?.givenName ?? personalData.person.givenName;
 		gender = personalData.person.gender;
-		departmentName = personalData.department.name;
+		departmentName = expandedLocale === ''
+			? personalData.department.name
+			: personalData.department?.locale?.name ?? personalData.department.name;
 		semester = personalData.actualSemester;
-		study_level = personalData.studyProgram.studyLevel.name;
+		study_level = expandedLocale === ''
+			? personalData.studyProgram.studyLevel.name
+			: personalData.studyProgram?.studyLevel?.locale?.name ?? personalData.studyProgram.studyLevel.name;
 	}
 </script>
 
@@ -52,7 +62,7 @@
 	<SubPageHeader title={$t('settings.personal')} stackedNav />
 	<ion-content fullscreen={true}>
 
-		{#await getPersonalInfo()}
+		{#await getPersonalInfo($locale)}
 			<PersonSkeleton />
 		{:then}
 			<InfoItem

@@ -12,11 +12,13 @@
 	import HomepageSkeleton from '$src/routes/pages/homepage/homepageSkeleton.svelte';
 	import { goto } from '$app/navigation';
 	import { getVocativeCase } from '$lib/globalFunctions/getVocativeCase';
+	import { removeDiacritics } from '$lib/globalFunctions/removeDiacritics';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import { getLocale, t } from '$lib/i18n';
 	import WalletCard from '$lib/components/wallet/WalletCard.svelte';
 	import { EventStore } from '$lib/components/calendar/event/EventStore';
 	import type { Event } from '$lib/components/calendar/event/Event';
+	import { getEventTypeValue } from '$lib/components/calendar/event/Event';
 	import { buildCalendarWeeks, type DayObject } from '$lib/components/calendar/calendarUtils';
 	import Links from '$src/routes/pages/homepage/quick_links/quickLinks.svelte';
 	import Notifications from '$src/routes/notifications/notificationsPage.svelte';
@@ -32,10 +34,10 @@
 
 	register();
 	// Get upcoming events (next 2 events)
-	let upcomingEvents = $EventStore
+	$: upcomingEvents = $EventStore
 		.filter((event: Event) => new Date(event.slot.start) >= new Date())
 		.sort((a: Event, b: Event) => new Date(a.slot.start).getTime() - new Date(b.slot.start).getTime())
-		.slice(0, 2);
+		.slice(0, 3);
 
 	// Mini calendar state
 	let currentDate = new Date();
@@ -173,15 +175,13 @@
 		});
 	}
 
-	let greeting: string = 'Hello';
 	const currentHour = new Date().getHours();
-	if (currentHour < 12) {
-		greeting = $t('homepage.goodmorning');
-	} else if (currentHour < 18) {
-		greeting = $t('homepage.goodafternoon');
-	} else {
-		greeting = $t('homepage.goodevening');
-	}
+	let greeting: string;
+	$: greeting = currentHour < 12
+		? $t('homepage.goodmorning')
+		: currentHour < 18
+			? $t('homepage.goodafternoon')
+			: $t('homepage.goodevening');
 
 	// Render instantly from the last known data (if any) while getInfo()
 	// silently refreshes in the background; only show the skeleton when
@@ -237,7 +237,7 @@
 					<div class="header ion-activatable" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
 						<ion-ripple-effect/>
 						<div class="welcome">
-							<h5 style="color: var(--ion-color-medium) !important; padding-left: 0.2rem;"><span style="font-size: 0.8em;">{greeting},</span> <br/> <span style="color: var(--ion-color-dark-tint);"><b>{getVocativeCase(givenName)}</b></span>
+							<h5 style="color: var(--ion-color-medium) !important; padding-left: 0.2rem;"><span style="font-size: 0.8em; font-weight: normal;">{greeting},</span> <br/> <span style="color: var(--ion-color-dark-tint);"><b>{getVocativeCase(givenName)}</b></span>
 							</h5>
 						</div>
 						
@@ -289,10 +289,10 @@
 			{#if upcomingEvents.length > 0}
 				<div style="margin-block: 1.5rem;">
 
-					<div class="events-section" style="padding-inline:0 !important;">
+					<div class="events-section">
 						<!-- Upcoming Events Section -->
-						<div class="section-title-row" style="padding-left: 1.5rem;">
-							<h4 class="middle-title" style="padding-bottom: 0.5rem;">{upcomingEvents.length > 0 ? $t('homepage.dontForget') : $t('homepage.allClear')}</h4>
+						<div class="section-title-row">
+							<h4 class="middle-title" style="margin-bottom: 0.5rem;">{upcomingEvents.length > 0 ? $t('homepage.dontForget') : $t('homepage.allClear')}</h4>
 							<svg class="zigzag-line" viewBox="0 0 100 10" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
 								<polyline
 								points="0,8 5,2 10,8 15,2 20,8 25,2 30,8 35,2 40,8 45,2 50,8 55,2 60,8 65,2 70,8 75,2 80,8 85,2 90,8 95,2 100,8"
@@ -305,27 +305,27 @@
 							</svg>
 						</div>	
 					</div>			
-					<div class="events-container" style="padding-inline:0 !important;">
+					<div class="events-container">
 						{#each upcomingEvents as event}
 							<div class="event-card ion-activatable" data-type={event.type} aria-hidden
 										on:click={() => { goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
 								<div class="event-header">
 									<div class="event-type-badge">
-										{event.type}
+										{removeDiacritics(getEventTypeValue(event.type, $locale))}
 									</div>
 									<span class="event-time-top">
 										{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start)}
 									</span>
 								</div>
 								<h5 class="event-title">{event.title}</h5>
+								{#if event.location}
 								<div class="event-footer">
-									{#if event.location}
 									<div class="event-detail-item">
 										<ion-icon icon={locationOutline} class="event-footer-icon"></ion-icon>
 										<span class="event-footer-text">{event.location}</span>
 									</div>
-									{/if}
 								</div>
+								{/if}
 								<ion-ripple-effect></ion-ripple-effect>
 							</div>
 						{/each}
@@ -396,7 +396,7 @@
 
 	.personal-section {
 		position: relative;
-		margin: 0.5rem 0  0.5rem 0;
+		margin: 0 0  0.5rem 0;
 		/* background: radial-gradient( 
 			ellipse at 72% -5%,
 			#6d5ef2 0%,
@@ -520,19 +520,13 @@
   padding-bottom: 0.5rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  /* remove the old dashed border */
+  /* bleed past ion-content's padding so cards can scroll fully off-screen */
+  margin-inline: -1.5rem;
+  padding-inline: 1.5rem;
 }
 
 .events-container::-webkit-scrollbar {
   display: none;
-}
-
-.events-container> div:first-child {
-    margin-left: 1.5rem;
-}
-
-.events-container> div:last-child {
-    margin-right: 1.5rem;
 }
 
 
@@ -583,7 +577,12 @@
   border-radius: 0.3rem;
   background: rgba(255, 255, 255, 0.25);
   color: white;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 60px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .event-time-top {
