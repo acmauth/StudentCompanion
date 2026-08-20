@@ -20,6 +20,7 @@
 	import type { Event } from '$lib/components/calendar/event/Event';
 	import { getEventTypeValue } from '$lib/components/calendar/event/Event';
 	import { buildCalendarWeeks, type DayObject } from '$lib/components/calendar/calendarUtils';
+	import { getNextOccurrence } from '$lib/components/calendar/CalendarFunctions';
 	import Links from '$src/routes/pages/homepage/quick_links/quickLinks.svelte';
 	import Notifications from '$src/routes/notifications/notificationsPage.svelte';
 	import { fetchUniversisEvents } from '$lib/components/calendar/calendarUtils';
@@ -33,9 +34,16 @@
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
 
 	register();
-	// Get upcoming events (next 2 events)
+	// Get upcoming events (next 3 events), resolving each repeated event to its
+	// next occurrence on or after now instead of its original (possibly past) start.
+	// Intentionally one card per event id (not one per occurrence) - a daily
+	// event happening tomorrow and the day after still only takes one slot here.
 	$: upcomingEvents = $EventStore
-		.filter((event: Event) => new Date(event.slot.start) >= new Date())
+		.map((event: Event) => {
+			const occurrence = getNextOccurrence(event, new Date());
+			return occurrence ? { ...event, slot: occurrence } : null;
+		})
+		.filter((event: Event | null): event is Event => event !== null)
 		.sort((a: Event, b: Event) => new Date(a.slot.start).getTime() - new Date(b.slot.start).getTime())
 		.slice(0, 3);
 
