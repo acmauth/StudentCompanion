@@ -187,6 +187,10 @@
 		align-items: center;
 		max-width: none;
 	}
+
+	:global(ion-tab-bar){
+		height: 48px;
+	}
 /* 
 	.tabBarLine2 {
 		display: none;
