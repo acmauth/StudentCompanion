@@ -2,11 +2,15 @@
 	import man from '$lib/assets/man.svg';
 	import woman from '$lib/assets/woman.svg';
 	import universityLogo from '$lib/assets/auth_white.png';
-	import { businessOutline, personOutline, idCardOutline, fingerPrintOutline, schoolOutline, calendarOutline, mailOutline, maleFemaleOutline, layersOutline, libraryOutline, copyOutline } from 'ionicons/icons';
+	import { businessOutline, idCardOutline, fingerPrintOutline, schoolOutline, mailOutline, layersOutline, libraryOutline, copyOutline, pencil } from 'ionicons/icons';
 	import { Clipboard } from '@capacitor/clipboard';
 	import { toastController } from 'ionic-svelte';
 	import type { ToastOptions } from '@ionic/core';
 	import { t } from '$lib/i18n';
+	import { navController } from '$components/shared/StackedNav';
+	import AvatarBuilder from '$src/routes/pages/homepage/avatar_builder/avatarEditor.svelte'
+	import AvatarPreview from '$src/lib/avatar/AvatarPreview.svelte';
+	import { avatarStore } from '$stores/avatar.store';
 
 	export let gender: String;
 	export let inscriptionYear: String;
@@ -68,11 +72,13 @@
 
 <ion-card class="profile-card">
 	<div class="profile-header">
-		{#if gender === 'Α'}
-			<img class="avatar" alt="man" src={man} />
-		{:else}
-			<img class="avatar" alt="woman" src={woman} />
-		{/if}
+		<div class="avatar_button" on:click={() => {navController.push(AvatarBuilder)}} aria-hidden>
+			<!-- <img class="avatar" alt="man" src={gender == 'Α' ? man : woman} /> -->
+			 <div class="avatar">
+				<AvatarPreview size={64} config={$avatarStore}/>
+			</div>
+			<ion-icon icon={pencil}></ion-icon>
+		</div>
 		<div class="profile-heading">
 			<span class="profile-name">{givenName} <br/> {familyName}</span>
 		</div>
@@ -128,18 +134,39 @@
 		margin: 0.6rem;
 		border-radius: 1.1rem;
 		box-shadow: none;
+		padding: 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
 	}
 
 	.profile-header {
 		display: flex;
 		align-items: center;
 		gap: 0.9rem;
-		padding: 1.1rem 1.1rem 0.4rem 1.1rem;
+		/* padding: 1.1rem 1.1rem 0.4rem 1.1rem; */
+	}
+
+	.avatar_button {
+		position: relative;
+	}
+
+	.avatar_button ion-icon {
+		position: absolute;
+		position-anchor: --avatar-anchor;
+		bottom: calc(anchor(bottom) + 6px);
+		right: calc(anchor(right) + 6px);
+		background: var(--color);
+		color: var(--ion-color-primary-contrast);
+		border-radius: 50%;
+		padding: 0.3rem;
+		font-size: 0.7rem;
 	}
 
 	.avatar {
-		width: 4rem;
-		height: 4rem;
+		anchor-name: --avatar-anchor;
+		/* width: 4rem;
+		height: 4rem; */
 		border-radius: 50%;
 		padding: 0.4rem;
 		flex-shrink: 0;
@@ -164,7 +191,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.4rem;
-		padding: 0.4rem 1rem 1rem 1rem;
+		/* padding: 0.4rem 1rem 1rem 1rem; */
 	}
 
 	.profile-row-group {

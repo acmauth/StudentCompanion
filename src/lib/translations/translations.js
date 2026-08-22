@@ -2,6 +2,7 @@ import { menu } from 'ionicons/icons';
 
 export default {
 	el: {
+		"common.save": "Αποθήκευση",
 		"navigation.home": "Αρχική",
 		"navigation.progress": "Πρόοδος",
 		"navigation.calendar": "Ατζέντα",
@@ -315,9 +316,29 @@ export default {
 		"recentgrades.period.today": "Σήμερα",
 		"recentgrades.period.yesterday": "Χθες",
 		"recentgrades.period.this_week": "Τελευταία βδομάδα",
-		"recentgrades.period.earlier": "Νωρίτερα"
+		"recentgrades.period.earlier": "Νωρίτερα",
+		"avatarBuilder.category.style": "Φόντο",
+		"avatarBuilder.category.top": "Μαλλιά",
+		"avatarBuilder.category.accessories": "Αξεσουάρ",
+		"avatarBuilder.category.facialHair": "Γένια",
+		"avatarBuilder.category.clothing": "Ρούχα",
+		"avatarBuilder.category.clothingGraphic": "Σχέδιο Μπλούζας",
+		"avatarBuilder.category.eyes": "Μάτια",
+		"avatarBuilder.category.eyebrows": "Φρύδια",
+		"avatarBuilder.category.nose": "Μύτη",
+		"avatarBuilder.category.mouth": "Στόμα",
+		"avatarBuilder.title": "Δημιουργία Avatar",
+		"avatarBuilder.colourLabel": "Χρώμα {{color}}",
+		"avatarBuilder.color.skin": "Δέρμα",
+		"avatarBuilder.color.hair": "Μαλλιά",
+		"avatarBuilder.color.hat": "Καπέλο",
+		"avatarBuilder.color.clothes": "Ρούχα",
+		"avatarBuilder.color.accessories": "Αξεσουάρ",
+		"avatarBuilder.color.facialHair": "Γένια",
+		"avatarBuilder.color.background": "Φόντο"
 	},
 	en: {
+		'common.save': 'Save',
 		'navigation.home': 'Home',
 		'navigation.progress': 'Progress',
 		'navigation.calendar': 'Agenda',
@@ -655,6 +676,25 @@ export default {
 		"recentgrades.period.today": "Today",
 		"recentgrades.period.yesterday": "Yesterday",
 		"recentgrades.period.this_week": "This week",
-		"recentgrades.period.earlier": "Earlier"
+		"recentgrades.period.earlier": "Earlier",
+		'avatarBuilder.category.style': 'Background',
+		'avatarBuilder.category.top': 'Top / Hair',
+		'avatarBuilder.category.accessories': 'Accessories',
+		'avatarBuilder.category.facialHair': 'Facial Hair',
+		'avatarBuilder.category.clothing': 'Clothing',
+		'avatarBuilder.category.clothingGraphic': 'Shirt Graphic',
+		'avatarBuilder.category.eyes': 'Eyes',
+		'avatarBuilder.category.eyebrows': 'Eyebrows',
+		'avatarBuilder.category.nose': 'Nose',
+		'avatarBuilder.category.mouth': 'Mouth',
+		'avatarBuilder.title': 'Avatar Builder',
+		'avatarBuilder.colourLabel': '{{color}} Colour',
+		'avatarBuilder.color.skin': 'Skin',
+		'avatarBuilder.color.hair': 'Hair',
+		'avatarBuilder.color.hat': 'Hat',
+		'avatarBuilder.color.clothes': 'Clothes',
+		'avatarBuilder.color.accessories': 'Accessories',
+		'avatarBuilder.color.facialHair': 'Facial hair',
+		'avatarBuilder.color.background': 'Background'
 	}
 };

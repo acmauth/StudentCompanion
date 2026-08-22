@@ -29,6 +29,8 @@
 	import { locale } from '$lib/i18n';
 	import AdBanner from './ad_banner.svelte';
 	import { getHomepageCache, setHomepageCache } from './homepageCache';
+	import AvatarPreview from '$src/lib/avatar/AvatarPreview.svelte';
+	import { avatarStore } from '$stores/avatar.store';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -254,12 +256,7 @@
 					</div>
 					<div class="settings-icon-container ion-activatable" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
 						<ion-ripple-effect/>
-						{#if gender === 'Α'}
-						<img class="avatar" alt="man" src={man} />
-						{:else}
-						<img class="avatar" alt="woman" src={woman} />
-						{/if}
-						<!-- <ion-icon icon={settingsOutline} class="settings-icon"></ion-icon> -->
+						<AvatarPreview size={54} config={$avatarStore}/>
 					</div>
 
 				</div>
