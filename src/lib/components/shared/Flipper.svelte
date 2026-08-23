@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { courseAdded } from '$lib/components/degreeCalculator/courseStore.ts';
+	import { onMount } from 'svelte';
+
 	export let flipped: boolean;
 	export let reactToHeight: boolean = false;
 
@@ -13,8 +14,17 @@
 	let frontChild: HTMLElement;
 	let backChild: HTMLElement;
 
-	$: courseAdded.subscribe(() => {
-		updateHeight(flipClass);
+	// Re-measure whenever either face changes size, rather than having the
+	// content tell us it grew. This catches every cause — content loading in, a
+	// row being removed — and runs after layout, so the height read is settled.
+	onMount(() => {
+		if (!reactToHeight) return;
+
+		const observer = new ResizeObserver(() => updateHeight(flipClass));
+		observer.observe(frontChild);
+		observer.observe(backChild);
+
+		return () => observer.disconnect();
 	});
 
 	// This function updates the height of the flip card when it's toggled.
@@ -24,9 +34,19 @@
 			// The height relative to the rest of the page is dictated by the main container, so we
 			// set it's height to the height of the front or back child, depending on the status of the flip.
 			// So if we're flipped, use the back child, otherwise the front
-			flipContainer.style.height = status
-				? `${backChild.clientHeight}px`
-				: `${frontChild.clientHeight}px`;
+			const measured = status ? backChild.clientHeight : frontChild.clientHeight;
+
+			// Ionic puts .ion-page-hidden (display: none) on a page once another
+			// one is stacked over it, so both faces measure 0 while we're covered.
+			// Writing that would collapse the card, and the shorter content clamps
+			// the scroll position of the page underneath — which then comes back
+			// scrolled somewhere else. Keep the last real height instead.
+			if (measured === 0) return;
+
+			const height = `${measured}px`;
+
+			// Writing only on a real change keeps the observer from re-entering.
+			if (flipContainer.style.height !== height) flipContainer.style.height = height;
 		}
 	};
 

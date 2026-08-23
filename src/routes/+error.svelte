@@ -1,9 +1,10 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
-    import { homeOutline, mailOutline } from 'ionicons/icons';
+    import { homeOutline, mailOutline, logOut } from 'ionicons/icons';
     import Logo from '$lib/assets/Logo_full.png';
     import { t } from '$lib/i18n';
+    import { invalidateAuth } from '$lib/globalFunctions/logOut';
     
     $: errorStatus = $page.status;
     $: errorMessage = $page.error?.message || "An unexpected error occurred.";
@@ -26,11 +27,16 @@
             {$t('errorPage.homeButton')}
         </ion-button>
 
-        <ion-button mode='ios' expand="block" fill="outline" href="mailto:aristomate@auth.acm.org?subject={$t('errorPage.reportButton')} - Error {errorStatus}&body=Περιγραφή προβλήματος:%0D%0A%0D%0AError: {errorStatus}%0D%0AMessage: {errorMessage}%0D%0AURL: {$page.url}" class="report-button">
+        
+        <ion-button mode='ios' expand="block" fill="outline" href="mailto:aristomate@auth.gr?subject={$t('errorPage.reportButton')} - Error {errorStatus}&body=Περιγραφή προβλήματος:%0D%0A%0D%0AError: {errorStatus}%0D%0AMessage: {errorMessage}%0D%0AURL: {$page.url}" class="report-button">
             <ion-icon slot="start" icon={mailOutline}></ion-icon>
             {$t('errorPage.reportButton')}
         </ion-button>
 
+        <ion-button mode='ios' on:click={() => {invalidateAuth(); goto('/login');}} aria-hidden>
+            <ion-icon icon={logOut}></ion-icon>
+        </ion-button>
+        
         <ion-text color="medium">
             <p class="error-details">
                 Error {errorStatus}: {errorMessage}

@@ -1,48 +1,56 @@
 <script lang="ts">
   	import IonTabs from '$lib/components/shared/AristomateTabBar.svelte';
-	import { restaurant, calendarClear, map, statsChart } from 'ionicons/icons';
-	import home_solid from "$customIcons/home-solid.svg";
-	import user_solid from "$customIcons/user-solid.svg";
-	import chart_bar_solid from "$customIcons/chart-bar-solid.svg";
+	import { home, homeOutline, restaurantOutline, restaurant, mapOutline, calendarClearOutline, calendarClear, map, statsChart, statsChartOutline } from 'ionicons/icons';
 	import { onMount } from 'svelte';
 	import initializeNotifications from '$lib/-notifications/core';
 	import { webmailLoggedIn as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
 	import { handleChangedPermission } from '$lib/calendarNotifications/exactAlarmPermissionStore';
 	import { t } from '$lib/i18n';
 
-
 	// Routes
+	$: restaurantIcon = activeTab === 'menu' ? restaurant : restaurantOutline;
+	$: mapIcon = activeTab === 'maps' ? map : mapOutline;
+	$: statsChartIcon = activeTab === 'grades' ? statsChart : statsChartOutline;
+	$: calendarIcon = activeTab === 'calendar' ? calendarClear : calendarClearOutline;
+	$: homeIcon = activeTab === "homepage" ? home : homeOutline;
+
 	$: bottomNav = [
 		{
 			// WARNING: Translated labels cause race condition!!!!
 			// label: $t('navigation.maps'),
-			icon: map,
+			icon: mapIcon,
 			tab: 'maps'
 		},
 		{
 			// label: $t('navigation.club'),
-			icon: restaurant,
+			icon: restaurantIcon,
 			tab: 'menu'
 		},
 		{
 			// label: $t('navigation.home'),
-			icon: home_solid,
+			icon: homeIcon,
 			tab: 'homepage'
 		},
 		{
 			// label: $t('navigation.progress'),
-			icon: statsChart,
+			icon: statsChartIcon,
 			tab: 'grades'
 		},
 		{
 			// label: $t('navigation.calendar'),
-			icon: calendarClear,
+			icon: calendarIcon,
 			tab: 'calendar'
 		}
 		
 	];
 
-	const logsStuff =()=>{};
+	let activeTab = 'homepage';
+
+	const handleTabChange = (event: any) => {
+		activeTab = event.detail.tab;
+	};
+
+	const logsStuff = () => {};
 
 	onMount(async ()=>{
 		if ($webmailAuthenticated) {
@@ -55,6 +63,6 @@
 
 </script>
 
-<IonTabs slot="bottom" tabs={bottomNav} ionTabsWillChange={logsStuff} ionTabsDidChange={logsStuff}>
+	<IonTabs slot="bottom" tabs={bottomNav} ionTabsWillChange={logsStuff} ionTabsDidChange={handleTabChange}>
 	<slot />
 </IonTabs>

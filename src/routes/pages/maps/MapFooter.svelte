@@ -4,6 +4,7 @@
     import { getMetroInfo } from '$lib/metroScraper/scraper';
     import { onMount } from "svelte";
     import { darkMode } from '$src/lib/globalFunctions/darkMode';
+    import { removeDiacritics } from '$lib/globalFunctions/removeDiacritics';
     import { registerPlugin } from '@capacitor/core';
 
     const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -52,7 +53,7 @@
         <div class="marquee-text" class:dark={isDarkMode}>
             {#await getMetroInfo() then metroInfo}
                 {#if isDarkMode}
-                    Metro: {metroInfo.normalize('NFD').replace(/[\u0300-\u036f]/g, '')}
+                    Metro: {removeDiacritics(metroInfo)}
                 {:else}
                     <strong>Metro:</strong> {metroInfo}
                 {/if}

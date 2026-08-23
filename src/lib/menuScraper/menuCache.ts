@@ -6,16 +6,18 @@ const CACHE_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export interface MenuCacheData {
     menu: string[];
+    clubOpen?: boolean;
     timestamp: number;
 }
 
 /**
  * Save menu data to cache
  */
-export async function saveMenuToCache(menuData: string[]): Promise<void> {
+export async function saveMenuToCache(menuData: string[], clubOpen?: boolean): Promise<void> {
     try {
         const cacheData: MenuCacheData = {
             menu: menuData,
+            clubOpen,
             timestamp: Date.now()
         };
         await Preferences.set({
@@ -28,14 +30,16 @@ export async function saveMenuToCache(menuData: string[]): Promise<void> {
 }
 
 /**
- * Get cached menu data
+ * Get cached menu data, along with the club-open status that was in effect
+ * when it was cached (so callers can avoid flashing an open menu that will
+ * immediately be replaced by a "closed for holidays" state).
  */
-export async function getMenuFromCache(): Promise<string[] | null> {
+export async function getMenuFromCache(): Promise<{ menu: string[]; clubOpen?: boolean } | null> {
     try {
         const result = await Preferences.get({ key: MENU_CACHE_KEY });
         if (result.value) {
             const cacheData: MenuCacheData = JSON.parse(result.value);
-            return cacheData.menu;
+            return { menu: cacheData.menu, clubOpen: cacheData.clubOpen };
         }
         return null;
     } catch (error) {

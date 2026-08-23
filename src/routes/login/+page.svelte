@@ -8,6 +8,7 @@
 	import Config from "$src/app.config"
 	import Logo from '$lib/assets/Logo_head.png';
 	import UniversityLogo from '$lib/assets/authLogo.png';
+	import AuthLogoWhite from '$lib/assets/auth_white.png'
 	import { t, changeLocale } from '$lib/i18n';
   	import { invalidateAuth } from '$lib/globalFunctions/logOut';
 
@@ -130,7 +131,7 @@
 			<!-- Footer -->
 			<div class="footer">
 				<div class="footer-content">
-					<img src={UniversityLogo} alt="AUTH Logo" class="university-logo" />
+					<img src={AuthLogoWhite} alt="AUTH Logo" class="university-logo" />
 					<p class="footer-text">
 						{$t('login.poweredBy')}<br />
 						<strong>{$t('login.university')}</strong>
@@ -414,12 +415,12 @@
 	}
 
 	.university-logo {
-		width: 48px;
-		height: 48px;
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.95);
-		padding: 6px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		width: 2rem;
+		height: 2rem;
+		/* border-radius: 50%; */
+		/* background: rgba(255, 255, 255, 0.95); */
+		margin: 5px;
+		/* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); */
 	}
 
 	:global(body.dark) .university-logo {

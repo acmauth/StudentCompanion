@@ -1,0 +1,11 @@
+/**
+ * Do not change this file manually! This file was generated with the "Dicebear Exporter"-Plugin for Figma.
+ *
+ * Plugin: https://www.figma.com/community/plugin/1005765655729342787
+ * File: https://www.figma.com/file/HBLdITkkTnLs4M09BmCe4h
+ */
+import { escape } from '../escape';
+import type { PartDict } from '../types';
+export const base: PartDict = {
+    default: (components, colors) => { var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r; return `<path d="M132 36a56 56 0 0 0-56 56v6.17A12 12 0 0 0 66 110v14a12 12 0 0 0 10.3 11.88 56.04 56.04 0 0 0 31.7 44.73v18.4h-4a72 72 0 0 0-72 72v9h200v-9a72 72 0 0 0-72-72h-4v-18.39a56.04 56.04 0 0 0 31.7-44.73A12 12 0 0 0 198 124v-14a12 12 0 0 0-10-11.83V92a56 56 0 0 0-56-56Z" fill="${escape.xml(`${colors.skin}`)}"/><path d="M108 180.61v8a55.79 55.79 0 0 0 24 5.39c8.59 0 16.73-1.93 24-5.39v-8a55.79 55.79 0 0 1-24 5.39 55.79 55.79 0 0 1-24-5.39Z" fill="#000" fill-opacity=".1"/><g transform="translate(0 170)">${(_b = (_a = components.clothing) === null || _a === void 0 ? void 0 : _a.value(components, colors)) !== null && _b !== void 0 ? _b : ''}</g><g transform="translate(78 134)">${(_d = (_c = components.mouth) === null || _c === void 0 ? void 0 : _c.value(components, colors)) !== null && _d !== void 0 ? _d : ''}</g><g transform="translate(104 122)">${(_f = (_e = components.nose) === null || _e === void 0 ? void 0 : _e.value(components, colors)) !== null && _f !== void 0 ? _f : ''}</g><g transform="translate(76 90)">${(_h = (_g = components.eyes) === null || _g === void 0 ? void 0 : _g.value(components, colors)) !== null && _h !== void 0 ? _h : ''}</g><g transform="translate(76 82)">${(_k = (_j = components.eyebrows) === null || _j === void 0 ? void 0 : _j.value(components, colors)) !== null && _k !== void 0 ? _k : ''}</g><g transform="translate(-1)">${(_m = (_l = components.top) === null || _l === void 0 ? void 0 : _l.value(components, colors)) !== null && _m !== void 0 ? _m : ''}</g><g transform="translate(49 72)">${(_p = (_o = components.facialHair) === null || _o === void 0 ? void 0 : _o.value(components, colors)) !== null && _p !== void 0 ? _p : ''}</g><g transform="translate(62 42)">${(_r = (_q = components.accessories) === null || _q === void 0 ? void 0 : _q.value(components, colors)) !== null && _r !== void 0 ? _r : ''}</g>`; },
+};
