@@ -65,6 +65,7 @@
     }
     .backIcon {
         font-size: 2rem;
+        flex-shrink: 0;
     }
     .headerTitle {
         display: flex;

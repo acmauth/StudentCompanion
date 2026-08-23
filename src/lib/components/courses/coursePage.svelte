@@ -6,12 +6,11 @@
     import CoursesSkeleton from "./coursesSkeleton.svelte";
     import ExamStatsSkeleton from "./examStatsSkeleton.svelte";
     import trophyOutline from "./trophy-outline.svg"
-    import { caretDown, personCircleOutline, personCircle, personCircleSharp } from "ionicons/icons";
+    import { caretDown, share, personCircleSharp } from "ionicons/icons";
 	import { getOrdinalSuffix } from '$src/routes/pages/maps/helper';
     import { gradeGaugeChart, gradeDistributionChart } from './charts';
 	import DOMPurify from 'dompurify';
 	import { fade, fly } from 'svelte/transition';
-	import AppCard from "$components/shared/AppCard.svelte";
 
 
     export let id: string;
