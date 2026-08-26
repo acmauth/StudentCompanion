@@ -1,4 +1,4 @@
-import { type Event, EventRepeatType } from './event/Event';
+import { type Event, type EventTimeSlot, EventRepeatType } from './event/Event';
 
 export function isCurrentDay(event: Event, active: Date): boolean {
     const activeDate = new Date(active);
@@ -123,4 +123,38 @@ export function isInactiveDate(date: Date, event: Event): boolean {
         }
     }
     return false;
+}
+
+// finds the next occurrence (start/end) of an event on or after "from",
+// walking day by day through the same isCurrentDay logic the calendar uses,
+// so repeated events whose original slot.start is in the past can still surface
+export function getNextOccurrence(event: Event, from: Date = new Date()): EventTimeSlot | null {
+    const start = new Date(event.slot.start);
+    const end = new Date(event.slot.end);
+    const duration = end.getTime() - start.getTime();
+
+    if (event.repeat == EventRepeatType.NEVER) {
+        return start.getTime() >= from.getTime() ? { start, end } : null;
+    }
+
+    if (!event.repeatUntil || !event.repeatInterval) return null;
+
+    const repeatUntil = new Date(event.repeatUntil);
+    repeatUntil.setHours(23, 59, 59, 999);
+
+    const cursor = new Date(Math.max(start.getTime(), from.getTime()));
+    cursor.setHours(0, 0, 0, 0);
+
+    while (cursor.getTime() <= repeatUntil.getTime()) {
+        if (isCurrentDay(event, cursor)) {
+            const occurrenceStart = new Date(cursor);
+            occurrenceStart.setHours(start.getHours(), start.getMinutes(), start.getSeconds(), start.getMilliseconds());
+            if (occurrenceStart.getTime() >= from.getTime()) {
+                return { start: occurrenceStart, end: new Date(occurrenceStart.getTime() + duration) };
+            }
+        }
+        cursor.setDate(cursor.getDate() + 1);
+    }
+
+    return null;
 }

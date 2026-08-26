@@ -7,19 +7,6 @@
 	import { get } from "svelte/store";
     import appConfig from '$src/app.config';
 
-	onMount(async () => {
-		if (appConfig.isMobile){
-			await StatusBar.setStyle({ style: Style.Dark });
-		}	
-	})
-
-	onDestroy(async () => {
-		if (appConfig.isMobile){
-			await StatusBar.setStyle({ style: get(darkMode)? Style.Dark : Style.Light });
-			await StatusBar.show();
-		}
-	});
-
 </script>
 
 <ion-tab tab="homepage" >

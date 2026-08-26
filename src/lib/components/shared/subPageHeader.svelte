@@ -2,10 +2,17 @@
     import { Capacitor } from '@capacitor/core';
     import { chevronBack, arrowBack } from 'ionicons/icons';
     import {navController} from '$components/shared/StackedNav';
+    import { createEventDispatcher } from 'svelte';
+    import { fly } from 'svelte/transition';
+    import { backOut } from 'svelte/easing';
     export let title: string;
     export let subtitle: string | undefined = undefined;
     export let genericHeader: boolean = false;
     export let stackedNav: boolean = false; // Are we in a stacked navigation scenario, or are we using the browser's history?
+    export let showSave: boolean = false; // Show a Save action on the right of the header
+    export let saveLabel: string = '';
+
+    const dispatch = createEventDispatcher();
 
     // Going back; if stackedNav is true, we use the navController to pop the page, otherwise we use the browser's history
     function goBack(){
@@ -14,6 +21,12 @@
         } else {
             window.history.back();
         }
+    }
+
+    // Commit the save, then navigate back the same way the back button does
+    function onSaveClick(){
+        dispatch('save');
+        goBack();
     }
 
     // Hijacking the back button on Android to go back
@@ -34,7 +47,11 @@
                 <ion-subtitle>{subtitle}</ion-subtitle>
             {/if}
         </div>
-        <ion-icon class="backIcon" aria-hidden/>
+        {#if showSave}
+            <ion-button fill="clear" size="small" class="saveButton" on:click={onSaveClick} transition:fly={{ x: 12, duration: 250, easing: backOut }}>{saveLabel}</ion-button>
+        {:else}
+            <ion-icon class="backIcon" aria-hidden/>
+        {/if}
         </div>
     </ion-toolbar>
 </ion-header>
@@ -48,6 +65,7 @@
     }
     .backIcon {
         font-size: 2rem;
+        flex-shrink: 0;
     }
     .headerTitle {
         display: flex;

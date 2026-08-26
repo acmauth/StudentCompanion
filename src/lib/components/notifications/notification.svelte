@@ -81,7 +81,7 @@
     <div class="notification-card">
         <div class="row-header">
             <div class="left-col">
-                <div class="icon-wrapper">
+                <div class="icon-wrapper" class:universis={notification.type == "universis"} class:webmail={notification.type == "webmail"} class:elearning={notification.type == "elearning"}>
                      <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail" ? mail : elearningLogo} />
                 </div>
                 <div class="details">
@@ -200,11 +200,24 @@
             border-radius: 12px;
             width: 40px;
             height: 40px;
+            box-sizing: border-box;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
             padding: 8px;
+        }
+
+        .icon-wrapper.universis {
+            background: rgba(var(--ion-color-primary-rgb), 0.12);
+        }
+
+        .icon-wrapper.webmail {
+            background: rgba(var(--ion-color-secondary-rgb), 0.12);
+        }
+
+        .icon-wrapper.elearning {
+            background: rgba(var(--ion-color-warning-rgb), 0.15);
         }
 
         .icon-wrapper img {

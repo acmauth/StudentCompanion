@@ -15,6 +15,7 @@
 	let isAssignment: boolean = false;
 	let isTask: boolean = false;
 	let isClass: boolean = false;
+	let isOther: boolean = false;
 
 	function handleClick() {
 		selectedEvent = eventItem;
@@ -40,6 +41,7 @@
 		isAssignment = eventItem.type == EventType.ASSIGNMENT;
 		isTask = eventItem.type == EventType.TASK;
 		isClass = eventItem.type == EventType.CLASS;
+		isOther = eventItem.type == EventType.OTHER;
 	};
 
 </script>
@@ -51,7 +53,7 @@
 
 			<div class="eventMainInformation">
 				<div class="eventTypeDot">
-					<ion-icon icon={ellipse} class="dummy {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null}"/>
+					<ion-icon icon={ellipse} class="dummy {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null} {isOther? 'other' : null}"/>
 				</div>
 				<div class="eventContent">
 					<ion-label class="eventHeader {isPastDate? 'pastDate' : null}">{eventItem.title}</ion-label>
@@ -86,10 +88,11 @@
         opacity: 0.5;
     }
 	
-	.task {color: var(--ion-color-tertiary);}
-	.test {color: var(--ion-color-danger);}
-	.assignment {color: var(--ion-color-warning);}
-	.class {color: var(--ion-color-secondary);}
+	.task {color: #1e88e5;}
+	.test {color: #e53835;}
+	.assignment {color: #fb8a00;}
+	.class {color: #43a048;}
+	.other {color: #bcbaba;}
 
 	/* Card contents */
 	.eventCard{

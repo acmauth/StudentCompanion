@@ -1,11 +1,11 @@
 <script>
 	// @ts-nocheck
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { navigating, page } from '$app/stores';
+	import { Capacitor } from '@capacitor/core';
 	import { Keyboard } from '@capacitor/keyboard';
 	import { goto } from '$app/navigation';
 	import { navController } from "./StackedNav"
-	import appConfig from '$src/app.config';
 
 	export let ionTabsDidChange = () => {};
 	export let ionTabsWillChange = () => {};
@@ -41,7 +41,7 @@
 		});
 	}
 
-	onMount(async () => {
+	onMount(() => {
 		// reassignment needed after onMount
 		controller = ionTabBarElement;
 		tabBarLine = ionTabBarElement;
@@ -72,10 +72,10 @@
 		const mo = new MutationObserver(() => updateFooterHeight());
 		if (ionTabBarElement) mo.observe(ionTabBarElement, { attributes: true, childList: true, subtree: true });
 
-		onDestroy(() => {
+		return () => {
 			window.removeEventListener('resize', resizeListener);
 			mo.disconnect();
-		});
+		};
 	});
 
 	const tabBarClick = async (selectedTab) => {
@@ -100,11 +100,11 @@
 	}
 
 	// Keyboard listener to hide the tab bar line when the keyboard is open
-	if (appConfig.isMobile){
+	if (Capacitor.isNativePlatform()) {
 		Keyboard.addListener('keyboardWillShow', () => {
 			tabBarLine.style.display = 'none';
 		});
-		
+
 		Keyboard.addListener('keyboardWillHide', () => {
 			tabBarLine.style.display = 'block';
 		});
@@ -134,9 +134,7 @@
 						tabBarClick(tab.tab);
 					}}
 				>
-					{#if tab.label}
-						<ion-label class="tabbarlabel">{tab.label}</ion-label>
-					{/if}
+					<!-- <ion-label class="tabbarlabel">{tab.label}</ion-label> -->
 					{#if tab.tab !== currentTabName && tab.iconUnselected}
 						<ion-icon icon={tab.iconUnselected} class="tabbaricons" />
 					{:else}
@@ -189,6 +187,10 @@
 		align-items: center;
 		max-width: none;
 	}
+
+	:global(ion-tab-bar){
+		height: 48px;
+	}
 /* 
 	.tabBarLine2 {
 		display: none;
@@ -209,6 +211,6 @@
 		text-overflow: ellipsis;
 		width: 100%;
 		font-weight: bold;
-		/* font-size: smaller; */
+		font-size: smaller;
 	}
 </style>

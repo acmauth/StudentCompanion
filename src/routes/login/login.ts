@@ -2,6 +2,7 @@ import { Capacitor } from "@capacitor/core";
 import { goto } from "$app/navigation";
 import OIDCClient from "$lib/authentication/OIDCClient";
 import Config from "$src/app.config";
+import hooks from '$src/lib/functions/hooks/login/hooks';
 
 
 // Initialize OIDC client
@@ -22,8 +23,12 @@ export async function handleCallback(url: string) {
       userInfo = await authClient.getUserInfo();
       isAuthenticated = true;
 
-      // Clean URL and redirect
-      // console.log("[src/login/login.ts] Navigating to homepage");
+      
+      // Login success!
+      //Hooks
+      await hooks();
+
+      //Redirect with clear url
       goto('/pages/homepage', { replaceState: true });
     } catch (err) {
       console.error('Login failed:', err);
