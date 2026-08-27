@@ -1,38 +1,42 @@
 PODS:
-  - Capacitor (7.4.4):
+  - Capacitor (8.5.0):
     - CapacitorCordova
-  - CapacitorApp (7.1.0):
+  - CapacitorApp (8.1.1):
     - Capacitor
-  - CapacitorBarcodeScanner (2.2.6):
+  - CapacitorBarcodeScanner (3.1.1):
     - Capacitor
-    - OSBarcodeLib (= 2.0.1)
-  - CapacitorBrowser (7.0.2):
+    - OSBarcodeLib (= 2.2.0)
+  - CapacitorBrowser (8.0.4):
     - Capacitor
-  - CapacitorClipboard (7.0.2):
+  - CapacitorClipboard (8.0.1):
     - Capacitor
-  - CapacitorCordova (7.4.4)
-  - CapacitorKeyboard (7.0.3):
+  - CapacitorCordova (8.5.0)
+  - CapacitorKeyboard (8.0.5):
     - Capacitor
-  - CapacitorLocalNotifications (7.0.3):
+  - CapacitorLocalNotifications (8.3.1):
     - Capacitor
-  - CapacitorNativeSettings (7.0.2):
+  - CapacitorNativeSettings (8.2.0):
     - Capacitor
-  - CapacitorNetwork (7.0.2):
+  - CapacitorNetwork (8.0.1):
     - Capacitor
-  - CapacitorPluginSafeArea (4.0.3):
+  - CapacitorPluginSafeArea (5.0.1):
     - Capacitor
-  - CapacitorPreferences (7.0.2):
+  - CapacitorPreferences (8.0.1):
     - Capacitor
-  - CapacitorPushNotifications (7.0.3):
+  - CapacitorPushNotifications (8.1.2):
     - Capacitor
-  - CapacitorStatusBar (7.0.3):
+  - CapacitorShare (8.0.1):
     - Capacitor
-  - CapacitorToast (7.0.2):
+  - CapacitorStatusBar (8.0.3):
     - Capacitor
-  - CapawesomeCapacitorAppUpdate (7.2.0):
+  - CapacitorToast (8.0.1):
+    - Capacitor
+  - CapawesomeCapacitorAppUpdate (8.0.4):
+    - Capacitor
+  - CapawesomeCapacitorScreenshot (8.0.1):
     - Capacitor
   - mailcore2-ios (0.6.4)
-  - OSBarcodeLib (2.0.1)
+  - OSBarcodeLib (2.2.0)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -48,9 +52,11 @@ DEPENDENCIES:
   - CapacitorPluginSafeArea (from `../../node_modules/capacitor-plugin-safe-area`)
   - "CapacitorPreferences (from `../../node_modules/@capacitor/preferences`)"
   - "CapacitorPushNotifications (from `../../node_modules/@capacitor/push-notifications`)"
+  - "CapacitorShare (from `../../node_modules/@capacitor/share`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - "CapacitorToast (from `../../node_modules/@capacitor/toast`)"
   - "CapawesomeCapacitorAppUpdate (from `../../node_modules/@capawesome/capacitor-app-update`)"
+  - "CapawesomeCapacitorScreenshot (from `../../node_modules/@capawesome/capacitor-screenshot`)"
   - mailcore2-ios
 
 SPEC REPOS:
@@ -85,33 +91,39 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/preferences"
   CapacitorPushNotifications:
     :path: "../../node_modules/@capacitor/push-notifications"
+  CapacitorShare:
+    :path: "../../node_modules/@capacitor/share"
   CapacitorStatusBar:
     :path: "../../node_modules/@capacitor/status-bar"
   CapacitorToast:
     :path: "../../node_modules/@capacitor/toast"
   CapawesomeCapacitorAppUpdate:
     :path: "../../node_modules/@capawesome/capacitor-app-update"
+  CapawesomeCapacitorScreenshot:
+    :path: "../../node_modules/@capawesome/capacitor-screenshot"
 
 SPEC CHECKSUMS:
-  Capacitor: 358dd1c3fdd71d969547b17e159fd8a7736cb45f
-  CapacitorApp: 26587c2ce485d88ddb39adb21cac64f8e481afe3
-  CapacitorBarcodeScanner: 2d699fe5b8731cdfa3db03a4062e68b9a75c5c72
-  CapacitorBrowser: 22541e48442de44dc629c214388290d6eecc6ae9
-  CapacitorClipboard: 7e227702976d4435a5a40df54f65e154d0dfc1f3
-  CapacitorCordova: bf648a636f3c153f652d312ae145fb508b6ffced
-  CapacitorKeyboard: 62f36104f26d53d8b3a2a43f2a69fe714f1777d5
-  CapacitorLocalNotifications: 0811aef56ab2e5f7f9ae72f47d3473ab50c29038
-  CapacitorNativeSettings: 3cd2e2ef431fe471674f381609cfb29154ddfcfa
-  CapacitorNetwork: 695069886b3c5ed514db69aa3d026b8dc3c03a6b
-  CapacitorPluginSafeArea: 1abd81c6facac9eae0c6ae3cb0b3b53ccc135522
-  CapacitorPreferences: 65107ed7437d96ee72583df5763985e3c0ff2bc2
-  CapacitorPushNotifications: bdd621fbd562be34a41f4a7b1750efa000447d5a
-  CapacitorStatusBar: 0659ddc7b1713764a05831463d215b177a15d054
-  CapacitorToast: 166611aea815418fc08894b77a915773e3d059d5
-  CapawesomeCapacitorAppUpdate: 9fb16b07faaa1c86468c794e39bfedb822a1a446
+  Capacitor: 00b87168591cc006ea6f5c0de681ec5c39a2c8eb
+  CapacitorApp: 305bd13c44f6f9d164e2ee66a4faa956ed8c0e06
+  CapacitorBarcodeScanner: 735028a8496e205c61e89634918b6b42f429e2bb
+  CapacitorBrowser: 752e0208aa07c7aa63d1f7cde895a3e9519b2656
+  CapacitorClipboard: c75fdaa6e622111119f35e7914ecfc67b05efecb
+  CapacitorCordova: 9d3acbb574048e7167d2af127a0af2123e619f2f
+  CapacitorKeyboard: b6b0744890cdb1d9a96e2cafcc9253fdcc55de3b
+  CapacitorLocalNotifications: e0747a329ddde3074d52dc74a003688af90e42be
+  CapacitorNativeSettings: 3f12e9700e0a10cb5d0e22aec00de29d72589a12
+  CapacitorNetwork: 8812ce60d11fb63d8f2e4ba51a49b2e59892ebe2
+  CapacitorPluginSafeArea: 874619c00586248f1694210e72038123d422c2d9
+  CapacitorPreferences: cca2021f386efb75947c850334447d9ff22b14f1
+  CapacitorPushNotifications: 32a7f840815f319fd9ba1c1c9b0b914be9d95237
+  CapacitorShare: 0c58305114538568059bfc07111f22dcb9cb2a82
+  CapacitorStatusBar: eca7bc2b58d9f886f1ef9edb66e57a9b29c121af
+  CapacitorToast: 408036fbd702120d3adde3980b740f3c0fb60c9e
+  CapawesomeCapacitorAppUpdate: 48d12562b70d4490e820faac23cbf497ca025c98
+  CapawesomeCapacitorScreenshot: 12d23f0773903de4e5b0b3fdebabef1d3813f826
   mailcore2-ios: 3ff0be2fa553d4da9c11d39c11d51863c768f24f
-  OSBarcodeLib: 57987d2eb1f916f701f4554e20e349b3cb83f023
+  OSBarcodeLib: aa520d51576362d0dfea290b82653e31df1a6fc4
 
-PODFILE CHECKSUM: 6d80e0c407b6beb092e4e3a864d6ea7529da48af
+PODFILE CHECKSUM: 527a30a8b720cbb41c84b3cc2566059328cf7b3c
 
 COCOAPODS: 1.16.2
