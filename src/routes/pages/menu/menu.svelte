@@ -138,12 +138,12 @@
 		now = $t('menu.lunch');
 		next = $t('menu.dinner');
 		defaultSlideIndex = 1; // Show lunch
-	} else if (hours >= 12 && hours < 16) {
+	} else if ((hours > 12 || (hours == 12 && mins >= 30)) && hours < 16) {
 		message = $t('menu.midday_open');
 		now = $t('menu.lunch');
 		next = $t('menu.dinner');
 		defaultSlideIndex = 1; // Show lunch
-	} else if (hours >= 16 && hours < 18) {
+	} else if ((hours > 16 || (hours == 16 && mins >= 30)) && hours < 18) {
 		message = $t('menu.midday_closed');
 		color = 'danger';
 		now = $t('menu.dinner');
