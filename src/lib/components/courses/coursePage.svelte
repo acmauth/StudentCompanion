@@ -41,6 +41,17 @@
         }
     }
 
+    // TEMP: grade story share spike. Delete this and the button below to remove.
+    async function shareStory(course: NewCourseType){
+        const { shareGradeStory } = await import('$lib/share/gradeStory');
+        await shareGradeStory({
+            courseTitle: localize(course.courseTitle, course.course.locale?.name),
+            formattedGrade: course.formattedGrade ?? '',
+            grade: course.grade ?? 0,
+            isPassed: !!course.isPassed
+        });
+    }
+
     function sanitize(input: string|any){
         if (input){
             return DOMPurify.sanitize(input, { SANITIZE_NAMED_PROPS: true });
@@ -181,6 +192,12 @@
                 <div class="grade-gauge">
                     <canvas use:gradeGaugeChart={{grade: courseDetails.grade*10, isPassed: !!courseDetails.isPassed, formattedGrade: courseDetails.formattedGrade}}></canvas>
                 </div>
+
+                <!-- TEMP: grade story share spike. Delete this block and src/lib/share/ to remove. -->
+                <ion-button fill="clear" size="small" on:click={() => shareStory(courseDetails)}>
+                    <ion-icon slot="start" icon={share}></ion-icon>
+                    Share
+                </ion-button>
             {:else}
                 <div class="no_grade">
                     <h1>{localize(courseDetails.courseTitle, courseDetails.course.locale?.name)}</h1>
