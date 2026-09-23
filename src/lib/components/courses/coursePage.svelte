@@ -194,9 +194,9 @@
                 </div>
 
                 <!-- TEMP: grade story share spike. Delete this block and src/lib/share/ to remove. -->
-                <ion-button fill="clear" size="small" on:click={() => shareStory(courseDetails)}>
+                <ion-button fill="clear" size="small" on:click={() => shareStory(courseDetails)} aria-hidden style="text-transform: capitalize;">
                     <ion-icon slot="start" icon={share}></ion-icon>
-                    Share
+                    {$t('common.share')}
                 </ion-button>
             {:else}
                 <div class="no_grade">

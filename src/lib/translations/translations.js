@@ -3,6 +3,7 @@ import { menu } from 'ionicons/icons';
 export default {
 	el: {
 		"common.save": "Αποθήκευση",
+		'common.share': 'Κοινοποίηση',
 		"navigation.home": "Αρχική",
 		"navigation.progress": "Πρόοδος",
 		"navigation.calendar": "Ατζέντα",
@@ -339,6 +340,7 @@ export default {
 	},
 	en: {
 		'common.save': 'Save',
+		'common.share': 'Share',
 		'navigation.home': 'Home',
 		'navigation.progress': 'Progress',
 		'navigation.calendar': 'Agenda',

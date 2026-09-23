@@ -150,10 +150,4 @@
 		transform: rotateY(180deg);
 	}
 
-	.flip-container.flipClass .front {
-		clip-path: polygon(0 0, 0 0, 0 0, 0 0); /* Hide front when flipped */
-	}
-	.flip-container:not(.flipClass) .back {
-		clip-path: polygon(0 0, 0 0, 0 0, 0 0); /* Hide back when not flipped */
-	}
 </style>
