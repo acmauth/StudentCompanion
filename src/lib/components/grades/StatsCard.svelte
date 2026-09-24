@@ -4,7 +4,7 @@
 	import * as allIonicIcons from 'ionicons/icons';
 	import Chip from '$components/shared/Chips.svelte';
 	import { t } from '$lib/i18n';
-	import { gradeEvolutionChart } from './charts';
+	import { gpaPerSemester, gradeEvolutionChart } from './charts';
 	import type { course } from '$lib/types/courseType';
 	import type { AveragesResult, Registration } from '$types/grades';
 
@@ -13,6 +13,9 @@
 	export let flip: () => void;
 	export let subjectsJSON: course[];
 	export let registrationsInDegree: Registration[];
+
+	// A single semester has no progression to show.
+	$: showChart = Object.keys(gpaPerSemester(registrationsInDegree)).length > 1;
 
 	let gradesObject = {
 		average: 0,
@@ -75,13 +78,17 @@
 					<span class="stat_label">ECTS</span>
 				</div>
 			</div>
-			<canvas
-				id="gradeChart"
-				use:gradeEvolutionChart={{
-					registrations: registrationsInDegree,
-					title: $t('progress.average_evolution')
-				}}
-			/>
+			{#if showChart}
+				<div class="chart">
+					<canvas
+						id="gradeChart"
+						use:gradeEvolutionChart={{
+							registrations: registrationsInDegree,
+							title: $t('progress.average_evolution')
+						}}
+					/>
+				</div>
+			{/if}
 			 </div>
 			<Chip chipIcon={allIonicIcons.calculator} text={$t('progress.average_prediction')} {flip} />
 	</ion-card-content>
@@ -113,6 +120,12 @@
 		text-align: center;
         position: relative;
         overflow: hidden;
+	}
+
+	/* chart.js sizes the canvas to this box; about twice a stat tile's height. */
+	.chart {
+		position: relative;
+		height: 12rem;
 	}
 
 	.stat_value {
