@@ -20,6 +20,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# Capacitor reads @CapacitorPlugin(permissions = @Permission(...)) via reflection;
+# R8 full mode breaks the nested annotation values unless the annotation types are kept
+-keep @interface com.getcapacitor.annotation.** { *; }
+
 # javax.mail loads protocol providers and content handlers by class name
 -keep class com.sun.mail.** { *; }
 -keep class javax.mail.** { *; }
