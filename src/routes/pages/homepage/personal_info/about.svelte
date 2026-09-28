@@ -11,6 +11,8 @@
   import SubPageHeader from '$shared/subPageHeader.svelte';
   import IonPage from 'ionic-svelte/components/IonPage.svelte';
   import { construct, heartOutline, peopleOutline, rocketOutline, locationOutline } from 'ionicons/icons';
+	import { navController } from '$components/shared/StackedNav';
+  import EasterEgg from './easterEgg.svelte';
 
   interface Contributor {
     name: string;
@@ -63,7 +65,7 @@
 
   <div class="about-section">
     <h2 class="section-title">
-      <ion-icon icon={heartOutline} aria-hidden="true"></ion-icon>
+      <ion-icon icon={heartOutline} on:click={() => {navController.push(EasterEgg)}} aria-hidden="true"></ion-icon>
       {$t("about.who_are_we")}
     </h2>
     <p class="section-text">{$t("about.who_are_we_text_1")}</p>
