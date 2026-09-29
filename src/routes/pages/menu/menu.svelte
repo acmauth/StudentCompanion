@@ -8,6 +8,7 @@
 	import SubPageHeader from '$shared/subPageHeader.svelte';
 	import MenuSkeleton from '$lib/components/menu/menuSkeleton.svelte';
 	import { t} from '$lib/i18n';
+	import appConfig from '$src/app.config';
 
 	register();
 
@@ -127,45 +128,54 @@
 		
 	// Determine cafeteria status based on current time
 	// Now we stay on today's menu all day until midnight
+	let tempClosed = false;
 	if ((hours == 8 && mins >= 30) || (hours == 10 && mins < 30) || (hours == 9)) {
 		message = $t('menu.morning_open');
 		now = $t('menu.breakfast');
 		next = $t('menu.lunch');
 		defaultSlideIndex = 0; // Show breakfast
+		tempClosed = false;
 	} else if ((hours == 10 && mins >=30) || (hours == 11)) {
 		message = $t('menu.morning_closed');
 		color = 'danger';
 		now = $t('menu.lunch');
 		next = $t('menu.dinner');
 		defaultSlideIndex = 1; // Show lunch
+		tempClosed = true;
 	} else if ((hours > 12 || (hours == 12 && mins >= 30)) && hours < 16) {
 		message = $t('menu.midday_open');
 		now = $t('menu.lunch');
 		next = $t('menu.dinner');
 		defaultSlideIndex = 1; // Show lunch
+		tempClosed = false;
 	} else if ((hours > 16 || (hours == 16 && mins >= 30)) && hours < 18) {
 		message = $t('menu.midday_closed');
 		color = 'danger';
 		now = $t('menu.dinner');
 		next = '';
 		defaultSlideIndex = 2; // Show dinner
+		tempClosed = true;
 	} else if (hours >= 18 && hours <= 23) {
 		// Changed: Stay on today's dinner until midnight
 		if (hours >= 18 && hours < 21) {
 			message = $t('menu.evening_open');
+			tempClosed = false;
 		} else {
 			message = $t('menu.evening_closed');
 			color = 'danger';
+			tempClosed = true;
 		}
 		now = $t('menu.dinner');
 		next = '';
 		defaultSlideIndex = 2; // Show dinner
+		tempClosed = false;
 	} else {
 		// Before breakfast opens
 		message = $t('menu.evening_closed');
 		color = 'danger';
 		now = $t('menu.breakfast');
 		next = $t('menu.lunch');
+		tempClosed = true;
 		defaultSlideIndex = 0; // Show breakfast
 	}
 
@@ -252,6 +262,36 @@
 		}
 	}
 	
+
+	type CrowdLevel = 'quiet' | 'moderate' | 'busy' | 'crowded';
+	const CROWD_COLORS: Record<CrowdLevel, string> = {
+		quiet: 'success',
+		moderate: 'warning',
+		busy: 'warning',
+		crowded: 'danger'
+	};
+
+	const CROWD_PERSONS: Record<CrowdLevel, number> = { quiet: 1, moderate: 2, busy: 3, crowded: 3 };
+	const CROWD_LEVELS = Object.keys(CROWD_COLORS) as CrowdLevel[];
+
+	// null = unknown, closed or failed to load: the chip is hidden
+	let crowdLevel: CrowdLevel | null = null;
+
+	async function loadCrowd() {
+		try {
+			const response = await fetch(`${appConfig.crowd.apiBase}?place_code=dining-auth`);
+			if (!response.ok) throw new Error(`HTTP ${response.status}`);
+			const { level } = await response.json();
+			// const level = "quiet";
+			crowdLevel = level in CROWD_COLORS ? (level as CrowdLevel) : null;
+		} catch (error) {
+			console.error('Failed to fetch crowd level:', error);
+			crowdLevel = null;
+		}
+	}
+
+	onMount(loadCrowd);
+
 	// Initialize swiper when data is loaded
 	$: if (dataLoaded && typeof window !== 'undefined') {
 		// Wait for the DOM to be ready and data to be loaded
@@ -299,8 +339,45 @@
     <ion-header collapse="condense" mode="ios">
         <ion-toolbar mode="md">
             <ion-title size="large">{$t('menu.title')}</ion-title>
+			{#if crowdLevel}
+				<ion-chip
+					slot="end"
+					color={CROWD_COLORS[crowdLevel]}
+					id="crowdness-chip"
+					aria-label={$t(`crowd.${crowdLevel}.label`)}
+				>
+					{#each Array(CROWD_PERSONS[crowdLevel]) as _}
+						<ion-icon style="font-size:1.3rem;" icon={allIonicIcons.man}></ion-icon>
+					{/each}
+				</ion-chip>
+			{/if}
         </ion-toolbar>
     </ion-header>	
+	{#if crowdLevel}
+		<ion-popover class="crowd-popover" trigger="crowdness-chip" triggerAction="click">
+			<div class="crowd-card">
+				<div class="crowd-header">
+					<ion-icon
+						class="crowd-icon"
+						style="color: var(--ion-color-{CROWD_COLORS[crowdLevel]});"
+						icon={allIonicIcons.people}
+					></ion-icon>
+					<strong>{$t(`crowd.${crowdLevel}.label`)}</strong>
+				</div>
+				<div class="crowd-meter">
+					{#each CROWD_LEVELS as _, i}
+						<span
+							class="crowd-segment"
+							style={i <= CROWD_LEVELS.indexOf(crowdLevel)
+								? `background: var(--ion-color-${CROWD_COLORS[crowdLevel]});`
+								: ''}
+						></span>
+					{/each}
+				</div>
+				<p>{$t(`crowd.${crowdLevel}.description`)}</p>
+			</div>
+		</ion-popover>
+	{/if}
     <ion-content style="padding-top:0;">
 		{#await initializeData()}
 			<!-- Loading: Show skeleton while fetching data -->
@@ -331,7 +408,7 @@
 										<ion-segment-button value={tabKey}>
 											<ion-icon icon={mealIcons[i]} />
 											<ion-label>{$t(`menu.${tabKey}`)}</ion-label>
-											{#if i === defaultSlideIndex}
+											{#if i === defaultSlideIndex && !tempClosed}
 												<span class="now-dot" aria-label={$t('menu.now')} />
 											{/if}
 										</ion-segment-button>
@@ -400,6 +477,49 @@
 <style>
 	.swiper-card-content {
 		padding: 0 !important;
+	}
+
+	#crowdness-chip ion-icon {
+		margin: 0 -0.2rem;
+	}
+
+	.crowd-popover {
+		--width: 260px;
+		--border-radius: 1rem;
+	}
+
+	.crowd-card {
+		padding: 1rem 1.1rem;
+	}
+
+	.crowd-header {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 1.05rem;
+	}
+
+	.crowd-icon {
+		font-size: 1.5rem;
+	}
+
+	.crowd-meter {
+		display: flex;
+		gap: 0.3rem;
+		margin: 0.75rem 0;
+	}
+
+	.crowd-segment {
+		flex: 1;
+		height: 0.4rem;
+		border-radius: 0.2rem;
+		background: var(--ion-color-step-150, rgba(127, 127, 127, 0.25));
+	}
+
+	.crowd-card p {
+		margin: 0;
+		font-size: 0.9rem;
+		color: var(--ion-color-medium);
 	}
 
 	.empty-state {

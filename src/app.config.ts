@@ -32,6 +32,9 @@ const appConfig = {
     menu: {
         apiBase: "https://api.aristomate.auth.gr/menu"
     },
+    crowd: {
+        apiBase: "https://api.aristomate.auth.gr/crowd"
+    },
     webmail: {
         server: "mail.auth.gr",
         port: '993',
