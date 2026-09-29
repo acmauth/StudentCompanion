@@ -230,6 +230,7 @@
 				<div class="wallet-item">
 					{#if $qrStore.filter((item) => item.title === "school").length > 0}
 						
+					<div class="qr-wallet-holder">
 						<svg 
 							use:qr={{
 								data: $qrStore.filter((item) => item.title === "school")[0].data,
@@ -238,6 +239,7 @@
 							on:click={()=>openQRDisplay('school', $qrStore.filter((item) => item.title === "school")[0].data)} 
 							aria-hidden
 						/>
+					</div>
 					{:else}
 						<img src={student_id} alt="student id" on:click={()=>{ gymQRPressed=false; schoolQRPressed=true; scanQRCode(); }} aria-hidden/>
 					{/if}
@@ -245,6 +247,7 @@
 				</div>
 				<div class="wallet-item">
 					{#if $qrStore.filter((item) => item.title === "gym").length > 0}
+					<div class="qr-wallet-holder">
 						<svg
 							use:qr={{
 								data: $qrStore.filter((item) => item.title === "gym")[0].data,
@@ -253,6 +256,7 @@
 							on:click={()=>openQRDisplay('gym', $qrStore.filter((item) => item.title === "gym")[0].data)}
 							aria-hidden
 						/>
+					</div>
 					{:else}
 						<img src={gym_id} alt="gym id" on:click={()=>{ gymQRPressed=true; schoolQRPressed=false; scanQRCode(); }} aria-hidden>
 					{/if}
@@ -453,8 +457,7 @@
 	}
 
 	.wallet-item svg {
-		width: 70%;
-		max-width: 120px;
+		width: 100%;
 		cursor: pointer;
 		transition: transform 0.2s ease;
 		image-rendering: -webkit-optimize-contrast;
@@ -531,10 +534,22 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: var(--app-color-map-input);
+		background: white;
+		color: black;
 		border-radius: 1rem;
 		padding: 1.5rem;
 		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.qr-wallet-holder{
+		width: 70%;
+		display: flex;
+		aspect-ratio: 1;
+		justify-content: center;
+		background: white;
+		color: black;
+		padding: 4px;
+		border-radius: 4px;
 	}
 
 	.qr-large {
