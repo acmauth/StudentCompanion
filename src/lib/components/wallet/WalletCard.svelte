@@ -457,8 +457,7 @@
 	}
 
 	.wallet-item svg {
-		/* width: 70%;
-		max-width: 120px; */
+		width: 100%;
 		cursor: pointer;
 		transition: transform 0.2s ease;
 		image-rendering: -webkit-optimize-contrast;
@@ -543,6 +542,7 @@
 	}
 
 	.qr-wallet-holder{
+		width: 70%;
 		display: flex;
 		aspect-ratio: 1;
 		justify-content: center;
