@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Resources referenced only by name from the web layer.
+    The resource shrinker cannot see these, so list them here.
+
+    @drawable/logo  LocalNotifications smallIcon / largeIcon (scheduleNotifications.ts)
+-->
+
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/logo" />
