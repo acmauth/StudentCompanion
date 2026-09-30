@@ -363,6 +363,7 @@
 						icon={allIonicIcons.people}
 					></ion-icon>
 					<strong>{$t(`crowd.${crowdLevel}.label`)}</strong>
+					<ion-chip class="beta-chip">BETA</ion-chip>
 				</div>
 				<div class="crowd-meter">
 					{#each CROWD_LEVELS as _, i}
@@ -501,6 +502,18 @@
 
 	.crowd-icon {
 		font-size: 1.5rem;
+	}
+
+	.beta-chip {
+		height: 1rem;
+		min-height: 1rem;
+		padding: 0 0.3rem;
+		margin: 0;
+		align-self: flex-start;
+		font-size: 0.55rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		transform: translateY(-0.3rem);
 	}
 
 	.crowd-meter {
