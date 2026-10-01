@@ -19,3 +19,21 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Capacitor reads @CapacitorPlugin(permissions = @Permission(...)) via reflection;
+# R8 full mode breaks the nested annotation values unless the annotation types are kept
+-keep @interface com.getcapacitor.annotation.** { *; }
+
+# javax.mail loads protocol providers and content handlers by class name
+-keep class com.sun.mail.** { *; }
+-keep class javax.mail.** { *; }
+-keep class javax.activation.** { *; }
+-dontwarn java.awt.**
+-dontwarn javax.security.sasl.**
+-dontwarn java.beans.Beans
+-dontwarn javax.security.auth.callback.NameCallback
+
+# Readable crash stack traces in Play Console
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
+
