@@ -128,49 +128,56 @@
 		
 	// Determine cafeteria status based on current time
 	// Now we stay on today's menu all day until midnight
+	// Open hours: 08:30-10:30 breakfast, 12:30-16:30 lunch, 18:00-21:00 dinner
 	let tempClosed = false;
-	if ((hours == 8 && mins >= 30) || (hours == 10 && mins < 30) || (hours == 9)) {
+	const totalMinutes = hours * 60 + mins;
+	if (totalMinutes >= 510 && totalMinutes < 630) {
+		// 08:30 - 10:30
 		message = $t('menu.morning_open');
 		now = $t('menu.breakfast');
 		next = $t('menu.lunch');
 		defaultSlideIndex = 0; // Show breakfast
 		tempClosed = false;
-	} else if ((hours == 10 && mins >=30) || (hours == 11)) {
+	} else if (totalMinutes >= 630 && totalMinutes < 750) {
+		// 10:30 - 12:30
 		message = $t('menu.morning_closed');
 		color = 'danger';
 		now = $t('menu.lunch');
 		next = $t('menu.dinner');
 		defaultSlideIndex = 1; // Show lunch
 		tempClosed = true;
-	} else if ((hours > 12 || (hours == 12 && mins >= 30)) && hours < 16) {
+	} else if (totalMinutes >= 750 && totalMinutes < 990) {
+		// 12:30 - 16:30
 		message = $t('menu.midday_open');
 		now = $t('menu.lunch');
 		next = $t('menu.dinner');
 		defaultSlideIndex = 1; // Show lunch
 		tempClosed = false;
-	} else if ((hours > 16 || (hours == 16 && mins >= 30)) && hours < 18) {
+	} else if (totalMinutes >= 990 && totalMinutes < 1080) {
+		// 16:30 - 18:00
 		message = $t('menu.midday_closed');
 		color = 'danger';
 		now = $t('menu.dinner');
 		next = '';
 		defaultSlideIndex = 2; // Show dinner
 		tempClosed = true;
-	} else if (hours >= 18 && hours <= 23) {
-		// Changed: Stay on today's dinner until midnight
-		if (hours >= 18 && hours < 21) {
-			message = $t('menu.evening_open');
-			tempClosed = false;
-		} else {
-			message = $t('menu.evening_closed');
-			color = 'danger';
-			tempClosed = true;
-		}
+	} else if (totalMinutes >= 1080 && totalMinutes < 1260) {
+		// 18:00 - 21:00
+		message = $t('menu.evening_open');
 		now = $t('menu.dinner');
 		next = '';
 		defaultSlideIndex = 2; // Show dinner
 		tempClosed = false;
+	} else if (totalMinutes >= 1260) {
+		// 21:00 - 24:00 (stay on today's dinner until midnight)
+		message = $t('menu.evening_closed');
+		color = 'danger';
+		now = $t('menu.dinner');
+		next = '';
+		tempClosed = true;
+		defaultSlideIndex = 2; // Show dinner
 	} else {
-		// Before breakfast opens
+		// 00:00 - 08:30 (before breakfast opens)
 		message = $t('menu.evening_closed');
 		color = 'danger';
 		now = $t('menu.breakfast');
