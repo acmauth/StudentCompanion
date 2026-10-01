@@ -346,7 +346,7 @@
     <ion-header collapse="condense" mode="ios">
         <ion-toolbar mode="md">
             <ion-title size="large">{$t('menu.title')}</ion-title>
-			{#if crowdLevel}
+			{#if crowdLevel && !closedForHolidays && !tempClosed}
 				<ion-chip
 					slot="end"
 					color={CROWD_COLORS[crowdLevel]}
@@ -360,7 +360,7 @@
 			{/if}
         </ion-toolbar>
     </ion-header>	
-	{#if crowdLevel}
+	{#if crowdLevel && !closedForHolidays && !tempClosed}
 		<ion-popover class="crowd-popover" trigger="crowdness-chip" triggerAction="click">
 			<div class="crowd-card">
 				<div class="crowd-header">
