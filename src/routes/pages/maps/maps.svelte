@@ -54,6 +54,17 @@
     $: deptSearchResults = fuzzyDeptSearchResults(deptSearchQuery);
     $: buildingSearchResults = fuzzyBuildingSearchResults(buildingSearchQuery);
 
+
+    function flyToBuilding(building: BuildingInfo){
+        hideMarkers();
+        selectedFeatureLayerGroup.clearLayers();
+        if (building && building.latY && building.longX) {
+            L.marker([parseFloat(building.latY), parseFloat(building.longX)], { title: building.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]}) })
+                .addTo(selectedFeatureLayerGroup)
+            map.flyTo([parseFloat(building.latY), parseFloat(building.longX)], 18, { duration: MAPANIMATIONDURATION });
+        }
+    }
+
     function updateSearchableRooms(selectedDepartment: Department|undefined, selectedBuilding: BuildingInfo|undefined, buildings: BuildingInfo[]): helpers.RoomWithBuilding[] {
         if (selectedBuilding) {
             const availRooms = allRooms.filter(r => r.authBldId === selectedBuilding.authBldId);
@@ -76,6 +87,7 @@
         await clearActiveRoom();
         selectedBuilding = building;
         buildingSearchQuery = building? building.name : "";
+        if (building) flyToBuilding(building);
     }
 
     function fuzzySearchResults(searchQuery: string): FuseResult<helpers.RoomWithBuilding>[] {
@@ -255,9 +267,7 @@
         if (!room.hasGis) {
             const building = buildings.find(b => b.authBldId === room.authBldId);
             if (building && building.latY && building.longX) {
-                L.marker([parseFloat(building.latY), parseFloat(building.longX)], { title: building.name, icon: L.icon({iconUrl: markerIcon,iconSize: [30, 30],iconAnchor: [15, 30],popupAnchor: [0, -30]}) })
-                    .addTo(selectedFeatureLayerGroup)
-                map.flyTo([parseFloat(building.latY), parseFloat(building.longX)], 18, { duration: MAPANIMATIONDURATION });
+                flyToBuilding(building)
             } else {
                 alert(`Room "${room.roomName}" has no location data available.`);
             }
