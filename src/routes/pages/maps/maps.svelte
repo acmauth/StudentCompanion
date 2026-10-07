@@ -13,6 +13,7 @@
     import MapFooter from "./MapFooter.svelte";
 	import { FuseResult } from "fuse.js";
     import markerIcon from '$lib/assets/marker.png';
+    import { enableDoubleTapDragZoom } from "./doubleTapDragZoom";
 
     // Constants
     const MAPANIMATIONDURATION = 0.35; // seconds
@@ -24,6 +25,7 @@
     let mapContainer: HTMLElement;
     let selectedFeatureLayerGroup: any;
     let markerClusterGroup: any;
+    let disableDoubleTapDragZoom: (() => void) | undefined;
 
     //control state
     let activeRoom: helpers.RoomWithBuilding|undefined = undefined;
@@ -188,6 +190,7 @@
                 maxZoom: 22
             }).addTo(map);
             selectedFeatureLayerGroup = L.layerGroup().addTo(map);
+            disableDoubleTapDragZoom = enableDoubleTapDragZoom(L, map);
             
             // Initialize marker cluster group with custom options
             markerClusterGroup = L.markerClusterGroup({
@@ -245,6 +248,7 @@
     });
 
     onDestroy(async () => {
+		disableDoubleTapDragZoom?.();
 		if (map) {
 			map.remove();
 		}
