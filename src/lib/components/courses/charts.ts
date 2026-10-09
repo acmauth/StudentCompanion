@@ -87,7 +87,7 @@ export function gradeDistributionChart(canvas: HTMLCanvasElement, statistics: Ex
         function toCounts(stats: ExamStatistics): number[] {
             const counts = new Array(MAX_GRADE + 1).fill(0);
             for (const bucket of stats) {
-                const grade = Math.round(bucket.examGrade*MAX_GRADE);
+                const grade = Math.floor(bucket.examGrade*MAX_GRADE);
                 if (grade >= 0 && grade <= MAX_GRADE) {
                     counts[grade] += bucket.total;
                 }
