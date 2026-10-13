@@ -26,9 +26,12 @@
     // Runs once at component creation: a fresh RecentsDisplay instance is mounted
     // each time recents.svelte's {#await} block resolves, so this doesn't need to be reactive.
     function initializeRecentItems() {
-        allRecentItems = [...recentItems];
+        const now = Date.now();
+        allRecentItems = recentItems.filter(item =>
+            item.type !== "notification" || getItemDate(item).getTime() <= now
+        );
 
-        recentItems = recentItems
+        recentItems = allRecentItems
             .filter(item => !$dismissedItems.includes(item.id))
             .sort((a, b) => getItemDate(b).getTime() - getItemDate(a).getTime())
             .slice(0, maxCards);

@@ -2,7 +2,8 @@
 	import type { notification } from "./notifications";
     import universisLogo from "$images/universis.png";
     import elearningLogo from "$images/elearning.png";
-    import mail from "$images/mail.png";
+    import aristomateLogo from "$images/aristomate.png";
+    import webmailLogo from "$images/mail.png";
     import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
     import DOMPurify, { sanitize } from 'dompurify';
@@ -10,6 +11,18 @@
     import { t, getLocale } from "$lib/i18n";
 
     export let notification: notification;
+
+    const OPTIONS: Record<string, {colour: string, logo: string, cssClass: string}> = {
+        "universis": {colour: "tertiary", logo: universisLogo, cssClass: "universis"},
+        "aristomate": {colour: "tertiary", logo: aristomateLogo, cssClass: "universis"},
+        "webmail": {colour: "secondary", logo: webmailLogo, cssClass: "webmail"},
+        "elearning": {colour: "warning", logo: elearningLogo, cssClass: "elearning"},
+        undefined: {colour: "tertiary", logo: aristomateLogo, cssClass: "universis"}
+    }
+
+    $: option = OPTIONS[notification.type] ?? OPTIONS.undefined;
+
+
     let iframe: HTMLIFrameElement;
     let inlineModalOpen = false;
     let breakpoints = [0, 0.5, 1];
@@ -81,8 +94,8 @@
     <div class="notification-card">
         <div class="row-header">
             <div class="left-col">
-                <div class="icon-wrapper" class:universis={notification.type == "universis"} class:webmail={notification.type == "webmail"} class:elearning={notification.type == "elearning"}>
-                     <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail" ? mail : elearningLogo} />
+                <div class="icon-wrapper {option.cssClass}">
+                     <img alt="Service logo" src={option.logo} />
                 </div>
                 <div class="details">
                     <span class="sender">{notification.sender}</span>
@@ -112,9 +125,9 @@
                         </ion-text>
                     </ion-item>
                     <div class="context-chips ion-padding-horizontal">
-                        <ion-chip style="flex-shrink: 2;" outline color={notification.type == "universis" ? "tertiary" : notification.type == "webmail" ? "secondary" : "warning"}>
+                        <ion-chip style="flex-shrink: 2;" outline color={option.colour}>
                             <ion-avatar>
-                                <img alt="Service logo" src={notification.type == "universis" ? universisLogo : notification.type == "webmail"? mail : elearningLogo} />
+                                <img alt="Service logo" src={option.logo} />
                             </ion-avatar>
                             <ion-label style="overflow:hidden; white-space: nowrap;">
                                 {#if notification.email}
