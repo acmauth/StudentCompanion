@@ -145,9 +145,15 @@ export function getPreviousMonth(month: number, year: number): { month: number; 
 }
 
 
+// A failed fetch leaves the stored events untouched
+function logFetchError(error: unknown): undefined {
+    console.warn('[fetchUniversisEvents] Fetch failed:', error);
+    return undefined;
+}
+
 export async function fetchUniversisEvents() {
         // console.log("Fetching courses events from Universis...");
-        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1'))?.value;
+        let fetchedExams = (await universisGet('students/me/availableCourseExamEvents?$top=-1').catch(logFetchError))?.value;
         // console.log(fetchedExams);
         await EventStore.loadFromStorage();
  
@@ -180,7 +186,7 @@ export async function fetchUniversisEvents() {
         }
 
 
-        let fetchedClasses = (await universisGet('students/me/teachingEvents?$top=-1&$expand=location,performer'))?.value;
+        let fetchedClasses = (await universisGet('students/me/teachingEvents?$top=-1&$expand=location,performer').catch(logFetchError))?.value;
         // console.log(fetchedClasses);
 
         if (fetchedClasses) {

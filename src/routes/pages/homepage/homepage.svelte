@@ -31,6 +31,7 @@
 	import { getHomepageCache, setHomepageCache } from './homepageCache';
 	import AvatarPreview from '$src/lib/avatar/AvatarPreview.svelte';
 	import { avatarStore } from '$stores/avatar.store';
+	import { AuthExpiredError } from '$lib/errors';
 
 	// Register the custom AppLauncher plugin
 	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
@@ -136,10 +137,16 @@
 		);
 
 
-		givenName = expandedLocale === '' ? personalData.person.givenName : personalData.person.locale.givenName;
+		if (!personalData?.person) {
+			throw new Error('Student data is incomplete (missing person)');
+		}
+
+		givenName = expandedLocale === ''
+			? personalData.person.givenName
+			: personalData.person.locale?.givenName ?? personalData.person.givenName;
 		gender = personalData.person.gender;
-		departmentName = expandedLocale === '' ? personalData.department?.name || 'Αδυναμία φόρτωσης' : personalData.department?.locale.name || 'Αδυναμία φόρτωσης';
-		studyLevel = expandedLocale === '' ? personalData.studyProgram?.studyLevel?.name : personalData.studyProgram?.studyLevel?.locale.name || 'Αδυναμία φόρτωσης' ;
+		departmentName = expandedLocale === '' ? personalData.department?.name || 'Αδυναμία φόρτωσης' : personalData.department?.locale?.name || 'Αδυναμία φόρτωσης';
+		studyLevel = expandedLocale === '' ? personalData.studyProgram?.studyLevel?.name : personalData.studyProgram?.studyLevel?.locale?.name || 'Αδυναμία φόρτωσης' ;
 		actualSemester = personalData.actualSemester || null;
 		studentStatus = personalData.studentStatus.id == 1 ? $t('homepage.studentStatusActive') : $t('homepage.studentStatusInactive');
 		aem = personalData.studentIdentifier;
@@ -224,6 +231,10 @@
 			await getInfo(locale);
 			loadError = null;
 		} catch (err) {
+			if (err instanceof AuthExpiredError) {
+				goto('/login?token_expired=true');
+				return;
+			}
 			loadError = err;
 		} finally {
 			loading = false;

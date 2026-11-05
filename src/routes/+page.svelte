@@ -6,6 +6,7 @@
 	import { neoUniversisGet } from '$lib/dataService';
 	import { loadPersistedStores } from './persistedStoreDeclarations';
 	import { App } from '@capacitor/app';
+	import { AuthExpiredError } from '$lib/errors';
 
 	function delay(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));
@@ -16,18 +17,34 @@
 		await neoUniversisGet('students/me/courses?$top=-1');
 	}
 
+	function goToLogin() {
+		console.log("[src/routes/+page.svelte] Navigating to login");
+		goto('/login?token_expiry=true');
+	}
+
 	// Handling the redirect to the homepage
 	onMount(async () => {
 		await loadPersistedStores();
-		// await delay(1000);
-		if (await judgeAuth()) {
-			await preFlightCache();
-			console.log("[src/routes/+page.svelte] Navigating to homepage");
-			goto('/pages/homepage'); // FIXME: This gets called after a call to login, resulting in -> /login and then /pages/homepage
-		} else {
-			console.log("[src/routes/+page.svelte] Navigating to login");
-			goto('/login?token_expiry=true');
+
+		if (!(await judgeAuth())) {
+			goToLogin();
+			return;
 		}
+
+		// Warming the cache is best-effort. Pages fall back to stale cache
+		// or show their own error, so only an expired session blocks entry.
+		try {
+			await preFlightCache();
+		} catch (error) {
+			if (error instanceof AuthExpiredError) {
+				goToLogin();
+				return;
+			}
+			console.warn("[src/routes/+page.svelte] Preflight failed:", error);
+		}
+
+		console.log("[src/routes/+page.svelte] Navigating to homepage");
+		goto('/pages/homepage');
 	});
 </script>
 

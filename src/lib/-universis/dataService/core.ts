@@ -5,66 +5,58 @@ import { userTokens } from "$stores/credentials.store";
 import reauthenticate from "../authenticator-deprecated/reauthenticate.js";
 import { Capacitor } from "@capacitor/core";
 import Config from "$src/app.config";
+import { ApiError, AuthExpiredError, NetworkError } from "$lib/errors";
 
 // This is a wrapper for the Universis API.
 // It's a simple GET request with a token in the header.
+// Throws AuthExpiredError, NetworkError or ApiError.
 export const apiRequest = async (endpoint: string): Promise<Object> => {
-    
+
   return await oidcApiRequest(endpoint);
-  
+
 };
 
-async function oidcApiRequest(endpoint: string): Promise<Object> {
-    /*
-      This function is a wrapper for the login, using the OIDC credential API.
-    */
-      const authClient = new OIDCClient(Config.auth);
+// Returns a usable access token, refreshing it first if it has expired.
+// Logs the user out only when the server rejects the refresh token.
+async function getValidToken(authClient: OIDCClient): Promise<string> {
 
+  if (!authClient.isRefreshable()) {
+    throw new AuthExpiredError('No refresh token');
+  }
 
-    if (authClient.isExpired()) {
-      // If the token is not valid, we try to get a new one
-      if (authClient.isRefreshable()) {
-        // If the refresh token is still valid, we try to get a new token
-        try {
-          await authClient.refreshToken();
-        } catch (error) {
-          // If the refresh fails, we logout the user
-          await authClient.logout();
-        }
-      } else {
-        // If the refresh token is not valid, we redirect the user to the login page
-        await authClient.logout();
-      }
-    }
-    
-    let token: string = "";
+  if (authClient.isExpired()) {
     try {
-      // If we reach this point, the token is valid
-      token = await authClient.getAccessToken();
+      await authClient.refreshToken();
     } catch (error) {
-      // If there was an error refreshing the token, we logout the user
-      await authClient.logout();
+      if (error instanceof AuthExpiredError) await authClient.logout();
+      throw error;
     }
-    
-    // We get the token from the store
-    const url = `${Config.universis.api}/${endpoint}`;
-    const response = await fetch(url, {
+  }
+
+  return authClient.getItemFromStore('access_token');
+}
+
+async function oidcApiRequest(endpoint: string): Promise<Object> {
+
+  const authClient = new OIDCClient(Config.auth);
+  const token = await getValidToken(authClient);
+
+  const url = `${Config.universis.api}/${endpoint}`;
+  let response: Response;
+  try {
+    response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    
+  } catch (error) {
+    throw new NetworkError(`Request to ${endpoint} failed: ${error}`);
+  }
 
+  if (!response.ok) {
+    throw new ApiError(response.status, `HTTP error ${response.status} on ${endpoint}`);
+  }
 
-    try {
-      if (!response.ok) {
-        throw new Error(`HTTP error ${response.status}`);
-      }
-      const text = await response.text();
-      return text ? JSON.parse(text) : {};
-    } catch (error) {      
-        console.error("API request error:", error);
-        return {};
-    }
-
+  const text = await response.text();
+  return text ? JSON.parse(text) : {};
 }

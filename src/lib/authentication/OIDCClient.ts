@@ -4,6 +4,7 @@ import { get } from 'svelte/store';
 import { jwtDecode } from "jwt-decode";
 import { goto } from '$app/navigation';
 import { toastController } from 'ionic-svelte';
+import { ApiError, AuthExpiredError, NetworkError } from '$lib/errors';
 /**
  * Flexible OpenID Connect Client with PKCE for Capacitor Apps
  * Supports both mobile (in-app browser) and web browser flows
@@ -25,6 +26,10 @@ type OIDCClientConfig = {
   isIOS: boolean | undefined;
   isProduction: boolean;
 };
+
+
+// Mutex for token refresh.
+let refreshInFlight: Promise<any> | null = null;
 
 class OIDCClient {
   private config: OIDCClientConfig;
@@ -239,11 +244,22 @@ class OIDCClient {
     return await response.json();
   }
 
-  // Refresh access token
+  // Refresh access token.
+  // Throws AuthExpiredError when the refresh token is missing or rejected,
+  // NetworkError when the token endpoint is unreachable, ApiError otherwise.
   async refreshToken() {
+    if (!refreshInFlight) {
+      refreshInFlight = this.performRefresh().finally(() => {
+        refreshInFlight = null;
+      });
+    }
+    return refreshInFlight;
+  }
+
+  private async performRefresh() {
     const refreshToken = this.getItemFromStore('refresh_token');
     if (!refreshToken) {
-      throw new Error('No refresh token available');
+      throw new AuthExpiredError('No refresh token available');
     }
 
     const body = new URLSearchParams({
@@ -252,17 +268,27 @@ class OIDCClient {
       client_id: this.config.clientId
     });
 
-    const response = await fetch(this.config.tokenUrl as string, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: body.toString()
-    });
+    let response: Response;
+    try {
+      response = await fetch(this.config.tokenUrl as string, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: body.toString()
+      });
+    } catch (error) {
+      throw new NetworkError(`Token refresh unreachable: ${error}`);
+    }
 
     if (!response.ok) {
       const error = await response.text();
-      throw new Error(`Token refresh failed: ${error}`);
+
+      // Keycloak answers invalid_grant (400) for expired or revoked refresh tokens
+      if (response.status === 400 || response.status === 401) {
+        throw new AuthExpiredError(`Token refresh rejected: ${error}`);
+      }
+      throw new ApiError(response.status, `Token refresh failed: ${error}`);
     }
 
     const tokens = await response.json();
@@ -326,15 +352,18 @@ class OIDCClient {
     return await response.json();
   }
 
-  // Logout
-  async logout() {
-    // const idToken = this.getItemFromStore('id_token');
-    
-    // Clear stored tokens
+  clearTokens() {
     this.removeItemFromStore('access_token');
     this.removeItemFromStore('refresh_token');
     this.removeItemFromStore('id_token');
     this.removeItemFromStore('expires_at');
+  }
+
+  // Logout
+  async logout() {
+    // const idToken = this.getItemFromStore('id_token');
+
+    this.clearTokens();
 
     // Perform server-side logout
     // if (false && idToken && this.config.logoutUrl) {
@@ -368,16 +397,17 @@ class OIDCClient {
       goto("/login?token_expired=true");
   }
 
+  // Treats the token as expired 30 s early so it can't lapse mid-request
   isExpired() {
     const expiresAt = this.getItemFromStore('expires_at');
     if (expiresAt) {
-      return Date.now() > parseInt(expiresAt);
+      return Date.now() > parseInt(expiresAt) - 30_000;
     }
     return true;
   }
 
+  // Check if refresh token exists
   isRefreshable() {
-    // With offline access scope, refresh token can't expire
     const refreshToken = this.getItemFromStore('refresh_token');
     return !!refreshToken;
   }

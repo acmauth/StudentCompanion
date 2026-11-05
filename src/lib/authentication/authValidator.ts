@@ -7,6 +7,7 @@ import { Network } from '@capacitor/network';
 import OIDCClient from "./OIDCClient.js";
 import { Capacitor } from "@capacitor/core";
 import Config from "$src/app.config";
+import { AuthExpiredError } from "$lib/errors";
 
 
 
@@ -15,17 +16,35 @@ const authClient = new OIDCClient(Config.auth);
 
 
 
-export async function judgeAuth() {
+export async function judgeAuth(): Promise<boolean> {
     /*
-    Bool    - Give a judgement on wether the user should be directed to the login page or not
-    true:   - The user is logged in
-            - The user is offline and has a token
-    false:  - The user is not logged in
-            - The user is offline and does not have a token
+    Decides whether startup should continue into the app or go to login.
+    Refreshes an expired access token here, so later requests don't hit
+    an expired session halfway through rendering.
+
+    true:   - The user is offline (cached data carries the session)
+            - The session is valid or was refreshed
+            - The refresh failed for a reason other than expiry (network, 5xx)
+    false:  - There is no session
+            - The server rejected the refresh token
     */
     const onLineStatus = (await Network.getStatus()).connected;
+    if (!onLineStatus) return true;
 
-    return authClient.isAuthenticated() || !onLineStatus;
+    if (!authClient.isAuthenticated()) return false;
+    if (!authClient.isExpired()) return true;
+
+    try {
+        await authClient.refreshToken();
+        return true;
+    } catch (error) {
+        if (error instanceof AuthExpiredError) {
+            authClient.clearTokens();
+            return false;
+        }
+        console.warn('[judgeAuth] Token refresh failed, continuing with cached data:', error);
+        return true;
+    }
 }
 
 

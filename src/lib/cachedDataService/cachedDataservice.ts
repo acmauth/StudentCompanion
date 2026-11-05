@@ -1,6 +1,7 @@
 import { universisGet, elearningGet, webmailInboxRequest } from "$lib/dataService"
 import { Network } from '@capacitor/network';
 import Dexie from "dexie";
+import { AuthExpiredError } from "$lib/errors";
 const isProduction = process.env.NODE_ENV === 'production';
 
 type cachedItem = {
@@ -36,10 +37,18 @@ export async function cachedUniversisGet (endpoint: string, options?: options): 
     const cached = await getFromCache(key);
     if (cached.exists && (!cached.expired && !options.forceFresh || !(await Network.getStatus()).connected)){
         return cached.value;
-    } else {
+    }
+
+    try {
         const response = await universisGet(endpoint);
         cacheItem(key, response, options.lifetime);
         return response;
+    } catch (error) {
+        if (cached.exists && !(error instanceof AuthExpiredError)) {
+            console.warn(`[cachedUniversisGet] Serving stale ${key}:`, error);
+            return cached.value;
+        }
+        throw error;
     }
 }
 
