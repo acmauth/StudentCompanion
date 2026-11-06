@@ -278,7 +278,7 @@
 		crowded: 'danger'
 	};
 
-	const CROWD_PERSONS: Record<CrowdLevel, number> = { quiet: 1, moderate: 2, busy: 3, crowded: 3 };
+	const CROWD_PERSONS: Record<CrowdLevel, number> = { quiet: 1, moderate: 2, busy: 3, crowded: 4 };
 	const CROWD_LEVELS = Object.keys(CROWD_COLORS) as CrowdLevel[];
 
 	// null = unknown, closed or failed to load: the chip is hidden
