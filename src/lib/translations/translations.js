@@ -43,7 +43,7 @@ export default {
 		"crowd.moderate.description": "Η λέσχη έχει αυτή τη στιγμή μέτρια προσέλευση.",
 		"crowd.busy.label": "Αρκετός κόσμος",
 		"crowd.busy.description": "Η λέσχη έχει αυτή τη στιγμή αρκετό κόσμο.",
-		"crowd.crowded.label": "Πολύ κόσμος",
+		"crowd.crowded.label": "Πολύς κόσμος",
 		"crowd.crowded.description": "Η λέσχη είναι αυτή τη στιγμή πολύ γεμάτη.",
 		"about.title": "Σχετικά με εμάς",
 		"about.subtitle": "Η ομάδα πίσω από το Aristomate",
