@@ -5,7 +5,11 @@
     import type { RecentItem } from "./types";
     import { neoUniversisGet } from "$lib/dataService";
 
-    export let maxCards = 6;
+    interface Props {
+        maxCards?: number;
+    }
+
+    let { maxCards = 6 }: Props = $props();
 
     const RECENT_ITEMS_CACHE_KEY = "recentItems";
 

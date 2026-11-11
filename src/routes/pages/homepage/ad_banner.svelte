@@ -2,8 +2,7 @@
 	import { onMount } from "svelte";
     import { neoUniversisGet } from "$src/lib/dataService";
 
-    export let semester;
-    export let departmentName;
+    let { semester, departmentName } = $props();
 
 
     let isPast = new Date() > new Date("2026-02-17T15:00:00.000+02:00");

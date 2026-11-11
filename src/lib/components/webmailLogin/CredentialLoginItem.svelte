@@ -1,20 +1,24 @@
 <script>
+	import { run } from 'svelte/legacy';
+
     import { mail, chevronForwardCircle } from 'ionicons/icons';
 	import { webmailLoggedIn as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
     import { t } from "$lib/i18n";
 	import { showLoginAlert } from './credentialLogin';
 	import Config from "$src/app.config";
 
-	let loginModalOpen = false;
-	$:	if ($autheticationFlag) loginModalOpen = false;
+	let loginModalOpen = $state(false);
+	run(() => {
+		if ($autheticationFlag) loginModalOpen = false;
+	});
 
 </script>
 
 {#if $autheticationFlag == false && (Config.isAndroid || Config.isDevelopment)}
-    <ion-item button on:click={showLoginAlert} aria-hidden>
-        <ion-icon size="small" icon={mail} />
+    <ion-item button onclick={showLoginAlert} aria-hidden>
+        <ion-icon size="small" icon={mail}></ion-icon>
         <ion-label class="ion-padding-start">{$t("settings.webmail")}</ion-label>
-        <ion-icon size="small" icon={chevronForwardCircle} />
+        <ion-icon size="small" icon={chevronForwardCircle}></ion-icon>
     </ion-item>
 {/if}
 

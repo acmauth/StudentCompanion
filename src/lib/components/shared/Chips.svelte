@@ -1,20 +1,20 @@
 <script>
-/**
-	 * @type {() => void}
+
+ 
+ 
+	/**
+	 * @typedef {Object} Props
+	 * @property {() => void} flip
+	 * @property {any} text
+	 * @property {any} chipIcon
 	 */
- export let flip;
- /**
-	 * @type {any}
-	 */
-  export let text;
- /**
-	 * @type {any}
-	 */
-  export let chipIcon;
+
+	/** @type {Props} */
+	let { flip, text, chipIcon } = $props();
 
 </script>
 
-<ion-chip on:click={flip} class="chip" aria-hidden>
+<ion-chip onclick={flip} class="chip" aria-hidden>
 	<div class="chipFlex">
 		<ion-icon icon={chipIcon}></ion-icon>
 	{text}

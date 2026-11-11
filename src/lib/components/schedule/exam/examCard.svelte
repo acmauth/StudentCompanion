@@ -9,9 +9,13 @@
 	import {timeOutline, map} from 'ionicons/icons';
 	import type { ExamItem } from './ExamItem';
 	import { onMount } from 'svelte';
-	export let examItem: ExamItem;
+	interface Props {
+		examItem: ExamItem;
+	}
+
+	let { examItem }: Props = $props();
 	
-	let isPastDate: boolean = false;
+	let isPastDate: boolean = $state(false);
 
 	onMount(async() => {
 		const examDate = new Date(new Date(new Date().getFullYear() + '-' + examItem.date.monthDate.split("/")[1] + '-' + examItem.date.monthDate.split("/")[0]+ ' ' + examItem.date.startTime));
@@ -27,12 +31,12 @@
 					<ion-card-title class="title">{examItem.subject}</ion-card-title>
 
 					<div class="icons">
-						<ion-icon icon={timeOutline} />
+						<ion-icon icon={timeOutline}></ion-icon>
 						<ion-card-subtitle>{examItem.date.weekDay} {examItem.date.monthDate}, {examItem.date.startTime} - {examItem.date.endTime}</ion-card-subtitle>
 					</div>
 
 					<div class="icons">
-						<ion-icon icon={map} />
+						<ion-icon icon={map}></ion-icon>
 						<ion-card-subtitle>{examItem.classroom}</ion-card-subtitle>
 					</div>
 				</ion-card-header>

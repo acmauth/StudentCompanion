@@ -2,12 +2,18 @@
     import { getSemester } from '$components/grades/helpers';
     import { t, getLocale } from '$lib/i18n';
 
-    /** @type { string } */
-    export let course_title;
-    /** @type { number } */
-    export let course_semester_id;
-    /** @type { string } */
-    export let course_semester_name;
+    
+    
+    
+    /**
+     * @typedef {Object} Props
+     * @property { string } course_title
+     * @property { number } course_semester_id
+     * @property { string } course_semester_name
+     */
+
+    /** @type {Props} */
+    let { course_title, course_semester_id, course_semester_name } = $props();
 </script>
 
 

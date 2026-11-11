@@ -2,7 +2,11 @@
 	import {personOutline, map} from 'ionicons/icons';
 	import type { ClassItemFlat} from './ClassItem'
 	import AppCard from '$components/shared/AppCard.svelte';
-	export let classItem: ClassItemFlat;
+	interface Props {
+		classItem: ClassItemFlat;
+	}
+
+	let { classItem }: Props = $props();
 </script>
 
 <AppCard href={`/pages/classes/editClass/${classItem.id}`}>
@@ -14,12 +18,12 @@
 					<ion-card-title color="primary">{classItem.title}</ion-card-title>
 
 					<div class="icons">
-						<ion-icon icon={personOutline} />
+						<ion-icon icon={personOutline}></ion-icon>
 						<ion-card-subtitle>{classItem.professor}</ion-card-subtitle>
 					</div>
 
 					<div class="icons">
-						<ion-icon icon={map} />
+						<ion-icon icon={map}></ion-icon>
 						<ion-card-subtitle>{classItem.classroom}</ion-card-subtitle>
 					</div>
 				</ion-card-header>

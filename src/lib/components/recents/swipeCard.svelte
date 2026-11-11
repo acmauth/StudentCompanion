@@ -1,9 +1,14 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
 
-    export let id: number;
+  interface Props {
+    id: number;
+    children?: import('svelte').Snippet;
+  }
 
-    let card: HTMLElement;
+  let { id, children }: Props = $props();
+
+    let card: HTMLElement = $state();
     const dispatch = createEventDispatcher<{ "delete-card": number }>();
 
     const SWIPE_THRESHOLD = 50;
@@ -78,12 +83,12 @@
 <ion-card
     class="swipe-card"
     bind:this={card}
-    on:touchstart={handleTouchStart}
-    on:touchmove={handleTouchMove}
-    on:touchend={handleTouchEnd}
+    ontouchstart={handleTouchStart}
+    ontouchmove={handleTouchMove}
+    ontouchend={handleTouchEnd}
     href=""
   >
-    <slot></slot>
+    {@render children?.()}
 </ion-card>
 
 <style>

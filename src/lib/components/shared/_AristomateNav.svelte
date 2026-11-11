@@ -1,35 +1,53 @@
 <script lang="ts">
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();
     import { mount, onMount } from "svelte";
     import type { Component } from "svelte";
     import { defineCustomElement } from "@ionic/core/components/ion-nav.js";
 
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  interface Props {
     /**
      * The root component of a Svelte app.
      */
-    export let root: any;
-  
+    root: any;
     /**
      * Whether or not the component is animated.
      */
-    export let animated: boolean|undefined = true;
-  
+    animated?: boolean|undefined;
     /**
      * An animation function that takes a base element and optional options and returns an Animation object.
      */
-    export let animation: ((baseEl: any, opts?: any) => Animation)|undefined;
-  
+    animation: ((baseEl: any, opts?: any) => Animation)|undefined;
     /**
      * Optional parameters for the root component.
      */
-    export let rootParams: undefined|{[key: string]: any};
-  
+    rootParams: undefined|{[key: string]: any};
     /**
      * Whether or not swipe gesture is enabled.
      */
-    export let swipeGesture: boolean|undefined;
+    swipeGesture: boolean|undefined;
+  }
+
+  let {
+    root,
+    animated = true,
+    animation,
+    rootParams,
+    swipeGesture
+  }: Props = $props();
   
-    let ionNav: HTMLElement;
-    let rootComponent: HTMLDivElement;
+    let ionNav: HTMLElement = $state();
+    let rootComponent: HTMLDivElement = $state();
     let newElement: HTMLDivElement;
 
     const createHTMLCompFromSvelte = (component: Component<any>, componentProps = {}): HTMLDivElement => {
@@ -87,7 +105,7 @@
     root-params={rootParams}
     swipe-gesture={swipeGesture}
     root={rootComponent}
-    on:ionNavDidChange
-    on:ionNavWillChange
-  />
+    onionNavDidChange={bubble('ionNavDidChange')}
+    onionNavWillChange={bubble('ionNavWillChange')}
+></ion-nav>
   

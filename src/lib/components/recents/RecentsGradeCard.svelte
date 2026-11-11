@@ -5,7 +5,11 @@
 	import { getLocale } from "$src/lib/i18n";
   import { school } from 'ionicons/icons';
 
-  export let subject: any;
+  interface Props {
+    subject: any;
+  }
+
+  let { subject }: Props = $props();
 
   export function navigateToCourse(course: any) {
 	    if (!(course.childCourses && course.childCourses.length > 0))
@@ -13,10 +17,10 @@
   }
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-missing-attribute -->
-<a on:click={() => navigateToCourse(subject.course)} class="card-link">
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_missing_attribute -->
+<a onclick={() => navigateToCourse(subject.course)} class="card-link">
   <div class="grade-card">
     <div class="row-header">
       <div class="left-col">

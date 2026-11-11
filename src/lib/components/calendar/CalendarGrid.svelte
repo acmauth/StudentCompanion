@@ -4,21 +4,35 @@
     import { getWeekdayNames, isSelectedDay as checkIsSelectedDay, isToday as checkIsToday } from './calendarUtils';
     import type { SelectedDay } from './calendarUtils';
     import { t, getLocale} from "$lib/i18n";
-    // removed alertController
+    
 
-    export let weeks: DayObject[][] = [];
-    export let month: number;
-    export let year: number;
-    export let selectedDay: SelectedDay | null = null;
-    export let onPreviousMonth: () => void;
-    export let onNextMonth: () => void;
-    export let onSelectDay: (dayObj: DayObject) => void;
-    export let onMonthYearChange: (newMonth: number, newYear: number) => void = () => {};
+    interface Props {
+        // removed alertController
+        weeks?: DayObject[][];
+        month: number;
+        year: number;
+        selectedDay?: SelectedDay | null;
+        onPreviousMonth: () => void;
+        onNextMonth: () => void;
+        onSelectDay: (dayObj: DayObject) => void;
+        onMonthYearChange?: (newMonth: number, newYear: number) => void;
+    }
+
+    let {
+        weeks = [],
+        month,
+        year,
+        selectedDay = null,
+        onPreviousMonth,
+        onNextMonth,
+        onSelectDay,
+        onMonthYearChange = () => {}
+    }: Props = $props();
 
     const weekdayNames = getWeekdayNames();
     
     // Date Picker State
-    let isDatePickerOpen = false;
+    let isDatePickerOpen = $state(false);
 
     function openMonthYearPicker() {
         isDatePickerOpen = true;
@@ -48,9 +62,9 @@
     const minDate = `${new Date().getFullYear() - 10}-01`;
     const maxDate = `${new Date().getFullYear() + 10}-12`;
 
-    $: isSelectedDay = (dayObj: DayObject) => {
+    let isSelectedDay = $derived((dayObj: DayObject) => {
         return checkIsSelectedDay(dayObj, selectedDay, month, year);
-    };
+    });
 
     function isToday(dayObj: DayObject) {
         return checkIsToday(dayObj, month, year);
@@ -64,19 +78,19 @@
 
 <div class="calendar">
     <div class="header">
-        <ion-card href="" on:click={onPreviousMonth} aria-label="Previous month" class="navButton" aria-hidden="true">
-            <ion-icon icon={chevronBackOutline} />
+        <ion-card href="" onclick={onPreviousMonth} aria-label="Previous month" class="navButton" aria-hidden="true">
+            <ion-icon icon={chevronBackOutline}></ion-icon>
         </ion-card>
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div class="month-title" on:click={openMonthYearPicker}>
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <div class="month-title" onclick={openMonthYearPicker}>
             {new Date(year, month).toLocaleDateString(getLocale(), {
                 month: 'long',
                 year: 'numeric'
             })}
         </div>
-        <ion-card href="" on:click={onNextMonth} aria-label="Next month" class="navButton" aria-hidden="true">
-            <ion-icon icon={chevronForwardOutline} />
+        <ion-card href="" onclick={onNextMonth} aria-label="Next month" class="navButton" aria-hidden="true">
+            <ion-icon icon={chevronForwardOutline}></ion-icon>
         </ion-card>
     </div>
 
@@ -87,8 +101,8 @@
 
         {#each weeks as week}
             {#each week as dayObj}
-                <!-- svelte-ignore a11y-no-static-element-interactions -->
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <!-- svelte-ignore a11y_no_static_element_interactions -->
+                <!-- svelte-ignore a11y_click_events_have_key_events -->
                 <div
                     class="day {dayObj.isCurrentMonth
                         ? 'selectable'
@@ -97,13 +111,13 @@
                     )
                         ? 'today'
                         : ''}"
-                    on:click={() => onSelectDay(dayObj)}
+                    onclick={() => onSelectDay(dayObj)}
                 >
                     <span>{dayObj.day}</span>
                     {#if hasEvents(dayObj)}
                         <div class="event-badges">
                             {#each Array(Math.min(dayObj.eventCount, 3)) as _, i}
-                                <div class="event-badge" />
+                                <div class="event-badge"></div>
                             {/each}
                         </div>
                     {/if}
@@ -112,7 +126,7 @@
         {/each}
     </div>
     
-    <ion-modal is-open={isDatePickerOpen} on:ionModalDidDismiss={() => isDatePickerOpen = false} style="--height: auto; --width: auto; --border-radius: 8px;">
+    <ion-modal is-open={isDatePickerOpen} onionModalDidDismiss={() => isDatePickerOpen = false} style="--height: auto; --width: auto; --border-radius: 8px;">
         <ion-datetime
             presentation="month-year"
             value={getISOString(year, month)}
@@ -122,8 +136,8 @@
             done-text={$t('common.apply', 'Apply')}
             cancel-text={$t('common.cancel', 'Cancel')}
             mode="ios"
-            on:ionChange={handleDateChange}
-            on:ionCancel={() => isDatePickerOpen = false}
+            onionChange={handleDateChange}
+            onionCancel={() => isDatePickerOpen = false}
         >
         </ion-datetime>
     </ion-modal>

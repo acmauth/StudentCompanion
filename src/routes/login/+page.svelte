@@ -15,12 +15,12 @@
   // Initialize OIDC client
   const authClient = new OIDCClient(Config.auth);
 
-  let loading = false;
-  let error = '';
+  let loading = $state(false);
+  let error = $state('');
   let userInfo: any = null;
   let isAuthenticated = false;
-  let pageLoaded = false;
-  let showRetry = false;
+  let pageLoaded = $state(false);
+  let showRetry = $state(false);
   let retryTimer: ReturnType<typeof setTimeout> | null = null;
 
   function startCallbackTimeout() {
@@ -97,8 +97,8 @@
 		<!-- Main Content -->
 		<div class="main-content" class:loaded={pageLoaded}>
 			<div class="language-switcher">
-				<ion-button fill="clear" on:click={() => changeLocale('el')}>EL</ion-button>
-				<ion-button fill="clear" on:click={() => changeLocale('en')}>EN</ion-button>
+				<ion-button fill="clear" onclick={() => changeLocale('el')}>EL</ion-button>
+				<ion-button fill="clear" onclick={() => changeLocale('en')}>EN</ion-button>
 			</div>
 			<div class="content-wrapper">
 				<img src={Logo} alt="Aristomate logo" class="logo" />
@@ -113,16 +113,16 @@
 				{/if}
 
 				<!-- Login Button -->
-				<ion-button class="login-button" on:click={onLoginClick} expand="block" disabled={loading} aria-hidden>
+				<ion-button class="login-button" onclick={onLoginClick} expand="block" disabled={loading} aria-hidden>
 					{#if loading}
-						<ion-spinner name="crescent" class="button-spinner" />
+						<ion-spinner name="crescent" class="button-spinner"></ion-spinner>
 					{:else}
 						{$t('login.connection')}
 					{/if}
 				</ion-button>
 
 				{#if showRetry}
-					<ion-button aria-hidden class="retry-button" on:click={tryAgain} expand="block" fill="outline">
+					<ion-button aria-hidden class="retry-button" onclick={tryAgain} expand="block" fill="outline">
 						{$t('login.tryAgain')}
 					</ion-button>
 				{/if}

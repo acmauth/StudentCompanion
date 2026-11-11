@@ -1,18 +1,33 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { onMount } from 'svelte';
 
-	export let flipped: boolean;
-	export let reactToHeight: boolean = false;
+	interface Props {
+		flipped: boolean;
+		reactToHeight?: boolean;
+		front?: import('svelte').Snippet;
+		back?: import('svelte').Snippet;
+	}
+
+	let {
+		flipped = $bindable(),
+		reactToHeight = false,
+		front,
+		back
+	}: Props = $props();
 
 	// The flip class is what we use to toggle the flip effect.
-	let flipClass = false;
-	$: flipClass = flipped;
+	let flipClass = $state(false);
+	run(() => {
+		flipClass = flipped;
+	});
 
 	// We need to keep track of the flip container and the front
 	// and back children so we can update the height of the flip card.
-	let flipContainer: HTMLElement;
-	let frontChild: HTMLElement;
-	let backChild: HTMLElement;
+	let flipContainer: HTMLElement = $state();
+	let frontChild: HTMLElement = $state();
+	let backChild: HTMLElement = $state();
 
 	// Re-measure whenever either face changes size, rather than having the
 	// content tell us it grew. This catches every cause — content loading in, a
@@ -53,7 +68,9 @@
 	// When the flip class changes, update the height of the flip card.
 	// Check if we should update the height of the flip card when it's toggled.
 	// Sometimes we don't want to do this, that's why it's optional.
-	$: if (reactToHeight) updateHeight(flipClass);
+	run(() => {
+		if (reactToHeight) updateHeight(flipClass);
+	});
 </script>
 
 <!-- Main container, this dictates the element height and flip state/click handling -->
@@ -63,11 +80,11 @@
 	<div class="flipper">
 		<!-- Slot for the front element and wrapping div -->
 		<div class="front" bind:this={frontChild}>
-			<slot name="front" />
+			{@render front?.()}
 		</div>
 		<!-- Slot for the back element and wrapping div -->
 		<div class="back" bind:this={backChild}>
-			<slot name="back" />
+			{@render back?.()}
 		</div>
 	</div>
 </div>

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { qrStore } from '$lib/components/wallet/qrStore';
 	import { wallet, close } from 'ionicons/icons';
 	import gym_id from '$lib/assets/qr/GYM_PLACEHOLDER.svg';
@@ -16,22 +18,34 @@
 	import { neoUniversisGet } from '$src/lib/dataService';
 
 
-	export let reactToHeight: boolean = true;
-	export let departmentName: string = '';
-	export let studyLevel: string = '';
-	export let actualSemester: number = 0;
-	export let numPassedSubjects: number = 0;
-	export let numSubjects: number = 0;
-	export let average: number = 0;
+	interface Props {
+		reactToHeight?: boolean;
+		departmentName?: string;
+		studyLevel?: string;
+		actualSemester?: number;
+		numPassedSubjects?: number;
+		numSubjects?: number;
+		average?: number;
+	}
+
+	let {
+		reactToHeight = true,
+		departmentName = '',
+		studyLevel = '',
+		actualSemester = 0,
+		numPassedSubjects = 0,
+		numSubjects = 0,
+		average = 0
+	}: Props = $props();
 
 	// Card flip state
-	let isFlipped = false;
-	let addQRModalOpen = false; // fallback manual-input modal
-	let qrDisplayModalOpen = false;
-	let qr_input_value: string = '';
-	let gymQRPressed = false;
-	let schoolQRPressed = false;
-	let currentQRData = '';
+	let isFlipped = $state(false);
+	let addQRModalOpen = $state(false); // fallback manual-input modal
+	let qrDisplayModalOpen = $state(false);
+	let qr_input_value: string = $state('');
+	let gymQRPressed = $state(false);
+	let schoolQRPressed = $state(false);
+	let currentQRData = $state('');
 	let currentQRTitle = '';
 
 	interface Registration {
@@ -146,14 +160,16 @@
 		return progression[progression.length - 2]?.trend ?? null;
 	}
 
-	let flipClass = false;
-	$: flipClass = isFlipped;
+	let flipClass = $state(false);
+	run(() => {
+		flipClass = isFlipped;
+	});
 
 	// We need to keep track of the flip container and the front
 	// and back children so we can update the height of the flip card.
-	let flipContainer: HTMLElement;
-	let frontChild: HTMLElement;
-	let backChild: HTMLElement;
+	let flipContainer: HTMLElement = $state();
+	let frontChild: HTMLElement = $state();
+	let backChild: HTMLElement = $state();
 
 	// This function updates the height of the flip card when it's toggled.
 	const updateHeight = (status: Boolean) => {
@@ -168,7 +184,7 @@
 		}
 	};
 
-	let trend: string | null = null;
+	let trend: string | null = $state(null);
 	let resizeObserver: ResizeObserver;
 
 	onMount(async() => {
@@ -193,17 +209,19 @@
 	// When the flip class changes, update the height of the flip card.
 	// Check if we should update the height of the flip card when it's toggled.
 	// Sometimes we don't want to do this, that's why it's optional.
-	$: if (reactToHeight) updateHeight(flipClass);
-	$: passedPct = numSubjects > 0 ? Math.round((numPassedSubjects / numSubjects) * 100) : 0;
+	run(() => {
+		if (reactToHeight) updateHeight(flipClass);
+	});
+	let passedPct = $derived(numSubjects > 0 ? Math.round((numPassedSubjects / numSubjects) * 100) : 0);
 </script>
 
 <div class="flip-container" class:flipClass aria-hidden bind:this={flipContainer}>
 	<div class="flipper" bind:this={frontChild} aria-hidden>
 		<!-- Front of card -->
 		<div class="front personal-card card-front ion-activatable" bind:this={frontChild} aria-hidden>
-			<ion-ripple-effect/>
+			<ion-ripple-effect></ion-ripple-effect>
 			<div class="card-header" aria-hidden>
-				<div class="department-info" on:click={toggleCardFlip} aria-hidden>
+				<div class="department-info" onclick={toggleCardFlip} aria-hidden>
 					<h3 class="department-name">{departmentName}</h3>
 					{#if actualSemester !== null}
 						<p class="study-level">{studyLevel} - {$t('homepage.semester')} {actualSemester}</p>
@@ -212,12 +230,12 @@
 					{/if}
 				</div>
 
-				<div class="wallet-icon-container" on:click={toggleCardFlip} aria-hidden>
+				<div class="wallet-icon-container" onclick={toggleCardFlip} aria-hidden>
 					<ion-icon icon={wallet} class="wallet-icon"></ion-icon>
 				</div>
 			</div>
 
-			<div class="stats-container" on:click={()=>{goto("/pages/grades")}} aria-hidden>
+			<div class="stats-container" onclick={()=>{goto("/pages/grades")}} aria-hidden>
 				<ProgressCircle value={passedPct} rightValue="{passedPct}%" rightDesc={$t('homepage.passed')} />
 				<ProgressGauge value={(average / 10) * 100} rightValue="{(average).toFixed(2)}" rightDesc={$t('homepage.average')} centerLabel={""} trend={trend} />
 			</div>
@@ -225,10 +243,10 @@
 
 		<!-- Back of card -->
 		<div class="back personal-card card-back ion-activatable" bind:this={backChild}>
-			<ion-ripple-effect/>
+			<ion-ripple-effect></ion-ripple-effect>
 			<div class="card-header wallet-header" aria-hidden>
-				<h3 class="department-name" on:click={toggleCardFlip}>{$t('homepage.wallet')}</h3>
-				<div class="wallet-icon-container" on:click={toggleCardFlip} aria-hidden>
+				<h3 class="department-name" onclick={toggleCardFlip}>{$t('homepage.wallet')}</h3>
+				<div class="wallet-icon-container" onclick={toggleCardFlip} aria-hidden>
 					<ion-icon icon={wallet} class="wallet-icon"></ion-icon>
 				</div>
 			</div>
@@ -243,12 +261,12 @@
 								data: $qrStore.filter((item) => item.title === "school")[0].data,
 								shape: 'circle'
 							}}
-							on:click={()=>openQRDisplay('school', $qrStore.filter((item) => item.title === "school")[0].data)} 
+							onclick={()=>openQRDisplay('school', $qrStore.filter((item) => item.title === "school")[0].data)} 
 							aria-hidden
 						/>
 					</div>
 					{:else}
-						<img src={student_id} alt="student id" on:click={()=>{ gymQRPressed=false; schoolQRPressed=true; scanQRCode(); }} aria-hidden/>
+						<img src={student_id} alt="student id" onclick={()=>{ gymQRPressed=false; schoolQRPressed=true; scanQRCode(); }} aria-hidden/>
 					{/if}
 					<p class="wallet-label">{$t("homepage.schoolQR")}</p>
 				</div>
@@ -260,12 +278,12 @@
 								data: $qrStore.filter((item) => item.title === "gym")[0].data,
 								shape: 'circle'
 							}}
-							on:click={()=>openQRDisplay('gym', $qrStore.filter((item) => item.title === "gym")[0].data)}
+							onclick={()=>openQRDisplay('gym', $qrStore.filter((item) => item.title === "gym")[0].data)}
 							aria-hidden
 						/>
 					</div>
 					{:else}
-						<img src={gym_id} alt="gym id" on:click={()=>{ gymQRPressed=true; schoolQRPressed=false; scanQRCode(); }} aria-hidden>
+						<img src={gym_id} alt="gym id" onclick={()=>{ gymQRPressed=true; schoolQRPressed=false; scanQRCode(); }} aria-hidden>
 					{/if}
 					<p class="wallet-label">{$t("homepage.gymQR")}</p>
 				</div>
@@ -277,7 +295,7 @@
 <!-- QR Display Modal -->
 <ion-modal
 	is-open={qrDisplayModalOpen}
-	on:ionModalDidDismiss={() => {qrDisplayModalOpen = false;}}
+	onionModalDidDismiss={() => {qrDisplayModalOpen = false;}}
 	class="qr-display-modal">
 	<div class="qr-modal-content">
 		<!-- <h3 class="qr-modal-title">{currentQRTitle === 'school' ? $t('homepage.schoolQR') : $t('homepage.gymQR')}</h3> -->
@@ -291,14 +309,14 @@
 				aria-hidden
 			/>
 		</div>
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<div class="modal-buttons">
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<ion-button expand="block" mode="ios" color="dark" on:click={() => qrDisplayModalOpen = false} class="cancel-button">
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<ion-button expand="block" mode="ios" color="dark" onclick={() => qrDisplayModalOpen = false} class="cancel-button">
 				{$t('wallet.cancel')}
 			</ion-button>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<ion-button expand="block" mode="ios" color="danger" on:click={removeCurrentQR} class="remove-button">
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<ion-button expand="block" mode="ios" color="danger" onclick={removeCurrentQR} class="remove-button">
 				{$t('wallet.remove')}
 			</ion-button>
 		</div>
@@ -308,27 +326,27 @@
 <!-- Add QR Fallback Modal (shown when the barcode scanner is unavailable or fails) -->
 <ion-modal
 	is-open={addQRModalOpen}
-	on:ionModalDidDismiss={() => { addQRModalOpen = false; }}
+	onionModalDidDismiss={() => { addQRModalOpen = false; }}
 	class="add-qr-modal">
 	<div class="add-qr-modal-content">
 		<h3 class="add-qr-title">{$t('wallet.addQRTitle')}</h3>
 		<p class="add-qr-message">{$t('wallet.addQRMessage')}</p>
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		<ion-input
 			type="text"
 			mode="ios"
 			fill="outline"
 			placeholder="{'20' + Math.floor(1000000000 + Math.random() * 9000000000).toString()}"
 			value={qr_input_value}
-			on:ionInput={(e) => { qr_input_value = e.detail.value ?? ''; }}
+			onionInput={(e) => { qr_input_value = e.detail.value ?? ''; }}
 		></ion-input>
 		<div class="modal-buttons">
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<ion-button aria-hidden expand="block" mode="ios" color="dark" on:click={() => { addQRModalOpen = false; }} class="cancel-button">
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<ion-button aria-hidden expand="block" mode="ios" color="dark" onclick={() => { addQRModalOpen = false; }} class="cancel-button">
 				{$t('wallet.cancel')}
 			</ion-button>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<ion-button aria-hidden expand="block" mode="ios" color="primary" on:click={handleManualAdd} class="remove-button">
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<ion-button aria-hidden expand="block" mode="ios" color="primary" onclick={handleManualAdd} class="remove-button">
 				{$t('wallet.add')}
 			</ion-button>
 		</div>

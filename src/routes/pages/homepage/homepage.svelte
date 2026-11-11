@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+	import { untrack } from 'svelte';
+
 	import { averages } from '$lib/functions/gradeAverages/averages';
 	import { neoUniversisGet } from '$lib/dataService';
 	import man from '$lib/assets/man.svg';
@@ -38,14 +41,14 @@
 	// next occurrence on or after now instead of its original (possibly past) start.
 	// Intentionally one card per event id (not one per occurrence) - a daily
 	// event happening tomorrow and the day after still only takes one slot here.
-	$: upcomingEvents = $EventStore
+	let upcomingEvents = $derived($EventStore
 		.map((event: Event) => {
 			const occurrence = getNextOccurrence(event, new Date());
 			return occurrence ? { ...event, slot: occurrence } : null;
 		})
 		.filter((event: Event | null): event is Event => event !== null)
 		.sort((a: Event, b: Event) => new Date(a.slot.start).getTime() - new Date(b.slot.start).getTime())
-		.slice(0, 3);
+		.slice(0, 3));
 
 	// Mini calendar state
 	let currentDate = new Date();
@@ -78,14 +81,14 @@
 		return new Date(date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
 	}
 
-	let givenName = '';
+	let givenName = $state('');
 	let gender = '';
-	let numPassedSubjects = 0;
-	let numSubjects = 0;
-	let average = 0;
-	let departmentName = '';
-	let studyLevel = '';
-	let actualSemester = 0;
+	let numPassedSubjects = $state(0);
+	let numSubjects = $state(0);
+	let average = $state(0);
+	let departmentName = $state('');
+	let studyLevel = $state('');
+	let actualSemester = $state(0);
 	let studentStatus = '';
 
 	let aem = '';
@@ -190,19 +193,19 @@
 	}
 
 	const currentHour = new Date().getHours();
-	let greeting: string;
-	$: greeting = currentHour < 12
+	let greeting: string = $derived(currentHour < 12
 		? $t('homepage.goodmorning')
 		: currentHour < 18
 			? $t('homepage.goodafternoon')
-			: $t('homepage.goodevening');
+			: $t('homepage.goodevening'));
+	
 
 	// Render instantly from the last known data (if any) while getInfo()
 	// silently refreshes in the background; only show the skeleton when
 	// there's nothing cached yet, or the locale changed since it was cached.
 	const cachedHomepageData = getHomepageCache();
-	let loading = !cachedHomepageData || cachedHomepageData.locale !== $locale;
-	let loadError: any = null;
+	let loading = $state(!cachedHomepageData || cachedHomepageData.locale !== $locale);
+	let loadError: any = $state(null);
 
 	if (cachedHomepageData) {
 		givenName = cachedHomepageData.givenName;
@@ -238,7 +241,12 @@
 		}
 	}
 
-	$: refreshInfo($locale);
+	// Re-fetch only when the locale changes. untrack: getInfo() reads (and fetchUniversisEvents writes)
+	// $EventStore, which would otherwise become a dependency and re-run this endlessly.
+	run(() => {
+		const currentLocale = $locale;
+		untrack(() => refreshInfo(currentLocale));
+	});
 </script>
 
 <ion-page>
@@ -252,8 +260,8 @@
 		<div id="scrolled_content">
 			<div class="personal-section">
 				<div class="info-container">
-					<div class="header ion-activatable" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
-						<ion-ripple-effect/>
+					<div class="header ion-activatable" onclick={() => {navController.push(PersonalInfo);}} aria-hidden>
+						<ion-ripple-effect></ion-ripple-effect>
 						<div class="welcome">
 							<h5 style="color: var(--ion-color-medium) !important; padding-left: 0.2rem;"><span style="font-size: 0.8em; font-weight: normal;">{greeting},</span> <br/> <span style="color: var(--ion-color-dark-tint);"><b>{getVocativeCase(givenName)}</b></span>
 							</h5>
@@ -262,8 +270,8 @@
 						<div>
 					</div>
 					</div>
-					<div class="settings-icon-container ion-activatable" on:click={() => {navController.push(PersonalInfo);}} aria-hidden>
-						<ion-ripple-effect/>
+					<div class="settings-icon-container ion-activatable" onclick={() => {navController.push(PersonalInfo);}} aria-hidden>
+						<ion-ripple-effect></ion-ripple-effect>
 						<AvatarPreview size={54} config={$avatarStore}/>
 					</div>
 
@@ -284,15 +292,15 @@
 			
 			<div class="services-section">
 				<div class="service-buttons-grid">
-					<div class="service-button ion-activatable" on:click={() => {navController.push(Links);}} aria-hidden>
+					<div class="service-button ion-activatable" onclick={() => {navController.push(Links);}} aria-hidden>
 						<ion-icon icon={linkOutline} color="primary" class="service-button-icon"></ion-icon>
 						<ion-ripple-effect></ion-ripple-effect>
 					</div>
-					<div class="service-button ion-activatable" on:click={handleCampusSafetyClick} aria-hidden>
+					<div class="service-button ion-activatable" onclick={handleCampusSafetyClick} aria-hidden>
 						<ion-icon icon={shield} color="danger" class="service-button-icon"></ion-icon>
 						<ion-ripple-effect></ion-ripple-effect>
 					</div>
-					<div class="service-button ion-activatable" on:click={openCapacitorSite} aria-hidden>
+					<div class="service-button ion-activatable" onclick={openCapacitorSite} aria-hidden>
 						<ion-icon icon={barbellOutline} color="success" class="service-button-icon"></ion-icon>
 						<ion-ripple-effect></ion-ripple-effect>
 					</div>
@@ -321,7 +329,7 @@
 					<div class="events-container">
 						{#each upcomingEvents as event}
 							<div class="event-card ion-activatable" data-type={event.type} aria-hidden
-										on:click={() => { goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
+										onclick={() => { goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
 								<div class="event-header">
 									<div class="event-type-badge">
 										{removeDiacritics(getEventTypeValue(event.type, $locale))}
@@ -346,9 +354,9 @@
 				</div>
 			{:else}
 				<!-- No Events Empty State -->
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="no-events-card" style="margin-inline: 1rem;" on:click={() => goto('/pages/calendar')} aria-hidden>
+				<!-- svelte-ignore a11y_click_events_have_key_events -->
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<div class="no-events-card" style="margin-inline: 1rem;" onclick={() => goto('/pages/calendar')} aria-hidden>
 					<div class="no-events-info">
 						<div class="no-events-icon">
 							<ion-icon icon={calendarOutline}></ion-icon>
@@ -379,9 +387,9 @@
 		<div class="updates-section">
 			<div style="display: flex; justify-content: space-between; align-items: center;">
 				<h4 class="middle-title" style="margin-bottom: 0;">{$t('homepage.updates')}</h4>
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div class="service-icon-container" on:click={() => {navController.push(Notifications);}}>
+				<!-- svelte-ignore a11y_click_events_have_key_events -->
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<div class="service-icon-container" onclick={() => {navController.push(Notifications);}}>
 					<ion-icon icon={ellipsisHorizontal} style="font-size: 1.3rem; color: var(--ion-color-medium);"></ion-icon>
 				</div>
 			</div>
@@ -547,6 +555,7 @@
 .event-card {
   position: relative;
   min-width: 185px;
+  max-width: 240px; /* long titles/locations are cut with "…" instead of widening the card */
   flex-shrink: 0;
   border-radius: 1rem;
   padding: 0.875rem;
@@ -610,12 +619,10 @@
   font-size: 1rem;
   font-weight: 700;
   color: white;
+  /* single line, cut with "…" at the card's max width */
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal;
-  display: -webkit-box;
-white-space: nowrap; /* Don't forget this one */
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
 }
 
 .event-footer {
@@ -644,6 +651,7 @@ white-space: nowrap; /* Don't forget this one */
   font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
+  min-width: 0; /* allow the flex item to shrink so the ellipsis applies */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

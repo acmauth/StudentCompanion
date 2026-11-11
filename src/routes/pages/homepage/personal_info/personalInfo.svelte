@@ -12,18 +12,18 @@
 
 	// Keep personal info
 
-	let aem: String = '';
-	let apm: String = '';
-	let inscriptionYear: String = '';
-	let birthDate: String = '';
-	let email: String = '';
-	let familyName: String = '';
-	let givenName: String = '';
-	let username: String = '';
-	let gender: String = '';
-	let departmentName: String = '';
-	let semester: String = '';
-	let study_level: String = '';
+	let aem: String = $state('');
+	let apm: String = $state('');
+	let inscriptionYear: String = $state('');
+	let birthDate: String = $state('');
+	let email: String = $state('');
+	let familyName: String = $state('');
+	let givenName: String = $state('');
+	let username: String = $state('');
+	let gender: String = $state('');
+	let departmentName: String = $state('');
+	let semester: String = $state('');
+	let study_level: String = $state('');
 
 	// Get personal details and department details
 

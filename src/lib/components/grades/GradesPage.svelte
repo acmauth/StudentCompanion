@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import GradesSkeleton from './GradesSkeleton.svelte';
 	import Flipper from '$components/shared/Flipper.svelte';
@@ -33,14 +35,14 @@
 	};
 
 	// Variables regarding grades and subjects
-	let semesterGroups: SemesterGroup[] = [];
-	let filteredSubjects: SemesterGroup[] = [];
-	let registrationsInDegree: Registration[] = [];
-	let searchQuery = '';
-	let subjects = 0;
-	let passedSubjects = 0;
-	let coursesBySemester: { [key: string]: course[] } = {};
-	let subjectsJSON: course[] = [];
+	let semesterGroups: SemesterGroup[] = $state([]);
+	let filteredSubjects: SemesterGroup[] = $state([]);
+	let registrationsInDegree: Registration[] = $state([]);
+	let searchQuery = $state('');
+	let subjects = $state(0);
+	let passedSubjects = $state(0);
+	let coursesBySemester: { [key: string]: course[] } = $state({});
+	let subjectsJSON: course[] = $state([]);
 
 	// Search
 	function handleChange(event: { target: { value: string } }) {
@@ -112,7 +114,7 @@
 	}
 
 	// Filter the results based on the searchQuery
-	$: {
+	run(() => {
 		if (searchQuery.length === 0) {
 			filteredSubjects = semesterGroups;
 		} else {
@@ -131,7 +133,7 @@
 				};
 			});
 		}
-	}
+	});
 </script>
 
 <!-- Show skeleton while loading -->
@@ -143,11 +145,11 @@
 
 				<ion-searchbar
 					debounce={500}
-					on:ionInput={handleChange}
+					onionInput={handleChange}
 					inputmode="text"
 					show-clear-button="always"
 					placeholder={$t('progress.search')}
-				/>
+				></ion-searchbar>
 
 				{#if Object.entries(coursesBySemester).length > 0}
 					<SemesterChips {coursesBySemester} />
@@ -156,22 +158,26 @@
 		</ion-header>
 
 		{#await gatherData()}
-			<ion-progress-bar type="indeterminate" />
+			<ion-progress-bar type="indeterminate"></ion-progress-bar>
 			<GradesSkeleton />
 		{:then}
 			<!-- Show content after loading is completed -->
 
 			{#if !searchQuery.length}
 				<Flipper reactToHeight bind:flipped={$flipped}>
-					<StatsCard
-						{flip}
-						{subjects}
-						{passedSubjects}
-						{subjectsJSON}
-						{registrationsInDegree}
-						slot="front"
-					/>
-					<DegreeCalculatorCard {flip} slot="back" />
+					{#snippet front()}
+										<StatsCard
+							{flip}
+							{subjects}
+							{passedSubjects}
+							{subjectsJSON}
+							{registrationsInDegree}
+							
+						/>
+									{/snippet}
+					{#snippet back()}
+										<DegreeCalculatorCard {flip}  />
+									{/snippet}
 				</Flipper>
 			{/if}
 

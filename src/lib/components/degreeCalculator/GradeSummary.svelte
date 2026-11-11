@@ -1,7 +1,13 @@
 <script>
     import { t } from "$lib/i18n";
-    /** @type { { based: {value: number, stringed: string}, simple: {value: number, stringed: string}; } } */
-    export let degree_grade;
+    
+    /**
+     * @typedef {Object} Props
+     * @property { { based: {value: number, stringed: string}, simple: {value: number, stringed: string}; } } degree_grade
+     */
+
+    /** @type {Props} */
+    let { degree_grade } = $props();
     
 </script>
 

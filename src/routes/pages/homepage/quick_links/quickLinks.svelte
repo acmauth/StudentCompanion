@@ -20,7 +20,7 @@
 	let departmentName = '';
 	let departmentURL = '';
 
-	let links = [
+	let links = $state([
 		{
 			linktitle: $t('links.club'),
 			linkaddress: 'http://www.pfl.auth.gr',
@@ -71,7 +71,7 @@
 			linkaddress: 'https://eurep.auth.gr/',
 			imagelink: erasmusLogo
 		}
-	];
+	]);
 
 	onMount(async () => {
 		department = await universisGet('Students/me/department');

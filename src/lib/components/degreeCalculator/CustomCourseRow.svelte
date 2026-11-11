@@ -4,12 +4,23 @@
 	import { isFailing } from './degreeGrade';
 	import type { CustomCourse } from './customCourses';
 
-	export let course: CustomCourse;
-	export let deleteCustomCourse: (id: number) => void;
-	export let onGrade: (course: CustomCourse) => void;
-	export let onClear: (course: CustomCourse) => void;
-	export let onCoefficient: (course: CustomCourse) => void;
-	export let onTitle: (course: CustomCourse) => void;
+	interface Props {
+		course: CustomCourse;
+		deleteCustomCourse: (id: number) => void;
+		onGrade: (course: CustomCourse) => void;
+		onClear: (course: CustomCourse) => void;
+		onCoefficient: (course: CustomCourse) => void;
+		onTitle: (course: CustomCourse) => void;
+	}
+
+	let {
+		course = $bindable(),
+		deleteCustomCourse,
+		onGrade,
+		onClear,
+		onCoefficient,
+		onTitle
+	}: Props = $props();
 
 	function setTitle(value: unknown) {
 		course.title = String(value ?? '');
@@ -17,39 +28,39 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="course-box">
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
 
 	<ion-icon
-		on:click={() => deleteCustomCourse(course.id)}
+		onclick={() => deleteCustomCourse(course.id)}
 		size="small"
 		class="icons"
 		icon={allIonicIcons.removeCircle}
-	/>
+	></ion-icon>
 
-	<!-- svelte-ignore a11y-click-events-have-key-events -->
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<ion-input
 		id={`course-title-${course.id}`}
 		class="course-name ion-padding-end"
 		placeholder={$t('customCourse.title')}
 		value={course.title}
-		on:focus={() => setTitle('')}
-		on:ionInput={(e) => setTitle(e.target.value)}
-	/>
+		onfocus={() => setTitle('')}
+		onionInput={(e) => setTitle(e.target.value)}
+	></ion-input>
 
 	<input
 		id={`ects-${course.id}`}
 		class="ects"
 		placeholder={'ECTS'}
 		inputmode={'numeric'}
-		on:focus={() => {
+		onfocus={() => {
 			course.coefficient = '';
 			onCoefficient(course);
 		}}
 		bind:value={course.coefficient}
-		on:input={() => onCoefficient(course)}
+		oninput={() => onCoefficient(course)}
 		maxlength="2"
 	/>
 </div>
@@ -62,11 +73,11 @@
 		class="inputCustom"
 		class:invalid={isFailing(course)}
 		name="grade"
-		on:focus={() => onClear(course)}
-		on:click={() => onClear(course)}
+		onfocus={() => onClear(course)}
+		onclick={() => onClear(course)}
 		bind:value={course.grade}
 		placeholder="5.00"
-		on:input={() => onGrade(course)}
+		oninput={() => onGrade(course)}
 	/>
 </div>
 

@@ -8,13 +8,13 @@
 </script>
 
 <div class="chipsrow">
-    <ion-chip color="primary" outline={!$toggles.all} on:click={() => {toggleAll()}} aria-hidden>
+    <ion-chip color="primary" outline={!$toggles.all} onclick={() => {toggleAll()}} aria-hidden>
        <ion-label>{$t('notifications.all')}</ion-label>
        {#if $toggles.all}
             <ion-icon icon={checkmark}></ion-icon>
         {/if}
     </ion-chip>
-    <ion-chip color="secondary" outline={!$toggles.webmail} on:click={() => {toggleWebmail()}} aria-hidden>
+    <ion-chip color="secondary" outline={!$toggles.webmail} onclick={() => {toggleWebmail()}} aria-hidden>
         <ion-avatar>
            <img src={mail} alt="mail icon"/>
         </ion-avatar>
@@ -23,7 +23,7 @@
              <ion-icon icon={checkmark}></ion-icon>
          {/if}
      </ion-chip>
-     <ion-chip color="tertiary" outline={!$toggles.universis} on:click={() => {toggleUniversis()}} aria-hidden>
+     <ion-chip color="tertiary" outline={!$toggles.universis} onclick={() => {toggleUniversis()}} aria-hidden>
         <ion-avatar>
            <img src={universisLogo} alt="universis logo"/>
         </ion-avatar>
@@ -32,7 +32,7 @@
              <ion-icon icon={checkmark}></ion-icon>
          {/if}
      </ion-chip>
-    <ion-chip color="warning" outline={!$toggles.elearning} on:click={() => {toggleElearning()}} aria-hidden>
+    <ion-chip color="warning" outline={!$toggles.elearning} onclick={() => {toggleElearning()}} aria-hidden>
         <ion-avatar>
            <img src={elearningLogo} alt="elearning logo"/>
         </ion-avatar>

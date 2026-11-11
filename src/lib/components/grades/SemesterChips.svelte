@@ -3,7 +3,11 @@
 	import { t, getLocale } from '$lib/i18n';
 	import type { course } from '$lib/types/courseType';
 
-	export let coursesBySemester: { [key: string]: course[] } = {};
+	interface Props {
+		coursesBySemester?: { [key: string]: course[] };
+	}
+
+	let { coursesBySemester = {} }: Props = $props();
 	let semesterId = '';
 
 	function handleClick(semId: string) {
@@ -24,14 +28,14 @@
 <div class="chipsrow">
 
 	{#each Object.entries(coursesBySemester) as [id, courses]}
-	    <!-- svelte-ignore a11y-click-events-have-key-events -->
-	    <!-- svelte-ignore a11y-no-static-element-interactions -->
+	    <!-- svelte-ignore a11y_click_events_have_key_events -->
+	    <!-- svelte-ignore a11y_no_static_element_interactions -->
 		{#if courses[0].semester.id <= 24}
-	    <ion-chip color="primary" on:click={handleClick(id)}>
+	    <ion-chip color="primary" onclick={() => handleClick(id)}>
 	        <ion-label>{getSemester(id, getLocale())} {$t('progress.semesterL')}</ion-label>
 	    </ion-chip>
 		{:else}
-		<ion-chip on:click={handleClick(id)} color="primary">
+		<ion-chip onclick={() => handleClick(id)} color="primary">
 	        <ion-label>{courses[0].semester.name}</ion-label>
 	    </ion-chip>
 		{/if}

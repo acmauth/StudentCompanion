@@ -21,8 +21,13 @@
 	import type { PassedSums } from './degreeGrade';
 
 	// Optional: the standalone /degreeCalculator route renders the card with
-	// nothing to flip back to.
-	export let flip: () => void = () => {};
+	
+	interface Props {
+		// nothing to flip back to.
+		flip?: () => void;
+	}
+
+	let { flip = () => {} }: Props = $props();
 
 	// Placeholder rows standing in for the courses while they load.
 	const SKELETON_ROWS = Array.from({ length: 4 });
@@ -32,11 +37,11 @@
 		simple: { value: 0, stringed: '0.00' }
 	};
 
-	let unpassedCourses: UnpassedCourse[] = [];
-	let passedSums: PassedSums = {
+	let unpassedCourses: UnpassedCourse[] = $state([]);
+	let passedSums: PassedSums = $state({
 		based: { grade_sum: 0, coefficient: 0 },
 		simple: { grade_sum: 0, passed: 0 }
-	};
+	});
 
 
 	let nextId = get(customCourses).reduce((max, course) => Math.max(max, course.id + 1), 0);
@@ -47,7 +52,7 @@
 		unpassedCourses = data.unpassedCourses;
 	}
 
-	$: degreeGrade = computeDegreeGrade(passedSums, [...unpassedCourses, ...$customCourses]);
+	let degreeGrade = $derived(computeDegreeGrade(passedSums, [...unpassedCourses, ...$customCourses]));
 
 	function onUnpassedGrade(course: UnpassedCourse) {
 		applyGradeInput(course);
@@ -121,9 +126,9 @@
 								class="inputCustom"
 								class:invalid={isFailing(course)}
 								bind:value={course.grade}
-								on:click={() => onUnpassedClear(course)}
+								onclick={() => onUnpassedClear(course)}
 								placeholder="5.00"
-								on:input={() => onUnpassedGrade(course)}
+								oninput={() => onUnpassedGrade(course)}
 							/>
 						</div>
 					</div>
@@ -145,10 +150,10 @@
 			</div>
 
 			<div class="columnFlex">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
-				<div on:click={addCourse} class="ion-padding addCourse">
-					<ion-icon class="icons" icon={allIonicIcons.addCircle} />
+				<!-- svelte-ignore a11y_click_events_have_key_events -->
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
+				<div onclick={addCourse} class="ion-padding addCourse">
+					<ion-icon class="icons" icon={allIonicIcons.addCircle}></ion-icon>
 					<ion-text class="course-name ion-padding-end">{$t('customCourse.title')}</ion-text>
 				</div>
 

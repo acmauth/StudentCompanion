@@ -6,7 +6,7 @@
 </script>
 
 {#if !$autheticationFlag}
-    <ion-card href="" aria-hidden on:click ={showLoginAlert}>
+    <ion-card href="" aria-hidden onclick={showLoginAlert}>
         <div class="mainContents">
             <img src={darkIcon} alt="Dark Icon" class="icon darkIcon"/>
             <img src={lightIcon} alt="Light Icon" class="icon lightIcon"/>

@@ -24,8 +24,13 @@
 	/* Theme variables */
 	import '../theme/variables.css';
 	import { onMount } from 'svelte';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 </script>
 
 <ion-app>
-	<slot />
+	{@render children?.()}
 </ion-app>

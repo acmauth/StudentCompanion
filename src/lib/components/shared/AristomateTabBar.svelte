@@ -7,17 +7,27 @@
 	import { afterNavigate, goto } from '$app/navigation';
 	import { navController } from "./StackedNav"
 
-	export let ionTabsDidChange = () => {};
-	export let ionTabsWillChange = () => {};
-	export let slot = 'bottom';
 
+	
 	/**
-      An array of tab objects containing label, icon, and tab properties.
-      @type {{label: string; icon: string; tab: string;}[]}
-      */
-	export let tabs = [];
+	 * @typedef {Object} Props
+	 * @property {any} [ionTabsDidChange]
+	 * @property {any} [ionTabsWillChange]
+	 * @property {string} [slot]
+	 * @property {{label: string; icon: string; tab: string;}[]} [tabs] - An array of tab objects containing label, icon, and tab properties.
+	 * @property {import('svelte').Snippet} [children]
+	 */
 
-	let ionTabBarElement;
+	/** @type {Props} */
+	let {
+		ionTabsDidChange = () => {},
+		ionTabsWillChange = () => {},
+		slot = 'bottom',
+		tabs = [],
+		children
+	} = $props();
+
+	let ionTabBarElement = $state();
 	let controller;
 	let tabBarLine;
 
@@ -26,7 +36,7 @@
 	const searchParams = $page.url.searchParams;
 	const cleanedPath = pathname.replace(/\/+$/, ''); // Strip trailing slashes, so we can get the last part of the path correctly. (e.g. /pages/homepage/ -> /pages/homepage)
 	const pathSplit = cleanedPath.split('/');
-	let currentTabName = pathSplit[pathSplit.length - 1]; // we don't want to use at(-1) because of old browsers
+	let currentTabName = $state(pathSplit[pathSplit.length - 1]); // we don't want to use at(-1) because of old browsers
 	let relativePath = cleanedPath.replace(currentTabName, '');
 
 	// we need to capture the router changes - to support a-href navigation and other stuff.
@@ -116,32 +126,32 @@
 
 <ion-tabs
 	style="padding-top: var(--ion-safe-area-top);"
-	on:ionTabsDidChange={ionTabsDidChange}
-	on:ionTabsWillChange={ionTabsWillChange}
+	onionTabsDidChange={ionTabsDidChange}
+	onionTabsWillChange={ionTabsWillChange}
 	bind:this={ionTabBarElement}
 >
-	<slot />
+	{@render children?.()}
 
 	{#if slot === 'bottom' || slot === ''}
 		<ion-tab-bar slot="bottom" class="tabbarmain">
-			<div class="tabBarLine2" />
+			<div class="tabBarLine2"></div>
 			{#each tabs as tab}
 				<ion-tab-button
 					aria-hidden
 					class="tabbarbutton tab_{tab.tab}"
 					tab={tab.tab}
-					on:keydown={() => {
+					onkeydown={() => {
 						tabBarClick(tab.tab);
 					}}
-					on:click={() => {
+					onclick={() => {
 						tabBarClick(tab.tab);
 					}}
 				>
 					<!-- <ion-label class="tabbarlabel">{tab.label}</ion-label> -->
 					{#if tab.tab !== currentTabName && tab.iconUnselected}
-						<ion-icon icon={tab.iconUnselected} class="tabbaricons" />
+						<ion-icon icon={tab.iconUnselected} class="tabbaricons"></ion-icon>
 					{:else}
-						<ion-icon icon={tab.icon} class="tabbaricons" />
+						<ion-icon icon={tab.icon} class="tabbaricons"></ion-icon>
 					{/if}
 				</ion-tab-button>
 			{/each}
@@ -153,15 +163,15 @@
 				<ion-tab-button
 					aria-hidden
 					tab={tab.tab}
-					on:keydown={() => {
+					onkeydown={() => {
 						tabBarClick(tab.tab);
 					}}
-					on:click={() => {
+					onclick={() => {
 						tabBarClick(tab.tab);
 					}}
 				>
 					<ion-label>{tab.label}</ion-label>
-					<ion-icon icon={tab.icon} class="tabbaricons" />
+					<ion-icon icon={tab.icon} class="tabbaricons"></ion-icon>
 				</ion-tab-button>
 			{/each}
 		</ion-tab-bar>

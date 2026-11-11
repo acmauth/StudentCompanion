@@ -7,7 +7,7 @@
     import { removeDiacritics } from '$lib/globalFunctions/removeDiacritics';
     import { AppLauncherPlugin } from '$lib/globalFunctions/appLauncher';
 
-    $: isDarkMode = $darkMode;
+    let isDarkMode = $derived($darkMode);
 
     onMount(() => {
         if (typeof window !== 'undefined') {
@@ -62,10 +62,10 @@
     </div>
 
     <div class="button-container">
-        <div style="width:0.2rem; align-self:stretch; background-color:grey; margin:0.2rem;" />
+        <div style="width:0.2rem; align-self:stretch; background-color:grey; margin:0.2rem;"></div>
 
         <ion-card
-            on:click={handleTransportAppClick}
+            onclick={handleTransportAppClick}
             class="button-card"
             aria-label="OASTH Transport Services"
             aria-hidden

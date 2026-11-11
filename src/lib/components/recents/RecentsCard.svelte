@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+    import { untrack } from 'svelte';
+
     import SwipeCard from "./swipeCard.svelte";
     import RecentGrade from "./RecentsGradeCard.svelte";
     import Notification from "$components/notifications/notification.svelte";
@@ -10,13 +13,17 @@
     import type { RecentItem } from "./types";
     import { getItemDate, groupItemsByPeriod, type PeriodKey } from "./periodGrouping";
 
-    export let recentItems: RecentItem[] = [];
-    export let maxCards = 6;
+    interface Props {
+        recentItems?: RecentItem[];
+        maxCards?: number;
+    }
+
+    let { recentItems = $bindable([]), maxCards = 6 }: Props = $props();
 
     let recentlyDismissedItem: number;
     let allRecentItems: RecentItem[] = [];
-    let showUndoButton = false;
-    let undoTimer: ReturnType<typeof setTimeout>;
+    let showUndoButton = $state(false);
+    let undoTimer: ReturnType<typeof setTimeout> = $state();
 
     const UNDO_TIMEOUT_MS = 8000;
     const OUTSIDE_INTERACTION_EVENTS = ['touchstart', 'touchmove'] as const;
@@ -37,7 +44,7 @@
             .slice(0, maxCards);
     }
 
-    $: groupedItems = groupItemsByPeriod(recentItems);
+    let groupedItems = $derived(groupItemsByPeriod(recentItems));
 
     // Unicode combining diacritical marks (U+0300–U+036F), stripped after NFD normalization
     const COMBINING_MARKS = new RegExp(`[${String.fromCharCode(0x300)}-${String.fromCharCode(0x36f)}]`, 'g');
@@ -108,13 +115,19 @@
         document.removeEventListener('focus', handleOutsideInteraction, true);
     }
 
-    $: if (showUndoButton) {
-        addOutsideInteractionListeners();
-        undoTimer = setTimeout(hideUndoButton, UNDO_TIMEOUT_MS);
-    } else {
-        removeOutsideInteractionListeners();
-        clearTimeout(undoTimer);
-    }
+    // Depends only on showUndoButton (untrack keeps undoTimer & co. out of the dependencies)
+    run(() => {
+        const show = showUndoButton;
+        untrack(() => {
+            if (show) {
+                addOutsideInteractionListeners();
+                undoTimer = setTimeout(hideUndoButton, UNDO_TIMEOUT_MS);
+            } else {
+                removeOutsideInteractionListeners();
+                clearTimeout(undoTimer);
+            }
+        });
+    });
 </script>
 
 <div class="recentGrades">
@@ -161,7 +174,7 @@
 
     <div class="button-container">
         {#if showUndoButton}
-            <ion-button class="undoButton" on:click={restoreDeletedCard} aria-hidden>
+            <ion-button class="undoButton" onclick={restoreDeletedCard} aria-hidden>
                 <ion-icon icon={refresh}></ion-icon>
             </ion-button>
         {/if}

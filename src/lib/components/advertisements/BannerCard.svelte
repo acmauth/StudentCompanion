@@ -1,11 +1,15 @@
 <script lang="ts">
 	import ad1 from '$lib/assets/Advert_dark.png';
-	export let margin: string = '1.5';
 	import { neoUniversisGet } from '$lib/dataService';
 	import type { Advertisements, Advert } from '$lib/types/ads';
 	import { close } from 'ionicons/icons';
 	import { isDeleted } from './dismissableStore';
 	import { Preferences } from '@capacitor/preferences';
+	interface Props {
+		margin?: string;
+	}
+
+	let { margin = '1.5' }: Props = $props();
 
 	const PROMO_CMS_URL = 'https://promotions.aristomate.gr';
 	const FALLBACK_IMAGE = ad1;
@@ -18,9 +22,9 @@
 	let study_level: string = '';
 	let ads: Advertisements = [];
 
-	let imageUrl = '';
-	let adLink = '';
-	let adAltText = '';
+	let imageUrl = $state('');
+	let adLink = $state('');
+	let adAltText = $state('');
 
 	function deleteBanner() {
 		isDeleted.set(true);
@@ -130,14 +134,14 @@
 	{#if !$isDeleted && getAdData() !== null}
 		<div style={marginStr} class="card-banner">
 			<a href={adLink} target="_blank"><img src={imageUrl} alt={adAltText} /></a>
-			<ion-icon class="xmark" icon={close} on:click={deleteBanner} aria-hidden />
+			<ion-icon class="xmark" icon={close} onclick={deleteBanner} aria-hidden></ion-icon>
 		</div>
 	{/if}
-{:then { imageUrl, adLink, adAltText }}
+{:then {imageUrl, adLink, adAltText }}
 	{#if !$isDeleted}
 		<div style={marginStr} class="card-banner">
 			<a href={adLink} target="_blank"><img src={imageUrl} alt={adAltText} /></a>
-			<ion-icon class="xmark" icon={close} on:click={deleteBanner} aria-hidden />
+			<ion-icon class="xmark" icon={close} onclick={deleteBanner} aria-hidden></ion-icon>
 		</div>
 	{/if}
 {/await}

@@ -15,7 +15,7 @@
         { id: 8, title: "Open source Acknowledgements", answer: "Αξιοποιούμε open source projects στο Aristomate. Μεταξύ αυτών είναι τα ακόλουθα: 1.OpenStreetMap για τους χάρτες υπό Open Database License (openstreetmap.org/copyright), 2. Ionic Capacitor, 3. ChartJs (https://www.chartjs.org/), 4. Svelte/Sveltekit." }
     ];
 
-    $: supportMailto = `mailto:aristomate@auth.gr?subject=${encodeURIComponent(`Aristomate - ${$t('faq.contact_subject')}`)}`;
+    let supportMailto = $derived(`mailto:aristomate@auth.gr?subject=${encodeURIComponent(`Aristomate - ${$t('faq.contact_subject')}`)}`);
 </script>
 
 

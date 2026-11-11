@@ -1,31 +1,49 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
 
   const R = 56;
   const CIRC = 2 * Math.PI * R;
 
-  export let value: number = 0;
-  export let color: string = 'var(--ion-color-primary, #378ADD)';
-  export let trackColor: string = 'var(--ion-color-light-shade, #e5e7eb)';
-  export let strokeWidth: number = 15;
 
-  export let centerLabel: string = '';
-  export let leftLabel: string = '';
-  export let rightLabel: string = '';
-  export let rightValue: string = '';   // bold top line in stacked block
-  export let rightDesc: string = '';    // muted bottom line in stacked block
+  interface Props {
+    value?: number;
+    color?: string;
+    trackColor?: string;
+    strokeWidth?: number;
+    centerLabel?: string;
+    leftLabel?: string;
+    rightLabel?: string;
+    rightValue?: string; // bold top line in stacked block
+    rightDesc?: string; // muted bottom line in stacked block
+  }
 
-  $: pct = Math.min(Math.max(Math.round(value), 0), 100);
-  $: targetOffset = CIRC * (1 - pct / 100);
-  $: hasCenter = centerLabel.trim() !== '';
-  $: hasStack = rightValue !== '' || rightDesc !== '';
-  $: circleSize = hasCenter ? 100 : 50;
+  let {
+    value = 0,
+    color = 'var(--ion-color-primary, #378ADD)',
+    trackColor = 'var(--ion-color-light-shade, #e5e7eb)',
+    strokeWidth = 15,
+    centerLabel = '',
+    leftLabel = '',
+    rightLabel = '',
+    rightValue = '',
+    rightDesc = ''
+  }: Props = $props();
+
+  let pct = $derived(Math.min(Math.max(Math.round(value), 0), 100));
+  let targetOffset = $derived(CIRC * (1 - pct / 100));
+  let hasCenter = $derived(centerLabel.trim() !== '');
+  let hasStack = $derived(rightValue !== '' || rightDesc !== '');
+  let circleSize = $derived(hasCenter ? 100 : 50);
 
   // Start fully "empty" (offset = full circumference) and tween to the real value.
   // Reactive set also handles smooth re-animation when `value` changes after mount.
   const animatedOffset = tweened(CIRC, { duration: 900, easing: cubicOut });
-  $: animatedOffset.set(targetOffset);
+  run(() => {
+    animatedOffset.set(targetOffset);
+  });
 </script>
 
 <div class="pc-wrapper">

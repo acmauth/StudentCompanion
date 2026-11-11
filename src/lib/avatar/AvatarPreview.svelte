@@ -2,10 +2,14 @@
 	import type { AvatarConfig } from './types';
 	import { composeAvatar } from './compose';
 
-	export let config: AvatarConfig;
-	export let size = 280;
+	interface Props {
+		config: AvatarConfig;
+		size?: number;
+	}
 
-	$:  svg = composeAvatar(config);
+	let { config, size = 280 }: Props = $props();
+
+	let svg = $derived(composeAvatar(config));
 </script>
 
 <div

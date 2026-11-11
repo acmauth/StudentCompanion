@@ -6,8 +6,8 @@
     import { t } from '$lib/i18n';
     import { invalidateAuth } from '$lib/globalFunctions/logOut';
     
-    $: errorStatus = $page.status;
-    $: errorMessage = $page.error?.message || "An unexpected error occurred.";
+    let errorStatus = $derived($page.status);
+    let errorMessage = $derived($page.error?.message || "An unexpected error occurred.");
 </script>
 
 <ion-content class="ion-padding">
@@ -22,7 +22,7 @@
             </p>
         </ion-text>
 
-        <ion-button mode='ios' expand="block" on:click={() => goto('/pages/homepage')} class="home-button" aria-hidden>
+        <ion-button mode='ios' expand="block" onclick={() => goto('/pages/homepage')} class="home-button" aria-hidden>
             <ion-icon slot="start" icon={homeOutline}></ion-icon>
             {$t('errorPage.homeButton')}
         </ion-button>
@@ -33,7 +33,7 @@
             {$t('errorPage.reportButton')}
         </ion-button>
 
-        <ion-button mode='ios' on:click={() => {invalidateAuth(); goto('/login');}} aria-hidden>
+        <ion-button mode='ios' onclick={() => {invalidateAuth(); goto('/login');}} aria-hidden>
             <ion-icon icon={logOut}></ion-icon>
         </ion-button>
         

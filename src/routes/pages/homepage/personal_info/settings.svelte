@@ -20,10 +20,12 @@
 	import Faq from './faq.svelte';
 	import { darkMode } from '$lib/globalFunctions/darkMode';
 
-	/**
-	 * @type {any}
-	 */
-	export let logOut;
+	
+	interface Props {
+		logOut: any;
+	}
+
+	let { logOut }: Props = $props();
 
 	onMount(() => {
 		checkAppMode();
@@ -50,15 +52,15 @@
 </script>
 
 <ion-card>
-	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<ion-card-content>
 		<ion-item>
-			<ion-icon size="small" icon={allIonicIcons.brush} />
+			<ion-icon size="small" icon={allIonicIcons.brush}></ion-icon>
 			<ion-toggle
 				id="themeToggle"
 				class="ion-padding-start"
 				checked={$darkMode}
-				on:ionChange={async () => await toggleDarkTheme()}
+				onionChange={async () => await toggleDarkTheme()}
 			>
 				Dark Mode
 			</ion-toggle>
@@ -67,17 +69,17 @@
 		<CredentialLoginItem />
 
 		{#if Capacitor.isNativePlatform()}
-			<ion-item button on:click={launchNativenotificationSettings} aria-hidden>
-				<ion-icon size="small" icon={cog_solid} />
+			<ion-item button onclick={launchNativenotificationSettings} aria-hidden>
+				<ion-icon size="small" icon={cog_solid}></ion-icon>
 				<ion-label class="ion-padding-start">{$t('settings.notifications')}</ion-label>
-				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} aria-hidden />
+				<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} aria-hidden></ion-icon>
 			</ion-item>
 		{/if}
 
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<ion-item button on:click={toggleLanguage}>
-			<ion-icon size="small" icon={allIonicIcons.language} />
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<ion-item button onclick={toggleLanguage}>
+			<ion-icon size="small" icon={allIonicIcons.language}></ion-icon>
 			<ion-label class="ion-padding-start">{$t('settings.language')}</ion-label>
 			<img
 				class="language-flag"
@@ -87,19 +89,19 @@
 			/>
 		</ion-item>
 
-		<ion-item button href=""  on:click={() => {navController.push(About)}} aria-hidden>
-			<ion-icon size="small" icon={allIonicIcons.people} />
+		<ion-item button href=""  onclick={() => {navController.push(About)}} aria-hidden>
+			<ion-icon size="small" icon={allIonicIcons.people}></ion-icon>
 			<ion-label class="ion-padding-start">{$t('settings.about')}</ion-label>
-			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
+			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle}></ion-icon>
 		</ion-item>
 
-		<ion-item button href="" on:click={() => {navController.push(Faq)}} aria-hidden>
-			<ion-icon size="small" icon={allIonicIcons.helpCircle} />
+		<ion-item button href="" onclick={() => {navController.push(Faq)}} aria-hidden>
+			<ion-icon size="small" icon={allIonicIcons.helpCircle}></ion-icon>
 			<ion-label class="ion-padding-start">FAQ</ion-label>
-			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
+			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle}></ion-icon>
 		</ion-item>
 
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<!-- <ion-item button on:click={updateButton}>
 			<ion-icon size="small" icon={allIonicIcons.syncCircle} />
 			<ion-label class="ion-padding-start">{$t('update.updateButton')}</ion-label>
@@ -107,21 +109,21 @@
 		</ion-item> -->
 
 		{#if $webmailLoggedIn}
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<ion-item button on:click={logoutWebmail}>
-				<ion-icon color="warning" size="small" icon={allIonicIcons.logOut} />
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<ion-item button onclick={logoutWebmail}>
+				<ion-icon color="warning" size="small" icon={allIonicIcons.logOut}></ion-icon>
 				<ion-label color="warning" class="ion-padding-start">{$t('settings.webmailLogout')}</ion-label>
-				<ion-icon color="warning" size="small" icon={allIonicIcons.chevronForwardCircle} />
+				<ion-icon color="warning" size="small" icon={allIonicIcons.chevronForwardCircle}></ion-icon>
 			</ion-item>
 		{/if}
 
-		<!-- svelte-ignore a11y-click-events-have-key-events -->
-		<!-- svelte-ignore a11y-no-static-element-interactions -->
-		<ion-item button lines="none" on:click={logOut}>
-			<ion-icon color="danger" size="small" icon={allIonicIcons.exit} />
+		<!-- svelte-ignore a11y_click_events_have_key_events -->
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
+		<ion-item button lines="none" onclick={logOut}>
+			<ion-icon color="danger" size="small" icon={allIonicIcons.exit}></ion-icon>
 
 			<ion-label color="danger" class="ion-padding-start">{$t('settings.logout')}</ion-label>
-			<ion-icon color="danger" size="small" icon={allIonicIcons.chevronForwardCircle} />
+			<ion-icon color="danger" size="small" icon={allIonicIcons.chevronForwardCircle}></ion-icon>
 		</ion-item>
 	</ion-card-content>
 </ion-card>

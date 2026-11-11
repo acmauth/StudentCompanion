@@ -13,7 +13,11 @@
 	import { fade, fly } from 'svelte/transition';
 
 
-    export let id: string;
+    interface Props {
+        id: string;
+    }
+
+    let { id }: Props = $props();
 
     
     const reducedMotion = typeof window !== 'undefined'
@@ -23,8 +27,8 @@
 
     let courseDetails: NewCourseType|null = null;
     let statistics: ExamStatistics|null = null;
-    let instructors: InstructorType[] = [];
-    let topTen: number;
+    let instructors: InstructorType[] = $state([]);
+    let topTen: number = $state();
 
     
     const courseIdLiteral = encodeURIComponent(`'${decodeURIComponent(id).replace(/'/g, "''")}'`);
@@ -177,7 +181,7 @@
 <ion-content fullscreen>
     {#await fetchCourseContents()}
         <SubPageHeader title={id} stackedNav />
-		<ion-progress-bar type="indeterminate" />
+		<ion-progress-bar type="indeterminate"></ion-progress-bar>
 		{#each { length: 3 } as i}
 			<CoursesSkeleton />
 		{/each}
@@ -194,7 +198,7 @@
                 </div>
 
                 <!-- TEMP: grade story share spike. Delete this block and src/lib/share/ to remove. -->
-                <ion-button fill="clear" size="small" on:click={() => shareStory(courseDetails)} aria-hidden style="text-transform: capitalize;">
+                <ion-button fill="clear" size="small" onclick={() => shareStory(courseDetails)} aria-hidden style="text-transform: capitalize;">
                     <ion-icon slot="start" icon={share}></ion-icon>
                     {$t('common.share')}
                 </ion-button>
@@ -251,7 +255,7 @@
                     <div class="instructor_chips">
                         {#each instructors as instructor (instructor.id)}
                             <div class="instructor">
-                                <ion-icon src={personCircleSharp} style="margin: 0; font-size: 1.5rem;"/>
+                                <ion-icon src={personCircleSharp} style="margin: 0; font-size: 1.5rem;"></ion-icon>
                                 {localize(instructor.givenName, instructor.locale?.givenName)} {localize(instructor.familyName, instructor.locale?.familyName)}
                             </div>
                         {/each}
@@ -266,7 +270,7 @@
                 <ion-accordion-group class="accordion" expand="compact" in:fade={{ duration: ANIMDURATION }}>
                         <ion-accordion value="first">
                                 <ion-item slot="header">
-                                    <ion-label>{$t("course.syllabus")}<ion-label/>
+                                    <ion-label>{$t("course.syllabus")}<ion-label></ion-label>
                                 </ion-item>
                                     <p slot="content" style="white-space: pre-line;">{$t("maps.loading")}</p>
                             </ion-accordion>
@@ -283,7 +287,7 @@
                     <ion-accordion-group class="accordion" expand="compact" in:fade={{ duration: ANIMDURATION }}>
                         <ion-accordion value="first">
                                 <ion-item slot="header">
-                                    <ion-label>{$t("course.syllabus")}<ion-label/>
+                                    <ion-label>{$t("course.syllabus")}<ion-label></ion-label>
                                 </ion-item>
                                 {#if CourseSyllabusEudoxus.syllabus}
                                     <p slot="content" style="white-space: pre-line;">{@html sanitize(CourseSyllabusEudoxus.syllabus)}</p>
@@ -344,17 +348,17 @@
                             <!-- Aggregate stat tiles -->
                             <div class="stat_tiles" in:fade={{ duration: ANIMDURATION, delay: STAGGER }}>
                                 <div class="stat_tile ion-activatable ripple-parent">
-                                    <ion-ripple-effect/>
+                                    <ion-ripple-effect></ion-ripple-effect>
                                     <span class="stat_value">{insights.avgGrade}</span>
                                     <span class="stat_label">{$t('course.average')}</span>
                                 </div>
                                 <div class="stat_tile ion-activatable ripple-parent">
-                                    <ion-ripple-effect/>
+                                    <ion-ripple-effect></ion-ripple-effect>
                                     <span class="stat_value">{insights.gradedTotal}</span>
                                     <span class="stat_label">{$t('course.graded_students')}</span>
                                 </div>
                                 <div class="stat_tile ion-activatable ripple-parent">
-                                    <ion-ripple-effect/>
+                                    <ion-ripple-effect></ion-ripple-effect>
                                     <span class="stat_value">{insights.avgPassed}</span>
                                     <span class="stat_label">{$t('course.successfull_average')}</span>
                                 </div>

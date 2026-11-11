@@ -8,12 +8,21 @@
 	import { getSemester } from './helpers';
 	import { t, getLocale } from '$lib/i18n';
 
-	export let courses: course[] = [];
-	export let semesterId: string;
-	export let semesterAverage: string;
-	export let semesterName: string;
+	interface Props {
+		courses?: course[];
+		semesterId: string;
+		semesterAverage: string;
+		semesterName: string;
+	}
 
-	let childrenOpen: boolean[] = [];
+	let {
+		courses = [],
+		semesterId,
+		semesterAverage,
+		semesterName
+	}: Props = $props();
+
+	let childrenOpen: boolean[] = $state([]);
 
 	function toggleChildren(index: number) {
 		childrenOpen[index] = !childrenOpen[index];
@@ -25,7 +34,7 @@
 	}
 </script>
 
-<span class="scroll" id={semesterId} />
+<span class="scroll" id={semesterId}></span>
 
 <div class="container">
 	{#if courses.length > 0}
@@ -52,10 +61,10 @@
 				<!-- Card content for course -->
 				<!-- Checking if course has children courses or not, so we can render the href links accordingly. Rest of the content stays the same -->
 				{#if course.childCourses && course.childCourses.length > 0}
-					<!-- svelte-ignore a11y-no-static-element-interactions -->
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y_no_static_element_interactions -->
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<ion-item
-						on:click={() => navigateToCourse(course)}
+						onclick={() => navigateToCourse(course)}
 						lines="none"
 						class="ion-no-padding"
 					>
@@ -68,13 +77,13 @@
 				{/if}
 
 				<!-- If the current course has children courses, add them below -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				{#if course.childCourses && course.childCourses.length > 0}
 					<div class="children" class:open={childrenOpen[index]}>
 						{#each course.childCourses as childCourse}
 							<!-- Card content for child course -->
 							<ion-item
-								on:click={() => navigateToCourse(childCourse)}
+								onclick={() => navigateToCourse(childCourse)}
 								lines="none"
 								class="ion-no-padding"
 							>
@@ -83,14 +92,14 @@
 						{/each}
 					</div>
 
-					<!-- svelte-ignore a11y-click-events-have-key-events -->
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<ion-icon
 						class="icon arrow"
-						on:click={() => toggleChildren(index)}
+						onclick={() => toggleChildren(index)}
 						size="large"
 						icon={allIonicIcons.caretDown}
 						class:arrowOpen={childrenOpen[index]}
-					/>
+					></ion-icon>
 				{/if}
 			</AppCard>
 		{/each}

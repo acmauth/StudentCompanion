@@ -15,8 +15,8 @@
 	import { t } from '$lib/i18n';
 	import SubPageHeader from '$components/shared/subPageHeader.svelte';
 
-	let refresher: HTMLIonRefresherElement;
-	let notificationsPromise = gatherNotifications();
+	let refresher: HTMLIonRefresherElement = $state();
+	let notificationsPromise = $state(gatherNotifications());
 
 	const refreshNotifications = async () => {
 		notificationsPromise = gatherNotifications({ refresh: true });
@@ -36,12 +36,12 @@
 		<Chips />
 	</ion-header>
 
-	<ion-refresher slot="fixed" bind:this={refresher} on:ionRefresh={refreshNotifications}>
-		<ion-refresher-content />
+	<ion-refresher slot="fixed" bind:this={refresher} onionRefresh={refreshNotifications}>
+		<ion-refresher-content></ion-refresher-content>
 	</ion-refresher>
 
 	{#await notificationsPromise}
-		<ion-progress-bar type="indeterminate" />
+		<ion-progress-bar type="indeterminate"></ion-progress-bar>
 		{#each randList(5) as rand (rand)}
 			<NotifSkeleton />
 		{/each}

@@ -27,14 +27,14 @@
 
 	// The avatar saved before editing began; used as the baseline for the save button.
 	const savedBaseline = get(avatarStore);
-	let config = structuredClone(savedBaseline);
+	let config = $state(structuredClone(savedBaseline));
 	let showJson = false;
-	let selectedCategory: string = selectableCategories[0].key;
+	let selectedCategory: string = $state(selectableCategories[0].key);
 
-	$: json = JSON.stringify(config, null, 2);
+	let json = $derived(JSON.stringify(config, null, 2));
 
 	// Show the save button only once the working config deviates from the saved baseline.
-	$: changed = JSON.stringify(config) !== JSON.stringify(savedBaseline);
+	let changed = $derived(JSON.stringify(config) !== JSON.stringify(savedBaseline));
 
 	function save() {
 		avatarStore.set(config);
@@ -67,9 +67,9 @@
 	}
 
 	// clothingGraphic only affects the avatar when the graphic shirt is worn.
-	$: graphicActive = config.clothing === 'graphicShirt';
+	let graphicActive = $derived(config.clothing === 'graphicShirt');
 
-	$: colorLabels = {
+	let colorLabels = $derived({
 		skin: $t('avatarBuilder.color.skin'),
 		hair: $t('avatarBuilder.color.hair'),
 		hat: $t('avatarBuilder.color.hat'),
@@ -77,7 +77,7 @@
 		accessories: $t('avatarBuilder.color.accessories'),
 		facialHair: $t('avatarBuilder.color.facialHair'),
 		background: $t('avatarBuilder.color.background')
-	} as Record<ColorKey, string>;
+	} as Record<ColorKey, string>);
 
 </script>
 
@@ -101,20 +101,20 @@
                                 style:background={color}
                                 title={color}
                                 aria-label={`Background ${color}`}
-                                on:click={() => setColor('background', color)}
-                            />
+                                onclick={() => setColor('background', color)}
+></button>
                         {/each}
                     </div>
                 </div>
             </div>
             <div class="settings">
-                <ion-segment class="feature_select" scrollable value={selectedCategory} on:ionChange={selectCategory}>
+                <ion-segment class="feature_select" scrollable value={selectedCategory} onionChange={selectCategory}>
                     {#each tabCategories as cat (cat.key)}
                         <ion-segment-button value={cat.key}>
                             {#if catIconMap[cat.key]}
                                 <div class="cat-icon">{@html catIconMap[cat.key]}</div>
                             {:else if cat.key === 'clothing'}
-                                <ion-icon icon={shirt} />
+                                <ion-icon icon={shirt}></ion-icon>
                             {:else}
                                 <ion-label>{$t(cat.labelKey)}</ion-label>
                             {/if}
@@ -137,7 +137,7 @@
                                                     style:background={color}
                                                     title={`${colorLabels[colorKey]}: ${color}`}
                                                     aria-label={`${colorLabels[colorKey]} ${color}`}
-                                                    on:click={() => setColor(colorKey, color)}>
+                                                    onclick={() => setColor(colorKey, color)}>
                                         </button>
                                         {/each}
                                     </div>
@@ -145,15 +145,15 @@
                             {/each}
                             <div class="options">
                                 {#if cat.optional}
-                                    <div class="option ion-activatable" on:click={() => {setOption(cat.key, '')}} style="background: {config.colors.background}" aria-hidden={true}>
-                                        <ion-ripple-effect/>
+                                    <div class="option ion-activatable" onclick={() => {setOption(cat.key, '')}} style="background: {config.colors.background}" aria-hidden={true}>
+                                        <ion-ripple-effect></ion-ripple-effect>
                                         <AvatarPreview config={previewConfig(cat.key, '')} size={86} />
                                     </div>
                                 {/if}
                                 {#each optionsFor(cat.key) as id (id)}
                                     <!-- {labelFor(id)} -->
-                                    <div class="option ion-activatable" class:selected={config[cat.key] == id} on:click={() => {setOption(cat.key, id)}} style="background: {config.colors.background}" aria-hidden={true}>
-                                        <ion-ripple-effect/>
+                                    <div class="option ion-activatable" class:selected={config[cat.key] == id} onclick={() => {setOption(cat.key, id)}} style="background: {config.colors.background}" aria-hidden={true}>
+                                        <ion-ripple-effect></ion-ripple-effect>
                                         <AvatarPreview config={previewConfig(cat.key, id)} size={86} />
                                     </div>
                                 {/each}
@@ -163,8 +163,8 @@
                                 <p class="section_label">{$t('avatarBuilder.category.eyebrows')}</p>
                                 <div class="options">
                                     {#each optionsFor('eyebrows') as id (id)}
-                                        <div class="option ion-activatable" class:selected={config.eyebrows == id} on:click={() => {setOption('eyebrows', id)}} style="background: {config.colors.background}" aria-hidden={true}>
-                                            <ion-ripple-effect/>
+                                        <div class="option ion-activatable" class:selected={config.eyebrows == id} onclick={() => {setOption('eyebrows', id)}} style="background: {config.colors.background}" aria-hidden={true}>
+                                            <ion-ripple-effect></ion-ripple-effect>
                                             <AvatarPreview config={previewConfig('eyebrows', id)} size={86} />
                                         </div>
                                     {/each}

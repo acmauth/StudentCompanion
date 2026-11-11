@@ -5,13 +5,17 @@
 	import {timeOutline, map} from 'ionicons/icons';
 	import { onMount } from 'svelte';
 	
-	export let taskItem: TaskItem;
+	interface Props {
+		taskItem: TaskItem;
+	}
+
+	let { taskItem }: Props = $props();
 	
 	let startDay: string = getDayByIndex(new Date(taskItem.date.startDate).getDay(), 'el', true); 
 	let endDay: string = getDayByIndex(new Date(taskItem.date.endDate).getDay(), 'el', true);
-	let isPastDate: boolean = false;
-	let isTest: boolean = false;
-	let isProject: boolean = false;
+	let isPastDate: boolean = $state(false);
+	let isTest: boolean = $state(false);
+	let isProject: boolean = $state(false);
 
 	onMount(async() => {
 		isPastDate = new Date().getTime() > new Date(taskItem.date.endDate).getTime();
@@ -48,7 +52,7 @@
 			<ion-card-header class="examCardHeader">
 				<ion-card-title color="primary">{taskItem.title}</ion-card-title>
 				<div class="icons">
-					<ion-icon icon={documentText} />
+					<ion-icon icon={documentText}></ion-icon>
 					<ion-card-subtitle>{taskItem.description}</ion-card-subtitle>
 				</div>
 			</ion-card-header>

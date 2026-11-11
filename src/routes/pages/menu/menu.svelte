@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { onMount } from 'svelte';
 	import { register } from 'swiper/element/bundle';
 	import IonPage from 'ionic-svelte/components/IonPage.svelte';
@@ -12,15 +14,15 @@
 
 	register();
 
-	let cafeteriaData: string[] = [];
-	let cafeteriaDates: (string | null)[] = [];
-	let breakfastData: string = '';
-	let lunchData: string = '';
-	let dinnerData: string = '';
+	let cafeteriaData: string[] = $state([]);
+	let cafeteriaDates: (string | null)[] = $state([]);
+	let breakfastData: string = $state('');
+	let lunchData: string = $state('');
+	let dinnerData: string = $state('');
 	let title: string = $t('menu.todaysMenu');
-	let defaultSlideIndex: number = 0;
-	let showingCachedData = false;
-	let dataLoaded = false;
+	let defaultSlideIndex: number = $state(0);
+	let showingCachedData = $state(false);
+	let dataLoaded = $state(false);
 
 	// Weekday keys (index order matches cafeteriaData/cafeteriaDates and menu.<day> i18n keys)
 	const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -28,7 +30,7 @@
 	// Meal tabs shown above the swiper (index order matches the swiper slide order)
 	const mealTabs = ['breakfast', 'lunch', 'dinner'];
 	const mealIcons = [allIonicIcons.cafeOutline, allIonicIcons.restaurantOutline, allIonicIcons.moonOutline];
-	let activeMealKey = mealTabs[0];
+	let activeMealKey = $state(mealTabs[0]);
 
 
 	const TIME_RANGE_RE = /\d{1,2}[:.]\d{2}\s*[–—-]\s*\d{1,2}[:.]\d{2}/;
@@ -108,16 +110,16 @@
 
 	const hours = date.getHours();
 	const mins = date.getMinutes();
-	let message = ''; // Cafeteria status message
+	let message = $state(''); // Cafeteria status message
 	let now = ''; // Current meal
 	let next = ''; // Next meal
-	let color = 'success';
+	let color = $state('success');
 	let menuDate = '';
-	let closedForHolidays = false;
+	let closedForHolidays = $state(false);
 
 	// Seasonal emoji shown when the cafeteria is closed for holidays
 	const month = date.getMonth(); // 0 = January, 11 = December
-	let seasonalEmoji = '🏖️';
+	let seasonalEmoji = $state('🏖️');
 	if (month === 6 || month === 7) {
 		seasonalEmoji = '🏖️'; // July - August
 	} else if (month === 11 || month === 0) {
@@ -129,7 +131,7 @@
 	// Determine cafeteria status based on current time
 	// Now we stay on today's menu all day until midnight
 	// Open hours: 08:30-10:30 breakfast, 12:30-16:30 lunch, 18:00-21:00 dinner
-	let tempClosed = false;
+	let tempClosed = $state(false);
 	const totalMinutes = hours * 60 + mins;
 	if (totalMinutes >= 510 && totalMinutes < 630) {
 		// 08:30 - 10:30
@@ -282,7 +284,7 @@
 	const CROWD_LEVELS = Object.keys(CROWD_COLORS) as CrowdLevel[];
 
 	// null = unknown, closed or failed to load: the chip is hidden
-	let crowdLevel: CrowdLevel | null = null;
+	let crowdLevel: CrowdLevel | null = $state(null);
 
 	async function loadCrowd() {
 		try {
@@ -300,46 +302,50 @@
 	onMount(loadCrowd);
 
 	// Initialize swiper when data is loaded
-	$: if (dataLoaded && typeof window !== 'undefined') {
-		// Wait for the DOM to be ready and data to be loaded
-		setTimeout(() => {
-			const swiperEl = document.querySelector('swiper-container') as any;
-			if (swiperEl && swiperEl.swiper) {
-				// Update existing swiper
-				swiperEl.swiper.update();
-				swiperEl.swiper.slideTo(defaultSlideIndex);
-				activeMealKey = mealTabs[defaultSlideIndex];
-			} else if (swiperEl) {
-				// Initialize swiper with custom configuration
-				const swiperParams = {
-					pagination: {
-						clickable: true,
-					},
-					spaceBetween: 20,
-					initialSlide: defaultSlideIndex,
-					autoHeight: true, // Enable auto-height to adjust to content
-				};
+	run(() => {
+		if (dataLoaded && typeof window !== 'undefined') {
+			// Wait for the DOM to be ready and data to be loaded
+			setTimeout(() => {
+				const swiperEl = document.querySelector('swiper-container') as any;
+				if (swiperEl && swiperEl.swiper) {
+					// Update existing swiper
+					swiperEl.swiper.update();
+					swiperEl.swiper.slideTo(defaultSlideIndex);
+					activeMealKey = mealTabs[defaultSlideIndex];
+				} else if (swiperEl) {
+					// Initialize swiper with custom configuration
+					const swiperParams = {
+						pagination: {
+							clickable: true,
+						},
+						spaceBetween: 20,
+						initialSlide: defaultSlideIndex,
+						autoHeight: true, // Enable auto-height to adjust to content
+					};
 
-				Object.assign(swiperEl, swiperParams);
-				swiperEl.initialize();
-				activeMealKey = mealTabs[defaultSlideIndex];
-			}
+					Object.assign(swiperEl, swiperParams);
+					swiperEl.initialize();
+					activeMealKey = mealTabs[defaultSlideIndex];
+				}
 
-			// Keep the meal segment control in sync when the user swipes manually
-			if (swiperEl && !swiperEl.__mealSyncBound) {
-				swiperEl.__mealSyncBound = true;
-				swiperEl.addEventListener('swiperslidechange', (e: any) => {
-					const idx = e.detail?.[0]?.activeIndex;
-					if (typeof idx === 'number' && mealTabs[idx]) {
-						activeMealKey = mealTabs[idx];
-					}
-				});
-			}
-		}, 100);
-	}
+				// Keep the meal segment control in sync when the user swipes manually
+				if (swiperEl && !swiperEl.__mealSyncBound) {
+					swiperEl.__mealSyncBound = true;
+					swiperEl.addEventListener('swiperslidechange', (e: any) => {
+						const idx = e.detail?.[0]?.activeIndex;
+						if (typeof idx === 'number' && mealTabs[idx]) {
+							activeMealKey = mealTabs[idx];
+						}
+					});
+				}
+			}, 100);
+		}
+	});
 
-	$: closedForHolidays = message === $t('menu.closedForHolidays');
-	$: todayKey = today_weekday.toLowerCase();
+	run(() => {
+		closedForHolidays = message === $t('menu.closedForHolidays');
+	});
+	let todayKey = $derived(today_weekday.toLowerCase());
 </script>
 
 <ion-page>
@@ -396,12 +402,12 @@
 				<div class="status-wrap">
 					{#if showingCachedData}
 						<div class="status-card status-warning">
-							<ion-icon icon={allIonicIcons.cloudOfflineOutline} />
+							<ion-icon icon={allIonicIcons.cloudOfflineOutline}></ion-icon>
 							<span class="status-message">{$t('menu.showingCachedData') || 'Showing cached data'}</span>
 						</div>
 					{:else}
 						<div class="status-card status-{color}">
-							<ion-icon icon={color === 'success' ? allIonicIcons.checkmarkCircleOutline : allIonicIcons.closeCircleOutline} />
+							<ion-icon icon={color === 'success' ? allIonicIcons.checkmarkCircleOutline : allIonicIcons.closeCircleOutline}></ion-icon>
 							<span class="status-message">{message}</span>
 						</div>
 					{/if}
@@ -411,13 +417,13 @@
 					{#if !closedForHolidays}
 					<ion-card>
 							<div class="meal-tabs">
-								<ion-segment value={activeMealKey} mode="ios" on:ionChange={(e) => handleSegmentChange(e.detail.value)}>
+								<ion-segment value={activeMealKey} mode="ios" onionChange={(e) => handleSegmentChange(e.detail.value)}>
 									{#each mealTabs as tabKey, i}
 										<ion-segment-button value={tabKey}>
-											<ion-icon icon={mealIcons[i]} />
+											<ion-icon icon={mealIcons[i]}></ion-icon>
 											<ion-label>{$t(`menu.${tabKey}`)}</ion-label>
 											{#if i === defaultSlideIndex && !tempClosed}
-												<span class="now-dot" aria-label={$t('menu.now')} />
+												<span class="now-dot" aria-label={$t('menu.now')}></span>
 											{/if}
 										</ion-segment-button>
 									{/each}

@@ -3,7 +3,11 @@
   import VectorUK from "$lib/components/language/UK.svg"
   import { changeLocale, t } from '$lib/i18n';
 
-  export let isOpen = false;
+  interface Props {
+    isOpen?: boolean;
+  }
+
+  let { isOpen = $bindable(false) }: Props = $props();
 
   function flagClick(lang: string)
   {
@@ -17,24 +21,24 @@
 
 <ion-modal
 	is-open={isOpen}
-	on:ionModalDidDismiss={() => { isOpen = false; }}
+	onionModalDidDismiss={() => { isOpen = false; }}
 	class="add-qr-modal">
 	<div class="add-qr-modal-content">
   <div class="language_select">
-    <div class="option ion-activatable" on:click={() => {flagClick("el")}} aria-hidden>
-    <ion-ripple-effect/>
+    <div class="option ion-activatable" onclick={() => {flagClick("el")}} aria-hidden>
+    <ion-ripple-effect></ion-ripple-effect>
       <img src={VectorGreece} alt="Greece">
       <p class = "flag-name">Ελληνικά</p>
     </div>
-    <div class="option ion-activatable" on:click={() => {flagClick("en")}} aria-hidden>
-    <ion-ripple-effect/>
+    <div class="option ion-activatable" onclick={() => {flagClick("en")}} aria-hidden>
+    <ion-ripple-effect></ion-ripple-effect>
       <img src={VectorUK} alt="English">
       <p class = "flag-name">English</p>
     </div>
   </div>
 		<div class="modal-buttons">
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			<ion-button aria-hidden expand="block" mode="ios" color="dark" on:click={() => { isOpen = false; }} class="cancel-button">
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<ion-button aria-hidden expand="block" mode="ios" color="dark" onclick={() => { isOpen = false; }} class="cancel-button">
 				{$t('wallet.cancel')}
 			</ion-button>
 		</div>

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
     import { onMount } from 'svelte';
     import { add } from 'ionicons/icons';
     import { EventStore } from '$lib/components/calendar/event/EventStore';
@@ -17,20 +19,20 @@
 	import { page } from '$app/stores';
 
     let currentDate = new Date();
-    let month = currentDate.getMonth();
-    let year = currentDate.getFullYear();
+    let month = $state(currentDate.getMonth());
+    let year = $state(currentDate.getFullYear());
 
-    let weeks: DayObject[][] = [];
-    let selectedDay: SelectedDay | null = null;
-    let activeDate = new Date();
-    let eventList: Event[] = [];
+    let weeks: DayObject[][] = $state([]);
+    let selectedDay: SelectedDay | null = $state(null);
+    let activeDate = $state(new Date());
+    let eventList: Event[] = $state([]);
 
     // Event creation and editing
-    let selectedEvent: Event | null = null;
-    let modalOpen: boolean = false;
-    let deleteModalOpen: boolean = false;
+    let selectedEvent: Event | null = $state(null);
+    let modalOpen: boolean = $state(false);
+    let deleteModalOpen: boolean = $state(false);
 
-    $: prototypeEvent = {
+    let prototypeEvent = $derived({
          id: new Date().getTime(),
             title: "",
             slot: {
@@ -44,13 +46,15 @@
             repeatInterval: 1,
             notify: false,
             notifyTime: 1
-    }
+    })
 
-    $: eventList = $EventStore
-        .filter((item) => isCurrentDay(item, activeDate) && !isInactiveDate(activeDate, item))
-        .sort((a, b) =>
-            new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1
-        );
+    run(() => {
+    eventList = $EventStore
+          .filter((item) => isCurrentDay(item, activeDate) && !isInactiveDate(activeDate, item))
+          .sort((a, b) =>
+              new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1
+          );
+  });
 
     function buildCalendar() {
         weeks = buildCalendarWeeks(month, year, $EventStore);
@@ -112,10 +116,10 @@
             handleNotificationPermission();
             handleExactAlarmPermission(); 
             removePastNotifications();
-            scheduleNotification(event); 
+            scheduleNotification(event);
         }
-        
-        selectedEvent = null;
+
+        // Close via isOpen only; EventModal calls onClose (clearing selectedEvent) once Ionic has dismissed it
         modalOpen = false;
     }
 
@@ -204,12 +208,12 @@
 <ion-page>
 <ion-content fullscreen class="ion-no-padding" scroll-y={false}>
     <ion-header collapse="condense" mode="ios">
-        <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <ion-toolbar mode="md">
             <ion-title size="large">{$t('schedule.title')}</ion-title>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <ion-button style="font-size: 1rem;margin-inline-end:1rem;" slot="end" on:click={openNewEventModal} fill="clear">
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <ion-button style="font-size: 1rem;margin-inline-end:1rem;" slot="end" onclick={openNewEventModal} fill="clear">
                 <ion-icon icon={add} slot="icon-only"></ion-icon>
             </ion-button>
         </ion-toolbar>

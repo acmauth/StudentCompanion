@@ -22,39 +22,30 @@
     // Canvas options
     let L: any;
     let map: any;
-    let mapContainer: HTMLElement;
+    let mapContainer: HTMLElement = $state();
     let selectedFeatureLayerGroup: any;
     let markerClusterGroup: any;
     let disableDoubleTapDragZoom: (() => void) | undefined;
 
     //control state
-    let activeRoom: helpers.RoomWithBuilding|undefined = undefined;
+    let activeRoom: helpers.RoomWithBuilding|undefined = $state(undefined);
     // activeRoom = {"faculty":"ΣΧΟΛΗ ΓΕΩΠΟΝΙΚΗ","bldName":"ΓΕΩΠΟΝΙΑΣ ΚΑΙ ΔΑΣΟΛΟΓΙΑΣ ΚΤΙΡΙΟ Β","school":"Σχολή Γεωπονίας, Δασολογίας και Φυσικού Περιβάλλοντος","floor":"O01","isMezz":false,"roomType":"Αμφιθέατρο","roomCode":"A02","roomName":"ΑΜΦΙΘΕΑΤΡΟ Β","roomId":"001-004-O01-0-A02","capacity":"176","bldId":"19","hasGis":false};
     
     //stateful variables
-    let searchBox: HTMLInputElement;
+    let searchBox: HTMLInputElement = $state();
     let isLoading = false; 
-    let searchQuery = "";
-    let selectedDepartment: Department|undefined = undefined;
-    let selectedBuilding: BuildingInfo|undefined = undefined;
-    let buildings: BuildingInfo[] = [];
+    let searchQuery = $state("");
+    let selectedDepartment: Department|undefined = $state(undefined);
+    let selectedBuilding: BuildingInfo|undefined = $state(undefined);
+    let buildings: BuildingInfo[] = $state([]);
     let buildingsRooms: Record<string, Rooms["rooms"]> = {};
-    let departments: Department[] = [];
+    let departments: Department[] = $state([]);
     let allRooms: helpers.RoomWithBuilding[] = []; // flat list of all rooms with building info, used for search and display - Loaded once and kept in memory for fast access
-    let deptSearchQuery = "";
-    let buildingSearchQuery = "";
-    let allowShowingDeptResults = false;
-    let allowShowingBuildingResults = false;
+    let deptSearchQuery = $state("");
+    let buildingSearchQuery = $state("");
+    let allowShowingDeptResults = $state(false);
+    let allowShowingBuildingResults = $state(false);
     
-    // derived variables
-    $: buildingIds = new Set(buildings.map(b => b.authBldId))
-    $: searchableRooms = updateSearchableRooms(selectedDepartment, selectedBuilding, buildings);
-    $: fuse = helpers.createRoomSearch(searchableRooms);
-    $: deptFuse = helpers.createDeptSearch(departments);
-    $: buildingFuse = helpers.createBuildingSearch(buildings);
-    $: searchResults = fuzzySearchResults(searchQuery);
-    $: deptSearchResults = fuzzyDeptSearchResults(deptSearchQuery);
-    $: buildingSearchResults = fuzzyBuildingSearchResults(buildingSearchQuery);
 
 
     function flyToBuilding(building: BuildingInfo){
@@ -343,6 +334,15 @@
         activeRoom = undefined;
         searchResults = [];
     }
+    // derived variables
+    let buildingIds = $derived(new Set(buildings.map(b => b.authBldId)))
+    let searchableRooms = $derived(updateSearchableRooms(selectedDepartment, selectedBuilding, buildings));
+    let fuse = $derived(helpers.createRoomSearch(searchableRooms));
+    let deptFuse = $derived(helpers.createDeptSearch(departments));
+    let buildingFuse = $derived(helpers.createBuildingSearch(buildings));
+    let searchResults = $derived(fuzzySearchResults(searchQuery));
+    let deptSearchResults = $derived(fuzzyDeptSearchResults(deptSearchQuery));
+    let buildingSearchResults = $derived(fuzzyBuildingSearchResults(buildingSearchQuery));
 </script>
 
     <ion-content>
@@ -352,8 +352,8 @@
         <div class="search-container">
             <div id="search-row-wrapper">
                 <input class="searchbox"
-                on:focusout={() => {searchResults=[];}}
-                on:focusin={() => {searchResults=fuzzySearchResults(searchQuery);}}
+                onfocusout={() => {searchResults=[];}}
+                onfocusin={() => {searchResults=fuzzySearchResults(searchQuery);}}
                 placeholder={activeRoom? activeRoom.roomName : $t('maps.search_placeholder')}
                 class:disabled={searchableRooms.length === 0}
                 autocomplete="off"
@@ -361,7 +361,7 @@
                 bind:this={searchBox} />
                 <div 
                     id="trashcan" 
-                    on:click={clearDisplay} 
+                    onclick={clearDisplay} 
                     aria-hidden 
                     class="ion-activatable"
                     class:disabled={!activeRoom && !selectedDepartment && !selectedBuilding}>
@@ -371,9 +371,9 @@
                 {#if searchResults.length > 0}
                     <ul class="autocomplete" transition:slide={{ duration: 200 }}>
                         {#each searchResults as { item } (item.roomId)}
-                            <li class="ion-activatable" on:mousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
+                            <li class="ion-activatable" onmousedown={() => {displayRoom(item);searchResults=[]}} class:has-gis={item.hasGis} aria-hidden>
                                 <ion-ripple-effect></ion-ripple-effect>
-                                {item.roomName} - <i class="building-name"><ion-icon class:hasGis={item.hasGis} icon={item.hasGis? buildingIcon : buildingVague}/>{item.authBldId} {item.bldName}</i>
+                                {item.roomName} - <i class="building-name"><ion-icon class:hasGis={item.hasGis} icon={item.hasGis? buildingIcon : buildingVague}></ion-icon>{item.authBldId} {item.bldName}</i>
                             </li>
                         {/each}
                     </ul>
@@ -385,15 +385,15 @@
                     bind:value={deptSearchQuery}
                     autocomplete="off"
                     class:disabled={!!selectedBuilding}
-                    on:focusout={() => {deptSearchResults=[];allowShowingDeptResults=false;}}
-                    on:focusin={() => {deptSearchResults=fuzzyDeptSearchResults(deptSearchQuery);allowShowingDeptResults=true;}}
+                    onfocusout={() => {deptSearchResults=[];allowShowingDeptResults=false;}}
+                    onfocusin={() => {deptSearchResults=fuzzyDeptSearchResults(deptSearchQuery);allowShowingDeptResults=true;}}
                  />
                  {#if deptSearchResults.length > 0 && allowShowingDeptResults}
                     <ul class="autocomplete departments" transition:slide={{ duration: 200 }}>
-                        <li class="ion-activatable" on:mousedown={() => {setSelectedDepartment(undefined);deptSearchResults=[]}} aria-hidden><ion-ripple-effect/>{$t('maps.all_departments')}</li>
+                        <li class="ion-activatable" onmousedown={() => {setSelectedDepartment(undefined);deptSearchResults=[]}} aria-hidden><ion-ripple-effect></ion-ripple-effect>{$t('maps.all_departments')}</li>
                         {#each deptSearchResults as { item } (item.unitID)}
-                            <li class="ion-activatable" on:mousedown={() => {setSelectedDepartment(item);deptSearchResults=[]}} aria-hidden>
-                                <ion-ripple-effect/>
+                            <li class="ion-activatable" onmousedown={() => {setSelectedDepartment(item);deptSearchResults=[]}} aria-hidden>
+                                <ion-ripple-effect></ion-ripple-effect>
                                 {getLocale()=="el" ? item.name : item.nameEn}
                             </li>
                         {/each}
@@ -405,15 +405,15 @@
                     placeholder={selectedBuilding ? (getLocale()=="el" ? selectedBuilding.name : selectedBuilding.name) : $t('maps.all_buildings')}
                     bind:value={buildingSearchQuery}
                     autocomplete="off"
-                    on:focusout={() => {buildingSearchResults=[];allowShowingBuildingResults=false;}}
-                    on:focusin={() => {buildingSearchResults=fuzzyBuildingSearchResults(buildingSearchQuery);allowShowingBuildingResults=true;}}
+                    onfocusout={() => {buildingSearchResults=[];allowShowingBuildingResults=false;}}
+                    onfocusin={() => {buildingSearchResults=fuzzyBuildingSearchResults(buildingSearchQuery);allowShowingBuildingResults=true;}}
                  />
                  {#if buildingSearchResults.length > 0 && allowShowingBuildingResults}
                     <ul class="autocomplete buildings" transition:slide={{ duration: 200 }}>
-                        <li class="ion-activatable" on:mousedown={() => {setSelectedBuilding(undefined); buildingSearchResults=[]}} aria-hidden><ion-ripple-effect/>{$t('maps.all_buildings')}</li>
+                        <li class="ion-activatable" onmousedown={() => {setSelectedBuilding(undefined); buildingSearchResults=[]}} aria-hidden><ion-ripple-effect></ion-ripple-effect>{$t('maps.all_buildings')}</li>
                         {#each buildingSearchResults as { item } }
-                            <li class="ion-activatable" on:mousedown={() => {setSelectedBuilding(item);buildingSearchResults=[]}} aria-hidden>
-                                <ion-ripple-effect/>
+                            <li class="ion-activatable" onmousedown={() => {setSelectedBuilding(item);buildingSearchResults=[]}} aria-hidden>
+                                <ion-ripple-effect></ion-ripple-effect>
                                 {getLocale()=="el" ? item.name : item.name} <i class="building-name">- {item.authBldId}</i>
                             </li>
                         {/each}
@@ -424,7 +424,7 @@
     </div>
     {#if activeRoom}
         <div id="bottom-controls" transition:fly={{ y: 200, duration: MAPANIMATIONDURATION * 1000 }}>
-            <ion-icon id="bottom-close" icon={close} on:click={clearDisplay} aria-hidden />
+            <ion-icon id="bottom-close" icon={close} onclick={clearDisplay} aria-hidden></ion-icon>
             <!-- <span id="bottom-faculty">{activeRoom.faculty}</span> -->
             <h2 id="bottom-room-name">{activeRoom.roomName}</h2>
             <span id="bottom-building-name">{activeRoom.bldName}</span>

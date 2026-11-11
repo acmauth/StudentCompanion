@@ -65,7 +65,7 @@
 
   <div class="about-section">
     <h2 class="section-title">
-      <ion-icon icon={heartOutline} on:click={() => {navController.push(EasterEgg)}} aria-hidden="true"></ion-icon>
+      <ion-icon icon={heartOutline} onclick={() => {navController.push(EasterEgg)}} aria-hidden="true"></ion-icon>
       {$t("about.who_are_we")}
     </h2>
     <p class="section-text">{$t("about.who_are_we_text_1")}</p>

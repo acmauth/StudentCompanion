@@ -4,13 +4,17 @@
     import elearningLogo from "$images/elearning.png";
     import aristomateLogo from "$images/aristomate.png";
     import webmailLogo from "$images/mail.png";
-    import { open } from 'ionicons/icons';
+    import { open, close } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
     import DOMPurify from 'dompurify';
-	import { onMount } from "svelte";
+	import { onMount, onDestroy } from "svelte";
     import { t, getLocale } from "$lib/i18n";
 
-    export let notification: NotificationData;
+    interface Props {
+        notification: NotificationData;
+    }
+
+    let { notification }: Props = $props();
 
     const OPTIONS: Record<string, {colour: string, logo: string, cssClass: string}> = {
         "universis": {colour: "tertiary", logo: universisLogo, cssClass: "universis"},
@@ -20,14 +24,23 @@
         undefined: {colour: "tertiary", logo: aristomateLogo, cssClass: "universis"}
     }
 
-    $: option = OPTIONS[notification.type] ?? OPTIONS.undefined;
+    let option = $derived(OPTIONS[notification.type] ?? OPTIONS.undefined);
 
 
-    let iframe: HTMLIFrameElement;
-    let inlineModalOpen = false;
+    let iframe: HTMLIFrameElement = $state();
+    let inlineModalOpen = $state(false);
     let breakpoints = [0, 0.5, 1];
     
     const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
+
+    let modalEl: HTMLIonModalElement | undefined = $state();
+
+    // While presented, Ionic moves <ion-modal> under <ion-app>; if this card is removed while the
+    // modal is open (e.g. the list re-renders), Svelte 5 can't remove it, so do it ourselves.
+    onDestroy(() => {
+        const el = modalEl;
+        if (el && (el as any).presented) el.dismiss().catch(() => {}).finally(() => el.remove());
+    });
 
     let content = DOMPurify.sanitize(notification.body, {SANITIZE_NAMED_PROPS: true}).trim().replace(/\s+/g, ' ').replace(/\s+/g, ' ');
 
@@ -45,32 +58,54 @@
     }
 
 
-    // Fixing the content of the iframe
-    function fixIframeContent(){    
-        // Getting the body of the iframe
-        const body = iframe.contentDocument.querySelector("html");
-        let bodyColor = '';
-        if (body) {
-            const root = document.documentElement;
-            // Check if body has the class 'dark'
-            if (document.body.classList.contains('dark')) {
-                
-            // Get the CSS variable value from body.dark
-            bodyColor = getComputedStyle(document.body).getPropertyValue('--app-color-notification');
-        } else {
-            
-            // Get the CSS variable value from root
-            bodyColor = getComputedStyle(root).getPropertyValue('--app-color-notification');
-        }
-            // Style reset for the iframe
-            body.style.fontFamily = "Roboto, sans-serif";
-            body.style.overflowY = "hidden";
-            body.style.color = bodyColor.trim();
+    // Fixing the content of the iframe: app font, theme colours, links in a new tab
+    function fixIframeContent(){
+        const doc = iframe?.contentDocument;
+        const html = doc?.documentElement;
+        if (!doc || !html) return;
 
-            // Adding a base tag to the iframe to open links in a new tab instead of inside the iframe
-            const baseTag = document.createElement('base');
+        // body inherits the :root value and body.dark overrides it, so this follows the current theme
+        const themeStyles = getComputedStyle(document.body);
+        const textColor = themeStyles.getPropertyValue('--app-color-notification').trim() || themeStyles.color;
+        const linkColor = themeStyles.getPropertyValue('--ion-color-primary').trim() || textColor;
+
+        html.style.fontFamily = "Roboto, sans-serif";
+        html.style.overflowY = "hidden";
+
+        // Force the email into the app's light/dark theme: many emails hard-code e.g. black text or
+        // white table backgrounds, which become unreadable in dark mode. Images are kept;
+        // background colours/images are dropped.
+        // Email templates often use their own `!important` colour rules, so ours get extra specificity:
+        // each :not(#_t) adds an ID's worth without matching anything special.
+        const s = ':not(#_t):not(#_t):not(#_t)';
+        let themeStyle = doc.getElementById('app-theme-override') as HTMLStyleElement | null;
+        if (!themeStyle) {
+            themeStyle = doc.createElement('style');
+            themeStyle.id = 'app-theme-override';
+            (doc.head ?? html).appendChild(themeStyle);
+        }
+        themeStyle.textContent = `
+            html${s}, body${s} { background: transparent !important; color: ${textColor} !important; }
+            body *${s} { color: inherit !important; -webkit-text-fill-color: currentColor !important; background-color: transparent !important; background-image: none !important; }
+            body a${s}, body a *${s} { color: ${linkColor} !important; }
+        `;
+
+        // Inline `style="color: … !important"` beats any stylesheet, and old-school colour attributes
+        // (<font color>, bgcolor, <body text>) are common in emails: strip colour styling at the source.
+        for (const el of doc.querySelectorAll<HTMLElement>('[style], [color], [bgcolor], [text]')) {
+            for (const prop of ['color', '-webkit-text-fill-color', 'background', 'background-color', 'background-image']) {
+                el.style?.removeProperty(prop);
+            }
+            el.removeAttribute('color');
+            el.removeAttribute('bgcolor');
+            el.removeAttribute('text');
+        }
+
+        // Adding a base tag to the iframe to open links in a new tab instead of inside the iframe
+        if (!doc.querySelector('base')) {
+            const baseTag = doc.createElement('base');
             baseTag.target = '_blank';
-            body.appendChild(baseTag);
+            (doc.head ?? html).appendChild(baseTag);
         }
     }
 
@@ -90,7 +125,7 @@
 </script>
 
 
-<div aria-hidden on:click ={() => {inlineModalOpen = true}} class="card-link">
+<div aria-hidden onclick={() => {inlineModalOpen = true}} class="card-link">
     <div class="notification-card">
         <div class="row-header">
             <div class="left-col">
@@ -111,82 +146,187 @@
 
 <!-- Modal which displays when clicked, showing the detailed contents of the notification -->
 <ion-modal
+      bind:this={modalEl}
+      class="mail-sheet"
       is-open={inlineModalOpen}
       initial-breakpoint={0.5}
       {breakpoints}
       handle-behavior="cycle"
-      on:ionModalDidDismiss={inlineModalDismissed}>
-      <ion-content >
-            <div class="mainContainer">
-                <ion-item-group>
-                    <ion-item lines="none">
-                        <ion-text>
-                            <h2>{notification.subject}</h2>
-                        </ion-text>
-                    </ion-item>
-                    <div class="context-chips ion-padding-horizontal">
-                        <ion-chip style="flex-shrink: 2;" outline color={option.colour}>
-                            <ion-avatar>
-                                <img alt="Service logo" src={option.logo} />
-                            </ion-avatar>
-                            <ion-label style="overflow:hidden; white-space: nowrap;">
-                                {#if notification.email}
-                                    <a href="mailto:{notification.email}" style="text-decoration: none; color: inherit;">
-                                        {notification.sender}
-                                    </a>
-                                {:else}
-                                    {notification.sender}
-                                {/if}
-                            </ion-label>
-                        </ion-chip>
-                        {#if notification.url}
-                            <ion-chip color="primary" on:click={()=>{window.location = notification.url}} aria-hidden>
-                                <ion-icon icon={open} ></ion-icon>
-                                <ion-label>{$t('notifications.open')}</ion-label>
-                            </ion-chip>
-                        {/if}
-                    </div>
-                    <ion-item-divider>
-                        <ion-label>{$t('notifications.description')} </ion-label>
-                      </ion-item-divider>                    
-                    <ion-item lines="none" class="item-text-wrap ion-no-padding">
-                        <iframe bind:this={iframe}
-                        title="Body"
-                        srcdoc={content}
-                        src="about:blank"
-                        style="width: 100%; border: none;"/>
-                    </ion-item>
-                    <ion-item-divider >
-                        <ion-label>{$t('notifications.date')}: {notification.dateReceived.toLocaleString()}</ion-label>
-                      </ion-item-divider> 
-                </ion-item-group>
+      onionModalWillPresent={fixIframeContent}
+      onionModalDidDismiss={inlineModalDismissed}>
+      <ion-header class="ion-no-border">
+            <div class="sheet-header">
+                <ion-button class="round-btn neutral" fill="solid" onclick={() => { inlineModalOpen = false; }} aria-label={$t('common.cancel')}>
+                    <ion-icon slot="icon-only" icon={close}></ion-icon>
+                </ion-button>
+                <div class="sheet-titles">
+                    <h2>{notification.subject}</h2>
+                    <span>{timeSinceDate(notification.dateReceived, getLocale())}</span>
+                </div>
+                {#if notification.url}
+                    <ion-button class="round-btn primary" fill="solid" onclick={() => { window.location = notification.url; }} aria-label={$t('notifications.open')}>
+                        <ion-icon slot="icon-only" icon={open}></ion-icon>
+                    </ion-button>
+                {:else}
+                    <span class="round-btn-spacer"></span>
+                {/if}
             </div>
-        </ion-content>
-    </ion-modal>
+      </ion-header>
+      <ion-content class="sheet-body">
+            <!-- Sender -->
+            <section class="group sender-card">
+                <div class="icon-wrapper {option.cssClass}">
+                    <img alt="Service logo" src={option.logo} />
+                </div>
+                <div class="sender-info">
+                    <span class="sender">{notification.sender}</span>
+                    {#if notification.email}
+                        <a class="sender-email" href="mailto:{notification.email}">{notification.email}</a>
+                    {/if}
+                    <span class="full-date">{notification.dateReceived.toLocaleString(getLocale(), { dateStyle: 'medium', timeStyle: 'short' })}</span>
+                </div>
+            </section>
+
+            <!-- Body -->
+            <section class="group mail-body">
+                <iframe bind:this={iframe}
+                    title={$t('notifications.description')}
+                    srcdoc={content}
+                    src="about:blank"></iframe>
+            </section>
+      </ion-content>
+</ion-modal>
 
     <style>
-        .ellipse-no-wrap {
+        /* ---------- Detail sheet (same style as the calendar event modal) ---------- */
+        .mail-sheet {
+            --border-radius: 1.5rem;
+            --background: var(--ion-background-color, #fff);
+            --box-shadow: rgba(100, 100, 111, 0.2) 0px -7px 29px 0px;
+        }
+
+        .mail-sheet ion-header {
+            background: var(--ion-background-color, #fff);
+        }
+
+        .sheet-header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.25rem 1rem 0.75rem;
+        }
+
+        .sheet-titles {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 0;
+            text-align: center;
+        }
+
+        .sheet-titles h2 {
+            margin: 0;
+            max-width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--ion-text-color);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            overflow-wrap: anywhere;
+        }
+
+        .sheet-titles span {
+            margin-top: 0.15rem;
+            font-size: 0.85rem;
+            color: var(--ion-color-step-600, #999);
+        }
+
+        .round-btn {
+            --border-radius: 50%;
+            --padding-start: 0;
+            --padding-end: 0;
+            --box-shadow: none;
+            width: 1.9rem;
+            height: 1.9rem;
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        .round-btn-spacer {
+            width: 1.9rem; /* keeps the title centred when there is no "open" button */
+        }
+
+        .round-btn.neutral {
+            --background: var(--ion-color-step-100, #e6e6e6);
+            --background-activated: var(--ion-color-step-200, #ccc);
+            --color: var(--ion-color-step-700, #4d4d4d);
+        }
+
+        .round-btn.primary {
+            --background: var(--ion-color-primary);
+            --color: var(--ion-color-primary-contrast, #fff);
+        }
+
+        .sheet-body {
+            /* card surface: white on the light grey sheet, step-50 in dark mode */
+            --group-bg: #fff;
+            --background: var(--ion-background-color, #fff);
+            --padding-start: 1rem;
+            --padding-end: 1rem;
+            --padding-bottom: 2rem;
+        }
+
+        :global(body.dark) .sheet-body {
+            --group-bg: var(--ion-color-step-50, #1e1e1e);
+        }
+
+        .group {
+            margin-bottom: 1rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: var(--group-bg);
+        }
+
+        .sender-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 0.9rem;
+        }
+
+        .sender-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            min-width: 0;
+        }
+
+        .sender-email {
+            font-size: 0.85rem;
+            color: var(--ion-color-primary);
+            text-decoration: none;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .mainContainer {
-            padding: 0.5rem;
+        .full-date {
+            font-size: 0.78rem;
+            color: var(--ion-color-medium);
         }
 
-        .date {
-            font-size: smaller !important;
+        .mail-body {
+            padding: 0.25rem 0.5rem;
         }
 
-        ion-chip {
-            margin: 0rem !important;
-        }
-
-        .context-chips{
-            display: flex;
-            flex-direction: row;
-            gap: 1rem;
+        .mail-body iframe {
+            display: block;
+            width: 100%;
+            border: none;
         }
 
         .notification-card {

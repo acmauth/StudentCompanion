@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Invalid count value: -1 -->
 <script lang="ts">
   	import IonTabs from '$lib/components/shared/AristomateTabBar.svelte';
 	import { home, homeOutline, restaurantOutline, restaurant, mapOutline, calendarClearOutline, calendarClear, map, statsChart, statsChartOutline } from 'ionicons/icons';

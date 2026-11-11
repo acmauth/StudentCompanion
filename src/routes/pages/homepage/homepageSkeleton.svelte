@@ -7,12 +7,12 @@
 		<div class="info-container">
 			<div class="header">
 				<div class="greeting-skeleton">
-					<ion-skeleton-text animated style="width: 55%; height: 0.85rem;" />
-					<ion-skeleton-text animated style="width: 75%; height: 1.1rem; margin-top: 0.5rem;" />
+					<ion-skeleton-text animated style="width: 55%; height: 0.85rem;"></ion-skeleton-text>
+					<ion-skeleton-text animated style="width: 75%; height: 1.1rem; margin-top: 0.5rem;"></ion-skeleton-text>
 				</div>
 			</div>
 			<div class="avatar-skeleton-container">
-				<ion-skeleton-text animated style="width: 3rem; height: 3rem; border-radius: 50%;" />
+				<ion-skeleton-text animated style="width: 3rem; height: 3rem; border-radius: 50%;"></ion-skeleton-text>
 			</div>
 		</div>
 
@@ -20,24 +20,24 @@
 		<div class="wallet-card-skeleton">
 			<div class="card-header">
 				<div class="department-info">
-					<ion-skeleton-text animated style="width: 60%; height: 0.9rem;" />
-					<ion-skeleton-text animated style="width: 80%; height: 0.75rem; margin-top: 0.5rem;" />
+					<ion-skeleton-text animated style="width: 60%; height: 0.9rem;"></ion-skeleton-text>
+					<ion-skeleton-text animated style="width: 80%; height: 0.75rem; margin-top: 0.5rem;"></ion-skeleton-text>
 				</div>
-				<ion-skeleton-text animated style="width: 1.8rem; height: 1.8rem; border-radius: 0.75rem;" />
+				<ion-skeleton-text animated style="width: 1.8rem; height: 1.8rem; border-radius: 0.75rem;"></ion-skeleton-text>
 			</div>
 			<div class="stats-container">
 				<div class="stat-item">
-					<ion-skeleton-text animated style="width: 3.25rem; height: 3.25rem; border-radius: 50%; flex-shrink: 0;" />
+					<ion-skeleton-text animated style="width: 3.25rem; height: 3.25rem; border-radius: 50%; flex-shrink: 0;"></ion-skeleton-text>
 					<div class="stat-text">
-						<ion-skeleton-text animated style="width: 2.5rem; height: 0.9rem;" />
-						<ion-skeleton-text animated style="width: 3.5rem; height: 0.7rem; margin-top: 0.35rem;" />
+						<ion-skeleton-text animated style="width: 2.5rem; height: 0.9rem;"></ion-skeleton-text>
+						<ion-skeleton-text animated style="width: 3.5rem; height: 0.7rem; margin-top: 0.35rem;"></ion-skeleton-text>
 					</div>
 				</div>
 				<div class="stat-item">
-					<ion-skeleton-text animated style="width: 3.25rem; height: 3.25rem; border-radius: 50%; flex-shrink: 0;" />
+					<ion-skeleton-text animated style="width: 3.25rem; height: 3.25rem; border-radius: 50%; flex-shrink: 0;"></ion-skeleton-text>
 					<div class="stat-text">
-						<ion-skeleton-text animated style="width: 2.5rem; height: 0.9rem;" />
-						<ion-skeleton-text animated style="width: 3.5rem; height: 0.7rem; margin-top: 0.35rem;" />
+						<ion-skeleton-text animated style="width: 2.5rem; height: 0.9rem;"></ion-skeleton-text>
+						<ion-skeleton-text animated style="width: 3.5rem; height: 0.7rem; margin-top: 0.35rem;"></ion-skeleton-text>
 					</div>
 				</div>
 			</div>
@@ -49,7 +49,7 @@
 		<div class="service-buttons-grid">
 			{#each { length: 3 } as _}
 				<div class="service-button-skeleton">
-					<ion-skeleton-text animated style="width: 1.5rem; height: 1.5rem; border-radius: 50%;" />
+					<ion-skeleton-text animated style="width: 1.5rem; height: 1.5rem; border-radius: 50%;"></ion-skeleton-text>
 				</div>
 			{/each}
 		</div>
@@ -58,27 +58,27 @@
 	<!-- Events / No-events Section -->
 	<div class="no-events-skeleton">
 		<div class="no-events-info">
-			<ion-skeleton-text animated style="width: 2.5rem; height: 2.5rem; border-radius: 50%; flex-shrink: 0;" />
-			<ion-skeleton-text animated style="width: 8rem; height: 0.95rem;" />
+			<ion-skeleton-text animated style="width: 2.5rem; height: 2.5rem; border-radius: 50%; flex-shrink: 0;"></ion-skeleton-text>
+			<ion-skeleton-text animated style="width: 8rem; height: 0.95rem;"></ion-skeleton-text>
 		</div>
-		<ion-skeleton-text animated style="width: 5.5rem; height: 2rem; border-radius: 0.6rem; flex-shrink: 0;" />
+		<ion-skeleton-text animated style="width: 5.5rem; height: 2rem; border-radius: 0.6rem; flex-shrink: 0;"></ion-skeleton-text>
 	</div>
 
 	<!-- Updates Section -->
 	<div class="updates-section">
 		<div class="updates-header">
-			<ion-skeleton-text animated style="width: 30%; height: 1.125rem;" />
-			<ion-skeleton-text animated style="width: 1.6rem; height: 1.6rem; border-radius: 50%;" />
+			<ion-skeleton-text animated style="width: 30%; height: 1.125rem;"></ion-skeleton-text>
+			<ion-skeleton-text animated style="width: 1.6rem; height: 1.6rem; border-radius: 50%;"></ion-skeleton-text>
 		</div>
 		<div class="timeline-skeleton">
 			{#each { length: 2 } as _}
 				<div class="tl-row-skeleton">
-					<ion-skeleton-text animated style="width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;" />
+					<ion-skeleton-text animated style="width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;"></ion-skeleton-text>
 					<div class="course-details-skeleton">
-						<ion-skeleton-text animated style="width: 70%; height: 0.9rem;" />
-						<ion-skeleton-text animated style="width: 40%; height: 0.7rem; margin-top: 0.4rem;" />
+						<ion-skeleton-text animated style="width: 70%; height: 0.9rem;"></ion-skeleton-text>
+						<ion-skeleton-text animated style="width: 40%; height: 0.7rem; margin-top: 0.4rem;"></ion-skeleton-text>
 					</div>
-					<ion-skeleton-text animated style="width: 2rem; height: 1.5rem; border-radius: 0.7rem; flex-shrink: 0;" />
+					<ion-skeleton-text animated style="width: 2rem; height: 1.5rem; border-radius: 0.7rem; flex-shrink: 0;"></ion-skeleton-text>
 				</div>
 			{/each}
 		</div>

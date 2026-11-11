@@ -8,21 +8,31 @@
 	import type { course } from '$lib/types/courseType';
 	import type { AveragesResult, Registration } from '$types/grades';
 
-	export let subjects: number;
-	export let passedSubjects: number;
-	export let flip: () => void;
-	export let subjectsJSON: course[];
-	export let registrationsInDegree: Registration[];
+	interface Props {
+		subjects: number;
+		passedSubjects: number;
+		flip: () => void;
+		subjectsJSON: course[];
+		registrationsInDegree: Registration[];
+	}
+
+	let {
+		subjects,
+		passedSubjects,
+		flip,
+		subjectsJSON,
+		registrationsInDegree
+	}: Props = $props();
 
 	// A single semester has no progression to show.
-	$: showChart = Object.keys(gpaPerSemester(registrationsInDegree)).length > 1;
+	let showChart = $derived(Object.keys(gpaPerSemester(registrationsInDegree)).length > 1);
 
-	let gradesObject = {
+	let gradesObject = $state({
 		average: 0,
 		weightedAverage: 0,
 		grades: [] as number[],
 		ects: 0
-	};
+	});
 
 	/**
 	 * js-circle-progress measures its stroke width in a microtask, before our ::part
@@ -59,21 +69,21 @@
 		{#if !subjects}
 			<ion-text>{$t('progress.no_courses_found')}</ion-text>
 		{:else}
-			<circle-progress use:remeasureRadius max={subjects} value={passedSubjects} />
+			<circle-progress use:remeasureRadius max={subjects} value={passedSubjects}></circle-progress>
 		{/if}
 			<div class="stat_tiles">
 				<div class="stat_tile ion-activatable ripple-parent">
-					<ion-ripple-effect/>
+					<ion-ripple-effect></ion-ripple-effect>
 					<span class="stat_value">{gradesObject.weightedAverage}</span>
 					<span class="stat_label">{$t('progress.grade_ects')}</span>
 				</div>
 				<div class="stat_tile ion-activatable ripple-parent">
-					<ion-ripple-effect/>
+					<ion-ripple-effect></ion-ripple-effect>
 					<span class="stat_value">{gradesObject.average}</span>
 					<span class="stat_label">{$t('progress.grade_simple')}</span>
 				</div>
 				<div class="stat_tile ion-activatable ripple-parent">
-					<ion-ripple-effect/>
+					<ion-ripple-effect></ion-ripple-effect>
 					<span class="stat_value">{gradesObject.ects}</span>
 					<span class="stat_label">ECTS</span>
 				</div>
@@ -86,7 +96,7 @@
 							registrations: registrationsInDegree,
 							title: $t('progress.average_evolution')
 						}}
-					/>
+					></canvas>
 				</div>
 			{/if}
 			 </div>

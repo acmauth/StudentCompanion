@@ -12,7 +12,7 @@
             <ion-accordion-group expand="compact">
                
                     <ion-item slot="header" color="light">
-                        <ion-skeleton-text />
+                        <ion-skeleton-text></ion-skeleton-text>
                     </ion-item>
                     <h3 class="teachers" slot="content">
                         <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
@@ -22,22 +22,22 @@
 
             <!-- Other skeleton items for course info -->
             <ion-item>
-                <ion-skeleton-text />
+                <ion-skeleton-text></ion-skeleton-text>
                 <ion-skeleton-text slot="end" animated style="width: 40%"></ion-skeleton-text>
             </ion-item>
 
             <ion-item>
-                <ion-skeleton-text />
+                <ion-skeleton-text></ion-skeleton-text>
                 <ion-skeleton-text slot="end" animated style="width: 40%"></ion-skeleton-text>
             </ion-item>
 
             <ion-item>
-                <ion-skeleton-text />
+                <ion-skeleton-text></ion-skeleton-text>
                 <ion-skeleton-text slot="end" animated style="width: 40%"></ion-skeleton-text>
             </ion-item>
 
             <ion-item>
-                <ion-skeleton-text />
+                <ion-skeleton-text></ion-skeleton-text>
                 <ion-skeleton-text slot="end" animated style="width: 40%"></ion-skeleton-text>
             </ion-item>
         </ion-list>

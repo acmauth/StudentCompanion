@@ -10,7 +10,11 @@
 		gradeYear: { name: string } | null;
 	}
 
-	export let course: CourseDetails;
+	interface Props {
+		course: CourseDetails;
+	}
+
+	let { course }: Props = $props();
 </script>
 
 <div class="containerFlex">

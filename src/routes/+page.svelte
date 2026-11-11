@@ -51,7 +51,7 @@
 <ion-grid class="ion-text-center center-grid">
 	<img src={Logo} alt="Aristomate logo" class="pop-up-image" style="width: 80%" />
 	<br />
-	<ion-spinner name="dots" color="secondary" style="scale: 150%;" />
+	<ion-spinner name="dots" color="secondary" style="scale: 150%;"></ion-spinner>
 </ion-grid>
 
 <style>

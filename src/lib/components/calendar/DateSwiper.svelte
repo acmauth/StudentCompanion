@@ -1,5 +1,7 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+  import { run } from 'svelte/legacy';
+
+    import { onMount, untrack } from 'svelte';
     import { register } from 'swiper/element/bundle';
     import { getDayByIndex } from '$lib/components/schedule/day/days';
 	  import { t, locale, locales, getLocale} from "$lib/i18n";
@@ -8,16 +10,16 @@
     let previousWeek;
     let currentWeek;
     let nextWeek;
-    let weeks: Date[] = [];
-    let swiperActiveIndex: number;
-    export let activeDate: Date;
-    let swiperEl: any;
+    let weeks: Date[] = $state([]);
+    let swiperActiveIndex: number = $state();
+  interface Props {
+    activeDate: Date;
+  }
+
+  let { activeDate = $bindable() }: Props = $props();
+    let swiperEl: any = $state();
     let isProgrammaticUpdate = false;
 
-    // Watch for external changes to activeDate and update swiper
-    $: if (swiperEl && activeDate) {
-        updateSwiperToDate(activeDate);
-    }
 
     function updateSwiperToDate(date: Date) {
         if (!swiperEl) return;
@@ -141,6 +143,16 @@
             swiperEl.swiper.slideTo(swiperEl?.swiper.clickedIndex);
         });
 
+    });
+    // Watch for external changes to activeDate and update swiper
+    // Depends only on swiperEl/activeDate; untrack so the weeks/swiperActiveIndex that
+    // updateSwiperToDate() reads and writes (also written on swipe) don't re-trigger it.
+    run(() => {
+        const el = swiperEl;
+        const date = activeDate;
+        if (el && date) {
+            untrack(() => updateSwiperToDate(date));
+        }
     });
 </script>
 

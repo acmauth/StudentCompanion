@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
     import { tweened } from 'svelte/motion';
     import { cubicOut } from 'svelte/easing';
 
@@ -6,30 +8,50 @@
     const CIRC = 2 * Math.PI * R;  // 351.86
     const HALF = Math.PI * R;       // 175.93 — the visible arc length
 
-    export let value: number = 0;
-    export let color: string = 'var(--ion-color-primary, #378ADD)';
-    export let trackColor: string = 'var(--ion-color-light-shade, #e5e7eb)';
-    export let strokeWidth: number = 13;
-    export let trend: string | null = null;
 
-    export let centerLabel: string = '';
-    export let leftLabel: string = '';
-    export let rightLabel: string = '';
-    export let rightValue: string = '';
-    export let rightDesc: string = '';
-    export let bottomLabel: string = '';
+    interface Props {
+        value?: number;
+        color?: string;
+        trackColor?: string;
+        strokeWidth?: number;
+        trend?: string | null;
+        centerLabel?: string;
+        leftLabel?: string;
+        rightLabel?: string;
+        rightValue?: string;
+        rightDesc?: string;
+        bottomLabel?: string;
+    }
 
-    $: pct = Math.min(Math.max(Math.round(value), 0), 100);
-    $: targetDrawn = HALF * (pct / 100);
-    $: hasCenter = centerLabel.trim() !== '';
-    $: hasStack = rightValue !== '' || rightDesc !== '';
-    $: gaugeW = 80;
-    $: gaugeH = 41;
+    let {
+        value = 0,
+        color = 'var(--ion-color-primary, #378ADD)',
+        trackColor = 'var(--ion-color-light-shade, #e5e7eb)',
+        strokeWidth = 13,
+        trend = null,
+        centerLabel = '',
+        leftLabel = '',
+        rightLabel = '',
+        rightValue = '',
+        rightDesc = '',
+        bottomLabel = ''
+    }: Props = $props();
+
+    let pct = $derived(Math.min(Math.max(Math.round(value), 0), 100));
+    let targetDrawn = $derived(HALF * (pct / 100));
+    let hasCenter = $derived(centerLabel.trim() !== '');
+    let hasStack = $derived(rightValue !== '' || rightDesc !== '');
+    let gaugeW = $state(80);
+    
+    let gaugeH = $state(41);
+    
 
     // Start at 0 (empty arc) and tween to the real drawn length.
     // Reactive set also handles smooth re-animation when `value` changes after mount.
     const animatedDrawn = tweened(0, { duration: 900, easing: cubicOut });
-    $: animatedDrawn.set(targetDrawn);
+    run(() => {
+        animatedDrawn.set(targetDrawn);
+    });
 </script>
 
 <div class="pc-wrapper">

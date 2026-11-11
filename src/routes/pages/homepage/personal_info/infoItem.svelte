@@ -12,24 +12,41 @@
 	import AvatarPreview from '$src/lib/avatar/AvatarPreview.svelte';
 	import { avatarStore } from '$stores/avatar.store';
 
-	export let gender: String;
-	export let inscriptionYear: String;
-	export let username: String;
-	export let familyName: String;
-	export let givenName: String;
-	export let aem: String;
-	export let apm: String;
-	export let birthDate: String;
-	export let email: String;
-	export let departmentName: String;
-	export let semester: String;
-	export let study_level: String;
+	interface Props {
+		gender: String;
+		inscriptionYear: String;
+		username: String;
+		familyName: String;
+		givenName: String;
+		aem: String;
+		apm: String;
+		birthDate: String;
+		email: String;
+		departmentName: String;
+		semester: String;
+		study_level: String;
+	}
 
-	$: semesterLabel = semester //? `${semester}` : '';
+	let {
+		gender,
+		inscriptionYear,
+		username,
+		familyName,
+		givenName,
+		aem,
+		apm,
+		birthDate,
+		email,
+		departmentName,
+		semester,
+		study_level
+	}: Props = $props();
+
+	let semesterLabel = $derived(semester) //? `${semester}` : '';
 
 	type InfoField = { icon?: string; image?: string; label: string; value: String; copyable?: boolean };
 
-	$: rows = (
+	let rows = $derived((
 		[
 			[{ image: universityLogo, label: $t('homepage.institution'), value: $t('homepage.university') }],
 			[{ icon: fingerPrintOutline, label: $t('homepage.apm'), value: apm, copyable: true }],
@@ -47,7 +64,7 @@
 		] as InfoField[][]
 	)
 		.map((row) => row.filter((field) => !!field.value))
-		.filter((row) => row.length > 0);
+		.filter((row) => row.length > 0));
 
 	async function showToast(toast: ToastOptions) {
 		const toast_ = await toastController.create(toast);
@@ -72,7 +89,7 @@
 
 <ion-card class="profile-card">
 	<div class="profile-header">
-		<div class="avatar_button" on:click={() => {navController.push(AvatarBuilder)}} aria-hidden>
+		<div class="avatar_button" onclick={() => {navController.push(AvatarBuilder)}} aria-hidden>
 			<!-- <img class="avatar" alt="man" src={gender == 'Α' ? man : woman} /> -->
 			 <div class="avatar">
 				<AvatarPreview size={64} config={$avatarStore}/>
@@ -89,12 +106,12 @@
 			<div class="profile-row-group">
 				{#each row as field}
 					{#if field.copyable}
-						<div class="profile-row ion-activatable" role="button" tabindex="0" on:click={() => writeToClipboard(field.value)} on:keydown={(e) => e.key === 'Enter' && writeToClipboard(field.value)}>
+						<div class="profile-row ion-activatable" role="button" tabindex="0" onclick={() => writeToClipboard(field.value)} onkeydown={(e) => e.key === 'Enter' && writeToClipboard(field.value)}>
 							<div class="profile-row-icon">
 								{#if field.image}
 									<img src={field.image} alt="" class="profile-row-logo" />
 								{:else}
-									<ion-icon icon={field.icon} />
+									<ion-icon icon={field.icon}></ion-icon>
 								{/if}
 							</div>
 							<div class="profile-row-text">
@@ -103,8 +120,8 @@
 								{/if}
 								<span class="profile-row-value">{field.value}</span>
 							</div>
-							<ion-icon class="profile-row-copy" icon={copyOutline} />
-							<ion-ripple-effect />
+							<ion-icon class="profile-row-copy" icon={copyOutline}></ion-icon>
+							<ion-ripple-effect></ion-ripple-effect>
 						</div>
 					{:else}
 						<div class="profile-row">
@@ -112,7 +129,7 @@
 								{#if field.image}
 									<img src={field.image} alt="" class="profile-row-logo" />
 								{:else}
-									<ion-icon icon={field.icon} />
+									<ion-icon icon={field.icon}></ion-icon>
 								{/if}
 							</div>
 							<div class="profile-row-text">

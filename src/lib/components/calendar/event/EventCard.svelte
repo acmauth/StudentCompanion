@@ -1,21 +1,33 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { EventType} from './Event';
 	import type { Event } from './Event';
 	import { longpress } from './EventCard';
 	import { ellipse } from 'ionicons/icons';
 	
-	export let eventItem: Event;
-	export let selectedEvent: Event | null;
-	export let modalOpen: boolean;
-	export let deleteModalOpen: boolean;
-	export let activeDate: Date;
+	interface Props {
+		eventItem: Event;
+		selectedEvent: Event | null;
+		modalOpen: boolean;
+		deleteModalOpen: boolean;
+		activeDate: Date;
+	}
+
+	let {
+		eventItem,
+		selectedEvent = $bindable(),
+		modalOpen = $bindable(),
+		deleteModalOpen = $bindable(),
+		activeDate = $bindable()
+	}: Props = $props();
 	
-	let isPastDate: boolean = false;
-	let isTest: boolean = false;
-	let isAssignment: boolean = false;
-	let isTask: boolean = false;
-	let isClass: boolean = false;
-	let isOther: boolean = false;
+	let isPastDate: boolean = $state(false);
+	let isTest: boolean = $state(false);
+	let isAssignment: boolean = $state(false);
+	let isTask: boolean = $state(false);
+	let isClass: boolean = $state(false);
+	let isOther: boolean = $state(false);
 
 	function handleClick() {
 		selectedEvent = eventItem;
@@ -27,7 +39,7 @@
 		deleteModalOpen = true;
 	}
 
-	$: {
+	run(() => {
 		isPastDate = false;
 		// Due to the fact that start/end slots of an event object refer to the date of their first instance (e.g. a weekly event), 
 		// an event must be marked as past iff either it the active date is previous than today or if it's today and the start time 
@@ -42,18 +54,18 @@
 		isTask = eventItem.type == EventType.TASK;
 		isClass = eventItem.type == EventType.CLASS;
 		isOther = eventItem.type == EventType.OTHER;
-	};
+	});;
 
 </script>
 
 
-<div use:longpress on:longpress={handleHold} on:click={handleClick} aria-hidden>
+<div use:longpress onlongpress={handleHold} onclick={handleClick} aria-hidden>
 	<ion-card class="eventCard" aria-hidden href="">
 		<div class="eventCardContents">
 
 			<div class="eventMainInformation">
 				<div class="eventTypeDot">
-					<ion-icon icon={ellipse} class="dummy {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null} {isOther? 'other' : null}"/>
+					<ion-icon icon={ellipse} class="dummy {isPastDate? 'pastDate' : null} {isAssignment? 'assignment' : null} {isClass? 'class' : null} {isTest? 'test' : null} {isTask? 'task' : null} {isOther? 'other' : null}"></ion-icon>
 				</div>
 				<div class="eventContent">
 					<ion-label class="eventHeader {isPastDate? 'pastDate' : null}">{eventItem.title}</ion-label>

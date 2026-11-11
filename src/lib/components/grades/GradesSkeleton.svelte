@@ -5,7 +5,7 @@
   <ion-card-header>
     <ion-card-title>
       <h2>
-        <ion-skeleton-text animated style="width: 100%" />
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
       </h2>
     </ion-card-title>
 
@@ -16,13 +16,13 @@
     <ion-list>
       <div class="courseDetails">
         <ion-label class="ion-padding-start">
-          <ion-skeleton-text animated style="width: 100%" />
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
         </ion-label>
 		
 
         <ion-item lines="none">
           <ion-label class="ion-text-wrap">
-            <ion-skeleton-text animated style="width: 100%" />
+            <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
           </ion-label>
 
           <ion-text class="ion-padding-left ion-padding-start">
@@ -30,27 +30,27 @@
         </ion-item>
 
         <ion-label class="ion-padding-bottom ion-padding-start">
-          <ion-skeleton-text animated style="width: 100%" />
+          <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
         </ion-label>
 
 		<ion-label class="ion-padding-bottom ion-padding-start">
-			<ion-skeleton-text animated style="width: 100%" />
+			<ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
 		  </ion-label>
 
 		  <ion-label class="ion-padding-bottom ion-padding-start">
-			<ion-skeleton-text animated style="width: 100%" />
+			<ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
 		  </ion-label>
 
 		  <ion-label class="ion-padding-bottom ion-padding-start">
-			<ion-skeleton-text animated style="width: 100%" />
+			<ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
 		  </ion-label>
 
 		  <ion-label class="ion-padding-bottom ion-padding-start">
-			<ion-skeleton-text animated style="width: 100%" />
+			<ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
 		  </ion-label>
 
 		  <ion-label class="ion-padding-bottom ion-padding-start">
-			<ion-skeleton-text animated style="width: 100%" />
+			<ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
 		  </ion-label>
 		
       </div>
@@ -66,15 +66,15 @@
 
   <ion-item>
     <ion-thumbnail slot="end">
-      <ion-skeleton-text />
+      <ion-skeleton-text></ion-skeleton-text>
    </ion-thumbnail>
 
   <ion-label>
       <p>
-          <ion-skeleton-text animated style="width: 80%" />
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
       </p>
       <p>
-          <ion-skeleton-text animated style="width: 80%" />
+          <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
      </p>
 
   </ion-label>

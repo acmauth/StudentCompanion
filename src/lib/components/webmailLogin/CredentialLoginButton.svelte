@@ -21,7 +21,7 @@
 </script>
 
 {#if $autheticationFlag == false}
-    <ion-chip mode="ios" color="dark" on:click={showLoginAlert} aria-hidden>
+    <ion-chip mode="ios" color="dark" onclick={showLoginAlert} aria-hidden>
         <ion-icon icon={keySharp} color="dark"></ion-icon>
         <ion-label>{$t("settings.webmail")}</ion-label>
     </ion-chip>
