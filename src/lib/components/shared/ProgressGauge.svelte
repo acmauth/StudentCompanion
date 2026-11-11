@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import { tweened } from 'svelte/motion';
     import { cubicOut } from 'svelte/easing';
 
@@ -49,7 +47,7 @@
     // Start at 0 (empty arc) and tween to the real drawn length.
     // Reactive set also handles smooth re-animation when `value` changes after mount.
     const animatedDrawn = tweened(0, { duration: 900, easing: cubicOut });
-    run(() => {
+    $effect.pre(() => {
         animatedDrawn.set(targetDrawn);
     });
 </script>

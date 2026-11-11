@@ -27,7 +27,7 @@
     let option = $derived(OPTIONS[notification.type] ?? OPTIONS.undefined);
 
 
-    let iframe: HTMLIFrameElement = $state();
+    let iframe: HTMLIFrameElement | undefined = $state();
     let inlineModalOpen = $state(false);
     let breakpoints = [0, 0.5, 1];
     
@@ -46,7 +46,7 @@
 
     // Adding an event listener to the iframe to set the height of the iframe to the content of the iframe
     onMount(() => {
-        iframe.addEventListener('load', onMailLoad);
+        iframe?.addEventListener('load', onMailLoad);
     });
 
 

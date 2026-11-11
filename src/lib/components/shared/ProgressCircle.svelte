@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
 
@@ -41,7 +39,7 @@
   // Start fully "empty" (offset = full circumference) and tween to the real value.
   // Reactive set also handles smooth re-animation when `value` changes after mount.
   const animatedOffset = tweened(CIRC, { duration: 900, easing: cubicOut });
-  run(() => {
+  $effect.pre(() => {
     animatedOffset.set(targetOffset);
   });
 </script>

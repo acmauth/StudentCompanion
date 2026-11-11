@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
 	import { untrack } from 'svelte';
 
 	import { averages } from '$lib/functions/gradeAverages/averages';
@@ -243,7 +242,7 @@
 
 	// Re-fetch only when the locale changes. untrack: getInfo() reads (and fetchUniversisEvents writes)
 	// $EventStore, which would otherwise become a dependency and re-run this endlessly.
-	run(() => {
+	$effect.pre(() => {
 		const currentLocale = $locale;
 		untrack(() => refreshInfo(currentLocale));
 	});

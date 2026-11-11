@@ -22,7 +22,7 @@
     // Canvas options
     let L: any;
     let map: any;
-    let mapContainer: HTMLElement = $state();
+    let mapContainer: HTMLElement | undefined = $state();
     let selectedFeatureLayerGroup: any;
     let markerClusterGroup: any;
     let disableDoubleTapDragZoom: (() => void) | undefined;
@@ -32,7 +32,7 @@
     // activeRoom = {"faculty":"ΣΧΟΛΗ ΓΕΩΠΟΝΙΚΗ","bldName":"ΓΕΩΠΟΝΙΑΣ ΚΑΙ ΔΑΣΟΛΟΓΙΑΣ ΚΤΙΡΙΟ Β","school":"Σχολή Γεωπονίας, Δασολογίας και Φυσικού Περιβάλλοντος","floor":"O01","isMezz":false,"roomType":"Αμφιθέατρο","roomCode":"A02","roomName":"ΑΜΦΙΘΕΑΤΡΟ Β","roomId":"001-004-O01-0-A02","capacity":"176","bldId":"19","hasGis":false};
     
     //stateful variables
-    let searchBox: HTMLInputElement = $state();
+    let searchBox: HTMLInputElement | undefined = $state();
     let isLoading = false; 
     let searchQuery = $state("");
     let selectedDepartment: Department|undefined = $state(undefined);
@@ -147,7 +147,7 @@
         await tick(); // Wait for the UI to update with the new building selection, which will update the searchableRooms list
         await tick();
         if (searchableRooms.length > 0) {
-            searchBox.focus();
+            searchBox?.focus();
         }
     }
 

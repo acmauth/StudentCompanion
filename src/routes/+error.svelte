@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { page } from "$app/stores";
+    import { page } from '$app/state';
     import { goto } from "$app/navigation";
     import { homeOutline, mailOutline, logOut } from 'ionicons/icons';
     import Logo from '$lib/assets/Logo_full.png';
     import { t } from '$lib/i18n';
     import { invalidateAuth } from '$lib/globalFunctions/logOut';
     
-    let errorStatus = $derived($page.status);
-    let errorMessage = $derived($page.error?.message || "An unexpected error occurred.");
+    let errorStatus = $derived(page.status);
+    let errorMessage = $derived(page.error?.message || "An unexpected error occurred.");
 </script>
 
 <ion-content class="ion-padding">
@@ -28,7 +28,7 @@
         </ion-button>
 
         
-        <ion-button mode='ios' expand="block" fill="outline" href="mailto:aristomate@auth.gr?subject={$t('errorPage.reportButton')} - Error {errorStatus}&body=Περιγραφή προβλήματος:%0D%0A%0D%0AError: {errorStatus}%0D%0AMessage: {errorMessage}%0D%0AURL: {$page.url}" class="report-button">
+        <ion-button mode='ios' expand="block" fill="outline" href="mailto:aristomate@auth.gr?subject={$t('errorPage.reportButton')} - Error {errorStatus}&body=Περιγραφή προβλήματος:%0D%0A%0D%0AError: {errorStatus}%0D%0AMessage: {errorMessage}%0D%0AURL: {page.url}" class="report-button">
             <ion-icon slot="start" icon={mailOutline}></ion-icon>
             {$t('errorPage.reportButton')}
         </ion-button>
@@ -40,7 +40,7 @@
         <ion-text color="medium">
             <p class="error-details">
                 Error {errorStatus}: {errorMessage}
-                <br/> {$page.url}
+                <br/> {page.url}
             </p>
         </ion-text>
     </ion-grid>

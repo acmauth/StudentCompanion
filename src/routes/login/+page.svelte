@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import OIDCClient from '$lib/authentication/OIDCClient';
 	import { App } from '@capacitor/app';
 	import { handleLogin, handleCallback, handleLogout } from './login';
@@ -68,10 +68,10 @@
     }
 
     // Handle callback from OAuth server (web)
-    if ($page.url.searchParams.has('code') || $page.url.searchParams.has('error')) {
+    if (page.url.searchParams.has('code') || page.url.searchParams.has('error')) {
 		loading = true;
 		startCallbackTimeout();
-      	await handleCallback($page.url.href);
+      	await handleCallback(page.url.href);
     }
 
     // Handle callback from deep link (mobile)

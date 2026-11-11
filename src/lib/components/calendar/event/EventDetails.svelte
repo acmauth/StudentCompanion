@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
-
     import type {Event} from '$components/calendar/event/Event';
     import {EventType, EventRepeatType, getEventTypeValue, getEventRepeatTypeValue, getEventRepeatTypeCycleValue} from '$components/calendar/event/Event';
     import { t, getLocale } from "$lib/i18n";
@@ -52,7 +50,7 @@
         return () => observer.disconnect();
     });
 
-    run(() => {
+    $effect.pre(() => {
         if (copyEvent.repeat !== EventRepeatType.NEVER) {
             copyEvent.repeatInterval = parseInt(String(copyEvent.repeatInterval ?? 1));
         }

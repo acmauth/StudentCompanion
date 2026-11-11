@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
     import { untrack } from 'svelte';
 
     import SwipeCard from "./swipeCard.svelte";
@@ -23,7 +22,7 @@
     let recentlyDismissedItem: number;
     let allRecentItems: RecentItem[] = [];
     let showUndoButton = $state(false);
-    let undoTimer: ReturnType<typeof setTimeout> = $state();
+    let undoTimer: ReturnType<typeof setTimeout> | undefined = $state();
 
     const UNDO_TIMEOUT_MS = 8000;
     const OUTSIDE_INTERACTION_EVENTS = ['touchstart', 'touchmove'] as const;
@@ -69,8 +68,7 @@
         dismissedItems.update(() => []);
     }
 
-    function handleDeleteCard(event: CustomEvent<number>) {
-        const deletedId = event.detail;
+    function handleDeleteCard(deletedId: number) {
         recentItems = recentItems.filter(item => item.id !== deletedId);
         dismissItem(deletedId);
         showUndoButton = true;
@@ -116,7 +114,7 @@
     }
 
     // Depends only on showUndoButton (untrack keeps undoTimer & co. out of the dependencies)
-    run(() => {
+    $effect.pre(() => {
         const show = showUndoButton;
         untrack(() => {
             if (show) {
@@ -157,7 +155,7 @@
                     <div class="tl-row" animate:flip={{ duration: 500, easing: quintOut }}>
                         <div class="tl-left" class:last={isLast}></div>
                         <div class="tl-card">
-                            <SwipeCard id={item.id} on:delete-card={handleDeleteCard}>
+                            <SwipeCard id={item.id} onDeleteCard={handleDeleteCard}>
                                 {#if item.type === "recentGrade"}
                                     <RecentGrade subject={item.content} />
                                 {:else}

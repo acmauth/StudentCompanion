@@ -1,6 +1,4 @@
 <script>
-	import { run } from 'svelte/legacy';
-
     import { mail, chevronForwardCircle } from 'ionicons/icons';
 	import { webmailLoggedIn as autheticationFlag} from '$components/webmailLogin/userCredsFlagStore';
     import { t } from "$lib/i18n";
@@ -8,7 +6,7 @@
 	import Config from "$src/app.config";
 
 	let loginModalOpen = $state(false);
-	run(() => {
+	$effect.pre(() => {
 		if ($autheticationFlag) loginModalOpen = false;
 	});
 

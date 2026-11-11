@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
-
-  const bubble = createBubbler();
     import { mount, onMount } from "svelte";
     import type { Component } from "svelte";
     import { defineCustomElement } from "@ionic/core/components/ion-nav.js";
@@ -46,8 +43,8 @@
     swipeGesture
   }: Props = $props();
   
-    let ionNav: HTMLElement = $state();
-    let rootComponent: HTMLDivElement = $state();
+    let ionNav: HTMLElement | undefined = $state();
+    let rootComponent: HTMLDivElement | undefined = $state();
     let newElement: HTMLDivElement;
 
     const createHTMLCompFromSvelte = (component: Component<any>, componentProps = {}): HTMLDivElement => {
@@ -104,8 +101,5 @@
     {animation}
     root-params={rootParams}
     swipe-gesture={swipeGesture}
-    root={rootComponent}
-    onionNavDidChange={bubble('ionNavDidChange')}
-    onionNavWillChange={bubble('ionNavWillChange')}
-></ion-nav>
+    root={rootComponent}></ion-nav>
   

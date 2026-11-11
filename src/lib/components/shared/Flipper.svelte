@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { onMount } from 'svelte';
 
 	interface Props {
@@ -18,16 +16,13 @@
 	}: Props = $props();
 
 	// The flip class is what we use to toggle the flip effect.
-	let flipClass = $state(false);
-	run(() => {
-		flipClass = flipped;
-	});
+	let flipClass = $derived(flipped);
 
 	// We need to keep track of the flip container and the front
 	// and back children so we can update the height of the flip card.
-	let flipContainer: HTMLElement = $state();
-	let frontChild: HTMLElement = $state();
-	let backChild: HTMLElement = $state();
+	let flipContainer: HTMLElement | undefined = $state();
+	let frontChild: HTMLElement | undefined = $state();
+	let backChild: HTMLElement | undefined = $state();
 
 	// Re-measure whenever either face changes size, rather than having the
 	// content tell us it grew. This catches every cause — content loading in, a
@@ -36,8 +31,8 @@
 		if (!reactToHeight) return;
 
 		const observer = new ResizeObserver(() => updateHeight(flipClass));
-		observer.observe(frontChild);
-		observer.observe(backChild);
+		if (frontChild) observer.observe(frontChild);
+		if (backChild) observer.observe(backChild);
 
 		return () => observer.disconnect();
 	});
@@ -68,7 +63,7 @@
 	// When the flip class changes, update the height of the flip card.
 	// Check if we should update the height of the flip card when it's toggled.
 	// Sometimes we don't want to do this, that's why it's optional.
-	run(() => {
+	$effect.pre(() => {
 		if (reactToHeight) updateHeight(flipClass);
 	});
 </script>

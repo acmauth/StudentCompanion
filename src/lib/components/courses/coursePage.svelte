@@ -28,7 +28,7 @@
     let courseDetails: NewCourseType|null = null;
     let statistics: ExamStatistics|null = null;
     let instructors: InstructorType[] = $state([]);
-    let topTen: number = $state();
+    let topTen: number | undefined = $state();
 
     
     const courseIdLiteral = encodeURIComponent(`'${decodeURIComponent(id).replace(/'/g, "''")}'`);
@@ -211,7 +211,7 @@
             {/if}
 
             <!-- Gamification chip -->
-            {#if topTen < 10}
+            {#if topTen !== undefined && topTen < 10}
                 <ion-chip color="success"><ion-icon src={trophyOutline} style="font-size:1rem"></ion-icon>{$t('course.top10Percent')}</ion-chip>
             {/if}
             

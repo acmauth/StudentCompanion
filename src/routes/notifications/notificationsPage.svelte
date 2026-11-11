@@ -15,12 +15,12 @@
 	import { t } from '$lib/i18n';
 	import SubPageHeader from '$components/shared/subPageHeader.svelte';
 
-	let refresher: HTMLIonRefresherElement = $state();
+	let refresher: HTMLIonRefresherElement | undefined = $state();
 	let notificationsPromise = $state(gatherNotifications());
 
 	const refreshNotifications = async () => {
 		notificationsPromise = gatherNotifications({ refresh: true });
-		refresher.complete();
+		refresher?.complete();
 	};
 
 	const randList = (length: number) => {

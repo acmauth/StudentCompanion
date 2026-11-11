@@ -84,7 +84,7 @@
 
 <!-- <ion-page> -->
 <IonPage>
-    <SubPageHeader title={$t('avatarBuilder.title')} stackedNav showSave={changed} saveLabel={$t('common.save')} on:save={save} />
+    <SubPageHeader title={$t('avatarBuilder.title')} stackedNav showSave={changed} saveLabel={$t('common.save')} onSave={save} />
     <ion-content fullscreen scroll-y={false}>
         <div class="editor">
             <div class="preview" style="background: {config.colors.background}">

@@ -2,7 +2,6 @@
     import { Capacitor } from '@capacitor/core';
     import { chevronBack, arrowBack } from 'ionicons/icons';
     import {navController} from '$components/shared/StackedNav';
-    import { createEventDispatcher } from 'svelte';
     import { fly } from 'svelte/transition';
     import { backOut } from 'svelte/easing';
     interface Props {
@@ -12,6 +11,7 @@
         stackedNav?: boolean; // Are we in a stacked navigation scenario, or are we using the browser's history?
         showSave?: boolean; // Show a Save action on the right of the header
         saveLabel?: string;
+        onSave?: () => void; // Called when the Save action is tapped (before navigating back)
     }
 
     let {
@@ -20,10 +20,9 @@
         genericHeader = false,
         stackedNav = false,
         showSave = false,
-        saveLabel = ''
+        saveLabel = '',
+        onSave
     }: Props = $props();
-
-    const dispatch = createEventDispatcher();
 
     // Going back; if stackedNav is true, we use the navController to pop the page, otherwise we use the browser's history
     function goBack(){
@@ -36,7 +35,7 @@
 
     // Commit the save, then navigate back the same way the back button does
     function onSaveClick(){
-        dispatch('save');
+        onSave?.();
         goBack();
     }
 

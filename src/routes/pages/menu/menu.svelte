@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
 
 	import { onMount } from 'svelte';
 	import { register } from 'swiper/element/bundle';
@@ -115,7 +114,7 @@
 	let next = ''; // Next meal
 	let color = $state('success');
 	let menuDate = '';
-	let closedForHolidays = $state(false);
+	let closedForHolidays = $derived(message === $t('menu.closedForHolidays'));
 
 	// Seasonal emoji shown when the cafeteria is closed for holidays
 	const month = date.getMonth(); // 0 = January, 11 = December
@@ -301,8 +300,8 @@
 
 	onMount(loadCrowd);
 
-	// Initialize swiper when data is loaded
-	run(() => {
+	// Initialize swiper when data is loaded (only dataLoaded is tracked; the setTimeout body isn't)
+	$effect.pre(() => {
 		if (dataLoaded && typeof window !== 'undefined') {
 			// Wait for the DOM to be ready and data to be loaded
 			setTimeout(() => {
@@ -342,9 +341,6 @@
 		}
 	});
 
-	run(() => {
-		closedForHolidays = message === $t('menu.closedForHolidays');
-	});
 	let todayKey = $derived(today_weekday.toLowerCase());
 </script>
 

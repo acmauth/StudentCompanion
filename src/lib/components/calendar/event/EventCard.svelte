@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { EventType} from './Event';
 	import type { Event } from './Event';
 	import { longpress } from './EventCard';
@@ -22,12 +20,17 @@
 		activeDate = $bindable()
 	}: Props = $props();
 	
-	let isPastDate: boolean = $state(false);
-	let isTest: boolean = $state(false);
-	let isAssignment: boolean = $state(false);
-	let isTask: boolean = $state(false);
-	let isClass: boolean = $state(false);
-	let isOther: boolean = $state(false);
+	// Due to the fact that start/end slots of an event object refer to the date of their first instance (e.g. a weekly event),
+	// an event must be marked as past iff either it the active date is previous than today or if it's today and the start time
+	// of the event is past the current time.
+	// include in the condition below:
+	// new Date(activeDate).getDate() < new Date().getDate() || new Date(activeDate).getDate() == new Date().getDate() &&
+	let isPastDate = $derived(new Date().getTime() >= new Date(eventItem.slot.start).getTime());
+	let isTest = $derived(eventItem.type == EventType.TEST);
+	let isAssignment = $derived(eventItem.type == EventType.ASSIGNMENT);
+	let isTask = $derived(eventItem.type == EventType.TASK);
+	let isClass = $derived(eventItem.type == EventType.CLASS);
+	let isOther = $derived(eventItem.type == EventType.OTHER);
 
 	function handleClick() {
 		selectedEvent = eventItem;
@@ -38,23 +41,6 @@
 		selectedEvent = eventItem;
 		deleteModalOpen = true;
 	}
-
-	run(() => {
-		isPastDate = false;
-		// Due to the fact that start/end slots of an event object refer to the date of their first instance (e.g. a weekly event), 
-		// an event must be marked as past iff either it the active date is previous than today or if it's today and the start time 
-		// of the event is past the current time.
-		if (new Date().getTime() >=  new Date(new Date(eventItem.slot.start)).getTime()) {
-			// include in the above condition:
-			// new Date(activeDate).getDate() < new Date().getDate() || new Date(activeDate).getDate() == new Date().getDate() &&
-			isPastDate = true;
-		}
-		isTest = eventItem.type == EventType.TEST;
-		isAssignment = eventItem.type == EventType.ASSIGNMENT;
-		isTask = eventItem.type == EventType.TASK;
-		isClass = eventItem.type == EventType.CLASS;
-		isOther = eventItem.type == EventType.OTHER;
-	});;
 
 </script>
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
     import { onDestroy } from 'svelte';
 
     import { close, checkmark } from 'ionicons/icons';
@@ -55,7 +54,7 @@
 
     // When the parent passes a different event, clone it into tmpEvent.
     // This triggers the {#key} block to recreate EventDetails with fresh state.
-    run(() => {
+    $effect.pre(() => {
         if (event && event.id !== lastEventId) {
             lastEventId = event.id;
             tmpEvent = JSON.parse(JSON.stringify(event));

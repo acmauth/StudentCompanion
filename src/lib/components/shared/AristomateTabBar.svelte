@@ -1,7 +1,7 @@
 <script>
 	// @ts-nocheck
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { Capacitor } from '@capacitor/core';
 	import { Keyboard } from '@capacitor/keyboard';
 	import { afterNavigate, goto } from '$app/navigation';
@@ -32,8 +32,8 @@
 	let tabBarLine;
 
 	// we need relative path for the goto to function properly and to allow for relative tab definitions
-	const { pathname } = $page.url;
-	const searchParams = $page.url.searchParams;
+	const { pathname } = page.url;
+	const searchParams = page.url.searchParams;
 	const cleanedPath = pathname.replace(/\/+$/, ''); // Strip trailing slashes, so we can get the last part of the path correctly. (e.g. /pages/homepage/ -> /pages/homepage)
 	const pathSplit = cleanedPath.split('/');
 	let currentTabName = $state(pathSplit[pathSplit.length - 1]); // we don't want to use at(-1) because of old browsers

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
 
 	import { qrStore } from '$lib/components/wallet/qrStore';
 	import { wallet, close } from 'ionicons/icons';
@@ -160,16 +159,13 @@
 		return progression[progression.length - 2]?.trend ?? null;
 	}
 
-	let flipClass = $state(false);
-	run(() => {
-		flipClass = isFlipped;
-	});
+	let flipClass = $derived(isFlipped);
 
 	// We need to keep track of the flip container and the front
 	// and back children so we can update the height of the flip card.
-	let flipContainer: HTMLElement = $state();
-	let frontChild: HTMLElement = $state();
-	let backChild: HTMLElement = $state();
+	let flipContainer: HTMLElement | undefined = $state();
+	let frontChild: HTMLElement | undefined = $state();
+	let backChild: HTMLElement | undefined = $state();
 
 	// This function updates the height of the flip card when it's toggled.
 	const updateHeight = (status: Boolean) => {
@@ -209,7 +205,7 @@
 	// When the flip class changes, update the height of the flip card.
 	// Check if we should update the height of the flip card when it's toggled.
 	// Sometimes we don't want to do this, that's why it's optional.
-	run(() => {
+	$effect.pre(() => {
 		if (reactToHeight) updateHeight(flipClass);
 	});
 	let passedPct = $derived(numSubjects > 0 ? Math.round((numPassedSubjects / numSubjects) * 100) : 0);

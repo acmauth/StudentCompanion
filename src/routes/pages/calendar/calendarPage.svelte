@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
-
     import { onMount } from 'svelte';
     import { add } from 'ionicons/icons';
     import { EventStore } from '$lib/components/calendar/event/EventStore';
@@ -16,7 +14,7 @@
     import { deleteEventNotifications, deleteSingleEventNotification } from '$src/lib/calendarNotifications/notificationFunctions';
     import { getLocale, t } from '$lib/i18n';
     import { buildCalendarWeeks, type DayObject, type SelectedDay, getNextMonth, getPreviousMonth, fetchUniversisEvents } from '$lib/components/calendar/calendarUtils';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
     let currentDate = new Date();
     let month = $state(currentDate.getMonth());
@@ -25,7 +23,14 @@
     let weeks: DayObject[][] = $state([]);
     let selectedDay: SelectedDay | null = $state(null);
     let activeDate = $state(new Date());
-    let eventList: Event[] = $state([]);
+    // Events of the selected day, in start-time order
+    let eventList: Event[] = $derived(
+        $EventStore
+            .filter((item) => isCurrentDay(item, activeDate) && !isInactiveDate(activeDate, item))
+            .sort((a, b) =>
+                new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1
+            )
+    );
 
     // Event creation and editing
     let selectedEvent: Event | null = $state(null);
@@ -47,14 +52,6 @@
             notify: false,
             notifyTime: 1
     })
-
-    run(() => {
-    eventList = $EventStore
-          .filter((item) => isCurrentDay(item, activeDate) && !isInactiveDate(activeDate, item))
-          .sort((a, b) =>
-              new Date(a.slot.start).getTime() < new Date(b.slot.start).getTime() ? -1 : 1
-          );
-  });
 
     function buildCalendar() {
         weeks = buildCalendarWeeks(month, year, $EventStore);
@@ -175,8 +172,8 @@
     onMount(async () => {
         let initialDate = currentDate;
 
-        const launchEventIdStr = $page.url.searchParams.get("showEventId")
-        const launchEventDateStr = $page.url.searchParams.get("eventDate")
+        const launchEventIdStr = page.url.searchParams.get("showEventId")
+        const launchEventDateStr = page.url.searchParams.get("eventDate")
 
         if (launchEventDateStr) {
             const launchEventDate: Date = new Date(decodeURIComponent(launchEventDateStr));

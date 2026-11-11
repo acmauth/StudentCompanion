@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
 	import GradesSkeleton from './GradesSkeleton.svelte';
 	import Flipper from '$components/shared/Flipper.svelte';
@@ -36,7 +34,6 @@
 
 	// Variables regarding grades and subjects
 	let semesterGroups: SemesterGroup[] = $state([]);
-	let filteredSubjects: SemesterGroup[] = $state([]);
 	let registrationsInDegree: Registration[] = $state([]);
 	let searchQuery = $state('');
 	let subjects = $state(0);
@@ -114,25 +111,23 @@
 	}
 
 	// Filter the results based on the searchQuery
-	run(() => {
-		if (searchQuery.length === 0) {
-			filteredSubjects = semesterGroups;
-		} else {
-			const allCourses = semesterGroups.reduce<course[]>((acc, curr) => acc.concat(curr.courses), []);
-			const fuse = new Fuse(allCourses, fuseOptions);
-			const searchResults = fuse.search(searchQuery);
+	let filteredSubjects: SemesterGroup[] = $derived.by(() => {
+		if (searchQuery.length === 0) return semesterGroups;
 
-			filteredSubjects = semesterGroups.map((semester) => {
-				return {
-					...semester,
-					courses: searchResults
-						.filter((result) =>
-							semester.courses.some((course) => course.course === result.item.course)
-						)
-						.map((result) => result.item)
-				};
-			});
-		}
+		const allCourses = semesterGroups.reduce<course[]>((acc, curr) => acc.concat(curr.courses), []);
+		const fuse = new Fuse(allCourses, fuseOptions);
+		const searchResults = fuse.search(searchQuery);
+
+		return semesterGroups.map((semester) => {
+			return {
+				...semester,
+				courses: searchResults
+					.filter((result) =>
+						semester.courses.some((course) => course.course === result.item.course)
+					)
+					.map((result) => result.item)
+			};
+		});
 	});
 </script>
 

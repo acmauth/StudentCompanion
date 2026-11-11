@@ -23,6 +23,8 @@
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@types/dompurify": "^3.0.5",
     "@types/sanitize-html": "^2.11.0",
+    "@typescript-eslint/eslint-plugin": "^8.72.2",
+    "@typescript-eslint/parser": "^8.72.2",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte": "^2.46.1",
@@ -96,6 +98,9 @@
     },
     "ionic-svelte": {
       "swiper": "^12.2.0"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.8"
     }
   }
 }

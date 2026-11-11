@@ -1,21 +1,24 @@
-<!-- @migration-task Error while migrating Svelte code: Invalid count value: -1 -->
 <script lang="ts">
-  	import IonTabs from '$lib/components/shared/AristomateTabBar.svelte';
+	import type { Snippet } from 'svelte';
+	import IonTabs from '$lib/components/shared/AristomateTabBar.svelte';
 	import { home, homeOutline, restaurantOutline, restaurant, mapOutline, calendarClearOutline, calendarClear, map, statsChart, statsChartOutline } from 'ionicons/icons';
 	import { onMount } from 'svelte';
 	import initializeNotifications from '$lib/-notifications/core';
 	import { webmailLoggedIn as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
 	import { handleChangedPermission } from '$lib/calendarNotifications/exactAlarmPermissionStore';
-	import { t } from '$lib/i18n';
+
+	let { children }: { children?: Snippet } = $props();
+
+	let activeTab = $state('homepage');
 
 	// Routes
-	$: restaurantIcon = activeTab === 'menu' ? restaurant : restaurantOutline;
-	$: mapIcon = activeTab === 'maps' ? map : mapOutline;
-	$: statsChartIcon = activeTab === 'grades' ? statsChart : statsChartOutline;
-	$: calendarIcon = activeTab === 'calendar' ? calendarClear : calendarClearOutline;
-	$: homeIcon = activeTab === "homepage" ? home : homeOutline;
+	let restaurantIcon = $derived(activeTab === 'menu' ? restaurant : restaurantOutline);
+	let mapIcon = $derived(activeTab === 'maps' ? map : mapOutline);
+	let statsChartIcon = $derived(activeTab === 'grades' ? statsChart : statsChartOutline);
+	let calendarIcon = $derived(activeTab === 'calendar' ? calendarClear : calendarClearOutline);
+	let homeIcon = $derived(activeTab === "homepage" ? home : homeOutline);
 
-	$: bottomNav = [
+	let bottomNav = $derived([
 		{
 			// WARNING: Translated labels cause race condition!!!!
 			// label: $t('navigation.maps'),
@@ -42,10 +45,7 @@
 			icon: calendarIcon,
 			tab: 'calendar'
 		}
-		
-	];
-
-	let activeTab = 'homepage';
+	]);
 
 	const handleTabChange = (event: any) => {
 		activeTab = event.detail.tab;
@@ -59,11 +59,11 @@
 		}
 
 		// reschedule calendar notifications if the exact alarm permission changes
-		handleChangedPermission(); 
-		});
+		handleChangedPermission();
+	});
 
 </script>
 
-	<IonTabs slot="bottom" tabs={bottomNav} ionTabsWillChange={logsStuff} ionTabsDidChange={handleTabChange}>
-	<slot />
+<IonTabs tabs={bottomNav} ionTabsWillChange={logsStuff} ionTabsDidChange={handleTabChange}>
+	{@render children?.()}
 </IonTabs>
