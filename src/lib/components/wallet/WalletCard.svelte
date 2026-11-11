@@ -142,7 +142,8 @@
 				trend: current.average > previous.average ? "up" : current.average == previous.average ? "stable" : "down" //  up, down, stable
 			};
 		});
-		return progression[progression.length - 2].trend ; // return the trend of the last semester
+		// return the trend of the last semester; null (no arrow) when there aren't enough semesters to compare
+		return progression[progression.length - 2]?.trend ?? null;
 	}
 
 	let flipClass = false;
@@ -167,7 +168,7 @@
 		}
 	};
 
-	let trend = null;
+	let trend: string | null = null;
 	let resizeObserver: ResizeObserver;
 
 	onMount(async() => {
@@ -176,7 +177,13 @@
 			if (frontChild) resizeObserver.observe(frontChild);
 			if (backChild) resizeObserver.observe(backChild);
 		}
-		trend = await estimateProgressTrend();
+		try {
+			trend = await estimateProgressTrend();
+		} catch (err) {
+			// The trend arrow is decorative: on missing/failed data show no arrow instead of throwing
+			console.warn('Could not estimate progress trend:', err);
+			trend = null;
+		}
 	});
 
 	onDestroy(() => {

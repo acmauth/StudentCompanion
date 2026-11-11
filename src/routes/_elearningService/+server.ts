@@ -11,12 +11,12 @@ export const GET: RequestHandler = async ({ url }) => {
     const password = url.searchParams.get('password');
 
 	if (!username || !password) {
-		throw error(400, 'Bad Request');
+		error(400, 'Bad Request');
 	}
     
 	const response = await elearningAuthenticator(username, password);
 	if (response.error) {
-		throw error(401, 'Unauthorized');
+		error(401, 'Unauthorized');
 	}
 
 	return new Response(JSON.stringify(response));

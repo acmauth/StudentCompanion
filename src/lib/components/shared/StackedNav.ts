@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { NavComponentWithProps, ComponentProps, NavComponent, NavOptions, TransitionDoneFn, ViewController } from "@ionic/core";
-import type { SvelteComponent } from "svelte";
+import { mount } from "svelte";
+import type { Component } from "svelte";
 import AristomateNav from "./_AristomateNav.svelte";
 import { Capacitor } from "@capacitor/core";
 
@@ -8,7 +9,7 @@ const StackedNav = AristomateNav;
 export default StackedNav;
 
 const createHTMLCompFromSvelte = (
-    component: new (...args: any) => SvelteComponent,
+    component: Component<any>,
     componentProps: { [key: string]: any } = {}
 ) => {
     const divWrapper = document.createElement('div');
@@ -27,7 +28,9 @@ const createHTMLCompFromSvelte = (
         // ionNav
     };
 
-    const svelteComponent = new component({
+    // mount() builds the DOM synchronously; the page's onMount callbacks run right after.
+    // No flushSync(): when push() is called from inside an effect it would drop those callbacks.
+    mount(component, {
         target: navContent,
         props
     });

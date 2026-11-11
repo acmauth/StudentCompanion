@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { afterUpdate, onMount } from "svelte";
-    import type { SvelteComponent } from "svelte";
+    import { mount, onMount } from "svelte";
+    import type { Component } from "svelte";
     import { defineCustomElement } from "@ionic/core/components/ion-nav.js";
 
     /**
@@ -32,7 +32,7 @@
     let rootComponent: HTMLDivElement;
     let newElement: HTMLDivElement;
 
-    const createHTMLCompFromSvelte = (component: SvelteComponent, componentProps = {}): HTMLDivElement => {
+    const createHTMLCompFromSvelte = (component: Component<any>, componentProps = {}): HTMLDivElement => {
         // Creating the content wrapper div
         const divWrapper = document.createElement("div");
         const contentID = "id" + Date.now() + Math.floor(Math.random()*10000) + "_wrapperDiv";
@@ -58,7 +58,9 @@
         };
   
         // Letting svelte magically fulfill that new div with content | Might need to pay attention to this
-        new component({
+        // mount() builds the DOM synchronously; the page's onMount callbacks run right after.
+        // Don't call flushSync() here: inside this onMount it drops the mounted page's onMount callbacks.
+        mount(component, {
             target: navContent,
             props,
         });

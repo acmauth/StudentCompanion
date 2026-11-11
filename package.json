@@ -9,8 +9,8 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
     "test": "npm run test:integration && npm run test:unit",
-    "lint": "prettier --plugin-search-dir . --check . && eslint .",
-    "format": "prettier --plugin-search-dir . --write .",
+    "lint": "prettier --check . && eslint .",
+    "format": "prettier --write .",
     "test:integration": "playwright test",
     "test:unit": "vitest"
   },
@@ -18,21 +18,22 @@
     "@capacitor/cli": "^8.0.0",
     "@playwright/test": "^1.28.1",
     "@svelte-put/qr": "^1.2.1",
-    "@sveltejs/adapter-static": "^2.0.3",
-    "@sveltejs/kit": "^1.20.4",
+    "@sveltejs/adapter-static": "^3.0.11",
+    "@sveltejs/kit": "^2.70.4",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@types/dompurify": "^3.0.5",
     "@types/sanitize-html": "^2.11.0",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-svelte": "^2.30.0",
-    "prettier": "^2.8.0",
-    "prettier-plugin-svelte": "^2.10.1",
-    "svelte": "^4.0.5",
-    "svelte-check": "^3.4.3",
-    "svelte-preprocess": "^5.0.4",
-    "typescript": "^5.0.0",
-    "vite": "^4.5.0",
-    "vitest": "^0.32.2"
+    "eslint-plugin-svelte": "^2.46.1",
+    "prettier": "^3.0.0",
+    "prettier-plugin-svelte": "^3.5.2",
+    "svelte": "^5.57.3",
+    "svelte-check": "^4.7.8",
+    "svelte-preprocess": "^6.0.5",
+    "typescript": "^5.3.3",
+    "vite": "^7.3.8",
+    "vitest": "^4.1.12"
   },
   "type": "module",
   "dependencies": {
@@ -59,9 +60,9 @@
     "@ionic/core": "^8.8.13",
     "@ionic/pwa-elements": "^3.2.2",
     "@protontech/jsmimeparser": "^3.0.1",
-    "@sveltejs/adapter-auto": "^2.1.0",
+    "@sveltejs/adapter-auto": "^7.0.1",
     "axios": "^1.5.1",
-    "axios-cookiejar-support": "^4.0.7",
+    "axios-cookiejar-support": "^7.0.0",
     "base64url": "^3.0.1",
     "capacitor-native-settings": "^8.1.0",
     "capacitor-plugin-safe-area": "^5.0.1",
@@ -73,7 +74,6 @@
     "fetch-cookie": "^2.1.0",
     "fuse.js": "^7.1.0",
     "html2canvas": "^1.4.1",
-    "imap-simple": "^5.1.0",
     "imapflow": "^1.0.158",
     "ionic-svelte": "^0.5.82",
     "ionicons": "^8.0.13",
@@ -86,8 +86,16 @@
     "qrcode": "^1.5.3",
     "svelte-persisted-store": "^0.7.0",
     "sveltekit-i18n": "^2.4.2",
-    "swiper": "^11.1.1",
+    "swiper": "^12.2.0",
     "tough-cookie": "^4.1.3",
-    "vite-plugin-node-polyfills": "^0.17.0"
+    "vite-plugin-node-polyfills": "^0.28.0"
+  },
+  "overrides": {
+    "@sveltejs/kit": {
+      "cookie": "^0.7.2"
+    },
+    "ionic-svelte": {
+      "swiper": "^12.2.0"
+    }
   }
 }

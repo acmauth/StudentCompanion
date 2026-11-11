@@ -1,10 +1,7 @@
 import * as authApi from "./functions";
 import type { BuildingInfo, Rooms, Department } from "./types";
 import Fuse from "fuse.js";
-import { registerPlugin } from '@capacitor/core';
 import appConfig from "$src/app.config";
-// Register the custom AppLauncher plugin 
-const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
 
 
 export type RoomWithBuilding = Rooms["rooms"][number] & { authBldId: string; hasGis?: boolean; X?: number; Y?:number };

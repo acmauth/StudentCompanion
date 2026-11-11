@@ -49,7 +49,7 @@
         /* background-color: #FBFBF9; */
         &::-webkit-scrollbar {
             display: none;
-        };  
+        }
 
     }
 

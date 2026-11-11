@@ -5,9 +5,7 @@
     import { onMount } from "svelte";
     import { darkMode } from '$src/lib/globalFunctions/darkMode';
     import { removeDiacritics } from '$lib/globalFunctions/removeDiacritics';
-    import { registerPlugin } from '@capacitor/core';
-
-    const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
+    import { AppLauncherPlugin } from '$lib/globalFunctions/appLauncher';
 
     $: isDarkMode = $darkMode;
 

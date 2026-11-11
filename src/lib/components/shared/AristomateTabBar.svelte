@@ -1,10 +1,10 @@
 <script>
 	// @ts-nocheck
 	import { onMount } from 'svelte';
-	import { navigating, page } from '$app/stores';
+	import { page } from '$app/stores';
 	import { Capacitor } from '@capacitor/core';
 	import { Keyboard } from '@capacitor/keyboard';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { navController } from "./StackedNav"
 
 	export let ionTabsDidChange = () => {};
@@ -29,17 +29,18 @@
 	let currentTabName = pathSplit[pathSplit.length - 1]; // we don't want to use at(-1) because of old browsers
 	let relativePath = cleanedPath.replace(currentTabName, '');
 
-	// we need to capture the router changes - to support a-href navigation and other stuff
-	$: if ($navigating && $navigating.to) {
-		tabs.forEach(async (tab) => {
-			if ($navigating.to.url.pathname.includes(relativePath + tab.tab)) {
-				currentTabName = tab.tab;
-				await goto($navigating.to.url);
-				controller.select(tab.tab);
-				moveTabBarLine(tab.tab);
-			}
-		});
-	}
+	// we need to capture the router changes - to support a-href navigation and other stuff.
+	// Sync the selected tab once a navigation has completed. (Calling goto() while
+	// $navigating is set re-triggers navigation endlessly under SvelteKit 2.)
+	afterNavigate(({ to }) => {
+		if (!to || !controller) return;
+		const tab = tabs.find((t) => to.url.pathname.includes(relativePath + t.tab));
+		if (tab) {
+			currentTabName = tab.tab;
+			controller.select(tab.tab);
+			moveTabBarLine(tab.tab);
+		}
+	});
 
 	onMount(() => {
 		// reassignment needed after onMount
@@ -88,6 +89,8 @@
 
 	function moveTabBarLine(tab) {
 		const tabButton = document.querySelector(`.tab_${tab}`);
+		// the tab bar may already be gone (e.g. redirected to /login before the delayed call runs)
+		if (!tabButton || !tabBarLine) return;
 		const tabButtonRect = tabButton.getBoundingClientRect();
 		const tabBarLineWidth = tabBarLine.clientWidth ? tabBarLine.clientWidth : 16;
 		const tabBar = document.querySelector('.tabbarmain');

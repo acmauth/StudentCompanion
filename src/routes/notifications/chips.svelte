@@ -52,7 +52,7 @@
         padding-right: 1rem;
         &::-webkit-scrollbar {
             display: none;
-        };
+        }
     }
 
 </style>

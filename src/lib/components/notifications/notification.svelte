@@ -1,16 +1,16 @@
 <script lang="ts">
-	import type { notification } from "./notifications";
+	import type { notification as NotificationData } from "./notifications";
     import universisLogo from "$images/universis.png";
     import elearningLogo from "$images/elearning.png";
     import aristomateLogo from "$images/aristomate.png";
     import webmailLogo from "$images/mail.png";
     import { open } from 'ionicons/icons';
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
-    import DOMPurify, { sanitize } from 'dompurify';
+    import DOMPurify from 'dompurify';
 	import { onMount } from "svelte";
     import { t, getLocale } from "$lib/i18n";
 
-    export let notification: notification;
+    export let notification: NotificationData;
 
     const OPTIONS: Record<string, {colour: string, logo: string, cssClass: string}> = {
         "universis": {colour: "tertiary", logo: universisLogo, cssClass: "universis"},

@@ -1,4 +1,5 @@
 <script lang='ts'>
+    import { tick } from 'svelte';
     import { sadOutline } from 'ionicons/icons';
     import { logOut } from '$lib/globalFunctions/logOut';
     import Dexie from 'dexie';

@@ -1,12 +1,12 @@
 import adapterAuto from '@sveltejs/adapter-auto';
 import adapterStatic from '@sveltejs/adapter-static';
-import preprocess from "svelte-preprocess";
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 const isProduction = process.env.NODE_ENV === 'production';
 console.log("isProduction", isProduction);
 
 const config = {
-	preprocess: preprocess(),
+	preprocess: vitePreprocess(),
 	kit: {
 		adapter: isProduction
 			? adapterStatic({
@@ -27,7 +27,7 @@ const config = {
 				$debug: "src/debug",
 			},
 csrf: {
-      checkOrigin: false,
+      trustedOrigins: ['*'],
     }
 
 	}

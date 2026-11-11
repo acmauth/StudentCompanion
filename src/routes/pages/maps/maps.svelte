@@ -11,7 +11,7 @@
     import buildingIcon from "./icons/building.svg"
     import buildingVague from "./icons/building_vague.svg"
     import MapFooter from "./MapFooter.svelte";
-	import { FuseResult } from "fuse.js";
+	import type { FuseResult } from "fuse.js";
     import markerIcon from '$lib/assets/marker.png';
     import { enableDoubleTapDragZoom } from "./doubleTapDragZoom";
 

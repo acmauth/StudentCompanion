@@ -4,7 +4,6 @@
 	import man from '$lib/assets/man.svg';
 	import { locationOutline, walletOutline, shield, settingsOutline, calendarOutline, shieldOutline, linkOutline, notificationsCircle, cloudOfflineOutline, barbellOutline, addOutline, ellipsisHorizontal } from 'ionicons/icons';
 	import woman from '$lib/assets/woman.svg';
-	import avatar from '$lib/assets/.svg';
 	import { register } from 'swiper/element/bundle';
 	import { navController } from '$components/shared/StackedNav';
 	import PersonalInfo from '$src/routes/pages/homepage/personal_info/personalInfo.svelte';
@@ -24,7 +23,8 @@
 	import Links from '$src/routes/pages/homepage/quick_links/quickLinks.svelte';
 	import Notifications from '$src/routes/notifications/notificationsPage.svelte';
 	import { fetchUniversisEvents } from '$lib/components/calendar/calendarUtils';
-	import { registerPlugin, Capacitor } from '@capacitor/core';
+	import { Capacitor } from '@capacitor/core';
+	import { AppLauncherPlugin } from '$lib/globalFunctions/appLauncher';
 	import { Browser } from '@capacitor/browser';
 	import { locale } from '$lib/i18n';
 	import AdBanner from './ad_banner.svelte';
@@ -32,9 +32,6 @@
 	import AvatarPreview from '$src/lib/avatar/AvatarPreview.svelte';
 	import { avatarStore } from '$stores/avatar.store';
 	import { AuthExpiredError } from '$lib/errors';
-
-	// Register the custom AppLauncher plugin
-	const AppLauncherPlugin = registerPlugin('AppLauncherPlugin');
 
 	register();
 	// Get upcoming events (next 3 events), resolving each repeated event to its
