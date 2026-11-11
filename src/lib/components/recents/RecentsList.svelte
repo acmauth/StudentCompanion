@@ -23,7 +23,7 @@
         return cachedItems ? (JSON.parse(cachedItems) as RecentItem[]).filter(item => !(item.id === 666)) : [];
     }
 
-    async function gatherRecentItems(): Promise<RecentItem[]> {
+    async function gatherRecentItems(refresh: boolean = false): Promise<RecentItem[]> {
         // Temporary ACM easter egg: CS undergraduates in years 1–2 only.
         const showACMNotification = neoUniversisGet(
             'Students/me?$expand=studyProgram($expand=studyLevel), department',
@@ -33,8 +33,8 @@
             && [1, 2, 3, 4].includes(Number(student?.semester))
         ).catch(() => false);
 
-        const notifications = await gatherNotifications({ days: 7 });
-        const recentGrades = await gatherRecentGrades();
+        const notifications = await gatherNotifications({ days: 7, refresh });
+        const recentGrades = await gatherRecentGrades(refresh);
 
         const recentItems: RecentItem[] = [
             ...recentGrades.map((recentGrade: any): RecentItem => ({
@@ -53,11 +53,30 @@
         return recentItems;
     }
 
-    const recentItemsFromCache = getCachedRecentItems();
+    // Show the cached items straight away, then the fresh ones once they arrive.
+    let recentItems: RecentItem[] = $state(getCachedRecentItems());
+    // RecentsDisplay reads its items only once, when created, so it is re-created
+    // (via {#key}) every time a new list arrives.
+    let version = $state(0);
+
+    async function load(refresh: boolean) {
+        try {
+            recentItems = await gatherRecentItems(refresh);
+            version++;
+        } catch (error) {
+            // Keep showing the current list if loading fails
+            console.warn('Could not load recent items:', error);
+        }
+    }
+
+    load(false);
+
+    /** Re-fetch the recent items, bypassing the caches (used by the homepage's pull-to-refresh). */
+    export async function refresh() {
+        await load(true);
+    }
 </script>
 
-{#await gatherRecentItems()}
-    <RecentsDisplay recentItems={recentItemsFromCache} {maxCards} />
-{:then recentItemsList}
-    <RecentsDisplay recentItems={recentItemsList} {maxCards} />
-{/await}
+{#key version}
+    <RecentsDisplay {recentItems} {maxCards} />
+{/key}

@@ -246,11 +246,26 @@
 		const currentLocale = $locale;
 		untrack(() => refreshInfo(currentLocale));
 	});
+
+	// Pull-to-refresh: re-fetch the recents (bypassing caches); the spinner stays until they've loaded
+	let recents: { refresh: () => Promise<void> } | undefined = $state();
+
+	async function handlePullRefresh(event: CustomEvent) {
+		try {
+			await recents?.refresh();
+		} finally {
+			(event.target as HTMLIonRefresherElement).complete();
+		}
+	}
 </script>
 
 <ion-page>
 
 	<ion-content id="homepage_content" fullscreen={false} >
+		<ion-refresher slot="fixed" onionRefresh={handlePullRefresh}>
+			<ion-refresher-content></ion-refresher-content>
+		</ion-refresher>
+
 		{#if loadError}
 		<ErrorLandingCard errorMsg={loadError} />
 		{:else if loading}
@@ -393,7 +408,7 @@
 				</div>
 			</div>
 			<div style="margin-top: 0.5rem;">
-				<RecentItems maxCards={6}/>
+				<RecentItems bind:this={recents} maxCards={6}/>
 			</div>
 		</div>
 		
