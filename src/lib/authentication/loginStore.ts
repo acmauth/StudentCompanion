@@ -20,5 +20,5 @@ export const loginStore = new CapacitorPersistedStore<LoginTokens>({
     id_token: "",
     refresh_token: "",
     expires_at: ""
-}, 'loginStore'
+}, 'loginStore', false
 );
