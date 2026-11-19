@@ -1,4 +1,3 @@
-import { Preferences } from "@capacitor/preferences";
 import Dexie from "dexie";
 import { Browser } from '@capacitor/browser'; 
 import { resetPersistedStores } from "$src/routes/persistedStoreDeclarations.js";
@@ -7,9 +6,11 @@ import { goto } from "$app/navigation";
 // Do we wanna log out? Let's clear our path
 export async function invalidateAuth(){
     let x = "https://oauth2.it.auth.gr/auth/realms/universis/protocol/openid-connect/logout" //?id_token_hint=" + get(loginStore).id_token;
+    // resetPersistedStores() removes only the logged-out user's own keys, so
+    // other users' stored contexts survive and are recovered on their next
+    // login. localStorage is cleared for app-level caches as before.
     await resetPersistedStores();
     localStorage.clear();
-    Preferences.clear();
     Dexie.delete('cachedData');
     await Browser.open({ url: x });
 }

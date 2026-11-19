@@ -9,7 +9,7 @@ export interface UserCreds {
 export const userCreds = new CapacitorPersistedStore({
     username: "",
     password: ""
-}, 'usercredentials')
+}, 'usercredentials', false)
 
 // Store for the user's tokens
 interface elearningCreds {
