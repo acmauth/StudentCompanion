@@ -138,7 +138,9 @@ class OIDCClient {
     const state = encodeURIComponent(btoa(JSON.stringify(
       {
         "production": this.config.isProduction,
-        "mobile": this.config?.isMobile
+        "mobile": this.config?.isMobile,
+        "ios": this.config?.isIOS,
+        "version": 1
       }
     )))
 
