@@ -3,5 +3,5 @@
     <string name="app_name">Aristomate</string>
     <string name="title_activity_main">Aristomate</string>
     <string name="package_name">studentCompanionUI.ionic.io</string>
-    <string name="custom_url_scheme">studentCompanionUI.ionic.io</string>
+    <string name="custom_url_scheme">app.aristomate.gr</string>
 </resources>
