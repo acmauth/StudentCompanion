@@ -11,6 +11,9 @@ PODS:
   - CapacitorClipboard (8.0.1):
     - Capacitor
   - CapacitorCordova (8.5.0)
+  - CapacitorFilesystem (8.1.3):
+    - Capacitor
+    - IONFilesystemLib (~> 1.1.1)
   - CapacitorKeyboard (8.0.5):
     - Capacitor
   - CapacitorLocalNotifications (8.3.1):
@@ -35,6 +38,7 @@ PODS:
     - Capacitor
   - CapawesomeCapacitorScreenshot (8.0.1):
     - Capacitor
+  - IONFilesystemLib (1.1.4)
   - mailcore2-ios (0.6.4)
   - OSBarcodeLib (2.2.0)
 
@@ -45,6 +49,7 @@ DEPENDENCIES:
   - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
   - "CapacitorClipboard (from `../../node_modules/@capacitor/clipboard`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorFilesystem (from `../../node_modules/@capacitor/filesystem`)"
   - "CapacitorKeyboard (from `../../node_modules/@capacitor/keyboard`)"
   - "CapacitorLocalNotifications (from `../../node_modules/@capacitor/local-notifications`)"
   - CapacitorNativeSettings (from `../../node_modules/capacitor-native-settings`)
@@ -61,6 +66,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - IONFilesystemLib
     - mailcore2-ios
     - OSBarcodeLib
 
@@ -77,6 +83,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/clipboard"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
+  CapacitorFilesystem:
+    :path: "../../node_modules/@capacitor/filesystem"
   CapacitorKeyboard:
     :path: "../../node_modules/@capacitor/keyboard"
   CapacitorLocalNotifications:
@@ -109,6 +117,7 @@ SPEC CHECKSUMS:
   CapacitorBrowser: 752e0208aa07c7aa63d1f7cde895a3e9519b2656
   CapacitorClipboard: c75fdaa6e622111119f35e7914ecfc67b05efecb
   CapacitorCordova: 9d3acbb574048e7167d2af127a0af2123e619f2f
+  CapacitorFilesystem: b2bbd84bb91c177906c9dbc252864cb71ab9957b
   CapacitorKeyboard: b6b0744890cdb1d9a96e2cafcc9253fdcc55de3b
   CapacitorLocalNotifications: e0747a329ddde3074d52dc74a003688af90e42be
   CapacitorNativeSettings: 3f12e9700e0a10cb5d0e22aec00de29d72589a12
@@ -121,9 +130,10 @@ SPEC CHECKSUMS:
   CapacitorToast: 408036fbd702120d3adde3980b740f3c0fb60c9e
   CapawesomeCapacitorAppUpdate: 48d12562b70d4490e820faac23cbf497ca025c98
   CapawesomeCapacitorScreenshot: 12d23f0773903de4e5b0b3fdebabef1d3813f826
+  IONFilesystemLib: e6610c2b260d15e4b9cb9d5e37a87095479b669e
   mailcore2-ios: 3ff0be2fa553d4da9c11d39c11d51863c768f24f
   OSBarcodeLib: aa520d51576362d0dfea290b82653e31df1a6fc4
 
-PODFILE CHECKSUM: 527a30a8b720cbb41c84b3cc2566059328cf7b3c
+PODFILE CHECKSUM: aece420b9d78a68f3cfc6b8544acdad08e622431
 
 COCOAPODS: 1.16.2
