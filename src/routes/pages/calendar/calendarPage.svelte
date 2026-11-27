@@ -203,18 +203,14 @@
 
 <ion-page>
 <ion-content fullscreen class="ion-no-padding" scroll-y={false}>
-    <ion-header collapse="condense" mode="ios">
+    <div slot="fixed" class="add-chip-wrap">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <ion-toolbar mode="md">
-            <ion-title size="large">{$t('schedule.title')}</ion-title>
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <ion-button style="font-size: 1rem;margin-inline-end:1rem;" slot="end" on:click={openNewEventModal} fill="clear">
-                <ion-icon icon={add} slot="icon-only"></ion-icon>
-            </ion-button>
-        </ion-toolbar>
-    </ion-header>
-    
+        <ion-button class="add-chip" shape="round" on:click={openNewEventModal}>
+            <ion-icon icon={add} slot="start"></ion-icon>
+            {$t('schedule.add_event')}
+        </ion-button>
+    </div>
+
     <div class="page-wrapper">
     <div class="container">
         <CalendarGrid
@@ -310,23 +306,60 @@
         height: 100%;
         overflow: hidden;
     }
+    .add-chip-wrap {
+        /* page already ends at the tab bar, so this is the gap above it */
+        position: absolute;
+        bottom: 1rem;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        pointer-events: none;
+    }
+    .add-chip {
+        pointer-events: auto;
+        margin: 0;
+        height: 2.75rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-transform: none;
+        letter-spacing: 0.01em;
+        /* liquid-glass: translucent primary tint over a blurred backdrop */
+        --background: rgba(var(--ion-color-primary-rgb), 0.18);
+        --background-activated: rgba(var(--ion-color-primary-rgb), 0.3);
+        --background-hover: rgba(var(--ion-color-primary-rgb), 0.24);
+        --color: var(--ion-color-primary);
+        --padding-start: 1.1rem;
+        --padding-end: 1.35rem;
+        --border-width: 1px;
+        --border-style: solid;
+        --border-color: rgba(var(--ion-color-primary-contrast-rgb), 0.1);
+        /* lifts the chip off event cards scrolling underneath */
+        --box-shadow: var(--shadow-md);
+    }
+    .add-chip::part(native) {
+        -webkit-backdrop-filter: blur(16px) saturate(180%);
+        backdrop-filter: blur(16px) saturate(180%);
+    }
+    .add-chip ion-icon {
+        font-size: 1.3rem;
+        margin-inline-end: 0.35rem;
+    }
     .container {
         width: 100%;
         height: 100%;
-        margin-top: -0.5rem;
         display: flex;
         flex-direction: column;
         overflow: hidden;
     }
     .events-section {
         flex: 1 1 0;
-        margin: 0;
+        margin: 0 1rem;
         padding: 1.25rem 0 0 0;
         display: flex;
         flex-direction: column;
-        background: var(--ion-color-light);
+        background: var(--ion-card-background, #fff);
         border-radius: 16px 16px 0 0;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         min-height: 0;
         overflow: hidden;
     }
@@ -346,7 +379,7 @@
         overflow-y: auto;
         flex: 1;
         /* margin-bottom: 3rem; */
-        padding: 0 1.25rem calc(1.25rem + var(--app-footer-height, 56px) + env(safe-area-inset-bottom, 0px)) 1.25rem;
+        padding: 0 0.75rem calc(1.25rem + var(--app-footer-height, 56px) + env(safe-area-inset-bottom, 0px)) 0.75rem;
         -webkit-overflow-scrolling: touch;
         touch-action: auto;
         scroll-padding-bottom: calc(var(--app-footer-height, 56px) + env(safe-area-inset-bottom, 0px));

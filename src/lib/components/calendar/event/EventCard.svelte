@@ -100,8 +100,8 @@
 		margin: 0;
 		padding: 0.75rem 1rem;
 		border: none;
-		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
-		background: var(--ion-color-step-50, #ffffff);
+		box-shadow: none !important;
+		background-color: var(--ion-background-color);
 		transition: all 0.2s ease;
 	}
 

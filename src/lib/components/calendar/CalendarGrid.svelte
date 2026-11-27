@@ -3,7 +3,7 @@
     import type { DayObject } from './calendarUtils';
     import { getWeekdayNames, isSelectedDay as checkIsSelectedDay, isToday as checkIsToday } from './calendarUtils';
     import type { SelectedDay } from './calendarUtils';
-    import { t, getLocale} from "$lib/i18n";
+    import { t, getLocale, locale } from "$lib/i18n";
     // removed alertController
 
     export let weeks: DayObject[][] = [];
@@ -115,12 +115,14 @@
     <ion-modal is-open={isDatePickerOpen} on:ionModalDidDismiss={() => isDatePickerOpen = false} style="--height: auto; --width: auto; --border-radius: 8px;">
         <ion-datetime
             presentation="month-year"
+            locale={$locale}
+            lang={$locale}
             value={getISOString(year, month)}
             min={minDate}
             max={maxDate}
             show-default-buttons={true}
-            done-text={$t('common.apply', 'Apply')}
-            cancel-text={$t('common.cancel', 'Cancel')}
+            done-text={$t('common.apply')}
+            cancel-text={$t('common.cancel')}
             mode="ios"
             on:ionChange={handleDateChange}
             on:ionCancel={() => isDatePickerOpen = false}
@@ -178,6 +180,9 @@
         text-align: center;
         gap: 0.5rem;
         margin-bottom: 0.5rem;
+        padding: 0.75rem 0.5rem;
+        background: var(--ion-card-background, #fff);
+        border-radius: 16px;
     }
     .day-name {
         font-weight: bold;
@@ -205,10 +210,9 @@
         font-weight: 600;
     }
     .day.selected {
-        background: var(--ion-color-light);
+        background: var(--ion-background-color, #fff);
         color: var(--ion-color-dark);
         font-weight: 600;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
     .day.selected.today {
         color: var(--ion-color-primary);
