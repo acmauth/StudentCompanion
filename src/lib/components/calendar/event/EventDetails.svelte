@@ -79,10 +79,10 @@
 </script>
 
 
-<ion-content force-overscroll class="sheet-body">
+<!-- Rendered inside BottomSheet (via EventModal), which provides the scrolling body -->
 
     <!-- Title & time -->
-    <section class="group">
+    <section class="sheet-group">
         <ion-item lines="full">
             <ion-input
                 class="title-input"
@@ -143,7 +143,7 @@
     </div>
 
     <!-- Details -->
-    <section class="group">
+    <section class="sheet-group">
         <ion-item lines="inset">
             <ion-icon slot="start" icon={locationOutline}></ion-icon>
             {#if copyEvent.location && copyEvent.locationCode}
@@ -203,7 +203,7 @@
     </section>
 
     <!-- Repeat & reminder -->
-    <section class="group">
+    <section class="sheet-group">
         <ion-item lines="inset">
             <ion-icon slot="start" icon={repeatOutline}></ion-icon>
             <ion-select id="repeatSelector" label={$t("event.isRepeated")} interface="popover" value={copyEvent.repeat} on:ionChange={(event)=>{copyEvent.repeat=event.detail.value;}}>
@@ -293,46 +293,25 @@
             {$t('event.delete')}
         </ion-button>
     {/if}
-</ion-content>
 
 
 <style>
-    .sheet-body {
-        /* card surface: white on the light grey sheet (like the homepage cards), step-50 in dark mode */
-        --group-bg: #fff;
-        --background: var(--ion-background-color, #fff);
-        --padding-start: 1rem;
-        --padding-end: 1rem;
-        --padding-bottom: 2rem;
-    }
-
-    :global(body.dark) .sheet-body {
-        --group-bg: var(--ion-color-step-50, #1e1e1e);
-    }
-
-    /* Rounded field groups instead of full-width divider rows */
-    .group {
-        margin-bottom: 1rem;
-        border-radius: 1rem;
-        overflow: hidden;
-        background: var(--group-bg);
-    }
-
-    /* :global so the rows rendered by DateTimeRow get the same styling */
-    .group :global(ion-item) {
+    /* The rounded .sheet-group card itself is styled by BottomSheet.
+       :global so the rows rendered by DateTimeRow get the same styling */
+    .sheet-group :global(ion-item) {
         --background: transparent;
         --border-color: var(--ion-color-step-150, #d9d9d9);
         --padding-start: 0.9rem;
         --inner-padding-end: 0.9rem;
     }
 
-    .group :global(ion-item > ion-icon[slot="start"]) {
+    .sheet-group :global(ion-item > ion-icon[slot="start"]) {
         margin-inline-end: 0.9rem;
         color: var(--ion-color-medium);
         font-size: 1.25rem;
     }
 
-    .group :global(ion-item.sub-item) {
+    .sheet-group :global(ion-item.sub-item) {
         --padding-start: 3.05rem; /* aligns with the text of the item above */
     }
 

@@ -5,8 +5,9 @@
     import aristomateLogo from "$images/aristomate.png";
     import webmailLogo from "$images/mail.png";
     import { open } from 'ionicons/icons';
+    import BottomSheet from "$components/shared/BottomSheet.svelte";
     import timeSinceDate from "$lib/globalFunctions/getTimeSinceDate";
-    import DOMPurify, { sanitize } from 'dompurify';
+    import DOMPurify from 'dompurify';
 	import { onMount } from "svelte";
     import { t, getLocale } from "$lib/i18n";
 
@@ -23,54 +24,74 @@
     $: option = OPTIONS[notification.type] ?? OPTIONS.undefined;
 
 
-    let iframe: HTMLIFrameElement;
+    let iframe: HTMLIFrameElement | undefined;
     let inlineModalOpen = false;
-    let breakpoints = [0, 0.5, 1];
-    
-    const inlineModalDismissed = (val: any) => {inlineModalOpen = false;};
 
     let content = DOMPurify.sanitize(notification.body, {SANITIZE_NAMED_PROPS: true}).trim().replace(/\s+/g, ' ').replace(/\s+/g, ' ');
 
     // Adding an event listener to the iframe to set the height of the iframe to the content of the iframe
     onMount(() => {
-        iframe.addEventListener('load', onMailLoad);
+        iframe?.addEventListener('load', onMailLoad);
     });
 
 
     // Fixing the height of the iframe
     function fixIframeHeight() {
-        if (iframe){
-            iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 100 + 'px';
+        const body = iframe?.contentWindow?.document.body;
+        if (iframe && body){
+            iframe.style.height = body.scrollHeight + 100 + 'px';
         }
     }
 
 
-    // Fixing the content of the iframe
-    function fixIframeContent(){    
-        // Getting the body of the iframe
-        const body = iframe.contentDocument.querySelector("html");
-        let bodyColor = '';
-        if (body) {
-            const root = document.documentElement;
-            // Check if body has the class 'dark'
-            if (document.body.classList.contains('dark')) {
-                
-            // Get the CSS variable value from body.dark
-            bodyColor = getComputedStyle(document.body).getPropertyValue('--app-color-notification');
-        } else {
-            
-            // Get the CSS variable value from root
-            bodyColor = getComputedStyle(root).getPropertyValue('--app-color-notification');
-        }
-            // Style reset for the iframe
-            body.style.fontFamily = "Roboto, sans-serif";
-            body.style.overflowY = "hidden";
-            body.style.color = bodyColor.trim();
+    // Fixing the content of the iframe: app font, theme colours, links in a new tab
+    function fixIframeContent(){
+        const doc = iframe?.contentDocument;
+        const html = doc?.documentElement;
+        if (!doc || !html) return;
 
-            // Adding a base tag to the iframe to open links in a new tab instead of inside the iframe
-            const baseTag = document.createElement('base');
+        // body inherits the :root value and body.dark overrides it, so this follows the current theme
+        const themeStyles = getComputedStyle(document.body);
+        const textColor = themeStyles.getPropertyValue('--app-color-notification').trim() || themeStyles.color;
+        const linkColor = themeStyles.getPropertyValue('--ion-color-primary').trim() || textColor;
+
+        html.style.fontFamily = "Roboto, sans-serif";
+        html.style.overflowY = "hidden";
+
+        // Force the email into the app's light/dark theme: many emails hard-code e.g. black text or
+        // white table backgrounds, which become unreadable in dark mode. Images are kept;
+        // background colours/images are dropped.
+        // Email templates often use their own `!important` colour rules, so ours get extra specificity:
+        // each :not(#_t) adds an ID's worth without matching anything special.
+        const s = ':not(#_t):not(#_t):not(#_t)';
+        let themeStyle = doc.getElementById('app-theme-override') as HTMLStyleElement | null;
+        if (!themeStyle) {
+            themeStyle = doc.createElement('style');
+            themeStyle.id = 'app-theme-override';
+            (doc.head ?? html).appendChild(themeStyle);
+        }
+        themeStyle.textContent = `
+            html${s}, body${s} { background: transparent !important; color: ${textColor} !important; }
+            body *${s} { color: inherit !important; -webkit-text-fill-color: currentColor !important; background-color: transparent !important; background-image: none !important; }
+            body a${s}, body a *${s} { color: ${linkColor} !important; }
+        `;
+
+        // Inline `style="color: … !important"` beats any stylesheet, and old-school colour attributes
+        // (<font color>, bgcolor, <body text>) are common in emails: strip colour styling at the source.
+        for (const el of doc.querySelectorAll<HTMLElement>('[style], [color], [bgcolor], [text]')) {
+            for (const prop of ['color', '-webkit-text-fill-color', 'background', 'background-color', 'background-image']) {
+                el.style?.removeProperty(prop);
+            }
+            el.removeAttribute('color');
+            el.removeAttribute('bgcolor');
+            el.removeAttribute('text');
+        }
+
+        // Adding a base tag to the iframe to open links in a new tab instead of inside the iframe
+        if (!doc.querySelector('base')) {
+            const baseTag = doc.createElement('base');
             baseTag.target = '_blank';
-            body.appendChild(baseTag);
+            (doc.head ?? html).appendChild(baseTag);
         }
     }
 
@@ -110,83 +131,78 @@
 </div>
 
 <!-- Modal which displays when clicked, showing the detailed contents of the notification -->
-<ion-modal
-      is-open={inlineModalOpen}
-      initial-breakpoint={0.5}
-      {breakpoints}
-      handle-behavior="cycle"
-      on:ionModalDidDismiss={inlineModalDismissed}>
-      <ion-content >
-            <div class="mainContainer">
-                <ion-item-group>
-                    <ion-item lines="none">
-                        <ion-text>
-                            <h2>{notification.subject}</h2>
-                        </ion-text>
-                    </ion-item>
-                    <div class="context-chips ion-padding-horizontal">
-                        <ion-chip style="flex-shrink: 2;" outline color={option.colour}>
-                            <ion-avatar>
-                                <img alt="Service logo" src={option.logo} />
-                            </ion-avatar>
-                            <ion-label style="overflow:hidden; white-space: nowrap;">
-                                {#if notification.email}
-                                    <a href="mailto:{notification.email}" style="text-decoration: none; color: inherit;">
-                                        {notification.sender}
-                                    </a>
-                                {:else}
-                                    {notification.sender}
-                                {/if}
-                            </ion-label>
-                        </ion-chip>
-                        {#if notification.url}
-                            <ion-chip color="primary" on:click={()=>{window.location = notification.url}} aria-hidden>
-                                <ion-icon icon={open} ></ion-icon>
-                                <ion-label>{$t('notifications.open')}</ion-label>
-                            </ion-chip>
-                        {/if}
-                    </div>
-                    <ion-item-divider>
-                        <ion-label>{$t('notifications.description')} </ion-label>
-                      </ion-item-divider>                    
-                    <ion-item lines="none" class="item-text-wrap ion-no-padding">
-                        <iframe bind:this={iframe}
-                        title="Body"
-                        srcdoc={content}
-                        src="about:blank"
-                        style="width: 100%; border: none;"/>
-                    </ion-item>
-                    <ion-item-divider >
-                        <ion-label>{$t('notifications.date')}: {notification.dateReceived.toLocaleString()}</ion-label>
-                      </ion-item-divider> 
-                </ion-item-group>
-            </div>
-        </ion-content>
-    </ion-modal>
+<BottomSheet
+    bind:isOpen={inlineModalOpen}
+    title={notification.subject}
+    subtitle={timeSinceDate(notification.dateReceived, getLocale())}
+    titleLines={2}
+    actionIcon={open}
+    actionLabel={$t('notifications.open')}
+    onAction={notification.url ? () => { window.location.href = notification.url; } : undefined}
+    handleBehavior="cycle"
+    on:ionModalWillPresent={fixIframeContent}
+>
+    <!-- Sender -->
+    <section class="sheet-group sender-card">
+        <div class="icon-wrapper {option.cssClass}">
+            <img alt="Service logo" src={option.logo} />
+        </div>
+        <div class="sender-info">
+            <span class="sender">{notification.sender}</span>
+            {#if notification.email}
+                <a class="sender-email" href="mailto:{notification.email}">{notification.email}</a>
+            {/if}
+            <span class="full-date">{notification.dateReceived.toLocaleString(getLocale(), { dateStyle: 'medium', timeStyle: 'short' })}</span>
+        </div>
+    </section>
+
+    <!-- Body -->
+    <section class="sheet-group mail-body">
+        <iframe bind:this={iframe}
+            title={$t('notifications.description')}
+            srcdoc={content}
+            src="about:blank"></iframe>
+    </section>
+</BottomSheet>
 
     <style>
-        .ellipse-no-wrap {
+        /* ---------- Detail sheet (frame and header come from BottomSheet) ---------- */
+        .sender-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.85rem 0.9rem;
+        }
+
+        .sender-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            min-width: 0;
+        }
+
+        .sender-email {
+            font-size: 0.85rem;
+            color: var(--ion-color-primary);
+            text-decoration: none;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .mainContainer {
-            padding: 0.5rem;
+        .full-date {
+            font-size: 0.78rem;
+            color: var(--ion-color-medium);
         }
 
-        .date {
-            font-size: smaller !important;
+        .mail-body {
+            padding: 0.25rem 0.5rem;
         }
 
-        ion-chip {
-            margin: 0rem !important;
-        }
-
-        .context-chips{
-            display: flex;
-            flex-direction: row;
-            gap: 1rem;
+        .mail-body iframe {
+            display: block;
+            width: 100%;
+            border: none;
         }
 
         .notification-card {
