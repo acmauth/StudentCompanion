@@ -1,10 +1,10 @@
 <script>
 	// @ts-nocheck
 	import { onMount } from 'svelte';
-	import { navigating, page } from '$app/stores';
+	import { page } from '$app/stores';
 	import { Capacitor } from '@capacitor/core';
 	import { Keyboard } from '@capacitor/keyboard';
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { navController } from "./StackedNav"
 
 	export let ionTabsDidChange = () => {};
@@ -29,17 +29,19 @@
 	let currentTabName = pathSplit[pathSplit.length - 1]; // we don't want to use at(-1) because of old browsers
 	let relativePath = cleanedPath.replace(currentTabName, '');
 
-	// we need to capture the router changes - to support a-href navigation and other stuff
-	$: if ($navigating && $navigating.to) {
-		tabs.forEach(async (tab) => {
-			if ($navigating.to.url.pathname.includes(relativePath + tab.tab)) {
+	// Sync the selected tab with router changes (a-href links, goto calls, back button).
+	// Calling goto here would restart the navigation and loop forever.
+
+	afterNavigate(({ to }) => {
+		if (!to || !controller) return;
+		tabs.forEach((tab) => {
+			if (to.url.pathname.includes(relativePath + tab.tab)) {
 				currentTabName = tab.tab;
-				await goto($navigating.to.url);
 				controller.select(tab.tab);
 				moveTabBarLine(tab.tab);
 			}
 		});
-	}
+	});
 
 	onMount(() => {
 		// reassignment needed after onMount
