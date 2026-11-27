@@ -46,11 +46,19 @@
 
   /** warning **/
   --ion-color-warning: #cfac01;
-  --ion-color-warning-rgb: 255, 196, 9;
+  --ion-color-warning-rgb: 207, 172, 1;
   --ion-color-warning-contrast: #000000;
   --ion-color-warning-contrast-rgb: 0, 0, 0;
-  --ion-color-warning-shade: #c94800;
-  --ion-color-warning-tint: #c94800;
+  --ion-color-warning-shade: #b69701;
+  --ion-color-warning-tint: #d4b41a;
+
+  /** orange (custom, use via color="orange") **/
+  --ion-color-orange: #f5821f;
+  --ion-color-orange-rgb: 245, 130, 31;
+  --ion-color-orange-contrast: #000000;
+  --ion-color-orange-contrast-rgb: 0, 0, 0;
+  --ion-color-orange-shade: #d8721b;
+  --ion-color-orange-tint: #f68f35;
 
   /** danger **/
   --ion-color-danger: #eb445a;
@@ -267,6 +275,13 @@ body.dark {
   --ion-color-warning-shade: #e0bb2e;
   --ion-color-warning-tint: #ffd948;
 
+  --ion-color-orange: #ff9a3c;
+  --ion-color-orange-rgb: 255, 154, 60;
+  --ion-color-orange-contrast: #000000;
+  --ion-color-orange-contrast-rgb: 0, 0, 0;
+  --ion-color-orange-shade: #e08835;
+  --ion-color-orange-tint: #ffa450;
+
   --ion-color-danger: #ff4961;
   --ion-color-danger-rgb: 255, 73, 97;
   --ion-color-danger-contrast: #ffffff;
@@ -377,6 +392,16 @@ body.dark {
 
   --webmail-button-background: var(--app-color-primary);
 
+}
+
+/* Lets Ionic components accept color="orange" */
+.ion-color-orange {
+  --ion-color-base: var(--ion-color-orange);
+  --ion-color-base-rgb: var(--ion-color-orange-rgb);
+  --ion-color-contrast: var(--ion-color-orange-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-orange-contrast-rgb);
+  --ion-color-shade: var(--ion-color-orange-shade);
+  --ion-color-tint: var(--ion-color-orange-tint);
 }
 
 body.dark ion-card {

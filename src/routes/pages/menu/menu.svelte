@@ -274,7 +274,7 @@
 	const CROWD_COLORS: Record<CrowdLevel, string> = {
 		quiet: 'success',
 		moderate: 'warning',
-		busy: 'warning',
+		busy: 'orange',
 		crowded: 'danger'
 	};
 
@@ -289,7 +289,7 @@
 			const response = await fetch(`${appConfig.crowd.apiBase}?place_code=dining-auth`);
 			if (!response.ok) throw new Error(`HTTP ${response.status}`);
 			const { level } = await response.json();
-			// const level = "quiet";
+			// const level = "crowded"; // Hardcoded for testing; replace with the line above in production
 			crowdLevel = level in CROWD_COLORS ? (level as CrowdLevel) : null;
 		} catch (error) {
 			console.error('Failed to fetch crowd level:', error);
