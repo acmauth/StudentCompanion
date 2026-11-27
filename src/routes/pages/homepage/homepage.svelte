@@ -406,8 +406,8 @@
 <style>
 
 	ion-content {
-		--padding-start: 1.5rem;
-		--padding-end: 1.5rem;
+		--padding-start: var(--app-page-gutter);
+		--padding-end: var(--app-page-gutter);
 	}
 
 	.personal-section {
@@ -537,8 +537,8 @@
 		scrollbar-width: none;
 		-ms-overflow-style: none;
 		/* bleed past ion-content's padding so cards can scroll fully off-screen */
-		margin-inline: -1.5rem;
-		padding-inline: 1.5rem;
+		margin-inline: calc(-1 * var(--app-page-gutter));
+		padding-inline: var(--app-page-gutter);
 	}
 
 	.events-container::-webkit-scrollbar {

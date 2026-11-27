@@ -7,8 +7,11 @@
   font-family: 'Roboto', sans-serif;
 }
 :root {
+  /* Horizontal inset of page content. Headers bleed past it; their contents align to it. */
+  --app-page-gutter: 1rem;
+
   /** primary **/
-  
+
   --ion-background-color :#f5f5f5;
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;

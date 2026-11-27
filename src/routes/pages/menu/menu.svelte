@@ -407,7 +407,7 @@
 					{/if}
 				</div>
 
-				<div style="margin: 0 0.6rem 0rem 0.6rem; margin-bottom: 5rem;">
+				<div style="margin-bottom: 5rem;">
 					{#if !closedForHolidays}
 					<ion-card>
 							<div class="meal-tabs">
@@ -460,7 +460,7 @@
 
 				<!-- &nbsp; -->
 				
-				<h2 class="ion-padding">
+				<h2 class="ion-padding-vertical">
 					{$t('menu.week')}
 				</h2>
 				<ion-accordion-group expand="inset" value={closedForHolidays? undefined: todayKey}>
@@ -483,6 +483,31 @@
 </ion-page>
 
 <style>
+	/* Children align to the page gutter; none add their own inset. */
+	ion-content {
+		--padding-start: var(--app-page-gutter);
+		--padding-end: var(--app-page-gutter);
+	}
+
+	ion-content :global(ion-card),
+	ion-content :global(ion-accordion-group) {
+		margin-inline: 0;
+	}
+
+	/* The header sits outside ion-content, so it spans the screen already. */
+	ion-toolbar {
+		--padding-start: var(--app-page-gutter);
+		--padding-end: var(--app-page-gutter);
+	}
+
+	ion-title {
+		padding-inline: 0;
+	}
+
+	#crowdness-chip {
+		margin-inline: 0;
+	}
+
 	.swiper-card-content {
 		padding: 0 !important;
 	}
@@ -546,7 +571,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		margin: 1.5rem 0.6rem 2rem 0.6rem;
+		margin: 1.5rem 0 2rem 0;
 		padding: 2.5rem 1.5rem;
 		border-radius: 1.25rem;
 		background: var(--ion-color-light);
@@ -575,7 +600,7 @@
 	.status-wrap {
 		display: flex;
 		justify-content: center;
-		padding: 0.75rem 0.9rem 0;
+		padding-top: 0.75rem;
 		margin-bottom: 1rem;
 	}
 

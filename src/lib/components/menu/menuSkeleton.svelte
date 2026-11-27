@@ -7,7 +7,7 @@
 	</h5>
 </div>
 
-<ion-item lines="none">
+<ion-item lines="none" class="ion-no-padding">
 	<ion-label>
 		<h1 style="height:2rem">
 			<ion-skeleton-text animated style="width: 50%" />
@@ -46,7 +46,7 @@
 	</ion-item>
 </ion-card>
 
-<ion-item lines="none">
+<ion-item lines="none" class="ion-no-padding">
 	<ion-label>
 		<h1 style="height:2rem">
 			<ion-skeleton-text animated style="width: 50%" />

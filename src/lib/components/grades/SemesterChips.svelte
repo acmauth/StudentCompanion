@@ -44,8 +44,7 @@
     .chipsrow {
         overflow-x: scroll;
         white-space: nowrap;
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-inline: var(--app-page-gutter);
         /* background-color: #FBFBF9; */
         &::-webkit-scrollbar {
             display: none;
@@ -55,6 +54,10 @@
 
 	ion-chip {
 		color: var(--app-color-primary-dark);
+	}
+
+	ion-chip:first-child {
+		margin-inline-start: 0;
 	}
 
 </style>

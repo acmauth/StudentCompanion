@@ -29,7 +29,7 @@
 
 <div class="container">
 	{#if courses.length > 0}
-		<div class="ion-padding-start ion-padding-vertical semester">
+		<div class="ion-padding-vertical semester">
 			{#if Number(semesterId) <= 24}
 				<ion-text class="title"
 					><b>{getSemester(semesterId, getLocale())} {$t('progress.semester')}</b

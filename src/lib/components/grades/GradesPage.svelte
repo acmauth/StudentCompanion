@@ -192,14 +192,27 @@
 </ion-page>
 
 <style>
+	/* Children align to the page gutter; none add their own inset. */
+	ion-content {
+		--padding-start: var(--app-page-gutter);
+		--padding-end: var(--app-page-gutter);
+	}
+
+	/* The header bleeds to the screen edges, while its contents sit on the gutter. */
 	ion-header {
 		position: sticky;
 		top: 0;
 		z-index: 1;
+		width: auto;
+		margin-inline: calc(-1 * var(--app-page-gutter));
 	}
 
-	ion-content {
-		--padding-end: 0.6rem;
-		--padding-start: 0.6rem;
+	ion-title,
+	ion-searchbar {
+		padding-inline: var(--app-page-gutter);
+	}
+
+	ion-content :global(ion-card) {
+		margin-inline: 0;
 	}
 </style>
