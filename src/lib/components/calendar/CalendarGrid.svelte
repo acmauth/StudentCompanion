@@ -180,6 +180,9 @@
         text-align: center;
         gap: 0.5rem;
         margin-bottom: 0.5rem;
+        padding: 0.75rem 0.5rem;
+        background: var(--ion-card-background, #fff);
+        border-radius: 16px;
     }
     .day-name {
         font-weight: bold;
@@ -207,10 +210,9 @@
         font-weight: 600;
     }
     .day.selected {
-        background: var(--ion-color-light);
+        background: var(--ion-background-color, #fff);
         color: var(--ion-color-dark);
         font-weight: 600;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
     .day.selected.today {
         color: var(--ion-color-primary);
