@@ -77,8 +77,8 @@
 		await Browser.open({ url: 'https://gym.auth.gr/reservations/' });
 	};
 
-	function formatEventTime(date: Date): string {
-		return new Date(date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+	function formatEventTime(date: Date, locale: string = getLocale()): string {
+		return new Date(date).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 	}
 
 	let givenName = '';
@@ -330,7 +330,7 @@
 										{removeDiacritics(getEventTypeValue(event.type, $locale))}
 									</div>
 									<span class="event-time-top">
-										{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start)}
+										{formatEventDate(event.slot.start)} • {formatEventTime(event.slot.start, $locale)}
 									</span>
 								</div>
 								<h5 class="event-title">{event.title}</h5>
@@ -349,8 +349,8 @@
 				</div>
 			{:else}
 				<!-- No Events Empty State -->
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				<!-- svelte-ignore a11y-no-static-element-interactions -->
+				<!-- svelte-ignore a11y_click_events_have_key_events -->
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				<div class="no-events-card" style="margin-inline: 1rem;" on:click={() => goto('/pages/calendar')} aria-hidden>
 					<div class="no-events-info">
 						<div class="no-events-icon">
@@ -529,212 +529,214 @@
 	}
 
 	.events-container {
-  display: flex;
-  flex-direction: row;
-  gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  /* bleed past ion-content's padding so cards can scroll fully off-screen */
-  margin-inline: -1.5rem;
-  padding-inline: 1.5rem;
-}
+		display: flex;
+		flex-direction: row;
+		gap: 0.75rem;
+		overflow-x: auto;
+		padding-bottom: 0.5rem;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		/* bleed past ion-content's padding so cards can scroll fully off-screen */
+		margin-inline: -1.5rem;
+		padding-inline: 1.5rem;
+	}
 
-.events-container::-webkit-scrollbar {
-  display: none;
-}
-
-
-
-.event-card {
-  position: relative;
-  min-width: 185px;
-  flex-shrink: 0;
-  border-radius: 1rem;
-  padding: 0.875rem;
-  cursor: pointer;
-  overflow: hidden;
-  border: none;
-  color: white;
-}
-
-/* Card background colors per type */
-.event-card[data-type="TEST"] {
-  background: #e53835bc;
-}
-.event-card[data-type="ASSIGNMENT"] {
-  background: #fb8a00b3;
-}
-.event-card[data-type="CLASS"] {
-  background: #43a048d1;
-}
-.event-card[data-type="TASK"] {
-  background: #1e88e5bc;
-}
-.event-card[data-type="OTHER"] {
-  background: #bcbaba;
-}
-
-.event-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.6rem;
-  gap: 0.5rem;
-}
-
-.event-type-badge {
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 0.2rem 0.5rem;
-  border-radius: 0.3rem;
-  background: rgba(255, 255, 255, 0.25);
-  color: white;
-  flex-shrink: 1;
-  min-width: 0;
-  max-width: 60px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.event-time-top {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 500;
-  text-align: right;
-}
-
-.event-title {
-  margin: 0 0 0.625rem 0;
-  font-size: 1rem;
-  font-weight: 700;
-  color: white;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-  display: -webkit-box;
-white-space: nowrap; /* Don't forget this one */
-  -webkit-box-orient: vertical;
-}
-
-.event-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-.event-detail-item {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  
-}
-
-.event-footer-icon {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.8);
-  flex-shrink: 0;
-}
-
-.event-footer-text {
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.no-events-card {
-  position: relative;
-  display: flex;
-  align-items:center;
-  justify-content: space-between;
-  gap: 1rem;
-  border-radius: 1rem;
-  margin-block: 2rem;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.no-events-info {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-width: 0;
-}
-
-.no-events-icon {
-  flex-shrink: 0;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--ion-color-primary);
-  color: var(--ion-color-primary-contrast);
-  font-size: 1.3rem;
-}
-
-.no-events-text {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.no-events-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--ion-text-color);
-}
-
-.no-events-cta {
-  position:relative;
-  overflow: hidden;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--ion-color-primary);
-  padding: 0.4rem 0.6rem;
-  border-radius: 0.6rem;
-  background: rgba(var(--ion-color-primary-rgb), 0.12);
-}
-
-.no-events-cta ion-icon {
-  font-size: 1rem;
-}
+	.events-container::-webkit-scrollbar {
+		display: none;
+	}
 
 
-.section-title-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin-bottom: 0.625rem;
-}
 
-.section-title-row .middle-title {
-    margin-bottom: 0;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
+	.event-card {
+		position: relative;
+		min-width: 185px;
+		max-width: 240px; /* long titles/locations are cut with "…" instead of widening the card */
+		flex-shrink: 0;
+		border-radius: 1rem;
+		padding: 0.875rem;
+		cursor: pointer;
+		overflow: hidden;
+		border: none;
+		color: white;
+	}
 
-.zigzag-line {
-    display: block;
-    width: 100%;
-    flex: 1;
-    height: 10px;
-    color: var(--ion-color-medium);
-}
+	/* Card background colors per type */
+	.event-card[data-type="TEST"] {
+		background: #e53835bc;
+	}
+	.event-card[data-type="ASSIGNMENT"] {
+		background: #fb8a00b3;
+	}
+	.event-card[data-type="CLASS"] {
+		background: #43a048d1;
+	}
+	.event-card[data-type="TASK"] {
+		background: #1e88e5bc;
+	}
+	.event-card[data-type="OTHER"] {
+		background: #bcbaba;
+	}
+
+	.event-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 0.6rem;
+		gap: 0.5rem;
+	}
+
+	.event-type-badge {
+		font-size: 0.65rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		padding: 0.2rem 0.5rem;
+		border-radius: 0.3rem;
+		background: rgba(255, 255, 255, 0.25);
+		color: white;
+		/* take whatever room is left next to the time; only truncate when it runs out */
+		flex: 0 1 auto;
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.event-time-top {
+		font-size: 0.7rem;
+		color: rgba(255, 255, 255, 0.85);
+		font-weight: 500;
+		text-align: right;
+		flex-shrink: 0;
+		white-space: nowrap;
+	}
+
+	.event-title {
+		margin: 0 0 0.625rem 0;
+		font-size: 1rem;
+		font-weight: 700;
+		color: white;
+		/* single line, cut with "…" at the card's max width */
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.event-footer {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	margin-top: 0.5rem;
+	padding-top: 0.5rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.25);
+	}
+
+	.event-detail-item {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	
+	}
+
+	.event-footer-icon {
+	font-size: 0.8rem;
+	color: rgba(255, 255, 255, 0.8);
+	flex-shrink: 0;
+	}
+
+	.event-footer-text {
+	font-size: 0.78rem;
+	color: rgba(255, 255, 255, 0.9);
+	font-weight: 500;
+	min-width: 0; /* allow the flex item to shrink so the ellipsis applies */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	}
+
+	.no-events-card {
+	position: relative;
+	display: flex;
+	align-items:center;
+	justify-content: space-between;
+	gap: 1rem;
+	border-radius: 1rem;
+	margin-block: 2rem;
+	cursor: pointer;
+	overflow: hidden;
+	}
+
+	.no-events-info {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	min-width: 0;
+	}
+
+	.no-events-icon {
+	flex-shrink: 0;
+	width: 2.5rem;
+	height: 2.5rem;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--ion-color-primary);
+	color: var(--ion-color-primary-contrast);
+	font-size: 1.3rem;
+	}
+
+	.no-events-text {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	}
+
+	.no-events-title {
+	font-size: 0.95rem;
+	font-weight: 700;
+	color: var(--ion-text-color);
+	}
+
+	.no-events-cta {
+	position:relative;
+	overflow: hidden;
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--ion-color-primary);
+	padding: 0.4rem 0.6rem;
+	border-radius: 0.6rem;
+	background: rgba(var(--ion-color-primary-rgb), 0.12);
+	}
+
+	.no-events-cta ion-icon {
+	font-size: 1rem;
+	}
+
+
+	.section-title-row {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		margin-bottom: 0.625rem;
+	}
+
+	.section-title-row .middle-title {
+		margin-bottom: 0;
+		white-space: nowrap;
+		flex-shrink: 0;
+	}
+
+	.zigzag-line {
+		display: block;
+		width: 100%;
+		flex: 1;
+		height: 10px;
+		color: var(--ion-color-medium);
+	}
 	
 </style>

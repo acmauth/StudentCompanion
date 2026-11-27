@@ -1,11 +1,12 @@
 <script lang="ts">
-    import { close, checkmark, trash } from 'ionicons/icons';
+    import { checkmark } from 'ionicons/icons';
     import EventDetails from './EventDetails.svelte';
+    import BottomSheet from '$components/shared/BottomSheet.svelte';
     import type { Event } from './Event';
-    import { EventCheckFormat } from './Event';
+    import { EventCheckFormat, getEventTypeValue } from './Event';
     import { toastController } from 'ionic-svelte';
     import type { ToastOptions } from '@ionic/core';
-    import { t } from '$lib/i18n';
+    import { t, getLocale } from '$lib/i18n';
 
     export let isOpen: boolean;
     export let event: Event;
@@ -17,7 +18,7 @@
     let lastEventId: number | undefined = event?.id;
 
     // When the parent passes a different event, clone it into tmpEvent.
-    // This triggers the {#key} block to recreate EventDetails with fresh ion-datetime elements.
+    // This triggers the {#key} block to recreate EventDetails with fresh state.
     $: if (event && event.id !== lastEventId) {
         lastEventId = event.id;
         tmpEvent = JSON.parse(JSON.stringify(event));
@@ -66,44 +67,24 @@
     function handleDelete() {
         onDelete(tmpEvent);
     }
+
+    // Existing events can be deleted; the "new event" prototype has an empty title
+    $: canDelete = event?.title !== "";
 </script>
 
-<ion-modal 
-    is-open={isOpen} 
-    initial-breakpoint={0.5} 
-    breakpoints={[0, 0.5, 1]} 
+<BottomSheet
+    bind:isOpen
+    title={tmpEvent?.type ? getEventTypeValue(tmpEvent.type, getLocale()) : $t('event.type')}
+    closeLabel={$t('event.cancel')}
+    actionIcon={checkmark}
+    actionLabel={$t('common.save')}
+    onAction={submit}
+    keepContentsMounted
     on:ionBreakpointDidChange={handleBreakpointChange}
     on:ionModalDidDismiss={handleModalDismiss}
     on:ionModalWillPresent={handleModalPresent}
-    keep-contents-mounted
 >
-    <ion-toolbar>
-        <ion-buttons slot="end">
-            {#if event?.title !== ""}
-            <ion-button id="delete" on:click={handleDelete} aria-hidden>
-                <ion-icon slot="icon-only" icon={trash}/>
-            </ion-button>
-            {/if}
-            <ion-button id="submit" on:click={submit} aria-hidden>
-                <ion-icon slot="icon-only" icon={checkmark}/>
-            </ion-button>
-        </ion-buttons>
-        <ion-title class="ion-text-center">
-            {event.title || $t('event.title')}
-        </ion-title>
-        <ion-buttons slot="start">
-            <ion-button id="cancel" on:click={onClose} aria-hidden>
-                <ion-icon slot="icon-only" icon={close}/>
-            </ion-button>
-        </ion-buttons>
-    </ion-toolbar>
     {#key tmpEvent?.id}
-        <EventDetails bind:copyEvent={tmpEvent} />
+        <EventDetails bind:copyEvent={tmpEvent} onDelete={canDelete ? handleDelete : undefined} />
     {/key}
-</ion-modal>
-
-<style>
-    ion-button {
-        text-transform: none;
-    }
-</style>
+</BottomSheet>
