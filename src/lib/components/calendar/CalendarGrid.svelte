@@ -3,7 +3,7 @@
     import type { DayObject } from './calendarUtils';
     import { getWeekdayNames, isSelectedDay as checkIsSelectedDay, isToday as checkIsToday } from './calendarUtils';
     import type { SelectedDay } from './calendarUtils';
-    import { t, getLocale} from "$lib/i18n";
+    import { t, getLocale, locale } from "$lib/i18n";
     // removed alertController
 
     export let weeks: DayObject[][] = [];
@@ -115,12 +115,14 @@
     <ion-modal is-open={isDatePickerOpen} on:ionModalDidDismiss={() => isDatePickerOpen = false} style="--height: auto; --width: auto; --border-radius: 8px;">
         <ion-datetime
             presentation="month-year"
+            locale={$locale}
+            lang={$locale}
             value={getISOString(year, month)}
             min={minDate}
             max={maxDate}
             show-default-buttons={true}
-            done-text={$t('common.apply', 'Apply')}
-            cancel-text={$t('common.cancel', 'Cancel')}
+            done-text={$t('common.apply')}
+            cancel-text={$t('common.cancel')}
             mode="ios"
             on:ionChange={handleDateChange}
             on:ionCancel={() => isDatePickerOpen = false}
