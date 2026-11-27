@@ -144,8 +144,8 @@
 				<ion-searchbar
 					debounce={500}
 					on:ionInput={handleChange}
-					inputmode="text"
-					show-clear-button="always"
+					inputmode="search"
+					show-clear-button="focus"
 					placeholder={$t('progress.search')}
 				/>
 
@@ -212,7 +212,34 @@
 		padding-inline: var(--app-page-gutter);
 	}
 
+	/* Ionic's condensed-header toolbar squeezes the searchbar; restore its standalone spacing. */
+	ion-header ion-toolbar ion-searchbar {
+		padding-block: 8px;
+	}
+
 	ion-content :global(ion-card) {
 		margin-inline: 0;
 	}
+
+	ion-searchbar {
+		padding-inline: var(--app-page-gutter);
+		--border-radius: 1rem !important;
+		--background: transparent;
+		--box-shadow: none;
+	}
+
+	:global(ion-searchbar:is(.md, .ios) .searchbar-input) {
+		border: 1px solid alpha(from var(--ion-color-medium-shade) / 20%);
+	}
+
+	:global(ion-searchbar.searchbar-has-focus:is(.md, .ios),
+	ion-searchbar.searchbar-has-value:is(.md, .ios)) {
+		--background: var(--app-color-surface);
+	}
+
+	:global(ion-searchbar.searchbar-has-focus:is(.md, .ios) .searchbar-input,
+	ion-searchbar.searchbar-has-value:is(.md, .ios) .searchbar-input) {
+		border-color: transparent;
+	}
+
 </style>

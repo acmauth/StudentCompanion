@@ -103,6 +103,10 @@
   --app-color-blue: #a6c4fb;
   --app-color-blue-dark: #004696;
 
+  /* Surfaces */
+  --app-color-border: #EBEBEB;
+  --app-color-surface: white;
+
   /* Login input */
   --app-login-background: #F9FAFB;
 
@@ -179,7 +183,7 @@
 
   ion-card {
     border-radius: 1rem !important;
-    border: 1px solid #EBEBEB;
+    border: 1px solid var(--app-color-border);
     /* box-shadow: var(--shadow-short-md); */
     /* box-shadow: var(--shadow-sm); */
     box-shadow: var(--shadow-md);
@@ -196,10 +200,7 @@
     --box-shadow: var(--shadow-sm);
   }
 
-  .searchbar-input.sc-ion-searchbar-md {
-    /* border: 1px solid #8ED2FF; */
-    border: 1px solid #EBEBEB;
-  }
+
 
   ion-item {
     --background: transparent !important;
@@ -218,9 +219,6 @@
     --progress-background: var(--app-color-primary-dark);
   }
 
-  .searchbar-input.sc-ion-searchbar-md {
-    border: 1px solid transparent;
-  }
 
   ion-app {
     background-color: var(--ion-background-color);
@@ -230,6 +228,9 @@
 
 
 body.dark {
+
+  --app-color-border: rgb(39, 39, 42);
+  --app-color-surface: rgb(24, 24, 27);
 
   --ion-color-primary: rgba(85, 187, 255, 1);
   --ion-color-primary-rgb: 66, 140, 255;
@@ -379,8 +380,8 @@ body.dark {
 }
 
 body.dark ion-card {
-  border: 1px solid rgba(39, 39, 42, 1);
-  --background: rgba(24, 24, 27, 1);
+  border: 1px solid var(--app-color-border);
+  --background: var(--app-color-surface);
 
 }
 
