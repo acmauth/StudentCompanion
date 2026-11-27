@@ -324,7 +324,7 @@
 					<div class="events-container">
 						{#each upcomingEvents as event}
 							<div class="event-card ion-activatable" data-type={event.type} aria-hidden
-										onclick={() => { goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
+										on:click={() => { goto(`/pages/calendar?showEventId=${encodeURIComponent(event.id)}&eventDate=${encodeURIComponent((new Date(event.slot.start)).toISOString())}`); }}>
 								<div class="event-header">
 									<div class="event-type-badge">
 										{removeDiacritics(getEventTypeValue(event.type, $locale))}
@@ -351,7 +351,7 @@
 				<!-- No Events Empty State -->
 				<!-- svelte-ignore a11y_click_events_have_key_events -->
 				<!-- svelte-ignore a11y_no_static_element_interactions -->
-				<div class="no-events-card" style="margin-inline: 1rem;" onclick={() => goto('/pages/calendar')} aria-hidden>
+				<div class="no-events-card" style="margin-inline: 1rem;" on:click={() => goto('/pages/calendar')} aria-hidden>
 					<div class="no-events-info">
 						<div class="no-events-icon">
 							<ion-icon icon={calendarOutline}></ion-icon>
