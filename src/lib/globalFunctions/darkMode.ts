@@ -3,7 +3,7 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 import CapacitorPersistedStore from "../storage/capacitorPersistedStore";
 import { get } from "svelte/store";
 
-export const darkMode = new CapacitorPersistedStore<boolean>(false, "darkMode");
+export const darkMode = new CapacitorPersistedStore<boolean>(false, "darkMode", false);
 
 // Check if dark mode is enabled and set it if it is
 export async function checkAppMode() {
