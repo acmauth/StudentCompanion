@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { judgeAuth } from '$lib/authentication/authValidator';
+	import { judgeAuth } from '$services/authentication/authValidator';
 	import { onMount } from 'svelte';
-	import Logo from '$lib/assets/Logo_full.png';
-	import { neoUniversisGet } from '$lib/dataService';
-	import { loadPersistedStores } from './persistedStoreDeclarations';
+	import Logo from '$assets/common/brand/Logo_full.png';
+	import { neoUniversisGet } from '$services/dataService';
+	import { loadPersistedStores } from '$services/storage/persisted/persistedStoreDeclarations';
 	import { App } from '@capacitor/app';
-	import { AuthExpiredError } from '$lib/errors';
+	import { AuthExpiredError } from '$services/errors';
 
 	function delay(ms: number) {
 		return new Promise((resolve) => setTimeout(resolve, ms));

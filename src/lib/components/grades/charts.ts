@@ -1,6 +1,6 @@
 import type { Plugin } from 'chart.js';
-import { Chart } from '$lib/chart';
-import type { Registration } from '$types/grades';
+import { Chart } from '$methods/chart';
+import type { Registration } from './types';
 
 /** Weighted average per semester, keyed by semester id. */
 export function gpaPerSemester(registrations: Registration[]): Record<number, string> {

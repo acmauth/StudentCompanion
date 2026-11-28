@@ -1,11 +1,11 @@
 <script lang="ts">
-  	import IonTabs from '$lib/components/shared/AristomateTabBar.svelte';
+  	import IonTabs from '$common/AristomateTabBar.svelte';
 	import { home, homeOutline, restaurantOutline, restaurant, mapOutline, calendarClearOutline, calendarClear, map, statsChart, statsChartOutline } from 'ionicons/icons';
 	import { onMount } from 'svelte';
-	import initializeNotifications from '$lib/-notifications/core';
-	import { webmailLoggedIn as webmailAuthenticated} from '$components/webmailLogin/userCredsFlagStore';
-	import { handleChangedPermission } from '$lib/calendarNotifications/exactAlarmPermissionStore';
-	import { t } from '$lib/i18n';
+	import initializeNotifications from '$services/notifications/push/core';
+	import { webmailLoggedIn as webmailAuthenticated} from '$services/webmail/userCredsFlagStore';
+	import { handleChangedPermission } from '$services/notifications/calendar/exactAlarmPermissionStore';
+	import { t } from '$methods/i18n';
 
 	// Routes
 	$: restaurantIcon = activeTab === 'menu' ? restaurant : restaurantOutline;

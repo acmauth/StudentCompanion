@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { averages } from '$lib/functions/gradeAverages/averages';
+	import { averages } from './averages';
 	import * as allIonicIcons from 'ionicons/icons';
-	import Chip from '$components/shared/Chips.svelte';
-	import { t } from '$lib/i18n';
+	import Chip from '$common/Chips.svelte';
+	import { t } from '$methods/i18n';
 	import { gpaPerSemester, gradeEvolutionChart } from './charts';
-	import type { course } from '$lib/types/courseType';
-	import type { AveragesResult, Registration } from '$types/grades';
+	import type { course } from '$services/universis/courseType';
+	import type { AveragesResult, Registration } from './types';
 
 	export let subjects: number;
 	export let passedSubjects: number;

@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { getOrdinalSuffix } from '$methods/format/ordinal';
 
 export const flipped = writable(false);
 
@@ -7,9 +8,5 @@ export function getSemester(semester: any, lang: string) {
 
 	if (lang == 'el') return semester + 'o';
 
-	if (semester == 1) return '1st';
-	else if (semester == 2) return '2nd';
-	else if (semester == 3) return '3rd';
-
-	return semester + 'th';
+	return getOrdinalSuffix(semester);
 }

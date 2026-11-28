@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { setupIonicBase } from 'ionic-svelte';
 	import type { IonicConfig } from '@ionic/core';
-	import { nativeSettings } from '$lib/globalFunctions/nativeSettings';
+	import { nativeSettings } from '$methods/app/nativeSettings';
 	import { Capacitor } from '@capacitor/core';
-	import { addNetworkListener } from '$lib/globalFunctions/offlineHandling';
-	import { checkAppMode } from '$lib/globalFunctions/darkMode';
+	import { addNetworkListener } from '$methods/app/offlineHandling';
+	import { checkAppMode } from '$methods/app/darkMode';
 	/* Import all components - or do partial loading - see below */
 	import 'ionic-svelte/components/all';
 
@@ -22,7 +22,7 @@
 	addNetworkListener();
 
 	/* Theme variables */
-	import '../theme/variables.css';
+	import '$src/theme/variables.css';
 	import { onMount } from 'svelte';
 </script>
 

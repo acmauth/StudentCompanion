@@ -1,12 +1,6 @@
 <script lang="ts">
-	import StackedNav from "$components/shared/StackedNav"
-	import { StatusBar, Style } from "@capacitor/status-bar";
-	import Homepage from './homepage.svelte';
-	import {onDestroy, onMount} from 'svelte';
-	import { darkMode } from "$src/lib/globalFunctions/darkMode";
-	import { get } from "svelte/store";
-    import appConfig from '$src/app.config';
-
+	import StackedNav from "$common/stackedNav"
+	import Homepage from './HomePage.svelte';
 </script>
 
 <ion-tab tab="homepage" >

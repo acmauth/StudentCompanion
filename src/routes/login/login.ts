@@ -1,8 +1,8 @@
 import { Capacitor } from "@capacitor/core";
 import { goto } from "$app/navigation";
-import OIDCClient from "$lib/authentication/OIDCClient";
+import OIDCClient from "$services/authentication/OIDCClient";
 import Config from "$src/app.config";
-import hooks from '$src/lib/functions/hooks/login/hooks';
+import hooks from '$services/authentication/loginHooks/hooks';
 
 
 // Initialize OIDC client
