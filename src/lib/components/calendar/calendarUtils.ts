@@ -1,8 +1,8 @@
-import { EventRepeatType, EventType, type Event } from './event/Event';
-import { isCurrentDay } from './CalendarFunctions';
-import { getLocale } from '$src/lib/i18n';
-import { universisGet } from '$src/lib/dataService';
-import { EventStore } from '$lib/components/calendar/event/EventStore';
+import { EventRepeatType, EventType, type Event } from './event/event';
+import { isCurrentDay } from './calendarFunctions';
+import { getLocale } from '$methods/i18n';
+import { universisGet } from '$services/dataService';
+import { EventStore } from './event/eventStore';
 
 
 export interface DayObject {

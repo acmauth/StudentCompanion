@@ -1,6 +1,6 @@
 <script lang="ts">
-	import StackedNav from "$components/shared/StackedNav"
-	import Menu from './menu.svelte';
+	import StackedNav from "$common/stackedNav"
+	import Menu from './MenuPage.svelte';
 </script>
 
 <ion-tab tab="menu">

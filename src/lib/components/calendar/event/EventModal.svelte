@@ -1,12 +1,12 @@
 <script lang="ts">
     import { checkmark } from 'ionicons/icons';
     import EventDetails from './EventDetails.svelte';
-    import BottomSheet from '$components/shared/BottomSheet.svelte';
-    import type { Event } from './Event';
-    import { EventCheckFormat, getEventTypeValue } from './Event';
+    import BottomSheet from '$common/BottomSheet.svelte';
+    import type { Event } from './event';
+    import { EventCheckFormat, getEventTypeValue } from './event';
     import { toastController } from 'ionic-svelte';
     import type { ToastOptions } from '@ionic/core';
-    import { t, getLocale } from '$lib/i18n';
+    import { t, getLocale } from '$methods/i18n';
 
     export let isOpen: boolean;
     export let event: Event;

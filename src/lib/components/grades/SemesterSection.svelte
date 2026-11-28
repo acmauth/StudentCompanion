@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { course } from '$lib/types/courseType';
-	import AppCard from '$shared/AppCard.svelte';
+	import type { course } from '$services/universis/courseType';
+	import AppCard from '$common/AppCard.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
-	import Course from '$components/courses/coursePage.svelte';
+	import Course from '$src/routes/pages/grades/course/CoursePage.svelte';
 	import CourseRow from './CourseRow.svelte';
-	import { navController } from '$components/shared/StackedNav';
+	import { navController } from '$common/stackedNav';
 	import { getSemester } from './helpers';
-	import { t, getLocale } from '$lib/i18n';
+	import { t, getLocale } from '$methods/i18n';
 
 	export let courses: course[] = [];
 	export let semesterId: string;

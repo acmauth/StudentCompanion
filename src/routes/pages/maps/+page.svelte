@@ -1,6 +1,6 @@
 <script lang="ts">
-	import StackedNav from "$components/shared/StackedNav"
-	import Maps from './maps.svelte';
+	import StackedNav from "$common/stackedNav"
+	import Maps from './MapsPage.svelte';
 </script>
 
 <ion-tab tab="maps">

@@ -16,7 +16,7 @@ const res = await page.evaluate(async (passed) => {
   link.href = 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap';
   document.head.appendChild(link);
 
-  const mod = await import('/src/lib/share/gradeStory.ts');
+  const mod = await import('/src/lib/methods/share/gradeStory.ts');
   const canvas = await mod.renderGradeStory({
     courseTitle: 'Βασικές Αρχές Προγραμματισμού',
     formattedGrade: passed ? '9' : '4',

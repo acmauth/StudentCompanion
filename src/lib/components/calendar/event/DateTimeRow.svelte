@@ -1,6 +1,6 @@
 <script lang="ts">
     import { slide } from 'svelte/transition';
-    import { locale } from '$lib/i18n';
+    import { locale } from '$methods/i18n';
 
     type Mode = 'date' | 'time';
 

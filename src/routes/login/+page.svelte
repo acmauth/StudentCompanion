@@ -2,15 +2,15 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import OIDCClient from '$lib/authentication/OIDCClient';
+	import OIDCClient from '$services/authentication/OIDCClient';
 	import { App } from '@capacitor/app';
 	import { handleLogin, handleCallback, handleLogout } from './login';
 	import Config from "$src/app.config"
-	import Logo from '$lib/assets/Logo_head.png';
-	import UniversityLogo from '$lib/assets/authLogo.png';
-	import AuthLogoWhite from '$lib/assets/auth_white.png'
-	import { t, changeLocale } from '$lib/i18n';
-  	import { invalidateAuth } from '$lib/globalFunctions/logOut';
+	import Logo from '$assets/common/brand/Logo_head.png';
+	import UniversityLogo from '$assets/common/university/authLogo.png';
+	import AuthLogoWhite from '$assets/common/university/auth_white.png'
+	import { t, changeLocale } from '$methods/i18n';
+  	import { invalidateAuth } from '$services/authentication/logOut';
 
   // Initialize OIDC client
   const authClient = new OIDCClient(Config.auth);

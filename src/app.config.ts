@@ -1,5 +1,5 @@
 import { Capacitor } from "@capacitor/core";
-import { getLocale } from '$lib/i18n';
+import { getLocale } from './lib/methods/i18n';
 
 const isMobile = Capacitor.isNativePlatform();
 const isProduction = process.env.NODE_ENV === 'production';

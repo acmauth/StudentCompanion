@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Maps from '../pages/maps/maps.svelte';
+    import Maps from '$src/routes/pages/maps/MapsPage.svelte';
 
 </script>
 

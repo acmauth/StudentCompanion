@@ -1,8 +1,8 @@
 <script lang="ts">
 
 
-import StackedNav from "$components/shared/StackedNav"
-import Grades from '$components/grades/GradesPage.svelte';
+import StackedNav from "$common/stackedNav"
+import Grades from './GradesPage.svelte';
 </script>
 
 <ion-tab tab="grades">

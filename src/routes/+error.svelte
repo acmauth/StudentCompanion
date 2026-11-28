@@ -2,9 +2,9 @@
     import { page } from "$app/stores";
     import { goto } from "$app/navigation";
     import { homeOutline, mailOutline, logOut } from 'ionicons/icons';
-    import Logo from '$lib/assets/Logo_full.png';
-    import { t } from '$lib/i18n';
-    import { invalidateAuth } from '$lib/globalFunctions/logOut';
+    import Logo from '$assets/common/brand/Logo_full.png';
+    import { t } from '$methods/i18n';
+    import { invalidateAuth } from '$services/authentication/logOut';
     
     $: errorStatus = $page.status;
     $: errorMessage = $page.error?.message || "An unexpected error occurred.";

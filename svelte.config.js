@@ -11,13 +11,13 @@ const config = {
 			precompress: false
 		}),
 			alias: {
-				$stores: "src/stores",
 				$components: "src/lib/components",
-				$shared: "src/lib/components/shared",
-				$images: "src/lib/static/images",
-				$types: "src/lib/types",
-				$customIcons: "src/lib/static/customIcons",
+				$common: "src/lib/components/common",
+				$services: "src/lib/services",
+				$methods: "src/lib/methods",
+				$assets: "src/lib/assets",
 				$src: "src",
+				$lib: "src/lib",
 				$debug: "src/debug",
 			},
 csrf: {

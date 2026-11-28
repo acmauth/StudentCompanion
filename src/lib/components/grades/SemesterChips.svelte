@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getSemester } from './helpers';
-	import { t, getLocale } from '$lib/i18n';
-	import type { course } from '$lib/types/courseType';
+	import { t, getLocale } from '$methods/i18n';
+	import type { course } from '$services/universis/courseType';
 
 	export let coursesBySemester: { [key: string]: course[] } = {};
 	let semesterId = '';

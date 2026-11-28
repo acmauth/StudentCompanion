@@ -1,7 +1,7 @@
 <script lang="ts">
-    import type {Event} from '$components/calendar/event/Event';
-    import {EventType, EventRepeatType, getEventTypeValue, getEventRepeatTypeValue, getEventRepeatTypeCycleValue} from '$components/calendar/event/Event';
-    import { t, getLocale } from "$lib/i18n";
+    import type {Event} from './event';
+    import {EventType, EventRepeatType, getEventTypeValue, getEventRepeatTypeValue, getEventRepeatTypeCycleValue} from './event';
+    import { t, getLocale } from "$methods/i18n";
     import DateTimeRow from './DateTimeRow.svelte';
     import {
         navigateCircle, timeOutline, flagOutline, locationOutline, personOutline, documentTextOutline,

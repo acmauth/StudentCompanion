@@ -3,7 +3,7 @@
     import type { DayObject } from './calendarUtils';
     import { getWeekdayNames, isSelectedDay as checkIsSelectedDay, isToday as checkIsToday } from './calendarUtils';
     import type { SelectedDay } from './calendarUtils';
-    import { t, getLocale, locale } from "$lib/i18n";
+    import { t, getLocale, locale } from "$methods/i18n";
     // removed alertController
 
     export let weeks: DayObject[][] = [];

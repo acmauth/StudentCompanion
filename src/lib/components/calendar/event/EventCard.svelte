@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { EventType} from './Event';
-	import type { Event } from './Event';
-	import { longpress } from './EventCard';
+	import { EventType} from './event';
+	import type { Event } from './event';
+	import { longpress } from './eventCard';
 	import { ellipse } from 'ionicons/icons';
 	
 	export let eventItem: Event;
