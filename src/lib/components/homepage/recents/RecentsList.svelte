@@ -10,9 +10,6 @@
 
     const RECENT_ITEMS_CACHE_KEY = "recentItems";
 
-    // Legacy localStorage snapshot
-    localStorage.removeItem(RECENT_ITEMS_CACHE_KEY);
-
     function cacheRecentItems(recentItems: RecentItem[]) {
         setCached(RECENT_ITEMS_CACHE_KEY, recentItems);
     }

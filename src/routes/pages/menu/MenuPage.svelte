@@ -3,10 +3,10 @@
 	import { register } from 'swiper/element/bundle';
 	import IonPage from 'ionic-svelte/components/IonPage.svelte';
 	import * as allIonicIcons from 'ionicons/icons';
-	import { getMenu, getMenuFromCache } from '$services/scrapers/menu/scraper';
+	import { getMenu, type MenuDay } from '$services/scrapers/menu/scraper';
 	import SubPageHeader from '$common/SubPageHeader.svelte';
 	import MenuSkeleton from '$components/menu/MenuSkeleton.svelte';
-	import { t} from '$methods/i18n';
+	import { locale, t } from '$methods/i18n';
 	import appConfig from '$src/app.config';
 
 	register();
@@ -18,8 +18,6 @@
 	let dinnerData: string = '';
 	let title: string = $t('menu.todaysMenu');
 	let defaultSlideIndex: number = 0;
-	let showingCachedData = false;
-	let dataLoaded = false;
 
 	// Weekday keys (index order matches cafeteriaData/cafeteriaDates and menu.<day> i18n keys)
 	const weekDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -81,7 +79,7 @@
 
 	// Applies prepareDayHtml() across a week and assigns both cafeteriaData and
 	// cafeteriaDates together, so Svelte only sees one update per array.
-	function applyWeekHtml(days: { full: string }[]) {
+	function applyWeekHtml(days: MenuDay[]) {
 		const prepared = days.map((day) => prepareDayHtml(day.full));
 		cafeteriaData = prepared.map((p) => p.html);
 		cafeteriaDates = prepared.map((p) => p.date);
@@ -111,7 +109,6 @@
 	let now = ''; // Current meal
 	let next = ''; // Next meal
 	let color = 'success';
-	let menuDate = '';
 	let closedForHolidays = false;
 
 	// Seasonal emoji shown when the cafeteria is closed for holidays
@@ -187,62 +184,18 @@
 
 	title = $t('menu.todaysMenu');
 
-	// Applies the club-open status to the status message/color shown above the menu
-	function applyClubOpenStatus(isClubOpen: boolean | undefined) {
-		if (isClubOpen != undefined && !isClubOpen) {
-			message = $t('menu.closedForHolidays');
-			color = 'danger';
-		}
-	}
+	$: menu = getMenu($locale);
 
-	// Fetch and process menu data
-	async function getMenuData() {
-		const menuAPIresponse = await getMenu();
-		const menuData = menuAPIresponse.days;
-		const isClubOpen = menuAPIresponse.club_open;
+	// Days currently rendered; the cached copy is replaced when the fresh one arrives
+	let appliedDays: MenuDay[] | null = null;
+	$: if ($menu.days && $menu.days !== appliedDays) applyMenu($menu.days);
 
-		applyClubOpenStatus(isClubOpen);
-
-		if (typeof menuData === 'string') {
-			throw new Error(menuData);
-		}
-
-
-		// menuData is an array of day objects (Monday=0, Sunday=6)
-		applyWeekHtml(menuData);
-		breakfastData = markHoursParagraphs(menuData[today]?.breakfast || '');
-		lunchData = markHoursParagraphs(menuData[today]?.lunch || '');
-		dinnerData = markHoursParagraphs(menuData[today]?.dinner || '');
-		menuDate = '';
-
-		// if it's undefined then cached data is returned
-		if (isClubOpen != undefined) {
-			showingCachedData = false;
-		}
-		dataLoaded = true;
-	}
-
-	// Load cached data immediately on mount
-	async function loadCachedData() {
-		const cached = await getMenuFromCache();
-		const cachedMenu = cached?.menu;
-
-		if (cachedMenu && cachedMenu.length > 0) {
-			applyWeekHtml(cachedMenu);
-			breakfastData = markHoursParagraphs(cachedMenu[today]?.breakfast || '');
-			lunchData = markHoursParagraphs(cachedMenu[today]?.lunch || '');
-			dinnerData = markHoursParagraphs(cachedMenu[today]?.dinner || '');
-			menuDate = '';
-
-			// Apply the club-open status that was cached alongside the menu so a
-			// holiday closure doesn't flash an open menu before the fresh fetch lands
-			applyClubOpenStatus(cached?.clubOpen);
-
-			showingCachedData = true;
-			dataLoaded = true;
-			return true;
-		}
-		return false;
+	function applyMenu(days: MenuDay[]) {
+		applyWeekHtml(days);
+		breakfastData = markHoursParagraphs(days[today]?.breakfast || '');
+		lunchData = markHoursParagraphs(days[today]?.lunch || '');
+		dinnerData = markHoursParagraphs(days[today]?.dinner || '');
+		appliedDays = days;
 	}
 
 	function formatDate(date: Date){
@@ -251,23 +204,6 @@
 				String(date.getMonth() + 1).padStart(2, '0') + '/' +
 				date.getFullYear();
 	}
-
-	// Initialize data on mount
-	async function initializeData() {
-		const hasCachedData = await loadCachedData();
-
-		if (!hasCachedData) {
-			// No cached data, fetch from API
-			await getMenuData();
-		} else {
-			// Has cached data, fetch fresh data in background
-			getMenuData().catch(error => {
-				console.error('Failed to fetch fresh menu data:', error);
-				// Keep showing cached data on error
-			});
-		}
-	}
-	
 
 	type CrowdLevel = 'quiet' | 'moderate' | 'busy' | 'crowded';
 	const CROWD_COLORS: Record<CrowdLevel, string> = {
@@ -299,7 +235,7 @@
 	onMount(loadCrowd);
 
 	// Initialize swiper when data is loaded
-	$: if (dataLoaded && typeof window !== 'undefined') {
+	$: if (appliedDays && typeof window !== 'undefined') {
 		// Wait for the DOM to be ready and data to be loaded
 		setTimeout(() => {
 			const swiperEl = document.querySelector('swiper-container') as any;
@@ -337,7 +273,9 @@
 		}, 100);
 	}
 
-	$: closedForHolidays = message === $t('menu.closedForHolidays');
+	$: closedForHolidays = $menu.clubOpen === false;
+	$: statusMessage = closedForHolidays ? $t('menu.closedForHolidays') : message;
+	$: statusColor = closedForHolidays ? 'danger' : color;
 	$: todayKey = today_weekday.toLowerCase();
 </script>
 
@@ -386,22 +324,21 @@
 		</ion-popover>
 	{/if}
     <ion-content style="padding-top:0;">
-		{#await initializeData()}
-			<!-- Loading: Show skeleton while fetching data -->
+		{#if $menu.status === 'loading'}
 			<MenuSkeleton />
-		{:then}
-			<!-- Data loaded successfully -->
-			{#if dataLoaded}
+		{:else if $menu.status === 'error'}
+			<p>{$menu.error}</p>
+		{:else}
 				<div class="status-wrap">
-					{#if showingCachedData}
+					{#if $menu.stale}
 						<div class="status-card status-warning">
 							<ion-icon icon={allIonicIcons.cloudOfflineOutline} />
 							<span class="status-message">{$t('menu.showingCachedData') || 'Showing cached data'}</span>
 						</div>
 					{:else}
-						<div class="status-card status-{color}">
-							<ion-icon icon={color === 'success' ? allIonicIcons.checkmarkCircleOutline : allIonicIcons.closeCircleOutline} />
-							<span class="status-message">{message}</span>
+						<div class="status-card status-{statusColor}">
+							<ion-icon icon={statusColor === 'success' ? allIonicIcons.checkmarkCircleOutline : allIonicIcons.closeCircleOutline} />
+							<span class="status-message">{statusMessage}</span>
 						</div>
 					{/if}
 				</div>
@@ -474,10 +411,7 @@
 					{/each}
 				</ion-accordion-group>
 				</div>
-			{/if}
-		{:catch error}
-			<p>{error.message}</p>
-		{/await}
+		{/if}
 	</ion-content>
 </ion-page>
 
